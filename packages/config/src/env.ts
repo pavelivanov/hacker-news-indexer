@@ -83,6 +83,10 @@ const environmentSchema = z
     CLASSIFIER_PROVIDER: optionalString,
     CLASSIFIER_API_TOKEN: optionalString,
     CLASSIFIER_MODEL: optionalString,
+    CLASSIFIER_REASONING_EFFORT: z.preprocess(
+      emptyToUndefined,
+      z.enum(["none", "low", "medium", "high", "xhigh", "max"]).default("low"),
+    ),
     CLASSIFIER_REQUEST_TIMEOUT_MS: integer(45_000, 100, 180_000),
   })
   .superRefine((value, context) => {

@@ -12,6 +12,7 @@ describe("application configuration", () => {
       PORT: 3000,
       TELEGRAM_ENABLED: false,
       CLASSIFIER_ENABLED: false,
+      CLASSIFIER_REASONING_EFFORT: "low",
       DATABASE_READY_TIMEOUT_MS: 2_000,
       INGESTION_MAX_RANGE: 1_000,
       WORKER_CONCURRENCY: 4,
@@ -26,7 +27,8 @@ describe("application configuration", () => {
     ["PORT", "not-a-number"],
     ["DATABASE_READY_TIMEOUT_MS", "99"],
     ["TELEGRAM_REQUEST_TIMEOUT_MS", "nope"],
-  ])("rejects invalid numeric value for %s", (key, value) => {
+    ["CLASSIFIER_REASONING_EFFORT", "extreme"],
+  ])("rejects invalid value for %s", (key, value) => {
     expect(() => parseConfig({ [key]: value })).toThrow();
   });
 

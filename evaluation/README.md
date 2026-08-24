@@ -33,3 +33,18 @@ use only the 69-row development split until a configuration is selected; the
 
 Evaluation reports belong in `evaluation/reports/`. Provider responses, prompts,
 and source bodies must not be written to logs.
+
+## Live provider benchmark
+
+The OpenAI benchmark adapter loads the ignored local `.env` file and requires
+`CLASSIFIER_PROVIDER=openai`, `CLASSIFIER_API_TOKEN`, and `CLASSIFIER_MODEL`.
+Classification can remain disabled while running development evaluation.
+
+```bash
+npm run eval -- --provider openai --reasoning-effort low --concurrency 2
+```
+
+The command sends only the 69-row development split, uses strict JSON Schema
+output with no tools and `store: false`, and writes an aggregate report. Use
+`--mode holdout` only after a development report passes every acceptance gate.
+Never use the holdout for prompt, model, or reasoning-effort tuning.
