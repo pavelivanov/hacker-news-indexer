@@ -13,6 +13,7 @@
     "build": "tsc -b --pretty false"
   },
   "dependencies": {
+    "@hn-knowledge/contracts": "0.1.0",
     "@hn-knowledge/domain": "0.1.0",
     "@hn-knowledge/ports": "0.1.0",
     "domhandler": "6.0.1",

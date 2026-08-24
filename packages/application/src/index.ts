@@ -26,3 +26,8 @@ export {
   reconstructMultipart,
   type ReconstructMultipartInput,
 } from "./reconstruct/multipart.js";
+export * from "./classification/build-input.js";
+export * from "./classification/classify.js";
+export * from "./classification/load-input.js";
+export * from "./classification/prompt.js";
+export * from "./classification/validate-output.js";

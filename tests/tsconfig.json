@@ -11,7 +11,8 @@
     "../tests/**/*.ts",
     "../vitest.contract.config.ts",
     "../vitest.config.ts",
-    "../vitest.integration.config.ts"
+    "../vitest.integration.config.ts",
+    "../vitest.evaluation.config.ts"
   ],
   "references": [
     { "path": "../packages/adapters" },

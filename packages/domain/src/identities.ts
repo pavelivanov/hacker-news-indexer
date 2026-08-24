@@ -7,6 +7,8 @@ export type HnItemId = Brand<number, "HnItemId">;
 export type IngestionRunId = Brand<string, "IngestionRunId">;
 export type SelectionOccurrenceId = Brand<string, "SelectionOccurrenceId">;
 export type PipelineJobId = Brand<string, "PipelineJobId">;
+export type ClassificationRunId = Brand<string, "ClassificationRunId">;
+export type ContentDecisionId = Brand<string, "ContentDecisionId">;
 
 const positiveSafeInteger = (value: number, name: string): number => {
   if (!Number.isSafeInteger(value) || value <= 0) {
@@ -37,3 +39,9 @@ export const selectionOccurrenceId = (value: string): SelectionOccurrenceId =>
 
 export const pipelineJobId = (value: string): PipelineJobId =>
   nonEmptyIdentifier(value, "Pipeline job ID") as PipelineJobId;
+
+export const classificationRunId = (value: string): ClassificationRunId =>
+  nonEmptyIdentifier(value, "Classification run ID") as ClassificationRunId;
+
+export const contentDecisionId = (value: string): ContentDecisionId =>
+  nonEmptyIdentifier(value, "Content decision ID") as ContentDecisionId;

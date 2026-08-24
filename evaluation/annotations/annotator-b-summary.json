@@ -1,0 +1,112 @@
+{
+  "annotator": {
+    "id": "B",
+    "method": "independent-fixture-review"
+  },
+  "total": 98,
+  "uniqueCommentIds": 98,
+  "counts": {
+    "DISCOVERY": 13,
+    "EXPERT_NOTE": 28,
+    "REJECTED": 57
+  },
+  "unresolvedIssues": [
+    {
+      "commentId": 49348358,
+      "reviewFlags": ["LEGAL_RECOMMENDATION", "AMBIGUOUS_CLASSIFICATION"]
+    },
+    {
+      "commentId": 49353104,
+      "reviewFlags": ["SECURITY_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49361132,
+      "reviewFlags": ["FLAGGED_OR_UNAVAILABLE_CONTENT"]
+    },
+    {
+      "commentId": 49363671,
+      "reviewFlags": ["SECURITY_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49367810,
+      "reviewFlags": ["LEGAL_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49369163,
+      "reviewFlags": ["LEGAL_RECOMMENDATION", "SECURITY_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49372025,
+      "reviewFlags": ["MISSING_OR_AMBIGUOUS_CANONICAL_URL"]
+    },
+    {
+      "commentId": 49372945,
+      "reviewFlags": ["SECURITY_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49375609,
+      "reviewFlags": ["SECURITY_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49376272,
+      "reviewFlags": ["LOW_CONFIDENCE", "AMBIGUOUS_CLASSIFICATION"]
+    },
+    {
+      "commentId": 49379412,
+      "reviewFlags": ["MEDICAL_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49382737,
+      "reviewFlags": ["SECURITY_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49388070,
+      "reviewFlags": ["LEGAL_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49391973,
+      "reviewFlags": ["MISSING_OR_AMBIGUOUS_CANONICAL_URL"]
+    },
+    {
+      "commentId": 49392826,
+      "reviewFlags": [
+        "LEGAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE"
+      ]
+    },
+    {
+      "commentId": 49393603,
+      "reviewFlags": ["MISSING_OR_AMBIGUOUS_CANONICAL_URL"]
+    },
+    {
+      "commentId": 49395024,
+      "reviewFlags": [
+        "SECURITY_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE",
+        "LEGAL_RECOMMENDATION"
+      ]
+    },
+    {
+      "commentId": 49396801,
+      "reviewFlags": ["LEGAL_RECOMMENDATION", "SECURITY_RECOMMENDATION"]
+    },
+    {
+      "commentId": 49403412,
+      "reviewFlags": [
+        "MISSING_OR_AMBIGUOUS_CANONICAL_URL",
+        "LOW_CONFIDENCE",
+        "AMBIGUOUS_CLASSIFICATION"
+      ]
+    },
+    {
+      "commentId": 49409002,
+      "reviewFlags": ["SECURITY_RECOMMENDATION"]
+    }
+  ],
+  "coordinateBasis": {
+    "COMMENT": "comment.plainText",
+    "ROOT_STORY": "root.plainText"
+  },
+  "jsonlSha256": "d0aac9791b63a86888854d8aea760a075b15900069bf8aa96e3f487e9faad3d8"
+}

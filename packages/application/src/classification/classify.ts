@@ -1,0 +1,257 @@
+import {
+  ClassificationV1Schema,
+  type ClassificationV1,
+} from "@hn-knowledge/contracts";
+import type {
+  ClassificationRun,
+  ContentDecision,
+  HnItemId,
+} from "@hn-knowledge/domain";
+import {
+  ClassifierProviderError,
+  type BoundedClassifierInput,
+  type ClassificationRepository,
+  type ClassifierPort,
+  type ClassifierResponse,
+  type Hasher,
+} from "@hn-knowledge/ports";
+
+import {
+  CLASSIFICATION_PROMPT_VERSION,
+  CLASSIFICATION_SYSTEM_PROMPT,
+} from "./prompt.js";
+import {
+  validateClassifierOutput,
+  type ClassifierOutputValidationErrorCode,
+} from "./validate-output.js";
+
+export const CLASSIFIER_REQUEST_TIMEOUT_MS = 45_000;
+export const CLASSIFICATION_SCHEMA_VERSION = "classification.v1";
+
+export class ClassificationExecutionError extends Error {
+  constructor(
+    readonly code: string,
+    readonly retryable: boolean,
+    readonly retryAfterMs: number | null = null,
+    options?: ErrorOptions,
+  ) {
+    super(code, options);
+    this.name = "ClassificationExecutionError";
+  }
+}
+
+export interface ClassifyCommentInput {
+  readonly commentId: HnItemId;
+  readonly boundedInput: BoundedClassifierInput;
+  readonly activateDecision?: boolean;
+  readonly persistRetryableFailure?: boolean;
+}
+
+export type ClassifyCommentResult =
+  | {
+      readonly kind: "DECISION";
+      readonly run: ClassificationRun;
+      readonly decision: ContentDecision;
+      readonly output: ClassificationV1;
+    }
+  | {
+      readonly kind: "REVIEW";
+      readonly run: ClassificationRun;
+      readonly errorCode: ClassifierOutputValidationErrorCode;
+    };
+
+const sumUsage = (
+  responses: readonly ClassifierResponse[],
+  field: "inputTokens" | "outputTokens",
+): number | null => {
+  const values = responses
+    .map((response) => response[field])
+    .filter((value): value is number => value !== null);
+  return values.length === 0
+    ? null
+    : values.reduce((total, value) => total + value, 0);
+};
+
+const assertMetadata = (
+  classifier: ClassifierPort,
+  response: ClassifierResponse,
+): void => {
+  if (
+    response.provider !== classifier.provider ||
+    response.modelId !== classifier.modelId ||
+    response.modelConfigId !== classifier.modelConfigId
+  ) {
+    throw new ClassificationExecutionError(
+      "CLASSIFIER_METADATA_MISMATCH",
+      false,
+    );
+  }
+};
+
+const retryableValidation = (
+  code: ClassifierOutputValidationErrorCode,
+): boolean => code === "JSON_INVALID" || code === "SCHEMA_INVALID";
+
+export const createClassifyComment =
+  (
+    classifier: ClassifierPort,
+    repository: ClassificationRepository,
+    hasher: Hasher,
+  ) =>
+  async (input: ClassifyCommentInput): Promise<ClassifyCommentResult> => {
+    if (input.boundedInput.selectedCommentId !== input.commentId) {
+      throw new TypeError("Classifier input comment ID does not match job");
+    }
+    const inputHash = hasher.sha256(JSON.stringify(input.boundedInput));
+    const promptHash = hasher.sha256(CLASSIFICATION_SYSTEM_PROMPT);
+    const request = {
+      input: input.boundedInput,
+      prompt: CLASSIFICATION_SYSTEM_PROMPT,
+      promptVersion: CLASSIFICATION_PROMPT_VERSION,
+      promptHash,
+      schemaVersion: CLASSIFICATION_SCHEMA_VERSION,
+      outputSchema: ClassificationV1Schema as unknown as Readonly<
+        Record<string, unknown>
+      >,
+      timeoutMs: CLASSIFIER_REQUEST_TIMEOUT_MS,
+    } as const;
+    const responses: ClassifierResponse[] = [];
+    let invalidCode: ClassifierOutputValidationErrorCode | null = null;
+
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      let response: ClassifierResponse;
+      try {
+        response = await classifier.classify(request);
+      } catch (error) {
+        const providerError =
+          error instanceof ClassifierProviderError
+            ? error
+            : new ClassifierProviderError(
+                "CLASSIFIER_INVALID_RESPONSE",
+                false,
+                null,
+                { cause: error },
+              );
+        if (
+          !providerError.retryable ||
+          input.persistRetryableFailure === true
+        ) {
+          await repository.recordRun({
+            commentId: input.commentId,
+            inputHash,
+            promptVersion: CLASSIFICATION_PROMPT_VERSION,
+            promptHash,
+            schemaVersion: CLASSIFICATION_SCHEMA_VERSION,
+            modelConfigId: classifier.modelConfigId,
+            provider: classifier.provider,
+            modelId: classifier.modelId,
+            outputHash: null,
+            providerOutput: null,
+            latencyMs: null,
+            inputTokens: null,
+            outputTokens: null,
+            status: "FAILED",
+            errorCode: providerError.code,
+          });
+        }
+        throw new ClassificationExecutionError(
+          providerError.code,
+          providerError.retryable,
+          providerError.retryAfterMs,
+          { cause: error },
+        );
+      }
+      assertMetadata(classifier, response);
+      responses.push(response);
+      const validated = validateClassifierOutput(
+        response.rawOutput,
+        input.boundedInput,
+        hasher,
+      );
+      if (!validated.ok) {
+        invalidCode = validated.code;
+        if (attempt === 0 && retryableValidation(validated.code)) {
+          continue;
+        }
+        const recorded = await repository.recordRun({
+          commentId: input.commentId,
+          inputHash,
+          promptVersion: CLASSIFICATION_PROMPT_VERSION,
+          promptHash,
+          schemaVersion: CLASSIFICATION_SCHEMA_VERSION,
+          modelConfigId: response.modelConfigId,
+          provider: response.provider,
+          modelId: response.modelId,
+          outputHash: hasher.sha256(response.rawOutput),
+          providerOutput: responses.map((value) => value.rawOutput),
+          latencyMs: responses.reduce(
+            (total, value) => total + value.latencyMs,
+            0,
+          ),
+          inputTokens: sumUsage(responses, "inputTokens"),
+          outputTokens: sumUsage(responses, "outputTokens"),
+          status: "REVIEW",
+          errorCode: validated.code,
+        });
+        return {
+          kind: "REVIEW",
+          run: recorded.run,
+          errorCode: validated.code,
+        };
+      }
+
+      const output = validated.output;
+      const runStatus =
+        output.primary_decision === "REVIEW" || output.review.required
+          ? "REVIEW"
+          : "SUCCEEDED";
+      const recorded = await repository.recordRun({
+        commentId: input.commentId,
+        inputHash,
+        promptVersion: CLASSIFICATION_PROMPT_VERSION,
+        promptHash,
+        schemaVersion: CLASSIFICATION_SCHEMA_VERSION,
+        modelConfigId: response.modelConfigId,
+        provider: response.provider,
+        modelId: response.modelId,
+        outputHash: hasher.sha256(response.rawOutput),
+        providerOutput: output,
+        latencyMs: responses.reduce(
+          (total, value) => total + value.latencyMs,
+          0,
+        ),
+        inputTokens: sumUsage(responses, "inputTokens"),
+        outputTokens: sumUsage(responses, "outputTokens"),
+        status: runStatus,
+        errorCode: null,
+      });
+      const decision = await repository.saveDecision({
+        commentId: input.commentId,
+        classificationRunId: recorded.run.id,
+        source: "MODEL",
+        primaryDecision: output.primary_decision,
+        decisionConfidence: output.decision_confidence,
+        materiallyTechnical: output.comment_relevance.is_materially_technical,
+        reviewRequired: output.review.required,
+        validatedOutput: output,
+        manualOverrideOfId: null,
+        evidenceSpans: validated.evidenceSpans.map((span) => ({
+          spanId: span.id,
+          sourceDocument: span.documentId,
+          origin: span.origin,
+          start: span.start,
+          end: span.end,
+          textHash: span.textHash,
+        })),
+      });
+      if (input.activateDecision === true) {
+        await repository.activateDecision(input.commentId, decision.id);
+      }
+      return { kind: "DECISION", run: recorded.run, decision, output };
+    }
+
+    throw new ClassificationExecutionError(
+      invalidCode ?? "CLASSIFIER_INVALID_RESPONSE",
+      false,
+    );
+  };

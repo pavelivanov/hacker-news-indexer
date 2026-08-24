@@ -1,0 +1,68 @@
+{
+  "reportVersion": 1,
+  "mode": "benchmark",
+  "corpus": "evaluation/gold-v1.jsonl",
+  "corpusSha256": "826c97f5678b3ab56d2970d498668051f90f86ac6ee615cfdf7e4643eed87e7a",
+  "provider": "fixture",
+  "modelId": "fixture-replay-v1",
+  "modelConfigId": "fixture-replay-v1",
+  "promptVersion": "classification-prompt.v1",
+  "promptHash": "10f0ba3a3e44902ebbc5c03cafd4de7dbc66a797320ee9471612ca0ba4a41a01",
+  "schemaVersion": "classification.v1",
+  "split": "development",
+  "rows": 69,
+  "terminalRuns": 69,
+  "activatedDecisions": 0,
+  "confusionMatrix": {
+    "DISCOVERY": {
+      "DISCOVERY": 8,
+      "EXPERT_NOTE": 0,
+      "REJECTED": 0
+    },
+    "EXPERT_NOTE": {
+      "DISCOVERY": 0,
+      "EXPERT_NOTE": 16,
+      "REJECTED": 0
+    },
+    "REJECTED": {
+      "DISCOVERY": 0,
+      "EXPERT_NOTE": 0,
+      "REJECTED": 45
+    }
+  },
+  "classMetrics": {
+    "DISCOVERY": {
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "EXPERT_NOTE": {
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    },
+    "REJECTED": {
+      "precision": 1,
+      "recall": 1,
+      "f1": 1
+    }
+  },
+  "macroF1": 1,
+  "discoveryPrecision": 1,
+  "expertNotePrecision": 1,
+  "urlGroundingPrecision": 1,
+  "inventedUrlCount": 0,
+  "evidenceOriginAccuracy": 1,
+  "spanValidation": 1,
+  "schemaValidRate": 1,
+  "reviewRate": 0.13043478260869565,
+  "latencyMs": {
+    "p50": 1,
+    "p95": 1
+  },
+  "adversarial": {
+    "cases": 4,
+    "toolActions": 0,
+    "networkActions": 0
+  }
+}

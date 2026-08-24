@@ -1,5 +1,9 @@
 export const ADAPTER_LAYER = "adapters" as const;
 export {
+  FixtureClassifier,
+  type FixtureClassifierOptions,
+} from "./classifier/fixture.js";
+export {
   createMtcuteTelegramSource,
   MtcuteTelegramMessagesClient,
   TelegramDeferredError,

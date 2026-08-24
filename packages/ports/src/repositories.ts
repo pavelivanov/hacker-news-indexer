@@ -1,4 +1,10 @@
 import type {
+  ClassificationRun,
+  ClassificationRunId,
+  ClassificationRunStatus,
+  ContentDecision,
+  ContentDecisionClass,
+  ContentDecisionId,
   HnItem,
   HnItemId,
   IngestionRange,
@@ -15,6 +21,65 @@ import type {
   SelectedOccurrenceContext,
   UrlCandidate,
 } from "@hn-knowledge/domain";
+
+import type { StoredClassifierSource } from "./classifier.js";
+
+export interface RecordClassificationRunInput {
+  readonly commentId: HnItemId;
+  readonly inputHash: string;
+  readonly promptVersion: string;
+  readonly promptHash: string;
+  readonly schemaVersion: string;
+  readonly modelConfigId: string;
+  readonly provider: string;
+  readonly modelId: string;
+  readonly outputHash: string | null;
+  readonly providerOutput: unknown;
+  readonly latencyMs: number | null;
+  readonly inputTokens: number | null;
+  readonly outputTokens: number | null;
+  readonly status: ClassificationRunStatus;
+  readonly errorCode: string | null;
+}
+
+export interface RecordClassificationRunResult {
+  readonly run: ClassificationRun;
+  readonly created: boolean;
+}
+
+export interface SaveContentDecisionInput {
+  readonly commentId: HnItemId;
+  readonly classificationRunId: ClassificationRunId | null;
+  readonly source: "MODEL" | "MANUAL";
+  readonly primaryDecision: ContentDecisionClass;
+  readonly decisionConfidence: number;
+  readonly materiallyTechnical: boolean;
+  readonly reviewRequired: boolean;
+  readonly validatedOutput: unknown;
+  readonly manualOverrideOfId: ContentDecisionId | null;
+  readonly evidenceSpans: readonly {
+    readonly spanId: string;
+    readonly sourceDocument: string;
+    readonly origin: "COMMENT" | "ROOT_STORY";
+    readonly start: number;
+    readonly end: number;
+    readonly textHash: string;
+  }[];
+}
+
+export interface ClassificationRepository {
+  loadSource(commentId: HnItemId): Promise<StoredClassifierSource | null>;
+  recordRun(
+    input: RecordClassificationRunInput,
+  ): Promise<RecordClassificationRunResult>;
+  getRun(id: ClassificationRunId): Promise<ClassificationRun | null>;
+  saveDecision(input: SaveContentDecisionInput): Promise<ContentDecision>;
+  activateDecision(
+    commentId: HnItemId,
+    decisionId: ContentDecisionId,
+  ): Promise<void>;
+  getActiveDecision(commentId: HnItemId): Promise<ContentDecision | null>;
+}
 
 export interface StartIngestionResult {
   readonly run: IngestionRun;
