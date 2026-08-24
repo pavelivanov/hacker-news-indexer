@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.build/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+coverage/
+packages/db/src/generated/
+.DS_Store
+.idea/
+*.log
+
+# Local credentials and sessions must never be committed.
+.sessions/
+*.session
+*.session-journal

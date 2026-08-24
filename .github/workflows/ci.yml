@@ -1,0 +1,65 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:17-bookworm
+        env:
+          POSTGRES_DB: hn_knowledge
+          POSTGRES_USER: hn_knowledge
+          POSTGRES_PASSWORD: hn_knowledge
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U hn_knowledge -d hn_knowledge"
+          --health-interval 2s
+          --health-timeout 2s
+          --health-retries 20
+    env:
+      DATABASE_URL: postgresql://hn_knowledge:hn_knowledge@127.0.0.1:5432/hn_knowledge
+      NODE_ENV: test
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.19.0
+          cache: npm
+
+      - name: Install exact dependencies
+        run: npm ci
+
+      - name: Validate and generate Prisma client
+        run: |
+          npm run db:validate
+          npm run db:generate
+
+      - name: Verify source
+        run: |
+          npm run format:check
+          npm run lint
+          npm run typecheck
+          npm run build
+          npm test
+
+      - name: Verify PostgreSQL integration
+        run: |
+          npm run db:test:wait
+          npm run db:migrate:deploy
+          npm run test:integration
+
+      - name: Build container
+        run: docker build -t hn-knowledge:verify .

@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "..",
+    "outDir": "../.build/tests",
+    "tsBuildInfoFile": "../.build/tests.tsbuildinfo",
+    "types": ["node", "vitest/globals"]
+  },
+  "include": [
+    "../tests/**/*.ts",
+    "../vitest.config.ts",
+    "../vitest.integration.config.ts"
+  ],
+  "references": [
+    { "path": "../packages/config" },
+    { "path": "../packages/db" },
+    { "path": "../apps/api" }
+  ]
+}

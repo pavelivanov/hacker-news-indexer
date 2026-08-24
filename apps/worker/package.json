@@ -1,0 +1,14 @@
+{
+  "name": "@hn-knowledge/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -b --pretty false",
+    "dev": "tsx watch src/index.ts",
+    "start": "node --enable-source-maps dist/index.js"
+  },
+  "dependencies": {
+    "@hn-knowledge/config": "0.1.0"
+  }
+}
