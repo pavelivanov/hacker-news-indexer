@@ -3,6 +3,7 @@ node_modules/
 .build/
 coverage/
 packages/db/src/generated/
+tests/fixtures/seed/
 package-lock.json
 plans/
 docs/telegram-hn-technical-knowledge-project-research-plan.md

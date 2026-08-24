@@ -1,0 +1,2271 @@
+{
+  "schemaVersion": 1,
+  "source": "TELEGRAM_PUBLIC_EMBED",
+  "sourceKey": "hn_best_comments",
+  "minId": 32847,
+  "maxId": 32946,
+  "messages": [
+    {
+      "id": 32847,
+      "date": "2026-08-19T15:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple announces changes for apps in the European Union\n\n> The Core Technology Fee, a per-install fee for developers that achieve extraordinary scale, will be replaced by the Core Technology Commission, a simple 5 percent commission on digital transactions in apps distributed outside the App Store. The new terms also eliminate the initial acquisition fee and store services fee.\n\n[...]\n\n> In order to keep EU users as safe as possible, Apple will continue to require every alternatively distributed app to go through Notarization — a baseline review focused on basic functionality and protection from serious threats.\n\nAll in all, still extremely anti-consumer. If I can download and run arbitrary code on my Mac--even if I have to jump through scary warnings--why should I not be able to do so on my phone? Why would one computing platform be different from the other?\n\nmjorgers, 22 hours ago",
+      "contentHash": "38d7d32f44b700ad508d816df99350912bc0c7b094ed7aa8ef3de6836a72f240",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 54,
+          "url": "https://news.ycombinator.com/item?id=49348055"
+        },
+        {
+          "kind": "text_link",
+          "offset": 886,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49348450"
+        }
+      ]
+    },
+    {
+      "id": 32848,
+      "date": "2026-08-19T15:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude writing a macOS driver for my obscure HP printer built only for Windows\n\nI was able to (through heavy Claude use) successfully reverse engineer a golf cart motor controller that is programmable over USB, but only was supported by a Windows application. Claude walked me through using ILSpy on the .NET assembly, using Wireshark to capture the protocol over USB, and to completely map out all of the functionality in the Windows application. The output was a portable C library and CLI program which, so far, has worked well.\n\nI consider myself kind of an AI detractor but even I'll admit that the tool allowed me to do something it would have taken weeks-to-months to learn to do the hard way.\n\nryandrake, 18 hours ago",
+      "contentHash": "3eb954df9c6b158a0068e5846bea6be523cc0350d5464853e4953d8d4136deae",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49344643"
+        },
+        {
+          "kind": "text_link",
+          "offset": 717,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49353141"
+        }
+      ]
+    },
+    {
+      "id": 32849,
+      "date": "2026-08-19T17:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Being ambitious and being a dad\n\n> The passionate hunger to do something significant and meaningful with my life was a major reason I took care never to have any children.\n\nRaising kids is probably the most meaningful and significant thing I have done with my life.\n\nDerbasti, 11 hours ago",
+      "contentHash": "3f7c49f57cb274202710fef7bdc6834f9e83ce224f92c4dfa60f7b44403f3337",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 31,
+          "url": "https://news.ycombinator.com/item?id=49321298"
+        },
+        {
+          "kind": "text_link",
+          "offset": 281,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49357415"
+        }
+      ]
+    },
+    {
+      "id": 32850,
+      "date": "2026-08-19T18:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Being ambitious and being a dad\n\nThe older I get the more I realize ambition and \"being ambitious\" is a completely misplaced way to orient your life.\n\nThe chance of validation from others is not a good reason for making one choice or another and a life made of choices of that kind will eventually leave you spiritually bankrupt.\n\nMake decisions based on what you're passionate about, based on what will bring and keep meaningful relationships into your life, based on what will leave you with habits that take you outside, into the sun, moving your body and eating healthy, and, sure, that will afford you the ability to pay for those things.\n\nFocus on the process, not the outcome.\n\nMaking decisions based on what will make you more \"successful\" will make you a slave to others approval. And those others will use you up and waste your life to achieve their own objectives.\n\nAlso, if you pick the right partner, having kids does all the good things in life at once. It is the most efficient way to get yourself into the good life possible.\n\nspicyusername, 6 hours ago",
+      "contentHash": "a4f47b24d6f9fc65ab10515075a84c2b3c83a3ef7178e50d2a40008c7afb5b02",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 31,
+          "url": "https://news.ycombinator.com/item?id=49321298"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1062,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49360220"
+        }
+      ]
+    },
+    {
+      "id": 32851,
+      "date": "2026-08-19T21:50:00.000Z",
+      "editDate": null,
+      "text": "Re: And then the men with guns tell you to do it anyway\n\n> But it is easy to see why some people feel this might open the gateway to messages which, at best, are irrelevant\n\nIf you're in South Korea, you can expect to get around half a dozen emergency notifications every day. Typical contents include \"it's cold, so dress warmly\", \"roads are icy, so drive carefully\", and \"Mrs Kim, 79, suffers from dementia and was last seen in Seoul wearing a black coat\".\n\nYou can set your phone to filter these out, but then you'll also miss the notification about North Korea commencing artillery bombardment.\n\ndecimalenough, 19 hours ago",
+      "contentHash": "21156e0150f43b3f95c50689b09bca2c7946f84403b4daea017085ff05621711",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49348912"
+        },
+        {
+          "kind": "text_link",
+          "offset": 615,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49356163"
+        }
+      ]
+    },
+    {
+      "id": 32852,
+      "date": "2026-08-19T21:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Remote workers report the highest well-being in study of 7,700 employees\n\n…of a single company\n\n> Researchers analyzed survey data from 7,704 employees at a large healthcare organization.\n\nI’ve been remote and worked for remote companies for a long time. In my observation, the well-being is bimodal. The people who adapt well to remote thrive. There are a lot of people who think they’re going to love remote who ultimately flame out from the loneliness, isolation, lack of visual boundaries between work and home life, and lack of externally enforced routine.\n\nIt’s really sad when the latter happens because it’s almost always someone who was hired for their great work and abilities. Then over time they get drained and you can see that the remote work wasn’t what they expected.\n\nIt’s basically impossible to predict who will fall into each category at the interview stage, or at least I can’t do it. Prior remote work success (not just experience) is the best indicator but it’s hard to evaluate, too. Some of the most difficult remote hires I’ve worked with had past remote work experience, but it’s only after being hired that you learn they struggled at those companies too.\n\nAurornis, 6 hours ago",
+      "contentHash": "b745b7171a849a8e26dae025c00e43e8e7176ceee0cd23ceafdd8bd2842773ed",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 72,
+          "url": "https://news.ycombinator.com/item?id=49362934"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1199,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49363352"
+        }
+      ]
+    },
+    {
+      "id": 32853,
+      "date": "2026-08-19T23:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude writing a macOS driver for my obscure HP printer built only for Windows\n\nUnfortunately this is a very misleading article and headline. I don't doubt the end result - it's useful that it works, but it's not \"natively\" and, unlike what some people assume, Claude didn't write a driver. It basically used HP's existing proprietary driver in a Linux VM on macOS, and just bridged that to macOS.\n\nIt also requires a root launcher that runs code from the user ~/.hp1008 dir, so security is weakened.\n\nTiberium, 1 day ago",
+      "contentHash": "8f7a6212bcc8bda0f2ea18d02bc6130d181d938b276ecbebeb97cdd29dc3cccb",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49344643"
+        },
+        {
+          "kind": "text_link",
+          "offset": 516,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49353104"
+        }
+      ]
+    },
+    {
+      "id": 32854,
+      "date": "2026-08-20T00:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Google replaced Git tags for certain source code with obtaining via Google Drive\n\nIf you're like me and struggled to parse the title, my understanding is, \"To obtain certain source code from Google, you could previously reference git tags, but now you have to fill out a form and wait for a human to give you a google drive link.\"\n\nhatthew, 4 hours ago",
+      "contentHash": "1602e5c66b4fd7eb41fa83aa82e9dc63d5f0822bb68d229c17c6da59d07285e3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 80,
+          "url": "https://news.ycombinator.com/item?id=49364745"
+        },
+        {
+          "kind": "text_link",
+          "offset": 345,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49367035"
+        }
+      ]
+    },
+    {
+      "id": 32855,
+      "date": "2026-08-20T00:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple announces changes for apps in the European Union\n\n> \"These changes resolve Apple’s disagreements with the Commission over business terms and alternative distribution.\"\n\n[...]\n\n> \"The Core Technology Fee, a per-install fee for developers that achieve extraordinary scale, will be replaced by the Core Technology Commission, a simple 5 percent commission on digital transactions in apps distributed outside the App Store. The new terms also eliminate the initial acquisition fee and store services fee.\"\n\n[...]\n\n> \"In order to keep EU users as safe as possible, Apple will continue to require every alternatively distributed app to go through Notarization — a baseline review focused on basic functionality and protection from serious threats.\"\n\nThis is bonkers, I can't believe the EU Commission agreed to it. The main issue that the DMA was about still remains: Apple retains ultimate control over app developers' dealings with users.\n\nThe status quo that the EU should have pushed for, and which Article 6(7) of the DMA requires, is one where a developer can distribute iOS apps to users without ever entering into any contractual relationship with Apple. The OS APIs that most apps use are already paid-for by the user when they buy the device. Apple wants to double-dip and charge developers for the value that the users already have by virtue of owning their iDevices with all the necessary iOS paraphernalia in them.\n\nOf course, Xcode and the SDK overall aren't paid for by users, so Apple can charge devs for it, but so far there's no way to signal to Apple that you have opted out of using their SDK and have the fee waived. Not that it would be enough anyway, since even having to interact with Apple in any capacity to be an iOS dev is the main problem.\n\nEMIRELADERO, 1 day ago",
+      "contentHash": "602258aaaf882202e192cd15da640bd334f689d8e9d78516e06e635fe8f2ec1e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 54,
+          "url": "https://news.ycombinator.com/item?id=49348055"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1787,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49348358"
+        }
+      ]
+    },
+    {
+      "id": 32856,
+      "date": "2026-08-20T02:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Meta's blockbuster trial draws parallels to big tobacco\n\nIt took decades to clearly define gambling enough to regulate it as we do now. Note that pinball was banned in major cities for decades because it was too similar to gambling devices.\n\nAnd even with those definitions things weren't very clear. I used to work for financial traders here in Chicago. Every year there would be an unofficial snow futures market. It was a fancy way for all the traders and clerks to gamble on monthly snowfall at O'Hare.\n\nBut to my delight, the CME eventually created an actual, legal weather derivative for snow. What made one gambling and the other not? What makes any given bet a legitimate financial trade versus pure gambling? Let me know if you figure it out.\n\nMy point being that not having a clear definition won't stop us from grappling with the harms. Nor should it. Figuring out what new things really mean is always a messy process.\n\nwpietri, 22 hours ago",
+      "contentHash": "a0f58f95801243ecb04482a9c900759267487b515214612a0f6260711bd772ab",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 55,
+          "url": "https://news.ycombinator.com/item?id=49355825"
+        },
+        {
+          "kind": "text_link",
+          "offset": 945,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49356976"
+        }
+      ]
+    },
+    {
+      "id": 32857,
+      "date": "2026-08-20T03:50:00.000Z",
+      "editDate": null,
+      "text": "Re: A joke domain purchase turned in geopolitical warfare\n\nThis was fascinating, thank you. I expected to read about legal threats against the folks collecting this data and am glad that those didn't materialize.\n\nAlso I only realized after finishing the article what a breath of fresh air it was to read something that came straight from another human's brain without LLM intermediation. Thank you to the author for that too.\n\nmonitron, 11 hours ago",
+      "contentHash": "430c358600bbc0a82525b10d50b114f16a66fc5eab4e521a8bdaeb53afdf22bf",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 53,
+          "url": "https://news.ycombinator.com/item?id=49360015"
+        },
+        {
+          "kind": "text_link",
+          "offset": 438,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49364238"
+        }
+      ]
+    },
+    {
+      "id": 32858,
+      "date": "2026-08-20T04:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Civic Hygiene – avoid building technologies that could be used by a police state (2013)\n\nHarder than it looks. Everything is dual use. Certainly didn't expect my game development telemetry[1] system used to improve artillery [2]...\n\n[1] https://gdcvault.com/play/1012227/Development-Telemetry-in-V...\n\n[2] https://www.army.mil/article/85934/solution_to_weapon_develo...\n\ngmerc, 12 hours ago",
+      "contentHash": "2500fb71e08ee6ee3d7871efc319a61e9e69ad8f4e7d1472a30a26c524f1987b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 87,
+          "url": "https://news.ycombinator.com/item?id=49363433"
+        },
+        {
+          "kind": "text_link",
+          "offset": 241,
+          "length": 63,
+          "url": "https://gdcvault.com/play/1012227/Development-Telemetry-in-Video-Games"
+        },
+        {
+          "kind": "text_link",
+          "offset": 310,
+          "length": 63,
+          "url": "https://www.army.mil/article/85934/solution_to_weapon_development_problem_halo_mass_effect"
+        },
+        {
+          "kind": "text_link",
+          "offset": 382,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49363671"
+        }
+      ]
+    },
+    {
+      "id": 32859,
+      "date": "2026-08-20T04:20:00.000Z",
+      "editDate": null,
+      "text": "Re: How does IKEA come up with names for its products?\n\nAmazing. A post asks a question in the title that I actually want answered, and then goes on to answer that question clearly and succinctly. Maybe the best corporate content I've seen this year.\n\nbcaulfield, 1 day ago",
+      "contentHash": "fc8c98350c65b697d9e0bdd0aab239d5d7aab6875b61e59cf43272e13882719a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 50,
+          "url": "https://news.ycombinator.com/item?id=49349984"
+        },
+        {
+          "kind": "text_link",
+          "offset": 264,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49350308"
+        }
+      ]
+    },
+    {
+      "id": 32860,
+      "date": "2026-08-20T04:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Casio F-B100W-1A\n\nNewish Casio user here. From what I understand, it's so that you can switch it to 24h after accidentally switching it to 12h and vice versa.\n\nVPenkov, 7 hours ago",
+      "contentHash": "d9ea24a658255fa8aa7f38bcc4a1be18f6967ae0bef94073288b14ba4d1e168c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 16,
+          "url": "https://news.ycombinator.com/item?id=49362887"
+        },
+        {
+          "kind": "text_link",
+          "offset": 173,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49367354"
+        }
+      ]
+    },
+    {
+      "id": 32861,
+      "date": "2026-08-20T05:20:02.000Z",
+      "editDate": null,
+      "text": "Re: OpenRouter is joining Stripe\n\nGreat product, been using it for a while.\n\nTurns out even a proxy can be worth $8bn with the right business model behind it.\n\nUsers get an array of providers competing behind a single API, meaning they have to compete on price and quality not vendor lock-in. This encourages users to join OpenRouter over specific model vendors.\n\nProviders get easy access to revenue (and data) and new customers with little to no ad spending, encouraging them onto the platform too.\n\nAnd that's all you need. Win win.\n\nWell done and congratulations.\n\napexalpha, 9 hours ago",
+      "contentHash": "e7ae7fad8258ac72df5b09dfc2e5900bf512e26fa42014494ce4b8b5446f8720",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 28,
+          "url": "https://news.ycombinator.com/item?id=49364559"
+        },
+        {
+          "kind": "text_link",
+          "offset": 580,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49366396"
+        }
+      ]
+    },
+    {
+      "id": 32862,
+      "date": "2026-08-20T06:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Being ambitious and being a dad\n\n\"Behind every great man there's a great woman.\" I thought I was killing it at work and as a dad when I was answering emails about complex bugs while hiking with my first kid riding in a backpack. But then I quit working to be a full-time dad for kid #2 and found out how much work my partner had been doing that I didn't know about. I suddenly understood why so many of the men at my former workplace had been divorced. So be ambitious, but check in with your partner and make sure they are on the same page.\n\nqooiii2, 1 day ago",
+      "contentHash": "980794741bc9f699a1c3e25b32c3aaabeaf71985686bacbcaa2eeeb909c85065",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 31,
+          "url": "https://news.ycombinator.com/item?id=49321298"
+        },
+        {
+          "kind": "text_link",
+          "offset": 556,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49354775"
+        }
+      ]
+    },
+    {
+      "id": 32863,
+      "date": "2026-08-20T09:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Google has stopped pushing Git tags for some Android source code\n\nThey stopped pushing tags for any of the Pixel kernel or userspace driver repositories to AOSP. They also stopped pushing AOSP releases specific to Pixels which is why AOSP now only gets yearly releases, QPR2 releases and security backports to both of those. Other OEMs use the yearly and theoretically also the QPR2 releases. Both the yearly and QPR2 releases get monthly security backports. Since they dropped Pixel support from AOSP, they don't push the releases not shipped by other OEMs anymore.\n\nThese changes directly led to our Motorola partnership. One of their security people reached out to us after seeing our posts about this with the launch of Android 16. We haven't talked about it much since then since we adapted to it during the several weeks it delayed our Android 16 port. We then continued adapting to it and have fully worked around it. It was an ongoing problem but not a new one and we had accepted we had to deal with it as the new normal.\n\nThey were previously responding to our kernel source requests within a day. It was often done without hours. Despite the archaic system, this part wasn't that bad. Recently, they've been taking weeks or longer to get back to us for the requests which is ridiculous. It's the direct result of purposely adding a lot of friction with manual handling of the requests even if the delays weren't directly planned by management.\n\nWeeks or months of delay is not reasonable for one of the largest tech companies in the world. GPL doesn't set a standard time limit for providing the sources, but that doesn't mean they can delay it indefinitely. They need to do it in a reasonable amount of time. What's reasonable for one of the largest tech companies in the world in 2026 with current technology is not the same as what was reasonable 30 years ago. Google chose to come up with a archaic way of distributing the sources involving someone manually going through a list and sharing Google Drive access. It's a deliberate way of making it painful. If they can't keep up with it and it gets delayed for weeks or months then they're not complying with the GPL by not providing it in a reasonable amount of time. Law is not code and a time limit not being explicitly written down doesn't mean there isn't a limit to what's reasonable for compliance.\n\ngrapheneos, 8 hours ago [1/2]",
+      "contentHash": "d920c0baf8cc44482c217643206ce13998043ffc14ee784f1ce3a92fbed8b5c7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 64,
+          "url": "https://news.ycombinator.com/item?id=49364745"
+        },
+        {
+          "kind": "text_link",
+          "offset": 2387,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49369163"
+        }
+      ]
+    },
+    {
+      "id": 32864,
+      "date": "2026-08-20T09:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Google has stopped pushing Git tags for some Android source code\n\nThey'll sell far fewer Pixels because of these overall changes. It pushes GrapheneOS and other projects towards other devices instead. For us, Pixels are being used due to security rather than ease of supporting them. It's now a lot harder to deal with Pixels than it would be for many other devices but they're currently still the most secure option. We're working on changing that and have a lot less reason to contribute to improving Pixels. We helped them fix serious security weaknesses for Pixels including vulnerabilities being exploited in the wild by forensic data extraction companies. Pixel security with the stock OS would be worse without GrapheneOS.\n\ngrapheneos, 8 hours ago [2/2]",
+      "contentHash": "8033bbde40eca432ec4a8680083e56b359ff1fe1ca90874b712e00e11cb9e1bd",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 64,
+          "url": "https://news.ycombinator.com/item?id=49364745"
+        },
+        {
+          "kind": "text_link",
+          "offset": 747,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49369163"
+        }
+      ]
+    },
+    {
+      "id": 32865,
+      "date": "2026-08-20T12:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Don't Paste the AI, please\n\nHeh. Just got done writing (by hand!) a Principles of AI Use document for my (ironically) AI enablement firm, the first of which is:\n\nWrite as yourself. You’re being paid for your expertise and insights. Communicate them directly to us. Copying and pasting Claude responses into Slack or an email directly shifts the burden of comprehension and understanding to everyone else, and worse, risks skipping that step for yourself. Even if you’re fundamentally using Claude to gather your thoughts or help you prepare a response, you need to be writing it yourself, in your own voice. Not having Claude ape your voice, or “make it sound less like AI”. You, directly. Doing this will further reinforce your own understanding of the state of things, the same way teaching someone is the best way to learn. As a guideline: for Slack and email comms, this should be near-universally written as you. For deliverables that are longer form and follow a template like proposals, roadmap/discovery work, etc., use of agents is expected but, see Principle #2. (Own the Output.)\n\ndisillusioned, 4 hours ago",
+      "contentHash": "398fdbd72f1808fd0ff840653e1f9af28f66034425914ebe3ba45a02d00c2a2a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 26,
+          "url": "https://news.ycombinator.com/item?id=49371857"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1111,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49372025"
+        }
+      ]
+    },
+    {
+      "id": 32866,
+      "date": "2026-08-20T16:50:00.000Z",
+      "editDate": null,
+      "text": "Re: A joke domain purchase turned in geopolitical warfare\n\nI am part of the team which runs the OpenStreetMap.org infrastructure, we also get a lot of weird and wonderful requests / emails. .mil, .gov, .edu and GeoTLD variants.\n\nI should really do a write-up sometime.\n\nFirefishy, 1 day ago",
+      "contentHash": "9e2158008ab312b040def2fefe24fb0bacc36adabd1f824975489e60ceeb3cad",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 53,
+          "url": "https://news.ycombinator.com/item?id=49360015"
+        },
+        {
+          "kind": "text_link",
+          "offset": 96,
+          "length": 17,
+          "url": "http://OpenStreetMap.org/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 281,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49363706"
+        }
+      ]
+    },
+    {
+      "id": 32867,
+      "date": "2026-08-20T17:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Windows brings out the Rorschach test in everyone (2003)\n\nRaymond Chen's articles are true wealth of contemporary tech-lore. My favorite is the one where a user reported error on Flight Simulator map [0] and it escalated all the way up to Bill Gates & the then chief of FS division.\n\n[0] https://devblogs.microsoft.com/oldnewthing/20170418-00/?p=95...\n\nsrvmshr, 9 hours ago",
+      "contentHash": "560065c6f59b67a5c82413322e306dd60c6889c1aba1deb87078e2b205e9b328",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 56,
+          "url": "https://news.ycombinator.com/item?id=49371006"
+        },
+        {
+          "kind": "text_link",
+          "offset": 292,
+          "length": 63,
+          "url": "https://devblogs.microsoft.com/oldnewthing/20170418-00/?p=95985"
+        },
+        {
+          "kind": "text_link",
+          "offset": 366,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49371925"
+        }
+      ]
+    },
+    {
+      "id": 32868,
+      "date": "2026-08-20T18:05:00.000Z",
+      "editDate": null,
+      "text": "Re: AliExpress runs silent WebAudio fingerprinting that breaks Bluetooth multipoint\n\nI cannot ever imagine installing something like AliExpress as an app.\n\nlukeify, 7 hours ago",
+      "contentHash": "ad46b08927821f2a65e3091988d07d8fcfc6d27605fd5510d800b4492bd53b40",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49372583"
+        },
+        {
+          "kind": "text_link",
+          "offset": 165,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49372995"
+        }
+      ]
+    },
+    {
+      "id": 32869,
+      "date": "2026-08-20T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Devices with GrapheneOS support should be available in 2027\n\nAll the existing apps are on Android and iOS. Graphene lets you run them. You can't have a bank account on a Linux phone* because they won't let you, but you can on Android including on Graphene.\n\n* before replying snarkily that Android is Linux, please take a long walk off a short pier, thanks\n\ninigyou, 1 day ago",
+      "contentHash": "fae9d5f0371d76c0e526005f6f5f883ecf145964bca5e843af26f0ca16da14ed",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49360242"
+        },
+        {
+          "kind": "text_link",
+          "offset": 371,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49361052"
+        }
+      ]
+    },
+    {
+      "id": 32870,
+      "date": "2026-08-20T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Companies promote incompetent employees to management to limit damage they do\n\nIf you see someone incompetent being promoted then it's more likely:\n\n1) You are wrong about them being incompetent\n\n2) The person promoting them is also incompetent and has mistakenly promoted the wrong person.\n\nI have literally never seen or heard of anyone promoting someone to limit the harm they can do. It's something bitter people tell themselves to help them feel better about being passed over. It's not the explanation you are looking for.\n\nfancyfredbot, 2 days ago",
+      "contentHash": "c361b77dd2109375f133c0e68f31985f895b4e01c6e7fef85ff295e598e4e988",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 77,
+          "url": "https://news.ycombinator.com/item?id=49352794"
+        },
+        {
+          "kind": "text_link",
+          "offset": 548,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49353539"
+        }
+      ]
+    },
+    {
+      "id": 32871,
+      "date": "2026-08-20T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: How does IKEA come up with names for its products?\n\n> Every possible product name is carefully checked to avoid undesirable meanings in other languages, political or religious affiliations and fit into our global profile.\n\nI love the JERKER desk that I bought 26 years ago, so I assume this rule must be younger than that.\n\ntverbeure, 2 days ago",
+      "contentHash": "3e7ed559ad14dc332a0b1404392e1c2919a26f6452c3a77beba9c8f5626a9f83",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 50,
+          "url": "https://news.ycombinator.com/item?id=49349984"
+        },
+        {
+          "kind": "text_link",
+          "offset": 339,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49350799"
+        }
+      ]
+    },
+    {
+      "id": 32872,
+      "date": "2026-08-20T18:50:00.000Z",
+      "editDate": null,
+      "text": "Re: I like 'em thick: an apology to my English teachers\n\nAs an old man I now think the art and humanities classes in school landed at the wrong time.\n\nYou need context to really understand a book or a work of art. You want to know what kind of environment produced it, what it's talking to.\n\nBut when you're in school, there isn't time for that. You aren't going to know a bunch of things about history to put things into context, because there simply isn't enough time for it.\n\nSo you end up doing a bunch of weird commentary on say a book where you as a teenager have no idea where to place it. Like if you read Dickens, will you know enough about the industrial revolution, the condition of cities at the time, and such? Will you know what kind of thing the characters would care about?\n\nHow would you know what the characters in Pride and Prejudice are worried about if you don't know how that society is?\n\nSo as a kid it just totally didn't mean anything to me, it was just a strange torture where you are meant to comment on the motivations of the characters and how the writing style brings that out.\n\nlordnacho, 2 hours ago",
+      "contentHash": "e3faedfc0c21e9bccfef747ebbfcb7260072fe9d6b3722d0d3a42770c3a6ffc8",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49347543"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1120,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49376987"
+        }
+      ]
+    },
+    {
+      "id": 32873,
+      "date": "2026-08-20T19:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Devices with GrapheneOS support should be available in 2027\n\n[flagged]\n\nfelooboolooomba, 1 day ago",
+      "contentHash": "131842e3c4b1ea7a308be828aceb0bb09e8d91eae7d8e83e0e006740a2f3acee",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49360242"
+        },
+        {
+          "kind": "text_link",
+          "offset": 93,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49361132"
+        }
+      ]
+    },
+    {
+      "id": 32874,
+      "date": "2026-08-20T19:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Casio F-B100W-1A\n\nI spoke with a Casio engineer about this. It's so that your bending wrist can accidentally switch it to 12h time when you actually really want it on 24h time or vice versa.\n\nbushwart, 1 day ago",
+      "contentHash": "f3870744f83c1a6fc28b8cfc4d2cbf2512a79b77115218fbe933aade76120282",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 16,
+          "url": "https://news.ycombinator.com/item?id=49362887"
+        },
+        {
+          "kind": "text_link",
+          "offset": 206,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49364136"
+        }
+      ]
+    },
+    {
+      "id": 32875,
+      "date": "2026-08-20T19:50:01.000Z",
+      "editDate": null,
+      "text": "Re: Children's stunted lungs show recovery in ultra low emission zone\n\nAnecdata I was living very close to a busy highway, and my young daughter was wheazing when she had a cold, we had to give her medicine via a nebulizer. When we moved out to the country more, far away from any major roads, these issues all disappeared within a couple months.\n\necshafer, 2 days ago",
+      "contentHash": "ac9665929f8773f62905b4379f041220d9107be52451fd64d5f81899c4b2b201",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 65,
+          "url": "https://news.ycombinator.com/item?id=49355105"
+        },
+        {
+          "kind": "text_link",
+          "offset": 358,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49355650"
+        }
+      ]
+    },
+    {
+      "id": 32876,
+      "date": "2026-08-20T20:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Google has stopped pushing Git tags for some Android source code\n\nGrapheneOS is arguing that throwing away the metadata of however many commits and squashing them into a messy tarball is not the \"preferred form of the work for making modifications\", and that a manual process where you have to fill out a form in order to get a Google Drive link a week later is not \"a medium customarily used for software interchange\" in current times. Those are quotes from the GPLv2.\n\nflotzam, 22 hours ago",
+      "contentHash": "8b9da55a956d86a8a7e2b78ca4dec2c20b32459704d9e01d577570232a85653a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 64,
+          "url": "https://news.ycombinator.com/item?id=49364745"
+        },
+        {
+          "kind": "text_link",
+          "offset": 484,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49367810"
+        }
+      ]
+    },
+    {
+      "id": 32877,
+      "date": "2026-08-20T20:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Go 1.27\n\nNot mentioned: Floating-point parsing and formatting now uses Russ Cox's uscale algorithm.\n\nhttps://research.swtch.com/fp\n\nhttps://github.com/golang/go/blob/go1.27.0/src/internal/strc...\n\ne4m2, 1 day ago",
+      "contentHash": "9a7314dda2e0b9e57dab7e87514b9de32192f5bc79d9e63071ce2f414c3eee22",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 7,
+          "url": "https://news.ycombinator.com/item?id=49365405"
+        },
+        {
+          "kind": "text_link",
+          "offset": 105,
+          "length": 29,
+          "url": "https://research.swtch.com/fp"
+        },
+        {
+          "kind": "text_link",
+          "offset": 136,
+          "length": 63,
+          "url": "https://github.com/golang/go/blob/go1.27.0/src/internal/strconv/uscale.go"
+        },
+        {
+          "kind": "text_link",
+          "offset": 207,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49366580"
+        }
+      ]
+    },
+    {
+      "id": 32878,
+      "date": "2026-08-20T22:05:00.000Z",
+      "editDate": null,
+      "text": "Re: A faster way to calculate the day of the week\n\nExcellent article, and very useful for programming. For figuring out the day of the week in your head, there's a different (and very useful) trick. It uses the month and day from the Gregorian calendar, rather than the day number, because 99% of the time that's what you'll be wanting: \"Which day of the week will August 31st, 2026 be?\"\n\nThe trick is to notice that in any year, leap year or not, the following dates will be the same day of the week in any year: 4/4, 6/6, 8/8, 10/10, and 12/12. (Whether you use the month/day style favored in America, or the day/month style that the rest of the world uses, either way those dates are the same, which is convenient). Which day of the week those dates are will vary from year to year: this year (2026) those are all Saturdays, last year they were all Fridays, next year they will all be Sundays. But in any given year, those dates are separated by 63 days, a multiple of seven, so they are always going to be the same day of the week.\n\nAnd that's not all: look at 5/9, 9/5, 7/11, and 11/7 — those are also that same day of the week! (Again, conveniently, this works whether you're using the American calendar style or the rest of the world). Those odd-numbered dates can easily be remembered with the mnemonic phrase \"a 9-to-5 job at 7-11\". And voila, you have memorized one \"special\" day in nine of the twelve months. (What you do for January, February, and March I will cover later).\n\nNow I'll pause and explain why this is useful. Many of you have already made the intuitive leap to figure this out, but it's still useful to see it spelled out. If you're trying to figure out what day of the week a certain date, let's say August 31st, is going to be, then you find the \"key\" date for that month (August 8th), and remember that this year, those key dates are Saturdays. (I don't yet have a good mnemonic for easily remembering which key date is which for each year; I'd welcome suggestions if you can think of one). So, 8/8 was a Saturday. Therefore, August 15th and 22nd and 29th are Saturdays. Therefore, August 31st will be a Monday this year. All of that is math you can easily do in your head in seconds.\n\nrmunn, 18 hours ago [1/2]",
+      "contentHash": "5f397dc684b8fd3e5ab9f90fc66e4021fb1544b3fcc5fe13326cc887b2641e0d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 45,
+          "url": "https://news.ycombinator.com/item?id=49323795"
+        },
+        {
+          "kind": "text_link",
+          "offset": 2222,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49370357"
+        }
+      ]
+    },
+    {
+      "id": 32879,
+      "date": "2026-08-20T22:05:00.000Z",
+      "editDate": null,
+      "text": "Re: A faster way to calculate the day of the week\n\nNow, January, February, and March. March is always the same in every year: March 7th. 14th, 21st, and 28th are the \"key days\" that are the same day as 4/4 et al. But the way I prefer to memorize March is that \"March 0th\" (which isn't actually in March, it's the last day of February) is the \"key day\". That still lets me do the mental math for March easily enough, but it also reminds me that Feburary 28th or 29th, depending on whether you're in a leap year, is the \"key day\" for this year. Finally, for January, I use January 3rd in non-leap-years and January 4th in leap years as the \"key day\" that I memorize; the number 4 is strongly associated with leap years, so \"leap year = January 4th\" is easy to memorize, and I just have to remember that it's one day less in non-leap-years, January 3rd.\n\nAnd so I just have to memorize \"January 3rd or 4th\" and \"March 0th\", plus the phrase \"a 9-to-5 job at 7-11\". And I can easily figure out in my head what day of the week any day of the year will be. For example, December 25th will be a Friday this year: that took me three seconds to work out in my head without looking at a calendar.\n\nrmunn, 18 hours ago [2/2]",
+      "contentHash": "ab914e640d86a762b92a47bf88dc1528eccbebafdfb62a90c19775b19d1bcf03",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 45,
+          "url": "https://news.ycombinator.com/item?id=49323795"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1194,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49370357"
+        }
+      ]
+    },
+    {
+      "id": 32880,
+      "date": "2026-08-20T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Aaron Swartz was prosecuted for scraping, while Meta does it without consequence\n\nThe part that still bothers me so much about the US vs Swartz case is that JSTOR didn't pursue civil litigation against Aaron. It was the US government that pursued him.\n\nThere was little for the government to lose in the case. In a case vs Meta, at the scale it has reached, it could have wide ranging economic implications limiting the investment in AI, which the US is absolutely not willing to pursue at this point in time (or possibly ever).\n\nBasically, being a rich public company provides legal advantages when the US government has similar goals.\n\nThe whole thing is incredibly sad and exposes the hypocrisy of the US court system and government as a whole.\n\nRIP Aaron.\n\nmilkytron, 2 hours ago",
+      "contentHash": "ea2ba5324cd53aecef505f3e908bcaad9fd7909a367548dbc15f446c9f0215e8",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 80,
+          "url": "https://news.ycombinator.com/item?id=49379550"
+        },
+        {
+          "kind": "text_link",
+          "offset": 776,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49379781"
+        }
+      ]
+    },
+    {
+      "id": 32881,
+      "date": "2026-08-20T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Watching TikTok and Instagram deactivates the cognitive control network: Study\n\ndlPFC deactivation is observed in a lot of immersive tasks. There are a lot of tasks that do this. Playing video games, as one example https://link.springer.com/chapter/10.1007/4-431-26797-2_11\n\nInterpreting fMRI results like this article does is almost always wrong. Different activities produce different patterns of brain activity. You could put someone in an fMRI machine, have them do virtually any activity, and then write a headline saying that doing that activity turns of key brain regions that are important for something. The trick is that all brain regions are important for something. Having them be less active during a task doesn't imply that it's good or bad. It just shows you which parts of the brain are involved in that task.\n\nThis blogspam article isn't great. The study at https://www.sciencedirect.com/science/article/pii/S105381192... has more details, like the fact that those brain regions come online while viewing other less-preferred videos. The results aren't really indicative of anything by themself. It would have been more interesting if they compared to something, like watching a long involved movie or playing video games, but they didn't.\n\nAlso this post is coming from a fresh account that only spams links to this blog. Maybe the mods will want to switch the link to the actual study instead: https://www.sciencedirect.com/science/article/pii/S105381192...\n\nAurornis, 3 hours ago",
+      "contentHash": "aed042dac05fd31885421f97e62ea3d2f87352f6d0f15dc8f856f2028aeecdd5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49378630"
+        },
+        {
+          "kind": "text_link",
+          "offset": 219,
+          "length": 58,
+          "url": "https://link.springer.com/chapter/10.1007/4-431-26797-2_11"
+        },
+        {
+          "kind": "text_link",
+          "offset": 879,
+          "length": 63,
+          "url": "https://www.sciencedirect.com/science/article/pii/S1053811926000406"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1417,
+          "length": 63,
+          "url": "https://www.sciencedirect.com/science/article/pii/S1053811926000406"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1492,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49379412"
+        }
+      ]
+    },
+    {
+      "id": 32882,
+      "date": "2026-08-20T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: CIA funding helped keep NeXT afloat in the 80s\n\nYou know, when I see the phrase \"CIA funding\" I expect something like \"the CIA put a backdoor in NeXT computers destined for Hungary\" or something, not \"NeXT made computers and the CIA bought and used them.\"\n\njldugger, 6 hours ago",
+      "contentHash": "456e8901c2a31e50fca1afb3a320b7b85db741d9ad8fbdf4da3f3bf589342860",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49368886"
+        },
+        {
+          "kind": "text_link",
+          "offset": 271,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49377240"
+        }
+      ]
+    },
+    {
+      "id": 32883,
+      "date": "2026-08-20T23:35:00.000Z",
+      "editDate": null,
+      "text": "Re: CIA funding helped keep NeXT afloat in the 80s\n\nDid you know about the CIA's DECADES-LONG FUNDING of Coca-Cola? I have a hot tip from my good friend the soda machine technician that the CIA regularly funnels THOUSANDS OF DOLLARS a month into the pockets of BIG SODA when they restock their office kitchens and vending machines with Coca-Cola products!\n\nThis insidious relationship goes ALL THE WAY TO THE TOP, my friend!\n\nAdmiralAsshat, 6 hours ago",
+      "contentHash": "a2f2de94d69c71a488ca6dc20655940c9669fd00290944bf97e40a6b833403f7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49368886"
+        },
+        {
+          "kind": "text_link",
+          "offset": 441,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49377553"
+        }
+      ]
+    },
+    {
+      "id": 32884,
+      "date": "2026-08-20T23:35:00.000Z",
+      "editDate": null,
+      "text": "Re: The August 17 outage, and the work ahead\n\n  \"Since April, monthly commits have grown from 1.4 billion to 2.9 billion. \"\n\nWow, that is some incredible growth in a really short time.\n\nblakesterz, 4 hours ago",
+      "contentHash": "67ffea02251417e6bd95dd3f21790196293d10ad080291dbb8552a3be43d4b7f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 40,
+          "url": "https://news.ycombinator.com/item?id=49378957"
+        },
+        {
+          "kind": "text_link",
+          "offset": 198,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49379179"
+        }
+      ]
+    },
+    {
+      "id": 32885,
+      "date": "2026-08-21T00:20:00.000Z",
+      "editDate": null,
+      "text": "Re: The August 17 outage, and the work ahead\n\n\"You can't seriously tell me that the unhappy leg of the code path has no test coverage.\"\n\nSometimes I forget how ignorant HN can be of real world software development and the bar of corporate code quality, and then bangers like this remind me of it.\n\nACCount37, 2 hours ago",
+      "contentHash": "e670d3dba7902c1450ad8483aa25f1c4e1c5e7a868c22dd8804adb77d514b1fc",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 40,
+          "url": "https://news.ycombinator.com/item?id=49378957"
+        },
+        {
+          "kind": "text_link",
+          "offset": 309,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49381236"
+        }
+      ]
+    },
+    {
+      "id": 32886,
+      "date": "2026-08-21T00:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Git at any scale\n\nIt’s hard to overstate the reputation of the author of this post. Everything good about GitHub’s internal systems seemed to have his name all over it (I realize that today this statement hits different than a few years ago). Our times at GH didn’t overlap much but hearing the fact that he’s working at cursor increases my estimation of their engineering org by leaps and bounds.\n\nbrasic, 1 day ago",
+      "contentHash": "81f8f8cc1a14012b468df5d9478e9558ff6aff9cbf560298833488de288214a5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 16,
+          "url": "https://news.ycombinator.com/item?id=49348141"
+        },
+        {
+          "kind": "text_link",
+          "offset": 411,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49362986"
+        }
+      ]
+    },
+    {
+      "id": 32887,
+      "date": "2026-08-21T02:20:00.000Z",
+      "editDate": null,
+      "text": "Re: The August 17 outage, and the work ahead\n\n> Errors in those services triggered a client-side retry loop that increased traffic during recovery\n\nSymptomic of a wider trend to avoid showing the user any error at all costs, even if that means they sit watching a spinner for 7 hours.\n\n> Delayed replies to a single internal endpoint triggered a latent retry bug in VS Code that amplified traffic by approximately 10x and caused delayed recovery for the Copilot Token Service.\n\nThe detailed root analysis tries to pass this off as a \"bug\". You can't seriously tell me client retry doesn't have a unit test which ensures the retry back off behaviour is functioning exactly as designed. In this case aggressively to try and hide problems if token service responses become flakey.\n\ncube00, 5 hours ago",
+      "contentHash": "d9019990edbd70dc0ece03e1009903da7471b54f8c2e8219ecf91026301ac7cc",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 40,
+          "url": "https://news.ycombinator.com/item?id=49378957"
+        },
+        {
+          "kind": "text_link",
+          "offset": 787,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49380648"
+        }
+      ]
+    },
+    {
+      "id": 32888,
+      "date": "2026-08-21T04:20:00.000Z",
+      "editDate": null,
+      "text": "Re: AliExpress runs silent WebAudio fingerprinting that breaks Bluetooth multipoint\n\nI noticed in the last few weeks that if I’d recently opened the AliExpress iOS app (ie. it was backgrounded) my car audio would freak out thinking I was giving it an audio command. Killing the AliExpress app immediately fixed the problem. After seeing it happen more than once I assumed it was something dodgey and uninstalled the app.\n\npatspam, 17 hours ago",
+      "contentHash": "6fbaa7a10f0504e4e04994e82d47e64cdef1966ae8d74f0be9dbbe33da205388",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49372583"
+        },
+        {
+          "kind": "text_link",
+          "offset": 431,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49372945"
+        }
+      ]
+    },
+    {
+      "id": 32889,
+      "date": "2026-08-21T05:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Vomit: Clean up Claude 5's token output with a separate LLM\n\nI've been grappling with this for weeks, not just in Claude but in Codex as well, which isn't quite as bad but still annoying. AGENTS.md does very little, agents will consistently violate the communication preferences, especially as the session drags on. It's incredible to me that there's no good way to reliably change the way an LLM responds to you that a workaround like this would even be necessary. It seems like such a failure to live up to the promises of the product.\n\nThe baked in communication style of these models is so obnoxious it's impacting my work. The best way I can describe it is that everything is optimized to impress the user and make the agent sound more authoritative, but the way this is done is through deliberate obfuscation, inserting inappropriate and extremely dense jargon, and bizarre, stilted metaphors. It's like they've been trained to produce output that's hard to read.\n\ntrefoiled, 13 hours ago",
+      "contentHash": "4980b5a658123254f6dc3e98d2407c617ecf2bf26ccfaa86dceb2d7faa0390e1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49375996"
+        },
+        {
+          "kind": "text_link",
+          "offset": 192,
+          "length": 9,
+          "url": "http://AGENTS.md/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 986,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49376834"
+        }
+      ]
+    },
+    {
+      "id": 32890,
+      "date": "2026-08-21T05:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Why aren't smart people happier? (2022)\n\nI will speak from my experience. When I was younger, I considered myself very smart, and I was pretty unhappy. As I grew, I met people much smarter than me; I stopped seeing myself as \"the smart\" one, and now I am pretty happy.\n\nIt's not that I became happier because I became less smart; I became happier when I stopped thinking my value was based on my intelligence, so I stopped trying to be recognized by my intellect and started working on my mental health and building healthy relationships.\n\ndnlosx, 8 hours ago",
+      "contentHash": "c153fbb2f90e5df6e0f177443208df5d710e1c3db42eb0c94816b4aa6722159b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 39,
+          "url": "https://news.ycombinator.com/item?id=49378446"
+        },
+        {
+          "kind": "text_link",
+          "offset": 552,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49380602"
+        }
+      ]
+    },
+    {
+      "id": 32891,
+      "date": "2026-08-21T08:50:00.000Z",
+      "editDate": null,
+      "text": "Re: AI companies destroy physical books – let's scan rare books before it's too late\n\nI dislike these AI companies but let's be clear here: the copyright holders are the ones locking these books up. If they don't want to print more copies, then they could release the copyright on them.\n\nInstead, they enforce the copyright and force AI companies to shred books they want to ingest.\n\nedit: Also, an AI company would only ever care to purchase, scan, destroy a book once. Presumably many books have more than one copy.\n\nezfe, 5 hours ago",
+      "contentHash": "ba21cd8499d609c446ad491146f6ec059af2bb9e6dac96a61149353f582611b3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 80,
+          "url": "https://news.ycombinator.com/item?id=49383026"
+        },
+        {
+          "kind": "text_link",
+          "offset": 525,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49383354"
+        }
+      ]
+    },
+    {
+      "id": 32892,
+      "date": "2026-08-21T09:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Show HN: Huzzah – a novel approach to coding with AI\n\nI think you’re probably missing why it’s exhausting. The problem is not writing English, it’s the rate of change. Programming is meditative, it is a thinking process, the code you output is an artifact of your thinking. Agent-based development… there is no thinking, no meditation, you’re delegating the thinking to a machine, you’re just barking what you want at it, incessantly, endlessly.\n\nFor businesses it makes sense to abandon programming in favor of delegating to agents that can do more in less time, but for programmers, it is a loss. Either be a programmer and code, or be a delegator and delegate, you aren’t going to make the life of a delegator suck any less by trying to trick yourself into thinking you’re programming.\n\nreticulates, 12 hours ago",
+      "contentHash": "2313b0f4162c58c132830d031c739982e887dc473d5eeb064e5f94266fd876ae",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 52,
+          "url": "https://news.ycombinator.com/item?id=49378768"
+        },
+        {
+          "kind": "text_link",
+          "offset": 807,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49380334"
+        }
+      ]
+    },
+    {
+      "id": 32893,
+      "date": "2026-08-21T09:35:00.000Z",
+      "editDate": null,
+      "text": "Re: The August 17 outage\n\n> Both incidents were capacity failures at their core. We failed to scale critical components before demand exceeded their capacity.\n\nThis is the wrong way to think about this because there's no such thing as infinite capacity. A large distributed system will be simultaneously mostly idle and (in some subcomponents) overloaded. The root cause is not \"a component didn't have enough capacity (because of auto scaling failures)\", but rather \"this complex system collapses (rather than degrade gracefully) when demand exceeds capacity\".\n\nWhen components reach capacity limits, the excess traffic of the lowest priority should be rejected. Rejected traffic should not be retried — in fact, not only should clients not retry these errors, these errors should cause client-side throttling. Traffic isolation should be applied — if the cause of the overload is a single client/customer system, no other system should be affected.\n\nNearly a decade ago I wrote about some of the techniques we applied at Google to implement these protections: https://sre.google/sre-book/handling-overload/ Most other large internet services have since copied them, afaik.\n\nafc, 3 hours ago",
+      "contentHash": "2988dce04ae7e258611c2d3318a2b6c84736122c1a14598999cbd84abde167b6",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 20,
+          "url": "https://news.ycombinator.com/item?id=49378957"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1062,
+          "length": 46,
+          "url": "https://sre.google/sre-book/handling-overload/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1181,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49384447"
+        }
+      ]
+    },
+    {
+      "id": 32894,
+      "date": "2026-08-21T13:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Why aren't smart people happier? (2022)\n\nI got labeled \"smart but lazy\" at a pretty young age (high test scores, didn't do any homework), and I let that label stick with me for far too long. I took some pride in how I could get the top score in a class without studying, and didn't realize that studying itself was a useful skill. I let this whole mindset drag me down through undergrad (especially once I hit the point where I really ought to have studied), and I think it made me miserable.\n\nannzabelle, 14 hours ago",
+      "contentHash": "7cef786ac8105afdd41dd1fe35ec8ab4f547a6829da7014186c23a2b360416a8",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 39,
+          "url": "https://news.ycombinator.com/item?id=49378446"
+        },
+        {
+          "kind": "text_link",
+          "offset": 510,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49381689"
+        }
+      ]
+    },
+    {
+      "id": 32895,
+      "date": "2026-08-21T16:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Grand jury declines to indict Ohio man charged with destroying Flock camera\n\nFor those that don't know, grand juries declining an indictment is extremely rare. A grand jury is basically a check on prosecution, that they have to have some initial evidence before charging someone with a felony. The standards are much lower than the subsequent criminal proceedings.\n\nThe grand jury only hears from the prosecution, there is no defense involved. Only a majority of the grand jury has to sign off, not unanimous like in an actual trial. The standard of evidence is just probable cause, not beyond a reasonable doubt. The rules of evidence are relaxed, meaning hearsay and other evidence can potentially be introduced that would normally be barred from a trial.\n\nBecause of the above, the rate of indictment from a grand jury is very high, over 90%. Most prosecutors will go their entire careers without getting a \"no true bill\" (meaning the grand jury did not sign off on an indictment). There's a saying that \"a grand jury would indict a ham sandwich.\" So the fact that there was no indictment here is a big deal. It will probably hurt that prosecutor's career.\n\nopenasocket, 2 hours ago",
+      "contentHash": "4caa15f5d2584eef9cbaf0dc02557a0fadb35add76a7da469e0312f13faf68c5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 75,
+          "url": "https://news.ycombinator.com/item?id=49387497"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1178,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49389182"
+        }
+      ]
+    },
+    {
+      "id": 32896,
+      "date": "2026-08-21T17:05:00.000Z",
+      "editDate": null,
+      "text": "Re: AI companies destroy physical books – let's scan rare books before it's too late\n\nI don't see any mention of Project Ocean - AKA Google books. Before AI they endevoured to digitize books in a massive online library.  This inccluded rare and out of print books many which are archived at libraries.  Because they had to preserve the books and return them in the condition they received then they created elaborate technology to accomplish this.  The project was met with significant legal challenges from authors and publishers which was eventually overcome.  The legal precedents that were established from Project Ocean laid the ground work for the process as it exists today.  Books from libraries are still being preserved.\n\nhttps://en.wikipedia.org/wiki/Google_Books\n\nhttps://arstechnica.com/tech-policy/2015/10/appeals-court-ru...\n\nhttps://arstechnica.com/ai/2025/06/anthropic-destroyed-milli...\n\nthread_id, 3 hours ago",
+      "contentHash": "87156a87527f96627e81622e06e3df6222c773ad3dcecfc182010cf28af44be9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 80,
+          "url": "https://news.ycombinator.com/item?id=49385994"
+        },
+        {
+          "kind": "text_link",
+          "offset": 732,
+          "length": 42,
+          "url": "https://en.wikipedia.org/wiki/Google_Books"
+        },
+        {
+          "kind": "text_link",
+          "offset": 776,
+          "length": 63,
+          "url": "https://arstechnica.com/tech-policy/2015/10/appeals-court-rules-that-google-book-scanning-is-fair-use/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 841,
+          "length": 63,
+          "url": "https://arstechnica.com/ai/2025/06/anthropic-destroyed-millions-of-print-books-to-build-its-ai-models/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 917,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49388070"
+        }
+      ]
+    },
+    {
+      "id": 32897,
+      "date": "2026-08-21T17:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Kagi added a setting for removing paywalled links from search results\n\nI think this is amazing. Love Kagi. I’m happy to pay for a good search.\n\nNobody speaks about their AI Assistant, but it is really good. They somehow harnessed it so that it mainly searches info first and sticks to the verifiable data. I prefer it to Claude or any other, because it actually answers the question I need without fluff or “Great question! Here’s some plausible nonsense you can trip over instead of doing actual research!”.\n\ndelis-thumbs-7e, 3 hours ago",
+      "contentHash": "25d338e5b36956937cdfe254bab351ace2beab4918a0f4f8ac065861979d6397",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 69,
+          "url": "https://news.ycombinator.com/item?id=49388154"
+        },
+        {
+          "kind": "text_link",
+          "offset": 531,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49388910"
+        }
+      ]
+    },
+    {
+      "id": 32898,
+      "date": "2026-08-21T17:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Stop Making TUIs\n\nYou know what's awesome about TUIs? They live in a tab in my terminal. 95% of the time, my system has three windows open: terminal, browser, Signal.\n\nPlease, make more TUIs and web apps, so they can live in my terminal or my browser.\n\nJoshTriplett, 10 hours ago",
+      "contentHash": "e5735251d33a723ba8a12563e4fa29a276bfc64a057f913212fd193bc952e636",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 16,
+          "url": "https://news.ycombinator.com/item?id=49384210"
+        },
+        {
+          "kind": "text_link",
+          "offset": 271,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49384928"
+        }
+      ]
+    },
+    {
+      "id": 32899,
+      "date": "2026-08-21T17:50:00.000Z",
+      "editDate": null,
+      "text": "Re: AliExpress runs silent WebAudio fingerprinting that breaks Bluetooth multipoint\n\nI wish such shenanigans would simply trigger the little speaker icon most browser display on tabs these days.\n\nGiven that they don't (at least in my experience), I'm assuming \"playing silent audio\" is a sufficiently common thing for websites to do to have motivated browsers into doing the slightly more complicated thing of actually analyzing audio streams for content...\n\nNow I wonder, does this also allow websites to continue running in the background on mobile browsers? Playing media is one of the very few things that can convince iOS Safari to keep a tab running indefinitely, in my experience.\n\nlxgr, 1 day ago",
+      "contentHash": "18faeb2d4c3d1567d33df5cc1a86f47d8165c31257ec5853e70828ce1f6374f1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49372583"
+        },
+        {
+          "kind": "text_link",
+          "offset": 695,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49376272"
+        }
+      ]
+    },
+    {
+      "id": 32900,
+      "date": "2026-08-21T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Malicious Rust crate Arrayref runs a build-time payload\n\nGitHub really needs something finer-grain then just pretending the repo never existed during these incidents. [1]\n\nThe bad package version has also just disappeared from crates.io [2] with no indication its been yanked. There's no security advisory there either [3] \"No advisories found for this crate.\"\n\nI feel crates.io was unprepared for a security incident like this since they're managing the response [4]\n\n[1]: https://web.archive.org/web/20260820145918/https://github.co...\n\n[2]: https://crates.io/crates/arrayref/versions\n\n[3]: https://crates.io/crates/arrayref/security  (I'd give an Wayback link but that's also broken https://web.archive.org/web/20260820150747/https://crates.io...)\n\n[4]: https://github.com/rustsec/advisory-db/issues/3161#issuecomm...\n\ncube00, 1 day ago",
+      "contentHash": "ac1d33102ba2b028957be32ad761bd5443bf34554e829945d3a9774a80b0fe63",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 55,
+          "url": "https://news.ycombinator.com/item?id=49374269"
+        },
+        {
+          "kind": "text_link",
+          "offset": 231,
+          "length": 9,
+          "url": "http://crates.io/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 373,
+          "length": 9,
+          "url": "http://crates.io/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 478,
+          "length": 63,
+          "url": "https://web.archive.org/web/20260820145918/https://github.com/droundy/arrayref"
+        },
+        {
+          "kind": "text_link",
+          "offset": 548,
+          "length": 42,
+          "url": "https://crates.io/crates/arrayref/versions"
+        },
+        {
+          "kind": "text_link",
+          "offset": 597,
+          "length": 42,
+          "url": "https://crates.io/crates/arrayref/security"
+        },
+        {
+          "kind": "text_link",
+          "offset": 690,
+          "length": 63,
+          "url": "https://web.archive.org/web/20260820150747/https://crates.io/crates/arrayref/security"
+        },
+        {
+          "kind": "text_link",
+          "offset": 761,
+          "length": 63,
+          "url": "https://github.com/rustsec/advisory-db/issues/3161#issuecomment-5354024485"
+        },
+        {
+          "kind": "text_link",
+          "offset": 834,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49375609"
+        }
+      ]
+    },
+    {
+      "id": 32901,
+      "date": "2026-08-21T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: I'm becoming AI-blind\n\nThere's some psychological mechanism by which my brain immediately recognizes AI generated text and just short-circuits to \"there is no information here\".\n\nAnd when I force myself to read AI-generated text I realize I'm making my brain do creative work to impart meaning to the words. It is exhausting because my brain is literally trying to do a just-in-time rewrite of the text into something valuable.\n\nSomething is deeply wrong with AI generated output, and I say this as someone who is typically very impressed by AI.\n\ncausal, 5 hours ago",
+      "contentHash": "b21a1e4f6adc6dad2481953f4e79c82dd17b5778d08f5a897aade9f3317a3297",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 21,
+          "url": "https://news.ycombinator.com/item?id=49386699"
+        },
+        {
+          "kind": "text_link",
+          "offset": 559,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49388526"
+        }
+      ]
+    },
+    {
+      "id": 32902,
+      "date": "2026-08-21T20:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony Bench\n\nThe way that OpenAI has communicated around the HuggingFace incident makes me feel crazy. You created a machine that undertook a malicious campaign of harm against an innocent third-party! You should be doing deep introspection about how your company culture and approach to R&D produces criminal outcomes.\n\nInstead, they treat their own felonious behavior like it is an uncontrollable act of God. From Greg Brockman's post a few days ago:\n\n> The OpenAI-Hugging Face incident (opens in a new window) was a watershed moment for cybersecurity because it gave a peek into how the capabilities of a typical threat actor will evolve in upcoming months.\n\nI suppose if OpenAI burns someone's house down with a drone, that is a \"watershed moment\" for arson, too. Either way, I would hope that the people responsible would be prosecuted.\n\nrfw300, 3 hours ago",
+      "contentHash": "a1198c71a163c0006a5efcaa0aeccddd78a34c2fd6c6961dea33e7ea1ee5e7f1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49389430"
+        },
+        {
+          "kind": "text_link",
+          "offset": 856,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49391720"
+        }
+      ]
+    },
+    {
+      "id": 32903,
+      "date": "2026-08-21T22:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Japan tried to build an operating system for the world, the US intervened\n\n> The report stated that the US had concerns about Japanese government market intervention to support the TRON OS and identified two specific markets where TRON was receiving government advantage.\n\nThe US government is one hell of a moat.\n\nspecproc, 16 hours ago",
+      "contentHash": "20ea20facd64f47022a52ed91763e0af879c0e51c18c7860f7d627d21ceeeaba",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 73,
+          "url": "https://news.ycombinator.com/item?id=49384180"
+        },
+        {
+          "kind": "text_link",
+          "offset": 329,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49384354"
+        }
+      ]
+    },
+    {
+      "id": 32904,
+      "date": "2026-08-21T23:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nThe naivete of some of the comments here is astounding. It doesn't matter whether you're right, it doesn't matter whether it's the law, it's irrelevant that you have rights, etc. Those things are of the past now, for the US.\n\nI think it would be easier to understand the playing field and choose your actions accordingly, if you accept the US has entered its East Germany / late 20th century Soviet era -- except of course with 1000x more invasive and effective surveillance tech.\n\nThe social dynamics are the same - the abuses, the selective enforcement, the lack of recourse, the same characters in the roles of various levels of \"law enforcement\" and \"politics\". I'm so very sorry, but the best you can do from here is speedrun the collapse.\n\nbtbuildem, 3 hours ago",
+      "contentHash": "9736fa732e71c88ac98281cacb737445493ce904ba97f5bcb78c341781094d20",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 822,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49393076"
+        }
+      ]
+    },
+    {
+      "id": 32905,
+      "date": "2026-08-22T00:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nIt may be fun to fantasize about these things some times, but there is no technical solution to tyranny.  Laws are not like code, intent matters.  Ultimately if the intent is that the government wants to see your private data, hiding it in any way will be charged - it doesn't matter if you jump through hoops to avoid this specific instance.\n\nsolid_fuel, 5 hours ago",
+      "contentHash": "4a56c5bf16330e5091792225c6c6fe13a306eff40e67cc224ad6b75e071c958a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 421,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49392888"
+        }
+      ]
+    },
+    {
+      "id": 32906,
+      "date": "2026-08-22T05:35:00.000Z",
+      "editDate": null,
+      "text": "Re: There's no such thing as a small software team anymore\n\nHundreds of bots modifying thousands of microservices may sound good on the surface, but all those thousands of microservices make up an architecture and a product.\n\nAgents aren't very good at carrying the entire model in their context, so when they reason about a small piece of code, they often come up with something that hurts other parts of the code (especially as the KLOCs pile up). The complexity hasn't been replaced, only moved. And guess what's going to happen when all of these microservices become even more of a moving target than they already are?\n\nAI is capable of improving productivity, but this approach sounds more like a nightmare in the making.\n\nkstenerud, 1 day ago",
+      "contentHash": "0b090d8b8d8b9014464fa45841ca6c95fc293383a20e7563219f7d4482425326",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 54,
+          "url": "https://news.ycombinator.com/item?id=49382152"
+        },
+        {
+          "kind": "text_link",
+          "offset": 739,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49382571"
+        }
+      ]
+    },
+    {
+      "id": 32907,
+      "date": "2026-08-22T07:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Kobo can run apps now\n\nFor the unaware, there is an existing solution that integrates with Kobo's native software (Nickel).\n\nIt has been maintained for years, and it supports every Kobo AFAIK.\n\nIt's called NickelMenu, and it's great. I'm in the Kobo ecosystem because of NickelMenu and Plato.\n\nOne note if you're thinking about getting a kobo due its relative openness: consider getting a two-core device. I did not do my homework and got a Clara BW because I don't want the color display. Later I found out that color is the only one with the two-core CPU.\n\nthe-grump, 13 hours ago",
+      "contentHash": "367d5a68951ccf3183939ce6c4ba031122b7aaa499996121a5d95848c7e0126e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 21,
+          "url": "https://news.ycombinator.com/item?id=49390427"
+        },
+        {
+          "kind": "text_link",
+          "offset": 574,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49391973"
+        }
+      ]
+    },
+    {
+      "id": 32908,
+      "date": "2026-08-22T08:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nProbably, but it will be more valuable for society for him to be tried and found not guilty, setting a legal precedent.\n\naz226, 9 hours ago",
+      "contentHash": "4be71717e02eac1a495abb7c39f339f180a76da71b741e767d19e4fc996d9330",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 193,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49395071"
+        }
+      ]
+    },
+    {
+      "id": 32909,
+      "date": "2026-08-22T10:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nThe decoy passcode feature should boot into a separate partition that looks like a normal phone setup, and during that time quietly erase the user's actual data. They would never have known if it worked like this.\n\ngblargg, 11 hours ago",
+      "contentHash": "a660b148579595d4db454fe807f5858bf8732123e4b6f26d268a08f7739cfe5b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 289,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49395024"
+        }
+      ]
+    },
+    {
+      "id": 32910,
+      "date": "2026-08-22T10:35:00.000Z",
+      "editDate": null,
+      "text": "Re: There's no reason for software to be slow anymore\n\nOne of the biggest causes of slowness is just waiting for web requests. The fact that so much software is either online or built using the same stack even if it isn't, puts all that software in this blocked/waiting state constantly while using it.\n\nAnyone not in the US feels this even more since so much online is US hosted, 300ms for every little interaction adds up quick.\n\nIf your software has the affordance of a waiting dialogue or loading wheel for many of its UI controls, you are building with this default blocked assumption. Even if you are building something web based, ask yourself if that's actually necessary for your software or if you could build it differently to avoid constant UI blocking.\n\nehnto, 8 hours ago",
+      "contentHash": "d4bd38201e360f3e714f0dd7abc4c2a0b0ed894c7f0cdaf5660aa06a5786873a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 49,
+          "url": "https://news.ycombinator.com/item?id=49395628"
+        },
+        {
+          "kind": "text_link",
+          "offset": 773,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49395998"
+        }
+      ]
+    },
+    {
+      "id": 32911,
+      "date": "2026-08-22T12:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Claudette: Make Claude stop talking like a BuzzFeed article\n\nClaude not only writes verbose comments, it also writes comments about how things used to work when refactoring. That might have a place in version control comments, but not in the code.\n\ngraemep, 18 hours ago",
+      "contentHash": "b1570a1f93f4b75bb084925abf767031fbd5ab09f7120f848a6426fc80cbd01b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49388752"
+        },
+        {
+          "kind": "text_link",
+          "offset": 262,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49391865"
+        }
+      ]
+    },
+    {
+      "id": 32912,
+      "date": "2026-08-22T13:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada suspends trade negotiations with USA and match tariffs dollar for dollar\n\nHuh 30% of our lumber just got 50% more expensive. Good thing we don't have shortages of affordable housing that need new construction to solve. Brilliant stuff Donald. Truly some 4D chess moves.\n\nrobmccoll, 2 hours ago",
+      "contentHash": "40b7a89734ae59969a9752cf9cca5cb5f72777c0df2d7be6147dc669988d9fea",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49398304"
+        },
+        {
+          "kind": "text_link",
+          "offset": 293,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49398764"
+        }
+      ]
+    },
+    {
+      "id": 32913,
+      "date": "2026-08-22T14:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Stop Making TUIs\n\nAs a ratatui library maintainer, NO - please don't stop making TUIs ;)\n\nAs a developer outside of that, I love the scratch the itch apps stuff mentioned in here. I have a vibe coded SwiftUI chess repertoire builder app that fits in that same sort of space that I'm currently working on, where I'd probably not have chosen to explore the idea if not for coding agents.\n\nI agree with the article that the terminal is an odd shape which you're fighting against historical specs, etc. The key observation I have though is that the mismatch of terminal apps and libraries to deal with this are all fundamentally built around character cells and cursor movement plus various CSI/OSC/ASC/DEC/xterm/... protocols which are complex and have varying support and interact in weird ways.\n\nTo get a good terminal UX, I think the answer to this is probably to throw all that compatibility mess away and redesign a modern terminal protocol that bakes in accessibility, regions, scrolling, selection, proper keyboard, etc.\n\nI know Mitchell Hashimoto has a bit of a different perspective on this, which seems like it's to define some more protocol stuff and continue to build up on things. I think that probably gets to 95% pretty well. But a 100% good is a full replacement.\n\njoshka, 22 hours ago",
+      "contentHash": "ea7759a14b60bbac54a7609906336c9bd6efdcd0dbdfacc7987819efaa7c2794",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 16,
+          "url": "https://news.ycombinator.com/item?id=49384210"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1290,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49390842"
+        }
+      ]
+    },
+    {
+      "id": 32914,
+      "date": "2026-08-22T15:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada suspends trade negotiations with USA and match tariffs dollar for dollar\n\nGood for Canada, quite a shame the EU folded so easily\n\nPhelinofist, 4 hours ago",
+      "contentHash": "3982b783b22be00bce2a7fa02736abb159e11e503e63b63f6a3ced447cfddb8b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49398304"
+        },
+        {
+          "kind": "text_link",
+          "offset": 154,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49398416"
+        }
+      ]
+    },
+    {
+      "id": 32915,
+      "date": "2026-08-22T16:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada suspends trade negotiations with USA and match tariffs dollar for dollar\n\nYou still think any of his moves are driven by 'what's good for the US'?\n\nI think it's motivated entirely by schemes to stuff his pockets with money.\n\nwatutalkinbout, 5 hours ago",
+      "contentHash": "e74abac5023b9cf8c0ed79911f9af441606a27a3468931975bd490dcf0f5788f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49398304"
+        },
+        {
+          "kind": "text_link",
+          "offset": 252,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49398869"
+        }
+      ]
+    },
+    {
+      "id": 32916,
+      "date": "2026-08-22T17:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada suspends trade negotiations with USA and match tariffs dollar for dollar\n\nThis was totally the right move, if for no other reason than it's the only thing that this US admin will respect in the long run.\n\nBeing in Canada though this does look v. short sighted of the US. All this is going to achieve is pushing Canada much closer to other countries, particularly China, which at least superficially these negotiations were meant to prevent.\n\nfidotron, 6 hours ago",
+      "contentHash": "0f6d1a82a388eeb031486f3fddaa0f2bca2b94aa89cb0e9a716903f00befd878",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49398304"
+        },
+        {
+          "kind": "text_link",
+          "offset": 463,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49398678"
+        }
+      ]
+    },
+    {
+      "id": 32917,
+      "date": "2026-08-22T18:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nFrom  Universal Declaration of Human Rights (UDHR) accepted by the United Nations General Assembly on 10 December 1948\n\n--------\nArticle 12\n\nNo one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks.\n\nhttps://www.un.org/en/about-us/universal-declaration-of-huma...\n\nraluk, 10 hours ago",
+      "contentHash": "c8336efffe229df57872bdb0bcfced8b8e74b99bb3c81691ce1c244f54771246",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 446,
+          "length": 63,
+          "url": "https://www.un.org/en/about-us/universal-declaration-of-human-rights"
+        },
+        {
+          "kind": "text_link",
+          "offset": 518,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49397785"
+        }
+      ]
+    },
+    {
+      "id": 32918,
+      "date": "2026-08-22T18:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada will match US tariffs 'dollar for dollar' as trade talks break down\n\nThe world should've collectively recognised what Liberation Day was and responded together, in lock step, and in kind.\n\nInstead, the Europeans caved, Japanese caved (PM resigned after doing so), Republic of Korea caved (PM resigned after doing so), India of course caved and so on, shattering any prospect of collective action which might pull the rogue hegemon back into line.\n\nNow, the US is simply able to renege or renegotiate the bilateral deals whenever he feels like it, forcing the other party to face down the US by themselves - not many can do this, maybe only China. Anyways, I wish the Canadians well and I hope they gain global support\n\nhunglee2, 4 hours ago",
+      "contentHash": "e4661ce325a493d2dae125c7a25df4ae5a98936afa2735cbb0562605c20f912d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49397074"
+        },
+        {
+          "kind": "text_link",
+          "offset": 740,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49400145"
+        }
+      ]
+    },
+    {
+      "id": 32919,
+      "date": "2026-08-22T20:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada will match US tariffs 'dollar for dollar' as trade talks break down\n\nEverything the current US administration has done has been an unmitigated disaster. Tariffs are taxes. Manufacturing is still declining, not returning and a man who could not run casinos successfully is not going to change that. His economic and foreign policy are dictated entirely based on who flatters him the most. Add to that continued environmental damage, domestic policy dictated by a regressive religious minority and a lack of interest in performing the duties of the position in favor of caring about only what it can be leveraged for. A failing state operating on grievances and stupidity.\n\ncdrnsf, 2 hours ago",
+      "contentHash": "d97f87a27bf9693d887c44e18faf71901307756ffeffcd97f0efa20af9551ca6",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49397074"
+        },
+        {
+          "kind": "text_link",
+          "offset": 691,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49402424"
+        }
+      ]
+    },
+    {
+      "id": 32920,
+      "date": "2026-08-22T21:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nThe US is not a country governed by the rule of the law\n\nusern20260720, 13 hours ago",
+      "contentHash": "fbb572bc47c2413fc32c41d0d866fc0a558a636b50a26060e0c4326544b9ac73",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 137,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49397823"
+        }
+      ]
+    },
+    {
+      "id": 32921,
+      "date": "2026-08-22T22:50:00.000Z",
+      "editDate": null,
+      "text": "Re: New Worlds: We are living in the future of J.G. Ballard or William Gibson\n\nI am a big fan of both, but I think what's missing in reality, but in their fiction (and cyberpunk fiction in general) is a sense of coolness and caring about aesthetics. For all the evil that the mega corporations do in a Gibson novel, they still have an aesthetic appeal.\n\nReal-world corporations aren't that interesting. Amazon, Facebook, or Google have nothing \"culturally\" or aesthetically on Hosaka, Arasaka or Sense/Net.\n\nWhich is really the tragedy of it all: we are getting the cyberpunk dystopia with none of the aesthetics that have made it a household word.\n\nkeiferski, 1 day ago",
+      "contentHash": "ddddc556054091d1aec6ba54f1942907719739fb0bd01f78ec60e0a2a6cb9daa",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 73,
+          "url": "https://news.ycombinator.com/item?id=49387525"
+        },
+        {
+          "kind": "text_link",
+          "offset": 661,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49389372"
+        }
+      ]
+    },
+    {
+      "id": 32922,
+      "date": "2026-08-22T22:50:00.000Z",
+      "editDate": null,
+      "text": "Re: I'm becoming AI-blind\n\nThe \"something deeply wrong\" part about AI, that even most technology enthusiasts evidently do not seem to grasp, is that it is still fundamentally a statistical model — an algorithmic construct — and does not possess any real intelligence or critical thought whatsoever.\n\nNo matter how much investors and tech companies want you to believe that they are on the verge of super intelligence, nothing I've seen to date can not easily be explained by \"correlation engine\", including the \"novel\" math solutions, all of which appear to just be \"a composition of solutions humans have developed and documented elsewhere\" upon deeper inspection.\n\nTalkingCodeMonk, 1 day ago",
+      "contentHash": "fa19b91cee77471f42d7efac0b2d649a37fc9f464ef9f75e84dff7bb772c5dc7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 21,
+          "url": "https://news.ycombinator.com/item?id=49386699"
+        },
+        {
+          "kind": "text_link",
+          "offset": 684,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49389170"
+        }
+      ]
+    },
+    {
+      "id": 32923,
+      "date": "2026-08-22T23:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Ox Alpha\n\nIt's Chinese. Won't answer anything about Tiananmen Square but will gleefully give you instructions to perform various electronic warfare attacks that opus and fable instantly refuse.\n\nSide tangent, why is fable so weird about questions involving \"Welch's method\"? Even really trivial ones it'll shut down frequently. CFAR and STFT are both totally fine but Welch's is apparently taboo, it's wild.\n\nfedpost, 2 days ago",
+      "contentHash": "11d76f14dfd46c6e3b725322c5a4d25787951fcfcfba9bf9a8430ae655e97fb9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 8,
+          "url": "https://news.ycombinator.com/item?id=49381896"
+        },
+        {
+          "kind": "text_link",
+          "offset": 422,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49382737"
+        }
+      ]
+    },
+    {
+      "id": 32924,
+      "date": "2026-08-23T00:05:00.000Z",
+      "editDate": null,
+      "text": "Re: New MCP Roadmap\n\n> With the 2026-07-28 release, a remote MCP server is now no different from any other HTTP workload\n\nGood. Introducing a bespoke new protocol was one of the more bone-headed things MCP did on initial release.\n\nrco8786, 10 hours ago",
+      "contentHash": "70126679b564056e055d5c146a38d7bba2cbaaf53a8599dec30f41556e5b2295",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 15,
+          "url": "https://news.ycombinator.com/item?id=49399591"
+        },
+        {
+          "kind": "text_link",
+          "offset": 240,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49400071"
+        }
+      ]
+    },
+    {
+      "id": 32925,
+      "date": "2026-08-23T00:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada will match US tariffs 'dollar for dollar' as trade talks break down\n\nThat not how politics works. It is much slower and hidden process. EU fast tracked Mercosur and other trade deals. China and Japan is slowly dumping US treasury bills, Canada is in open trade confrontation and is diversifying toward China. Everybody is shifting away from US weapons suppliers. Nobody is willing to help with Iran even on symbolic level.\n\nChyzwar, 9 hours ago",
+      "contentHash": "302c90989800e940a69fa7f5ff4cea82d87f91c33de05681a5811f616024b1d1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49397074"
+        },
+        {
+          "kind": "text_link",
+          "offset": 444,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49400901"
+        }
+      ]
+    },
+    {
+      "id": 32926,
+      "date": "2026-08-23T00:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Anthropic appears to be A/B testing reduced effort levels in Claude Code\n\nWhatever Opus 5 is doing should not happen.\n\nPrompt was \"read and update the config file with new data\".  This work on 4.6 takes <2 \nminutes to read the file, parse the new data, and patch.\n\nOpus 5 Result: 43 minutes of pulling containers, running sandboxes, creating testing suites, which included evaluating the entire repo beyond the scope of the config file.\n\nBoth: one file modification\n\npizzafeelsright, 7 hours ago",
+      "contentHash": "0cbdac7358e2a11164726763a905ca601b80cb4a38fe084e33062bec24d87d17",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 72,
+          "url": "https://news.ycombinator.com/item?id=49401549"
+        },
+        {
+          "kind": "text_link",
+          "offset": 488,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49401919"
+        }
+      ]
+    },
+    {
+      "id": 32927,
+      "date": "2026-08-23T01:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Scrap\n\nOne convenient fiction that many wealthy people (in the US) tell themselves, is that poor people are \"lazy\"; and that's why they're poor.\n\nI know lots of folks without a pot to piss in, or a window to throw it out, and not one single one, is \"lazy.\" In fact, a few have more than one (difficult) job.\n\nI am old enough to see a few of them getting into the back nine, with no cushion.\n\nI'm extremely grateful for what I have.\n\n[EDIT] Added \"many\" because it's more appropriate, and short-circuits the implied \"all.\"\n\nChrisMarshallNY, 5 hours ago",
+      "contentHash": "db16a8e49a0ba314d6430f0f518b4594f538615593ebfc2acaf631474b518cf7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 5,
+          "url": "https://news.ycombinator.com/item?id=49402189"
+        },
+        {
+          "kind": "text_link",
+          "offset": 544,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49403193"
+        }
+      ]
+    },
+    {
+      "id": 32928,
+      "date": "2026-08-23T04:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Stop Making TUIs\n\nHard disagree. Make more TUIs!\n\nTUIs have downsides like accessibility, poor mouse support, but work really well if you focus on keyboard input. It is a better/faster input mode to begin with, especially for power users, but also for average people; you'd be surprised at how much more user-friendly an arrow-keys driven UI can be vs modern web interfaces.\n\nI've been building my own TUI framework [1] and getting amazing results. Good TUIs are more of a GUI than a dumb text terminal.\n\nIf we had a cross-platform usable GUI framework, and more consistency across OSes, the story would be different.\n\n[1] https://github.com/ricardobeat/milktea\n\nricardobeat, 12 hours ago",
+      "contentHash": "d5198cb4f868af121f5bfaad94338b739df0cd75409eedc55bb142fe77502c7c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 16,
+          "url": "https://news.ycombinator.com/item?id=49384210"
+        },
+        {
+          "kind": "text_link",
+          "offset": 627,
+          "length": 38,
+          "url": "https://github.com/ricardobeat/milktea"
+        },
+        {
+          "kind": "text_link",
+          "offset": 680,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49401179"
+        }
+      ]
+    },
+    {
+      "id": 32929,
+      "date": "2026-08-23T05:50:00.000Z",
+      "editDate": null,
+      "text": "Re: A week of using Codex more than Claude\n\nwhile everyone is somehow still stuck on and fascinated by claude, heres your quick update on the sota of coding models and harnesses mid august 2026\n\ncodex is good, both cli and desktop app, you get lots of usage on any plan. \nsol is good! and gets the job done, write or dictate a very long and thoughtful prompt, and leave sol xhigh or max fast working on it for an hour or so\n\nomp is an amazing harness, any feature claude code or codex is adding has likely already been here for a couple months.\ngood harness which im suggesting to all my developer friends, but for everyone else codex is the better option due to its simplicity and being the plug and play option\n\nclaude is decent, but not great. all models are somehow getting restrictive. you get basically unlimited opus on max plans, fable is good but slow and the random guardrails suck soo much which is why i havent used it once in weeks now.\n\ngemini 3.7 is great for speed. everyone is sleeping on it, including even me\n\nkimi k3 - great for frontend, one of the few models thats willing to commit crimes for you AND has the intelligence to have a chance at actually succeeding;\n\nds pro and flash are fast but not something id actually use for important things, unlike sol, fable and maybe 3.7 here and there\n\nglm 5.3 i haven't tested yet\n\nhonorable mention to local models which are actually getting good now! 5090s will continue to get more and more expensive in the coming months. sadly.\n\ntheres way way more than claude in this world and its taking people surprisingly long to figure that out. maybe its for the best!\n\n217, 1 day ago",
+      "contentHash": "4cdfd5853dccf6399493cb4ed29223dc93697ef383b1da097d8b8d2e8730bb39",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49393051"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1635,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49393603"
+        }
+      ]
+    },
+    {
+      "id": 32930,
+      "date": "2026-08-23T08:05:00.000Z",
+      "editDate": null,
+      "text": "Re: ElevenLabs, TwelveLabs, ThirteenLabs\n\nhttps://www.twelvelabs.io/blog/introducing-the-multimodal-ai...\n\n> Twelve Labs and ElevenLabs are co-hosting the 23Labs Hackathon\n\nprogbits, 14 hours ago",
+      "contentHash": "1ff5fd8d7b5c7cc1bd785a1dd24e71b87fbdcfda1bc6a782cf8e431051b2cb0c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49400408"
+        },
+        {
+          "kind": "text_link",
+          "offset": 42,
+          "length": 63,
+          "url": "https://www.twelvelabs.io/blog/introducing-the-multimodal-ai-23labs-hackathon"
+        },
+        {
+          "kind": "text_link",
+          "offset": 183,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49401875"
+        }
+      ]
+    },
+    {
+      "id": 32931,
+      "date": "2026-08-23T15:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nWith all due respect, this is a wild take. Things aren't great in the U.S. right now, but they're not even in the same universe as what the Stasi was doing.\n\n> I think it would be easier to understand the playing field and choose your actions accordingly, if you accept the US has entered its East Germany / late 20th century Soviet era -- except of course with 1000x more invasive and effective surveillance tech.\n\ndeepfriedbits, 2 days ago",
+      "contentHash": "9a340714990561ee9f2ef124b7c518764d340e9a69b8277248384f932d7b0a26",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 496,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49393422"
+        }
+      ]
+    },
+    {
+      "id": 32932,
+      "date": "2026-08-23T15:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Why your local LLM feels dumber than it is\n\nI just got qwen 3.8 27b mlx running on my Macbook Pro and honestly I’m pretty blown away by how not-dumb it is.\n\njonplackett, 19 hours ago",
+      "contentHash": "51b49da4305b89fab34b45cc16b842e3dda399836107142c7662f308b8dbe972",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 42,
+          "url": "https://news.ycombinator.com/item?id=49402232"
+        },
+        {
+          "kind": "text_link",
+          "offset": 174,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49403412"
+        }
+      ]
+    },
+    {
+      "id": 32933,
+      "date": "2026-08-23T16:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nAll Archive pages, when accessed from Italy, now are blocked by the Government:\n\n\"PAGINA INTERDETTA DAL CENTRO NAZIONALE PER IL CONTRASTO DELLA PEDOPORNOGRAFIA ONLINE (C.N.C.P.O.)\"\n\n“PAGE BLOCKED BY THE NATIONAL CENTER FOR COMBATING ONLINE CHILD PORNOGRAPHY (C.N.C.P.O.)”\n\nOh, we live in an interesting age.\n\nsimonebrunozzi, 2 days ago",
+      "contentHash": "9dc3eeeb68a7220690626efdd16b8924504eb6fb67a02ca67c5a37b54b361244",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 390,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49392339"
+        }
+      ]
+    },
+    {
+      "id": 32934,
+      "date": "2026-08-23T16:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nFor exactly the border search scenario, I wish smartphones could be imaged and restored as easily as PCs. Imagine booting the phone from a flash drive, making an encrypted image of the phone on said drive, and writing a fresh OS before reaching the border.\n\nThere's no deception required to protect sensitive data or avoid the seizure of an expensive phone. Consent to unlocking the phone, refuse to unlock the drive. The drive gets seized and you go on your way (if you're a US citizen entering the USA).\n\nSome time ago, Android with a custom recovery could come close to that, but it was fussy and as far as I know, no longer viable. Increased use of TPMs for storing credentials seems to be at least one of the reasons.\n\nZak, 2 days ago",
+      "contentHash": "72e51bc76478f075d5a4d7254363f979c5296baa772b859954728733305ea3a9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 794,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49392826"
+        }
+      ]
+    },
+    {
+      "id": 32935,
+      "date": "2026-08-23T16:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Grand jury declines to indict Ohio man charged with destroying Flock camera\n\nThough sometimes a prosecutors office will use a grand jury to fail to indict intentionally, like when the accused is a police officer they work with. It's a good way to launder away a prosecution that the DA doesn't want to pursue for political reasons.\n\naqme28, 2 days ago",
+      "contentHash": "b6a0b6c7d95a0db9573881a0ac435c677dbcb74f758f00ba4adb801454cf3ade",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 75,
+          "url": "https://news.ycombinator.com/item?id=49387497"
+        },
+        {
+          "kind": "text_link",
+          "offset": 345,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49389738"
+        }
+      ]
+    },
+    {
+      "id": 32936,
+      "date": "2026-08-23T16:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada will match US tariffs 'dollar for dollar' as trade talks break down\n\nYou are both right. The world capitulates more than it should. But the world is also moving away and building contingencies.\n\nThe world needs leadership. And Canada is helping with that.\n\nI do not think that reciprocal tariffs are actually the answer though. They hurt both sides and the US is not a rational enough actor to respond like you hope they will. The answer is in shifting trade away from the US and isolating their economy. It takes longer but it is what will work. And even if their behaviour does not change, their power will fade with their economy.\n\nLeFantome, 24 hours ago",
+      "contentHash": "b10e3142d2e377645851b18642d8a8952ccea9ff3f2150dbd44edcdf39900811",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49397074"
+        },
+        {
+          "kind": "text_link",
+          "offset": 657,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49401215"
+        }
+      ]
+    },
+    {
+      "id": 32937,
+      "date": "2026-08-23T16:50:00.000Z",
+      "editDate": null,
+      "text": "Re: ElevenLabs, TwelveLabs, ThirteenLabs\n\nTried to register sixsevenlabs, too late unfortunately...\n\nWhatsName, 1 day ago",
+      "contentHash": "b067008f1c0d4f839e3c4e925d1b5c6ef92ff2e3b07482ca5af788a6e66a1169",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49400408"
+        },
+        {
+          "kind": "text_link",
+          "offset": 112,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49401019"
+        }
+      ]
+    },
+    {
+      "id": 32938,
+      "date": "2026-08-23T17:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Wi-Fi 8 is the first wireless upgrade in years that isn't chasing speed\n\nWe need reliable, real-world ~20mbit/s for our warehouse scanners, not 382722 theoretical Gbit/s 5cm from the access point. And roaming that works instead of stupid clients clinging to somewhere or being thrown into a reconnect loop when the AP tries to get them to roam.\nI know this is theoretically possible today. But in the real world, I have inherited the setup, so AP locations are fixed for now, clients are some random old handhold motorola android devices and interference is high.\n\nIn comparison, DECT has been flawless in the same space. Set and forget, just works. I always wondered if we could have a kind of DECT proxy on the LAN, and have the ERP application talk to that proxy using DECT... I mean, it's a few EANs and stuff, DECT could handle this easily.\n\navhception, 10 hours ago",
+      "contentHash": "c5a32ada6a0fff98aee0430b01378f2acae36cb4ed0e0831c2fbae0ac5e1fb43",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 71,
+          "url": "https://news.ycombinator.com/item?id=49406539"
+        },
+        {
+          "kind": "text_link",
+          "offset": 863,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49406822"
+        }
+      ]
+    },
+    {
+      "id": 32939,
+      "date": "2026-08-23T18:05:00.000Z",
+      "editDate": null,
+      "text": "Re: ElevenLabs, TwelveLabs, ThirteenLabs\n\nI got 99 labs but bringing value to society ain't one\n\ninigyou, 1 day ago",
+      "contentHash": "adafd6ebb7b8f161ce6a13a672ce280ae4cb58e5880ff081cba185c75cf485be",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49400408"
+        },
+        {
+          "kind": "text_link",
+          "offset": 106,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49401913"
+        }
+      ]
+    },
+    {
+      "id": 32940,
+      "date": "2026-08-23T18:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Malware infects Android-based automotive head unit firmware\n\nThe article does not make it particularly clear, but the malware in question is delivered through official first-party OTA updates on cheap Chinese aftermarket head units that happen to run Android. It cannot self-propagate to any Android-based head unit, nor does it affect Android Auto which is a \"dumb\" screen mirroring protocol with the bulk of the software running on the connected phone rather than the head unit. This seems to be a very similar situation to that of cheap generic Android TV streaming boxes, which often come pre-infected from the factory with residential proxies and other malware as well; most of the infrastructure is likely shared.\n\nspicyjpeg, 5 hours ago",
+      "contentHash": "ec92f726f48e6ab8b2a252c74df957e7ae47ea3f52b1fa59e96d04b6ae0c88f5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49408550"
+        },
+        {
+          "kind": "text_link",
+          "offset": 736,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49409002"
+        }
+      ]
+    },
+    {
+      "id": 32941,
+      "date": "2026-08-23T20:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada will match US tariffs 'dollar for dollar' as trade talks break down\n\nPMI is a sentiment survey of 400 manufacturing executives. Vibes only.\n\nlawsthro0532, 24 hours ago",
+      "contentHash": "aec23682ab61b1eb42b979dd284cbc9cc9c3e16e3172b6b9389cebb2fb79648c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49397074"
+        },
+        {
+          "kind": "text_link",
+          "offset": 166,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49403620"
+        }
+      ]
+    },
+    {
+      "id": 32942,
+      "date": "2026-08-23T20:20:00.000Z",
+      "editDate": null,
+      "text": "Re: To become a better writer, read as much as you can\n\n> Why be a writer if you don’t love reading? Why devote your intellectual and emotional energy to creating a book, when it’s a form you’re not invested in? Why write, when you aren’t steeped in wonder of storytelling?\n\nThis is the key point, I think. I've seen the same as the author: people who want to be writers but rarely read books. And I don't get it.\n\nI recently finished a novel (now shopping around for agents, which was hard enough pre-AI but now...) and reading was integral to writing it. I know good sentences. I know the style of prose I like to read. I know how things can veer between florid and poetic and where the line is. I know how a sentence can be completely different if you read it as though it was spoken, instead of to yourself (some of mine are written to be read.)\n\nI know the things that annoy me: dropping out to put thoughts in italics; descriptions that specify instead of evoke; characters talking without it leading somewhere. (And much more.)\n\nHow do I know this? From reading.\n\nAnd I want to tell the story. It was a story that grew, that I think will anger the right people (it's not too kind to Musk or VCs or the Russian Orthodox Church), and yet is simply an adventure, tumbling our characters from situation to situation like they fell overboard while navigating rapids. Ultimately I wrote a book I wanted to read. It turned out to be about post-apocalyptic startups and sea monsters.\n\nSomeday I'll publish, I hope. And no doubt someone will read it and find style they dislike, learn from it things they don't want to do in their writing, either. But I also hope that there are moments in the book that will inspire someone else, in that they too will want to write, based on what they read.\n\nvintagedave, 12 hours ago",
+      "contentHash": "24e012fd6ba211e1a1303d9bf11dd310d2861ceabdb0680385f36fa278b6daf3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 50,
+          "url": "https://news.ycombinator.com/item?id=49405870"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1805,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49407075"
+        }
+      ]
+    },
+    {
+      "id": 32943,
+      "date": "2026-08-23T20:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Felony charges for citizen deleting phone data at US Border\n\nIf you want actual legal advice pay for an actual lawyer. You aren’t going to get it asking a bunch of randoms on a tech forum.\n\nSince we’re techies we tend to think about technological nuances and have a certain literal frame of mind (eg “They can’t make it illegal for me to just type the wrong pin” is the type of thinking I’m talking about here) whereas in law weird precedents and your intent really matter so you really need expert advice and either way, you are throwing yourself at the mercy of a stochastic process that depends on a bunch of fallible humans along the way many of whom have the power to make your life extremely miserable.\n\nTechnicalities of destroying the data vs destroying the key to the data, destroying the data when you have a backup etc may matter a lot to us but may not mean anything in an actual judicial process depending on how it goes.\n\nIt seems to me if you have data you don’t want subject to seizure at a border it is best not to travel over the border carrying that data.  If you have a backup (in your scenario), why not restore your phone from that backup after you have travelled, and not cross the border with anything that is likely to be a problem if seized?  Then you’re not putting yourself at risk from this process.\n\nseanhunter, 2 days ago",
+      "contentHash": "1226f50fe6140c1d7d8ea897c872454aeb887a8405e2057b817a392487b2189d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49386895"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1346,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49396801"
+        }
+      ]
+    },
+    {
+      "id": 32944,
+      "date": "2026-08-23T21:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Hister – A private, full content search index that you control\n\nOhi, author here! Thanks for posting Hister. Feel free to A.M.A.\n\nMy first free software search project was Searx, a privacy respecting metasearch engine, but because of the limitations of the metasearch concept, I've decided to take a different approach.\n\nHister builds a personal search index from pages you visit, bookmarks, browser history, local files, and crawled websites. It stores extracted content with offline result previews, so information remains searchable even when the original page changes or disappears. It supports full text and semantic search, can run entirely on your own machine, and includes a web interface, command line tools, and an MCP endpoint for assistant integrations.\n\nProject page: https://github.com/asciimoo/hister\n\nTiny read-only demo: https://demo.hister.org/\n\nasciimoo, 1 day ago",
+      "contentHash": "cf049acfa5f6589ae573ee78e1c9b4b57b15d2af8e8324888c2d6d2cd6d8215b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 62,
+          "url": "https://news.ycombinator.com/item?id=49351802"
+        },
+        {
+          "kind": "text_link",
+          "offset": 785,
+          "length": 34,
+          "url": "https://github.com/asciimoo/hister"
+        },
+        {
+          "kind": "text_link",
+          "offset": 842,
+          "length": 24,
+          "url": "https://demo.hister.org/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 878,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49402473"
+        }
+      ]
+    },
+    {
+      "id": 32945,
+      "date": "2026-08-23T21:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Canada will match US tariffs 'dollar for dollar' as trade talks break down\n\nHe'll be nullifying any agreement within two or three tantrums anyway, eventually we will learn and retaliate.\n\nlinohh, 1 day ago",
+      "contentHash": "079cd7f35457f89161f87002d853b9075b2d53e10fc23adbb48b95cfbd4a15d0",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49397074"
+        },
+        {
+          "kind": "text_link",
+          "offset": 200,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49398422"
+        }
+      ]
+    },
+    {
+      "id": 32946,
+      "date": "2026-08-23T22:05:00.000Z",
+      "editDate": null,
+      "text": "Re: ElevenLabs, TwelveLabs, ThirteenLabs\n\nFor context, 15 was some brony tf2 player who cracked deep voice synthesis in order to make My Little Pony characters say funny things. He then offered this for free on his site. It was never a clever branding thing, it was just his username.\n\nIt's funny seeing HN types being genuinely confused as to why someone would just make interesting things for the sake of making them, and then offer them freely for the good of others. He used to be on HN, there's good insights in his posts: https://news.ycombinator.com/user?id=15ai\n\nrozab, 1 day ago",
+      "contentHash": "ba7838f472578eb8cf5353b2d320cfc1eea5568cf40a04e3e34bd76738fada77",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49400408"
+        },
+        {
+          "kind": "text_link",
+          "offset": 528,
+          "length": 41,
+          "url": "https://news.ycombinator.com/user?id=15ai"
+        },
+        {
+          "kind": "text_link",
+          "offset": 578,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49403945"
+        }
+      ]
+    }
+  ]
+}

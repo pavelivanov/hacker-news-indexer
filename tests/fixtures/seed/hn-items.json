@@ -1,0 +1,2416 @@
+{
+  "schemaVersion": 1,
+  "source": "OFFICIAL_HN_API",
+  "capturedAt": "2026-08-24T16:08:22.819Z",
+  "items": [
+    {
+      "id": 49321298,
+      "type": "story",
+      "by": "nichochar",
+      "time": 1786896537,
+      "title": "Being ambitious and being a dad",
+      "url": "https://nicholascharriere.com/blog/being-ambitious-and-being-a-dad/",
+      "responseHash": "7071b3de4c8e30fb3f695b3673b2d13bfcee730e99ff5e1c3c0adf6dd9e9c914"
+    },
+    {
+      "id": 49323795,
+      "type": "story",
+      "by": "gavide",
+      "time": 1786915240,
+      "title": "A faster way to calculate the day of the week",
+      "url": "https://www.benjoffe.com/fast-day-of-week",
+      "responseHash": "6a7e099b2fc66a5412bc98d313d063d3afe557acdc6c1c93e6f8ddf6f5897ed2"
+    },
+    {
+      "id": 49344643,
+      "type": "story",
+      "by": "porridgeraisin",
+      "time": 1787055778,
+      "title": "Claude writing a macOS driver for my obscure HP printer built only for Windows",
+      "text": "<a href=\"https:&#x2F;&#x2F;xcancel.com&#x2F;kuberwastaken&#x2F;status&#x2F;2089377982536388964\" rel=\"nofollow\">https:&#x2F;&#x2F;xcancel.com&#x2F;kuberwastaken&#x2F;status&#x2F;2089377982536388964</a><p><a href=\"https:&#x2F;&#x2F;cdn.kuber.studio&#x2F;chat&#x2F;hp-laser-1008a-driver\" rel=\"nofollow\">https:&#x2F;&#x2F;cdn.kuber.studio&#x2F;chat&#x2F;hp-laser-1008a-driver</a>",
+      "url": "https://twitter.com/kuberwastaken/status/2089377982536388964",
+      "responseHash": "9065417c71ea3e6afe7adba57675a6def6642244e79b680a3362ddf135a225e4"
+    },
+    {
+      "id": 49347543,
+      "type": "story",
+      "by": "Ariarule",
+      "time": 1787068252,
+      "title": "I like 'em thick: an apology to my English teachers",
+      "url": "https://www.experimental-history.com/p/i-like-em-thick",
+      "responseHash": "366582c1146885ccb37240d941398f9b563136515a94e1d4b512dc78824471de"
+    },
+    {
+      "id": 49348055,
+      "type": "story",
+      "by": "newusertoday",
+      "time": 1787070094,
+      "title": "Apple announces changes for apps in the European Union",
+      "url": "https://www.apple.com/newsroom/2026/08/apple-announces-changes-for-apps-in-the-european-union/",
+      "responseHash": "b27e2a2ea5b2ea9c1c335facabda992e46d61e9e6f432f251a035be0842a1e1a"
+    },
+    {
+      "id": 49348141,
+      "type": "story",
+      "by": "meetpateltech",
+      "time": 1787070416,
+      "title": "Git at any scale",
+      "url": "https://cursor.com/blog/git-at-any-scale",
+      "responseHash": "89379a1a6dcb458490a44f503ac0336c21ada7a410238cde79ae687823b6f0a3"
+    },
+    {
+      "id": 49348358,
+      "type": "comment",
+      "parent": 49348055,
+      "by": "EMIRELADERO",
+      "time": 1787071210,
+      "text": "&gt; &quot;These changes resolve Apple’s disagreements with the Commission over business terms and alternative distribution.&quot;<p>[...]<p>&gt; &quot;The Core Technology Fee, a per-install fee for developers that achieve extraordinary scale, will be replaced by the Core Technology Commission, a simple 5 percent commission on digital transactions in apps distributed outside the App Store. The new terms also eliminate the initial acquisition fee and store services fee.&quot;<p>[...]<p>&gt; &quot;In order to keep EU users as safe as possible, Apple will continue to require every alternatively distributed app to go through Notarization — a baseline review focused on basic functionality and protection from serious threats.&quot;<p>This is bonkers, I can&#x27;t believe the EU Commission agreed to it. The main issue that the DMA was about still remains: Apple retains ultimate control over app developers&#x27; dealings with users.<p>The status quo that the EU should have pushed for, and which Article 6(7) of the DMA requires, is one where a developer can distribute iOS apps to users without ever entering into any contractual relationship with Apple. The OS APIs that most apps use are already paid-for by the user when they buy the device. Apple wants to double-dip and charge developers for the value that the users already have by virtue of owning their iDevices with all the necessary iOS paraphernalia in them.<p>Of course, Xcode and the SDK overall aren&#x27;t paid for by users, so Apple can charge devs for it, but so far there&#x27;s no way to signal to Apple that you have opted out of using their SDK and have the fee waived. Not that it would be enough anyway, since even having to interact with Apple in any capacity to be an iOS dev is the main problem.",
+      "responseHash": "6d7a857e1884d89dbf1c9c9adbaf9f2870a443bfa777feb6547fc83c0568b9bb"
+    },
+    {
+      "id": 49348450,
+      "type": "comment",
+      "parent": 49348055,
+      "by": "mjorgers",
+      "time": 1787071510,
+      "text": "&gt; The Core Technology Fee, a per-install fee for developers that achieve extraordinary scale, will be replaced by the Core Technology Commission, a simple 5 percent commission on digital transactions in apps distributed outside the App Store. The new terms also eliminate the initial acquisition fee and store services fee.<p>[...]<p>&gt; In order to keep EU users as safe as possible, Apple will continue to require every alternatively distributed app to go through Notarization — a baseline review focused on basic functionality and protection from serious threats.<p>All in all, still extremely anti-consumer. If I can download and run arbitrary code on my Mac--even if I have to jump through scary warnings--why should I not be able to do so on my phone? Why would one computing platform be different from the other?",
+      "responseHash": "0ba8e42ceb7e7f80f868d2568fa1848824712ea16858197362a9571f62ed19a0"
+    },
+    {
+      "id": 49348912,
+      "type": "story",
+      "by": "_djo_",
+      "time": 1787073088,
+      "title": "And then the men with guns tell you to do it anyway",
+      "url": "https://shkspr.mobi/blog/2026/08/and-then-the-men-with-guns-tell-you-to-do-it-anyway/",
+      "responseHash": "50c5277d9dd36f653803692c0005a1e24e7641000af6818807f56a9c48ad736c"
+    },
+    {
+      "id": 49349984,
+      "type": "story",
+      "by": "NaOH",
+      "time": 1787076713,
+      "title": "How does IKEA come up with names for its products?",
+      "url": "https://www.ikea.com/se/en/customer-service/knowledge/articles/6f564c4d-2ccc-46de-b643-545a3948dc79.html",
+      "responseHash": "833d315037cb36f670bc9185e8c22d02767de66398836eafde218dc300f8b2f4"
+    },
+    {
+      "id": 49350308,
+      "type": "comment",
+      "parent": 49349984,
+      "by": "bcaulfield",
+      "time": 1787077817,
+      "text": "Amazing. A post asks a question in the title that I actually want answered, and then goes on to answer that question clearly and succinctly. Maybe the best corporate content I&#x27;ve seen this year.",
+      "responseHash": "a93c864ba8199ff28c0a1316123e97133f952fbe10d715546cc5ab580bb3b77e"
+    },
+    {
+      "id": 49350799,
+      "type": "comment",
+      "parent": 49349984,
+      "by": "tverbeure",
+      "time": 1787079382,
+      "text": "&gt; Every possible product name is carefully checked to avoid undesirable meanings in other languages, political or religious affiliations and fit into our global profile.<p>I love the JERKER desk that I bought 26 years ago, so I assume this rule must be younger than that.",
+      "responseHash": "d0c05d36b5b3441a33d3647486f800a35da0ca3baf3743444ea62bbeae0239bb"
+    },
+    {
+      "id": 49351802,
+      "type": "story",
+      "by": "auraham",
+      "time": 1787083250,
+      "title": "Hister – A private, full content search index that you control",
+      "url": "https://hister.org/",
+      "responseHash": "7988b8f16097e44a4ff7ff266b9d129834a61788ec1f319f05df510dcf1c0686"
+    },
+    {
+      "id": 49352794,
+      "type": "story",
+      "by": "behnamoh",
+      "time": 1787087610,
+      "title": "Companies promote incompetent employees to management to limit damage they do",
+      "url": "https://lawsofsoftwareengineering.com/laws/dilbert-principle/",
+      "responseHash": "bc04ff600497a7598e255ca8ebb331d5d6a7fa5cec54b0b1bb9145b259b06828"
+    },
+    {
+      "id": 49353104,
+      "type": "comment",
+      "parent": 49344643,
+      "by": "Tiberium",
+      "time": 1787089331,
+      "text": "Unfortunately this is a very misleading article and headline. I don&#x27;t doubt the end result - it&#x27;s useful that it works, but it&#x27;s not &quot;natively&quot; and, unlike what some people assume, Claude didn&#x27;t write a driver. It basically used HP&#x27;s existing proprietary driver in a Linux VM on macOS, and just bridged that to macOS.<p>It also requires a root launcher that runs code from the user ~&#x2F;.hp1008 dir, so security is weakened.",
+      "responseHash": "3d111b59182e47ad32622e140d6ae923e65d89137fde77fb1f8af39353750fea"
+    },
+    {
+      "id": 49353141,
+      "type": "comment",
+      "parent": 49344643,
+      "by": "ryandrake",
+      "time": 1787089510,
+      "text": "I was able to (through heavy Claude use) successfully reverse engineer a golf cart motor controller that is programmable over USB, but only was supported by a Windows application. Claude walked me through using ILSpy on the .NET assembly, using Wireshark to capture the protocol over USB, and to completely map out all of the functionality in the Windows application. The output was a portable C library and CLI program which, so far, has worked well.<p>I consider myself kind of an AI detractor but even I&#x27;ll admit that the tool allowed me to do something it would have taken weeks-to-months to learn to do the hard way.",
+      "responseHash": "159109cccf8dd0085c4e541f78fff0267563904c83689befc5c0a3823854dd85"
+    },
+    {
+      "id": 49353539,
+      "type": "comment",
+      "parent": 49352794,
+      "by": "fancyfredbot",
+      "time": 1787091397,
+      "text": "If you see someone incompetent being promoted then it&#x27;s more likely:<p>1) You are wrong about them being incompetent<p>2) The person promoting them is also incompetent and has mistakenly promoted the wrong person.<p>I have literally never seen or heard of anyone promoting someone to limit the harm they can do. It&#x27;s something bitter people tell themselves to help them feel better about being passed over. It&#x27;s not the explanation you are looking for.",
+      "responseHash": "542e1fc5a2fa2f9774c13a697133873da7717bdaa4944053189551ea4528d7ab"
+    },
+    {
+      "id": 49353702,
+      "type": "comment",
+      "parent": 49321298,
+      "by": "marssaxman",
+      "time": 1787092174,
+      "text": "The passionate hunger to do something significant and meaningful with my life was a major reason I took care never to have any children. Having grown up in a large family within a religious subculture full of other large families, the amount of time and attention children consume was <i>crystal</i> clear from a young age, and I knew that I was going to need every scrap of energy I could spare for the work I wanted to do.<p>Years later, after I had to accept the failure of my ambitions, there was an opportunity to become the dad of a kid who needed one. So here I am being a dad after all, and it&#x27;s been a good experience. Difficult, of course, and often frustrating, but worthwhile; I have no regrets - neither about this choice, nor the one I made when I was young.",
+      "responseHash": "59a2d6af4f19535fd36b9220099d23e4beb42eb44bd994365b47f4b0ec5ba475"
+    },
+    {
+      "id": 49354775,
+      "type": "comment",
+      "parent": 49321298,
+      "by": "qooiii2",
+      "time": 1787098273,
+      "text": "&quot;Behind every great man there&#x27;s a great woman.&quot; I thought I was killing it at work and as a dad when I was answering emails about complex bugs while hiking with my first kid riding in a backpack. But then I quit working to be a full-time dad for kid #2 and found out how much work my partner had been doing that I didn&#x27;t know about. I suddenly understood why so many of the men at my former workplace had been divorced. So be ambitious, but check in with your partner and make sure they are on the same page.",
+      "responseHash": "2d24eb14fd403e02f919251021165d79b815b46a667eb78d126e74aff53a40b1"
+    },
+    {
+      "id": 49355105,
+      "type": "story",
+      "by": "dabinat",
+      "time": 1787100503,
+      "title": "Children's stunted lungs show recovery in ultra low emission zone",
+      "url": "https://www.bbc.com/news/articles/c1l1r1zne1ro",
+      "responseHash": "cdd1c4e46b55bea9a9350511706ae96f76acb88897377f06d95e6f95ae7db6b3"
+    },
+    {
+      "id": 49355650,
+      "type": "comment",
+      "parent": 49355105,
+      "by": "ecshafer",
+      "time": 1787105084,
+      "text": "Anecdata I was living very close to a busy highway, and my young daughter was wheazing when she had a cold, we had to give her medicine via a nebulizer. When we moved out to the country more, far away from any major roads, these issues all disappeared within a couple months.",
+      "responseHash": "225f0f5418daa739d90bed72cf5e32549d68f011070db863e8f243b8173a38bf"
+    },
+    {
+      "id": 49355825,
+      "type": "story",
+      "by": "newsomix9xl",
+      "time": 1787106274,
+      "title": "Meta's blockbuster trial draws parallels to big tobacco",
+      "text": "<a href=\"https:&#x2F;&#x2F;archive.ph&#x2F;a3165\" rel=\"nofollow\">https:&#x2F;&#x2F;archive.ph&#x2F;a3165</a>",
+      "url": "https://www.economist.com/business/2026/08/18/metas-blockbuster-trial-draws-parallels-to-big-tobacco",
+      "responseHash": "c29ab029fc07d7bf5ae3cafa69510686f11c67939ac4e26bfea5102e1f4ccaaa"
+    },
+    {
+      "id": 49356163,
+      "type": "comment",
+      "parent": 49348912,
+      "by": "decimalenough",
+      "time": 1787108916,
+      "text": "&gt; <i>But it is easy to see why some people feel this might open the gateway to messages which, at best, are irrelevant</i><p>If you&#x27;re in South Korea, you can expect to get around half a dozen emergency notifications <i>every day</i>. Typical contents include &quot;it&#x27;s cold, so dress warmly&quot;, &quot;roads are icy, so drive carefully&quot;, and &quot;Mrs Kim, 79, suffers from dementia and was last seen in Seoul wearing a black coat&quot;.<p>You can set your phone to filter these out, but then you&#x27;ll also miss the notification about North Korea commencing artillery bombardment.",
+      "responseHash": "e696e8a0e8d91c845e07697ee454da46ec0b6afee3415bae2fdd9c803f754ace"
+    },
+    {
+      "id": 49356512,
+      "type": "comment",
+      "parent": 49355825,
+      "by": "matrix87",
+      "time": 1787111476,
+      "text": "This seems really messy. We regulate gambling because it&#x27;s a specific thing, but how do you differentiate a non-addictive platform vs an addictive platform? (aside from this specific company... I mean in general). How do you &quot;test&quot; whether or not they&#x27;re inherently addictive?<p>At least in this specific instance, they can look at the blast radius and make a determination. But this feels legally unsatisfying in the general case",
+      "responseHash": "473cf628a9afa8ef3e08feaae0e3f0fa8539dce2c0ecb852d4a46174d33f29e2"
+    },
+    {
+      "id": 49356976,
+      "type": "comment",
+      "parent": 49356512,
+      "by": "wpietri",
+      "time": 1787114971,
+      "text": "It took decades to clearly define gambling enough to regulate it as we do now. Note that pinball was banned in major cities for decades because it was too similar to gambling devices.<p>And even with those definitions things weren&#x27;t very clear. I used to work for financial traders here in Chicago. Every year there would be an unofficial snow futures market. It was a fancy way for all the traders and clerks to gamble on monthly snowfall at O&#x27;Hare.<p>But to my delight, the CME eventually created an actual, legal weather derivative for snow. What made one gambling and the other not? What makes any given bet a legitimate financial trade versus pure gambling? Let me know if you figure it out.<p>My point being that not having a clear definition won&#x27;t stop us from grappling with the harms. Nor should it. Figuring out what new things really mean is always a messy process.",
+      "responseHash": "b5bdd1521ec8be2f330c6d8cf834860a2a2499f976f6a41b7829b79ec74dfe11"
+    },
+    {
+      "id": 49357415,
+      "type": "comment",
+      "parent": 49353702,
+      "by": "Derbasti",
+      "time": 1787118846,
+      "text": "&gt; The passionate hunger to do something significant and meaningful with my life was a major reason I took care never to have any children.<p>Raising kids is probably the most meaningful and significant thing I have done with my life.",
+      "responseHash": "136467ff34eee4f58435c02ac95dc56ae671cb2940fcbc023f99a9c0659ef196"
+    },
+    {
+      "id": 49360015,
+      "type": "story",
+      "by": "kareiva",
+      "time": 1787138510,
+      "title": "A joke domain purchase turned in geopolitical warfare",
+      "url": "https://sprocketfox.io/xssfox/2026/08/19/sondehub-and-war/",
+      "responseHash": "38b06f4c8b2c2c6be498d6fb00e35c5c1501b9b5c8364be45a4b488e14d6a54a"
+    },
+    {
+      "id": 49360220,
+      "type": "comment",
+      "parent": 49321298,
+      "by": "spicyusername",
+      "time": 1787139843,
+      "text": "The older I get the more I realize ambition and &quot;being ambitious&quot; is a completely misplaced way to orient your life.<p>The chance of validation from others is not a good reason for making one choice or another and a life made of choices of that kind will eventually leave you spiritually bankrupt.<p>Make decisions based on what you&#x27;re passionate about, based on what will bring and keep meaningful relationships into your life, based on what will leave you with habits that take you outside, into the sun, moving your body and eating healthy, and, sure, that will afford you the ability to pay for those things.<p>Focus on the process, not the outcome.<p>Making decisions based on what will make you more &quot;successful&quot; will make you a slave to others approval. And those others will use you up and waste your life to achieve their own objectives.<p>Also, if you pick the right partner, having kids does all the good things in life at once. It is the most efficient way to get yourself into the good life possible.",
+      "responseHash": "919263ee230a1e38614adc3eb1f314d5e403b559e4525064ea6aec41c7965510"
+    },
+    {
+      "id": 49360242,
+      "type": "story",
+      "by": "exceptione",
+      "time": 1787140018,
+      "title": "Devices with GrapheneOS support should be available in 2027",
+      "url": "https://grapheneos.social/@GrapheneOS/117078064184215730",
+      "responseHash": "2a817df8f54cbeb7b030dffaa44ee5d313e8ea28a25078bf6fbe87be60e9d2a9"
+    },
+    {
+      "id": 49360904,
+      "type": "comment",
+      "parent": 49360242,
+      "by": "tfrancisl",
+      "time": 1787143869,
+      "text": "I&#x27;ve never really understood why we chase Android-alikes on mobile platforms instead of trying to build on mainstream Linux. I know some folks in the nix community (nix-on-droid and other projects) have tried to bring us closer to this, but projects like Graphene seem to have a lot of traction.",
+      "responseHash": "db9b6b8f5466e33d1637e1ea6801eeaff1cce63993e1145a33916346f7b6dd3d"
+    },
+    {
+      "id": 49361052,
+      "type": "comment",
+      "parent": 49360904,
+      "by": "inigyou",
+      "time": 1787144449,
+      "text": "All the existing apps are on Android and iOS. Graphene lets you run them. You can&#x27;t have a bank account on a Linux phone* because they won&#x27;t let you, but you can on Android including on Graphene.<p>* before replying snarkily that Android is Linux, please take a long walk off a short pier, thanks",
+      "responseHash": "a8c3376cbdec7f0b2a137b0c80f3ed954bb7967daca858bd9717d80af0f65e4a"
+    },
+    {
+      "id": 49361132,
+      "type": "comment",
+      "parent": 49360242,
+      "by": "felooboolooomba",
+      "time": 1787144867,
+      "text": "[flagged]",
+      "responseHash": "74811a5c63f039f69c2b40fe9f01f7fcf81a204b026b261273d054e30581f01b"
+    },
+    {
+      "id": 49362887,
+      "type": "story",
+      "by": "__fst__",
+      "time": 1787153281,
+      "title": "Casio F-B100W-1A",
+      "url": "https://www.casio.com/uk/watches/casio/product.F-B100W-1A/",
+      "responseHash": "fd5e488fe5732b5a75f1eaad8bb02ae5f6331c1c8327c2833a9f4034407b1f6c"
+    },
+    {
+      "id": 49362934,
+      "type": "story",
+      "by": "downbad_",
+      "time": 1787153528,
+      "title": "Remote workers report the highest well-being in study of 7,700 employees",
+      "url": "https://www.colorado.edu/today/2026/08/12/remote-workers-report-highest-well-being-study-7700-employees",
+      "responseHash": "b44d368ed3a37dc8554eaa5d562b8976e6bc21e1c22751cf087a8bb6114a8a21"
+    },
+    {
+      "id": 49362986,
+      "type": "comment",
+      "parent": 49348141,
+      "by": "brasic",
+      "time": 1787153797,
+      "text": "It’s hard to overstate the reputation of the author of this post. Everything good about GitHub’s internal systems seemed to have his name all over it (I realize that today this statement hits different than a few years ago). Our times at GH didn’t overlap much but hearing the fact that he’s working at cursor increases my estimation of their engineering org by leaps and bounds.",
+      "responseHash": "c2680bf8e92f257c7e1145fd77e9bebadd258a1c9130f1eb85a896def717e0b5"
+    },
+    {
+      "id": 49363352,
+      "type": "comment",
+      "parent": 49362934,
+      "by": "Aurornis",
+      "time": 1787155346,
+      "text": "…of a single company<p>&gt; Researchers analyzed survey data from 7,704 employees at a large healthcare organization.<p>I’ve been remote and worked for remote companies for a long time. In my observation, the well-being is bimodal. The people who adapt well to remote thrive. There are a lot of people who think they’re going to love remote who ultimately flame out from the loneliness, isolation, lack of visual boundaries between work and home life, and lack of externally enforced routine.<p>It’s really sad when the latter happens because it’s almost always someone who was hired for their great work and abilities. Then over time they get drained and you can see that the remote work wasn’t what they expected.<p>It’s basically impossible to predict who will fall into each category at the interview stage, or at least I can’t do it. Prior remote work success (not just experience) is the best indicator but it’s hard to evaluate, too. Some of the most difficult remote hires I’ve worked with had past remote work experience, but it’s only after being hired that you learn they struggled at those companies too.",
+      "responseHash": "efa0ed8946cf61d4e19855ac5be7df18753628c617e5a5be0b2af82780a65ab5"
+    },
+    {
+      "id": 49363433,
+      "type": "story",
+      "by": "felineflock",
+      "time": 1787155634,
+      "title": "Civic Hygiene – avoid building technologies that could be used by a police state (2013)",
+      "url": "https://shkspr.mobi/blog/2013/11/civic-hygiene/",
+      "responseHash": "5f313aab75d291a0b3d0b1c3513f5b9060a7542fa3e507fe376eb26947474450"
+    },
+    {
+      "id": 49363529,
+      "type": "comment",
+      "parent": 49362887,
+      "by": "jorvi",
+      "time": 1787156057,
+      "text": "One thing I&#x27;ve never understood (and hopefully some Casio geek can shine a light on): why do almost all old Casio models have a 24&#x2F;12h time switch taking the premium spot as one of the main 4 buttons, instead of having it buried deep in the (awkward) menus. Seems to me that something like alarm or stopwatch setting or a second menu action button would have been far more useful.",
+      "responseHash": "eb70130a617d6a92a7bde26686b7710b82994e7f25e1e8c4212289d4d0edccd0"
+    },
+    {
+      "id": 49363671,
+      "type": "comment",
+      "parent": 49363433,
+      "by": "gmerc",
+      "time": 1787156780,
+      "text": "Harder than it looks. Everything is dual use. Certainly didn&#x27;t expect my game development telemetry[1] system used to improve artillery [2]...<p>[1] <a href=\"https:&#x2F;&#x2F;gdcvault.com&#x2F;play&#x2F;1012227&#x2F;Development-Telemetry-in-Video-Games\" rel=\"nofollow\">https:&#x2F;&#x2F;gdcvault.com&#x2F;play&#x2F;1012227&#x2F;Development-Telemetry-in-V...</a><p>[2] <a href=\"https:&#x2F;&#x2F;www.army.mil&#x2F;article&#x2F;85934&#x2F;solution_to_weapon_development_problem_halo_mass_effect\" rel=\"nofollow\">https:&#x2F;&#x2F;www.army.mil&#x2F;article&#x2F;85934&#x2F;solution_to_weapon_develo...</a>",
+      "responseHash": "dc8f10d473ad9d492676be34cd184d845a3510c48f5831e61d636951abe62af4"
+    },
+    {
+      "id": 49363706,
+      "type": "comment",
+      "parent": 49360015,
+      "by": "Firefishy",
+      "time": 1787156930,
+      "text": "I am part of the team which runs the OpenStreetMap.org infrastructure, we also get a lot of weird and wonderful requests &#x2F; emails. .mil, .gov, .edu and GeoTLD variants.<p>I should really do a write-up sometime.",
+      "responseHash": "0fa6e541085563b11c3926fec2719b4c80e60b52c3940f695ea929948fec344f"
+    },
+    {
+      "id": 49364136,
+      "type": "comment",
+      "parent": 49363529,
+      "by": "bushwart",
+      "time": 1787158808,
+      "text": "I spoke with a Casio engineer about this. It&#x27;s so that your bending wrist can accidentally switch it to 12h time when you actually really want it on 24h time or vice versa.",
+      "responseHash": "01de5b0672790f71b80f450ee5295bd8b347bb8546983bd4f0324adbf3cda9ff"
+    },
+    {
+      "id": 49364238,
+      "type": "comment",
+      "parent": 49360015,
+      "by": "monitron",
+      "time": 1787159327,
+      "text": "This was fascinating, thank you. I expected to read about legal threats against the folks collecting this data and am glad that those didn&#x27;t materialize.<p>Also I only realized after finishing the article what a breath of fresh air it was to read something that came straight from another human&#x27;s brain without LLM intermediation. Thank you to the author for that too.",
+      "responseHash": "5fc226268ba01984f747c8af0f5340293319de287b47365415b4319a7520c2e9"
+    },
+    {
+      "id": 49364559,
+      "type": "story",
+      "by": "rvz",
+      "time": 1787160758,
+      "title": "OpenRouter is joining Stripe",
+      "text": "Previously: Stripe will reportedly acquire OpenRouter for $7B+ <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=49323381\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=49323381</a>",
+      "url": "https://openrouter.ai/blog/announcements/openrouter-is-joining-stripe/",
+      "responseHash": "cc43cab807e0d985c92504df3f85a45159c1aa55d6fb2719467ed5d234b012f6"
+    },
+    {
+      "id": 49364745,
+      "type": "story",
+      "by": "Animux",
+      "time": 1787161649,
+      "title": "Google has stopped pushing Git tags for some Android source code",
+      "url": "https://grapheneos.social/@GrapheneOS/117057099753905023",
+      "responseHash": "e6c846bea6849a1fea139ea1d65875463d9ce308e603af27ccd6d37e38c0ddbc"
+    },
+    {
+      "id": 49365405,
+      "type": "story",
+      "by": "database64128",
+      "time": 1787164429,
+      "title": "Go 1.27",
+      "url": "https://go.dev/blog/go1.27",
+      "responseHash": "ed8e5a6ce32dcaad705af32b1ceea34a362963f964a29e3a6b7dc600bf109f1d"
+    },
+    {
+      "id": 49366367,
+      "type": "comment",
+      "parent": 49364745,
+      "by": "jmole",
+      "time": 1787169271,
+      "text": "“In violation of GPL” is a stretch.<p>Can’t imagine Google is making the process of obtaining source code easier on themselves though.<p>Android has always been more source-open than “open source”. The vast majority of community contributions that make it into the codebase are security fixes and small bug fixes.<p>Everything else is essentially all the work of Google and (to some extent) Samsung.",
+      "responseHash": "c38084d9cbe909885c4d132d646dfea59d6c6a996fdbc19fe26d2089933fc84f"
+    },
+    {
+      "id": 49366396,
+      "type": "comment",
+      "parent": 49364559,
+      "by": "apexalpha",
+      "time": 1787169406,
+      "text": "Great product, been using it for a while.<p>Turns out even a proxy can be worth $8bn with the right business model behind it.<p>Users get an array of providers competing behind a single API, meaning they have to compete on price and quality not vendor lock-in. This encourages users to join OpenRouter over specific model vendors.<p>Providers get easy access to revenue (and data) and new customers with little to no ad spending, encouraging them onto the platform too.<p>And that&#x27;s all you need. Win win.<p>Well done and congratulations.",
+      "responseHash": "5280bcbdf9a7a3d8ca6b56eb7bb6e71c39368021620b5702308dc1f2c59289f2"
+    },
+    {
+      "id": 49366580,
+      "type": "comment",
+      "parent": 49365405,
+      "by": "e4m2",
+      "time": 1787170373,
+      "text": "Not mentioned: Floating-point parsing and formatting now uses Russ Cox&#x27;s uscale algorithm.<p><a href=\"https:&#x2F;&#x2F;research.swtch.com&#x2F;fp\" rel=\"nofollow\">https:&#x2F;&#x2F;research.swtch.com&#x2F;fp</a><p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;golang&#x2F;go&#x2F;blob&#x2F;go1.27.0&#x2F;src&#x2F;internal&#x2F;strconv&#x2F;uscale.go\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;golang&#x2F;go&#x2F;blob&#x2F;go1.27.0&#x2F;src&#x2F;internal&#x2F;strc...</a>",
+      "responseHash": "81feb8fdf338b5897bcad87bb2c4fb086f5fb3b63fa2cf9ef0c5ff7d15cb7372"
+    },
+    {
+      "id": 49367035,
+      "type": "comment",
+      "parent": 49364745,
+      "by": "hatthew",
+      "time": 1787172492,
+      "text": "If you&#x27;re like me and struggled to parse the title, my understanding is, &quot;To obtain certain source code from Google, you could previously reference git tags, but now you have to fill out a form and wait for a human to give you a google drive link.&quot;",
+      "responseHash": "a85786214a2f8c68643ec5050940fcd9e156ae9fcc32a5c6107f1362e4edbb2b"
+    },
+    {
+      "id": 49367354,
+      "type": "comment",
+      "parent": 49363529,
+      "by": "VPenkov",
+      "time": 1787174431,
+      "text": "Newish Casio user here. From what I understand, it&#x27;s so that you can switch it to 24h after accidentally switching it to 12h and vice versa.",
+      "responseHash": "592e44c24801ee3488e421a450d60831a4565d3613a4714fb73daf3ff15350aa"
+    },
+    {
+      "id": 49367810,
+      "type": "comment",
+      "parent": 49366367,
+      "by": "flotzam",
+      "time": 1787177185,
+      "text": "GrapheneOS is arguing that throwing away the metadata of however many commits and squashing them into a messy tarball is not the &quot;preferred form of the work for making modifications&quot;, and that a manual process where you have to fill out a form in order to get a Google Drive link a week later is not &quot;a medium customarily used for software interchange&quot; in current times. Those are quotes from the GPLv2.",
+      "responseHash": "97f0e53ad3fd27f28fd97ae6b9b64390f493f436447af62b395e34a6200035d5"
+    },
+    {
+      "id": 49368886,
+      "type": "story",
+      "by": "EwanG",
+      "time": 1787184901,
+      "title": "CIA funding helped keep NeXT afloat in the 80s",
+      "text": "<a href=\"https:&#x2F;&#x2F;archive.is&#x2F;JfB5V\" rel=\"nofollow\">https:&#x2F;&#x2F;archive.is&#x2F;JfB5V</a>",
+      "url": "https://www.wsj.com/tech/steve-jobs-apple-next-cia-161b65f9?st=NWWds1&reflink=desktopwebshare_permalink",
+      "responseHash": "ae6bd093decaca3b44b46102d47cb7276915f843e5ec1dbcf7642f88258102ca"
+    },
+    {
+      "id": 49369163,
+      "type": "comment",
+      "parent": 49364745,
+      "by": "grapheneos",
+      "time": 1787187270,
+      "text": "They stopped pushing tags for any of the Pixel kernel or userspace driver repositories to AOSP. They also stopped pushing AOSP releases specific to Pixels which is why AOSP now only gets yearly releases, QPR2 releases and security backports to both of those. Other OEMs use the yearly and theoretically also the QPR2 releases. Both the yearly and QPR2 releases get monthly security backports. Since they dropped Pixel support from AOSP, they don&#x27;t push the releases not shipped by other OEMs anymore.<p>These changes directly led to our Motorola partnership. One of their security people reached out to us after seeing our posts about this with the launch of Android 16. We haven&#x27;t talked about it much since then since we adapted to it during the several weeks it delayed our Android 16 port. We then continued adapting to it and have fully worked around it. It was an ongoing problem but not a new one and we had accepted we had to deal with it as the new normal.<p>They were previously responding to our kernel source requests within a day. It was often done without hours. Despite the archaic system, this part wasn&#x27;t that bad. Recently, they&#x27;ve been taking weeks or longer to get back to us for the requests which is ridiculous. It&#x27;s the direct result of purposely adding a lot of friction with manual handling of the requests even if the delays weren&#x27;t directly planned by management.<p>Weeks or months of delay is not reasonable for one of the largest tech companies in the world. GPL doesn&#x27;t set a standard time limit for providing the sources, but that doesn&#x27;t mean they can delay it indefinitely. They need to do it in a reasonable amount of time. What&#x27;s reasonable for one of the largest tech companies in the world in 2026 with current technology is not the same as what was reasonable 30 years ago. Google chose to come up with a archaic way of distributing the sources involving someone manually going through a list and sharing Google Drive access. It&#x27;s a deliberate way of making it painful. If they can&#x27;t keep up with it and it gets delayed for weeks or months then they&#x27;re not complying with the GPL by not providing it in a reasonable amount of time. Law is not code and a time limit not being explicitly written down doesn&#x27;t mean there isn&#x27;t a limit to what&#x27;s reasonable for compliance.<p>They&#x27;ll sell far fewer Pixels because of these overall changes. It pushes GrapheneOS and other projects towards other devices instead. For us, Pixels are being used due to security rather than ease of supporting them. It&#x27;s now a lot harder to deal with Pixels than it would be for many other devices but they&#x27;re currently still the most secure option. We&#x27;re working on changing that and have a lot less reason to contribute to improving Pixels. We helped them fix serious security weaknesses for Pixels including vulnerabilities being exploited in the wild by forensic data extraction companies. Pixel security with the stock OS would be worse without GrapheneOS.",
+      "responseHash": "a605e28198095178e60bccde752d6f649e37dc21dabcfd2870415ec9b99b913f"
+    },
+    {
+      "id": 49370357,
+      "type": "comment",
+      "parent": 49323795,
+      "by": "rmunn",
+      "time": 1787199756,
+      "text": "Excellent article, and very useful for programming. For figuring out the day of the week <i>in your head</i>, there&#x27;s a different (and very useful) trick. It uses the month and day from the Gregorian calendar, rather than the day number, because 99% of the time that&#x27;s what you&#x27;ll be wanting: &quot;Which day of the week will August 31st, 2026 be?&quot;<p>The trick is to notice that in <i>any</i> year, leap year or not, the following dates will be the same day of the week in any year: 4&#x2F;4, 6&#x2F;6, 8&#x2F;8, 10&#x2F;10, and 12&#x2F;12. (Whether you use the month&#x2F;day style favored in America, or the day&#x2F;month style that the rest of the world uses, either way those dates are the same, which is convenient). <i>Which</i> day of the week those dates are will vary from year to year: this year (2026) those are all Saturdays, last year they were all Fridays, next year they will all be Sundays. But in any given year, those dates are separated by 63 days, a multiple of seven, so they are always going to be the same day of the week.<p>And that&#x27;s not all: look at 5&#x2F;9, 9&#x2F;5, 7&#x2F;11, and 11&#x2F;7 — those are also that same day of the week! (Again, conveniently, this works whether you&#x27;re using the American calendar style or the rest of the world). Those odd-numbered dates can easily be remembered with the mnemonic phrase &quot;a 9-to-5 job at 7-11&quot;. And voila, you have memorized one &quot;special&quot; day in nine of the twelve months. (What you do for January, February, and March I will cover later).<p>Now I&#x27;ll pause and explain why this is useful. Many of you have already made the intuitive leap to figure this out, but it&#x27;s still useful to see it spelled out. If you&#x27;re trying to figure out what day of the week a certain date, let&#x27;s say August 31st, is going to be, then you find the &quot;key&quot; date for that month (August 8th), and remember that this year, those key dates are Saturdays. (I don&#x27;t <i>yet</i> have a good mnemonic for easily remembering which key date is which for each year; I&#x27;d welcome suggestions if you can think of one). So, 8&#x2F;8 was a Saturday. Therefore, August 15th and 22nd and 29th are Saturdays. Therefore, August 31st will be a Monday this year. All of that is math you can easily do in your head in seconds.<p>Now, January, February, and March. March is always the same in every year: March 7th. 14th, 21st, and 28th are the &quot;key days&quot; that are the same day as 4&#x2F;4 <i>et al</i>. But the way I prefer to memorize March is that &quot;March 0th&quot; (which isn&#x27;t actually in March, it&#x27;s the last day of February) is the &quot;key day&quot;. That still lets me do the mental math for March easily enough, but it also reminds me that Feburary 28th or 29th, depending on whether you&#x27;re in a leap year, is the &quot;key day&quot; for this year. Finally, for January, I use January 3rd in non-leap-years and January 4th in leap years as the &quot;key day&quot; that I memorize; the number 4 is strongly associated with leap years, so &quot;leap year = January 4th&quot; is easy to memorize, and I just have to remember that it&#x27;s one day less in non-leap-years, January 3rd.<p>And so I just have to memorize &quot;January 3rd or 4th&quot; and &quot;March 0th&quot;, plus the phrase &quot;a 9-to-5 job at 7-11&quot;. And I can easily figure out in my head what day of the week any day of the year will be. For example, December 25th will be a Friday this year: that took me three seconds to work out in my head without looking at a calendar.",
+      "responseHash": "3c9896824a924fc4759c5519283530881d045d2fb319f7e11cb21928b73f9839"
+    },
+    {
+      "id": 49371006,
+      "type": "story",
+      "by": "luu",
+      "time": 1787206600,
+      "title": "Windows brings out the Rorschach test in everyone (2003)",
+      "url": "https://devblogs.microsoft.com/oldnewthing/20030825-00/?p=42803",
+      "responseHash": "08a0dd78376fba3ef4d32bcd64cc35d0f841a9161e781e02c7e28fd85f6cf443"
+    },
+    {
+      "id": 49371857,
+      "type": "story",
+      "by": "pjerem",
+      "time": 1787214044,
+      "title": "Don't paste the AI, please",
+      "url": "https://dontpastetheai.com/",
+      "responseHash": "811a18a413473f6b4578fcdaef1d4cd43a72cd92c68908137f2cd6536a0f379e"
+    },
+    {
+      "id": 49371925,
+      "type": "comment",
+      "parent": 49371006,
+      "by": "srvmshr",
+      "time": 1787214618,
+      "text": "Raymond Chen&#x27;s articles are true wealth of contemporary tech-lore. My favorite is the one where a user reported error on Flight Simulator map [0] and it escalated all the way up to Bill Gates &amp; the then chief of FS division.<p>[0] <a href=\"https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;oldnewthing&#x2F;20170418-00&#x2F;?p=95985\" rel=\"nofollow\">https:&#x2F;&#x2F;devblogs.microsoft.com&#x2F;oldnewthing&#x2F;20170418-00&#x2F;?p=95...</a>",
+      "responseHash": "9445869b1b662707c1151a6d46aa21f8ad7bb6bbfc845f2c629497500c7646e9"
+    },
+    {
+      "id": 49372025,
+      "type": "comment",
+      "parent": 49371857,
+      "by": "disillusioned",
+      "time": 1787215577,
+      "text": "Heh. Just got done writing (by hand!) a Principles of AI Use document for my (ironically) AI enablement firm, the first of which is:<p>Write as yourself. You’re being paid for your expertise and insights. Communicate them directly to us. Copying and pasting Claude responses into Slack or an email directly shifts the burden of comprehension and understanding to everyone else, and worse, risks skipping that step for yourself. Even if you’re fundamentally using Claude to gather your thoughts or help you prepare a response, you need to be writing it yourself, in your own voice. Not having Claude ape your voice, or “make it sound less like AI”. You, directly. Doing this will further reinforce your own understanding of the state of things, the same way teaching someone is the best way to learn. As a guideline: for Slack and email comms, this should be near-universally written as you. For deliverables that are longer form and follow a template like proposals, roadmap&#x2F;discovery work, etc., use of agents is expected but, see Principle #2. (Own the Output.)",
+      "responseHash": "61300c9ce8eb2c2d6cfe6d6fbfda4aa5cb5af9a6f5634c4771d0851dd1dafe48"
+    },
+    {
+      "id": 49372583,
+      "type": "story",
+      "by": "emctech",
+      "time": 1787220532,
+      "title": "AliExpress runs silent WebAudio fingerprinting that breaks Bluetooth multipoint",
+      "url": "https://blog.laserphile.com/2026/08/aliexpress-webpage-keeping-multipoint.html",
+      "responseHash": "df8b405101e0c7eaf45a7a2c656e7a5f1c3cbd67b0eea0e41d621ecabf5b6863"
+    },
+    {
+      "id": 49372945,
+      "type": "comment",
+      "parent": 49372583,
+      "by": "patspam",
+      "time": 1787223442,
+      "text": "I noticed in the last few weeks that if I’d recently opened the AliExpress iOS app (ie. it was backgrounded) my car audio would freak out thinking I was giving it an audio command. Killing the AliExpress app immediately fixed the problem. After seeing it happen more than once I assumed it was something dodgey and uninstalled the app.",
+      "responseHash": "bc362958cda35024c3fd7713c5c1ee02eec96e4c6b90feb345a5cdbae9cd986d"
+    },
+    {
+      "id": 49372995,
+      "type": "comment",
+      "parent": 49372945,
+      "by": "lukeify",
+      "time": 1787223812,
+      "text": "I cannot ever imagine installing something like AliExpress as an app.",
+      "responseHash": "5a644d775cd779e8e627070d0200ef9d8a93d756e7fc72c5d274a8884f32a203"
+    },
+    {
+      "id": 49374269,
+      "type": "story",
+      "by": "abhisek",
+      "time": 1787232192,
+      "title": "Malicious Rust crate Arrayref runs a build-time payload",
+      "text": "<a href=\"https:&#x2F;&#x2F;blog.rust-lang.org&#x2F;2026&#x2F;08&#x2F;20&#x2F;supply-chain-attack-on-arrayref&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;blog.rust-lang.org&#x2F;2026&#x2F;08&#x2F;20&#x2F;supply-chain-attack-on...</a><p><a href=\"https:&#x2F;&#x2F;github.com&#x2F;rustsec&#x2F;advisory-db&#x2F;issues&#x2F;3161\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;rustsec&#x2F;advisory-db&#x2F;issues&#x2F;3161</a>",
+      "url": "https://safedep.io/arrayref-proc-macro1-rust-build-time-malware/",
+      "responseHash": "20e7c86c911e6a2d2ccc34764730c9327c39d29d4e60f7fa6720b1aee63ed3ac"
+    },
+    {
+      "id": 49375609,
+      "type": "comment",
+      "parent": 49374269,
+      "by": "cube00",
+      "time": 1787238010,
+      "text": "GitHub really needs something finer-grain then just pretending the repo never existed during these incidents. [1]<p>The bad package version has also just disappeared from crates.io [2] with no indication its been yanked. There&#x27;s no security advisory there either [3] &quot;No advisories found for this crate.&quot;<p>I feel crates.io was unprepared for a security incident like this since they&#x27;re managing the response [4]<p>[1]: <a href=\"https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20260820145918&#x2F;https:&#x2F;&#x2F;github.com&#x2F;droundy&#x2F;arrayref\" rel=\"nofollow\">https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20260820145918&#x2F;https:&#x2F;&#x2F;github.co...</a><p>[2]: <a href=\"https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;arrayref&#x2F;versions\" rel=\"nofollow\">https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;arrayref&#x2F;versions</a><p>[3]: <a href=\"https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;arrayref&#x2F;security\" rel=\"nofollow\">https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;arrayref&#x2F;security</a>  (I&#x27;d give an Wayback link but that&#x27;s also broken <a href=\"https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20260820150747&#x2F;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;arrayref&#x2F;security\" rel=\"nofollow\">https:&#x2F;&#x2F;web.archive.org&#x2F;web&#x2F;20260820150747&#x2F;https:&#x2F;&#x2F;crates.io...</a>)<p>[4]: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;rustsec&#x2F;advisory-db&#x2F;issues&#x2F;3161#issuecomment-5354024485\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;rustsec&#x2F;advisory-db&#x2F;issues&#x2F;3161#issuecomm...</a>",
+      "responseHash": "e1a59bff9d357963c5d9a0a67ae7fa96ad177a7394c65476f7346bb9aa2c4a94"
+    },
+    {
+      "id": 49375996,
+      "type": "story",
+      "by": "Bluestein",
+      "time": 1787239562,
+      "title": "Vomit: Clean up Claude 5's token output with a separate LLM",
+      "url": "https://github.com/zachahn/vomit",
+      "responseHash": "17da1d611bca550b0c68355bfbd82fb44a93907aced066fbf5eeb24352bfdfd7"
+    },
+    {
+      "id": 49376272,
+      "type": "comment",
+      "parent": 49372583,
+      "by": "lxgr",
+      "time": 1787240794,
+      "text": "I wish such shenanigans would simply trigger the little speaker icon most browser display on tabs these days.<p>Given that they don&#x27;t (at least in my experience), I&#x27;m assuming &quot;playing silent audio&quot; is a sufficiently common thing for websites to do to have motivated browsers into doing the slightly more complicated thing of actually analyzing audio streams for content...<p>Now I wonder, does this also allow websites to continue running in the background on mobile browsers? Playing media is one of the very few things that can convince iOS Safari to keep a tab running indefinitely, in my experience.",
+      "responseHash": "881ab637d9a0df1a86c9f319b8823684d2e45dd675ca184702ee7c71c6da36e4"
+    },
+    {
+      "id": 49376834,
+      "type": "comment",
+      "parent": 49375996,
+      "by": "trefoiled",
+      "time": 1787243242,
+      "text": "I&#x27;ve been grappling with this for weeks, not just in Claude but in Codex as well, which isn&#x27;t quite as bad but still annoying. AGENTS.md does very little, agents will consistently violate the communication preferences, especially as the session drags on. It&#x27;s incredible to me that there&#x27;s no good way to reliably change the way an LLM responds to you that a workaround like this would even be necessary. It seems like such a failure to live up to the promises of the product.<p>The baked in communication style of these models is so obnoxious it&#x27;s impacting my work. The best way I can describe it is that everything is optimized to <i>impress</i> the user and make the agent sound more authoritative, but the way this is done is through deliberate obfuscation, inserting inappropriate and extremely dense jargon, and bizarre, stilted metaphors. It&#x27;s like they&#x27;ve been trained to produce output that&#x27;s hard to read.",
+      "responseHash": "e9a5edcba5919a4046d5506632ccb272600ca2e2aa5c3cf3715b6ad779f04747"
+    },
+    {
+      "id": 49376987,
+      "type": "comment",
+      "parent": 49347543,
+      "by": "lordnacho",
+      "time": 1787244020,
+      "text": "As an old man I now think the art and humanities classes in school landed at the wrong time.<p>You need context to really understand a book or a work of art. You want to know what kind of environment produced it, what it&#x27;s talking to.<p>But when you&#x27;re in school, there isn&#x27;t time for that. You aren&#x27;t going to know a bunch of things about history to put things into context, because there simply isn&#x27;t enough time for it.<p>So you end up doing a bunch of weird commentary on say a book where you as a teenager have no idea where to place it. Like if you read Dickens, will you know enough about the industrial revolution, the condition of cities at the time, and such? Will you know what kind of thing the characters would care about?<p>How would you know what the characters in Pride and Prejudice are worried about if you don&#x27;t know how that society is?<p>So as a kid it just totally didn&#x27;t mean anything to me, it was just a strange torture where you are meant to comment on the motivations of the characters and how the writing style brings that out.",
+      "responseHash": "cbe954ab0612e2710a718dc9ee1bf3a7f6e82a720a467abc228a7f5e32075430"
+    },
+    {
+      "id": 49377240,
+      "type": "comment",
+      "parent": 49368886,
+      "by": "jldugger",
+      "time": 1787245225,
+      "text": "You know, when I see the phrase &quot;CIA funding&quot; I expect something like &quot;the CIA put a backdoor in NeXT computers destined for Hungary&quot; or something, not &quot;NeXT made computers and the CIA bought and used them.&quot;",
+      "responseHash": "b09499f280b0a3a9ecc907e9446e63da5572485507443e4b2cd02ed2148afb31"
+    },
+    {
+      "id": 49377553,
+      "type": "comment",
+      "parent": 49377240,
+      "by": "AdmiralAsshat",
+      "time": 1787246674,
+      "text": "Did you know about the CIA&#x27;s DECADES-LONG FUNDING of Coca-Cola? I have a hot tip from my good friend the soda machine technician that the CIA regularly funnels THOUSANDS OF DOLLARS a month into the pockets of BIG SODA when they restock their office kitchens and vending machines with Coca-Cola products!<p>This insidious relationship goes ALL THE WAY TO THE TOP, my friend!",
+      "responseHash": "429bcc62edbbef18e74e4b4238f815f1c72e6c7a2987afd7c59f8e76d71972ab"
+    },
+    {
+      "id": 49378446,
+      "type": "story",
+      "by": "rafaelc",
+      "time": 1787251127,
+      "title": "Why aren't smart people happier? (2022)",
+      "url": "https://www.experimental-history.com/p/why-arent-smart-people-happier",
+      "responseHash": "4fe817fb48503ce98ce54a8e5a4d360a39be071f9b08553f8e72a39598d3648e"
+    },
+    {
+      "id": 49378630,
+      "type": "story",
+      "by": "Akasci",
+      "time": 1787252072,
+      "title": "Watching TikTok and Instagram deactivates the cognitive control network: Study",
+      "url": "https://www.rathbiotaclan.com/tiktok-videos-deactivate-key-cognitive-brain-regions/",
+      "responseHash": "29dd4f64988f1279ed2a210b702fd3384148edd6b35902fb5f34515fc663d151"
+    },
+    {
+      "id": 49378768,
+      "type": "story",
+      "by": "danielvaughn",
+      "time": 1787252736,
+      "title": "Show HN: Huzzah – a novel approach to coding with AI",
+      "text": "Hello everyone. I&#x27;ve been working on this experimental editor called Huzzah.<p>I&#x27;ve been working almost exclusively with coding agents since January of this year, and over the past few months I began to feel utterly exhausted by them. They&#x27;re great, but I&#x27;m finding it more and more tedious to write full sentences for every change I want. Not only that, but it seems there&#x27;s a complexity limit for codebases - beyond a certain point the agent begins confusing itself.<p>I&#x27;d like to go back to writing code, but I don&#x27;t want to go all the way back to fully manual coding. So I&#x27;ve come up with this interaction paradigm where you:<p><pre><code>  1. write pseudocode in whatever way makes the most sense to you\n  2. on save, the editor synchronizes your work to real source code\n  3. the pseudocode is persisted alongside the generated code, making your prompt effectively a stored record of intent.\n</code></pre>\nIt may not work for every use case, but in my initial playthroughs I&#x27;ve found it very enjoyable.<p>Right now it&#x27;s just a proof of concept - installation instructions are here in the readme: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;danielvaughn&#x2F;hz\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;danielvaughn&#x2F;hz</a><p>You can also watch a video of it in action here: <a href=\"https:&#x2F;&#x2F;x.com&#x2F;danielvaughn&#x2F;status&#x2F;2090456808431165715\" rel=\"nofollow\">https:&#x2F;&#x2F;x.com&#x2F;danielvaughn&#x2F;status&#x2F;2090456808431165715</a><p>Cheers!",
+      "url": "https://www.danielvaughn.dev/posts/huzzah/",
+      "responseHash": "e71d8f9503fed14a649c1e3431ae6c0792ec38845d46795277e9bb6267804de0"
+    },
+    {
+      "id": 49378957,
+      "type": "story",
+      "by": "0xedb",
+      "time": 1787253744,
+      "title": "The August 17 outage",
+      "url": "https://github.blog/news-insights/company-news/the-august-17-outage-and-the-work-ahead/",
+      "responseHash": "0e833db0c4f10bd920ccde59e039333a0321433c9b11f49b0c518be981cb7857"
+    },
+    {
+      "id": 49379179,
+      "type": "comment",
+      "parent": 49378957,
+      "by": "blakesterz",
+      "time": 1787254873,
+      "text": "<p><pre><code>  &quot;Since April, monthly commits have grown from 1.4 billion to 2.9 billion. &quot;\n</code></pre>\nWow, that is some incredible growth in a really short time.",
+      "responseHash": "ffc1b1e4c2931abb7ee0c8ef1f7eb09dcc1fad4c205dcf39344eb52612e54996"
+    },
+    {
+      "id": 49379412,
+      "type": "comment",
+      "parent": 49378630,
+      "by": "Aurornis",
+      "time": 1787255829,
+      "text": "dlPFC deactivation is observed in a lot of immersive tasks. There are a lot of tasks that do this. Playing video games, as one example <a href=\"https:&#x2F;&#x2F;link.springer.com&#x2F;chapter&#x2F;10.1007&#x2F;4-431-26797-2_11\" rel=\"nofollow\">https:&#x2F;&#x2F;link.springer.com&#x2F;chapter&#x2F;10.1007&#x2F;4-431-26797-2_11</a><p>Interpreting fMRI results like this article does is almost always wrong. Different activities produce different patterns of brain activity. You could put someone in an fMRI machine, have them do virtually any activity, and then write a headline saying that doing that activity turns of key brain regions that are important for something. The trick is that all brain regions are important for something. Having them be less active during a task doesn&#x27;t imply that it&#x27;s good or bad. It just shows you which parts of the brain are involved in that task.<p>This blogspam article isn&#x27;t great. The study at <a href=\"https:&#x2F;&#x2F;www.sciencedirect.com&#x2F;science&#x2F;article&#x2F;pii&#x2F;S1053811926000406\" rel=\"nofollow\">https:&#x2F;&#x2F;www.sciencedirect.com&#x2F;science&#x2F;article&#x2F;pii&#x2F;S105381192...</a> has more details, like the fact that those brain regions come online while viewing other less-preferred videos. The results aren&#x27;t really indicative of anything by themself. It would have been more interesting if they compared to something, like watching a long involved movie or playing video games, but they didn&#x27;t.<p>Also this post is coming from a fresh account that only spams links to this blog. Maybe the mods will want to switch the link to the actual study instead: <a href=\"https:&#x2F;&#x2F;www.sciencedirect.com&#x2F;science&#x2F;article&#x2F;pii&#x2F;S1053811926000406\" rel=\"nofollow\">https:&#x2F;&#x2F;www.sciencedirect.com&#x2F;science&#x2F;article&#x2F;pii&#x2F;S105381192...</a>",
+      "responseHash": "d4b9ba24c5d1d1595b8860a3307a2070cb354779dc97c34a001689b80541ae07"
+    },
+    {
+      "id": 49379550,
+      "type": "story",
+      "by": "speckx",
+      "time": 1787256446,
+      "title": "Aaron Swartz was prosecuted for scraping, while Meta does it without consequence",
+      "url": "https://blog.curiousquail.com/im-upset-again-about-a-co-creator-of-rss-being-prosecuted-for-something-meta-is-doing-with-little-consequence/",
+      "responseHash": "4300c08e3c5636e5c87239aa546fc3e4b55bc3eba5b1fff671ab0e172ca40746"
+    },
+    {
+      "id": 49379781,
+      "type": "comment",
+      "parent": 49379550,
+      "by": "milkytron",
+      "time": 1787257537,
+      "text": "The part that still bothers me so much about the US vs Swartz case is that JSTOR didn&#x27;t pursue civil litigation against Aaron. It was the US government that pursued him.<p>There was little for the government to lose in the case. In a case vs Meta, at the scale it has reached, it could have wide ranging economic implications limiting the investment in AI, which the US is absolutely not willing to pursue at this point in time (or possibly ever).<p>Basically, being a rich public company provides legal advantages when the US government has similar goals.<p>The whole thing is incredibly sad and exposes the hypocrisy of the US court system and government as a whole.<p>RIP Aaron.",
+      "responseHash": "cc6fb8fdd26a9c7daf5eb7f4c9c2e8a11308995ebefce1216af5905905a73c4c"
+    },
+    {
+      "id": 49380334,
+      "type": "comment",
+      "parent": 49378768,
+      "by": "reticulates",
+      "time": 1787260339,
+      "text": "I think you’re probably missing why it’s exhausting. The problem is not writing English, it’s the rate of change. Programming is meditative, it is a thinking process, the code you output is an artifact of your thinking. Agent-based development… there is no thinking, no meditation, you’re delegating the thinking to a machine, you’re just barking what you want at it, incessantly, endlessly.<p>For businesses it makes sense to abandon programming in favor of delegating to agents that can do more in less time, but for programmers, it is a loss. Either be a programmer and code, or be a delegator and delegate, you aren’t going to make the life of a delegator suck any less by trying to trick yourself into thinking you’re programming.",
+      "responseHash": "3203221156a10d48ca8dc917c9492ba5cb43e867bdb3118a597402d42795e137"
+    },
+    {
+      "id": 49380602,
+      "type": "comment",
+      "parent": 49378446,
+      "by": "dnlosx",
+      "time": 1787261783,
+      "text": "I will speak from my experience. When I was younger, I considered myself very smart, and I was pretty unhappy. As I grew, I met people much smarter than me; I stopped seeing myself as &quot;the smart&quot; one, and now I am pretty happy.<p>It&#x27;s not that I became happier because I became less smart; I became happier when I stopped thinking my value was based on my intelligence, so I stopped trying to be recognized by my intellect and started working on my mental health and building healthy relationships.",
+      "responseHash": "146229d358f9fa5b48163cd43e5cd97b105bb8e43ad8ffc841104cdfde825e87"
+    },
+    {
+      "id": 49380648,
+      "type": "comment",
+      "parent": 49378957,
+      "by": "cube00",
+      "time": 1787262033,
+      "text": "&gt; Errors in those services triggered a client-side retry loop that increased traffic during recovery<p>Symptomic of a wider trend to avoid showing the user any error at all costs, even if that means they sit watching a spinner for 7 hours.<p>&gt; Delayed replies to a single internal endpoint triggered a latent retry bug in VS Code that amplified traffic by approximately 10x and caused delayed recovery for the Copilot Token Service.<p>The detailed root analysis tries to pass this off as a &quot;bug&quot;. You can&#x27;t seriously tell me client retry doesn&#x27;t have a unit test which ensures the retry back off behaviour is functioning exactly as designed. In this case aggressively to try and hide problems if token service responses become flakey.",
+      "responseHash": "e17c5ec662fbcfbb01269c7e3a1970ccfc837d74e451979c5282e98073befdf8"
+    },
+    {
+      "id": 49381236,
+      "type": "comment",
+      "parent": 49380648,
+      "by": "ACCount37",
+      "time": 1787265621,
+      "text": "&quot;You can&#x27;t seriously tell me that the unhappy leg of the code path has no test coverage.&quot;<p>Sometimes I forget how ignorant HN can be of real world software development and the bar of corporate code quality, and then bangers like this remind me of it.",
+      "responseHash": "0f870de9147c5c4c619b183bd4f2aee17cfda1c2f436b8968641192236a0d01b"
+    },
+    {
+      "id": 49381689,
+      "type": "comment",
+      "parent": 49380602,
+      "by": "annzabelle",
+      "time": 1787268566,
+      "text": "I got labeled &quot;smart but lazy&quot; at a pretty young age (high test scores, didn&#x27;t do any homework), and I let that label stick with me for far too long. I took some pride in how I could get the top score in a class without studying, and didn&#x27;t realize that studying itself was a useful skill. I let this whole mindset drag me down through undergrad (especially once I hit the point where I really ought to have studied), and I think it made me miserable.",
+      "responseHash": "6b1f73482770fafc50a0abca089da7bd3e3f3bcf75dfede0cda869c290239f9e"
+    },
+    {
+      "id": 49381896,
+      "type": "story",
+      "by": "mtokmak06",
+      "time": 1787270195,
+      "title": "Ox Alpha",
+      "text": "<a href=\"https:&#x2F;&#x2F;twitter.com&#x2F;OpenRouter&#x2F;status&#x2F;2090544970923184269\" rel=\"nofollow\">https:&#x2F;&#x2F;twitter.com&#x2F;OpenRouter&#x2F;status&#x2F;2090544970923184269</a>, <a href=\"https:&#x2F;&#x2F;xcancel.com&#x2F;OpenRouter&#x2F;status&#x2F;2090544970923184269\" rel=\"nofollow\">https:&#x2F;&#x2F;xcancel.com&#x2F;OpenRouter&#x2F;status&#x2F;2090544970923184269</a>",
+      "url": "https://openrouter.ai/stealth/ox-alpha",
+      "responseHash": "4b30895896281edb98722afd90cc83c34333b6b0c14e0143a34a18394662db0e"
+    },
+    {
+      "id": 49382152,
+      "type": "story",
+      "by": "mooreslaw",
+      "time": 1787272117,
+      "title": "There's no such thing as a small software team anymore",
+      "url": "https://jacob.gold/posts/theres-no-such-thing-as-a-small-software-team/",
+      "responseHash": "9eaf7b33c724168196cb0c292433f8032a87c34c6a0f1a3f410648138de1140e"
+    },
+    {
+      "id": 49382571,
+      "type": "comment",
+      "parent": 49382152,
+      "by": "kstenerud",
+      "time": 1787275881,
+      "text": "Hundreds of bots modifying thousands of microservices may sound good on the surface, but all those thousands of microservices make up an architecture and a product.<p>Agents aren&#x27;t very good at carrying the entire model in their context, so when they reason about a small piece of code, they often come up with something that hurts other parts of the code (especially as the KLOCs pile up). The complexity hasn&#x27;t been replaced, only moved. And guess what&#x27;s going to happen when all of these microservices become even more of a moving target than they already are?<p>AI is capable of improving productivity, but this approach sounds more like a nightmare in the making.",
+      "responseHash": "3fd4661de892b181f82b24e325482946ad0e25f9f38c392c277b8d0a7c3883df"
+    },
+    {
+      "id": 49382737,
+      "type": "comment",
+      "parent": 49381896,
+      "by": "fedpost",
+      "time": 1787277282,
+      "text": "It&#x27;s Chinese. Won&#x27;t answer anything about Tiananmen Square but will gleefully give you instructions to perform various electronic warfare attacks that opus and fable instantly refuse.<p>Side tangent, why is fable so weird about questions involving &quot;Welch&#x27;s method&quot;? Even really trivial ones it&#x27;ll shut down frequently. CFAR and STFT are both totally fine but Welch&#x27;s is apparently taboo, it&#x27;s wild.",
+      "responseHash": "cbd64228b2f2b3d6db0c710576d2ef4dfa13cad1a69aa435f32a6defc2aef008"
+    },
+    {
+      "id": 49383026,
+      "type": "story",
+      "by": "Cider9986",
+      "time": 1787279867,
+      "title": "AI companies destroy physical books – let's scan rare books before it's too late",
+      "url": "https://annas-archive.gl/blog/physical-destruction.html",
+      "responseHash": "a1e49d6d499e46e663354b3caa9ad8da4e222a1d8346e4468628768e01a16d2b"
+    },
+    {
+      "id": 49383354,
+      "type": "comment",
+      "parent": 49383026,
+      "by": "ezfe",
+      "time": 1787282507,
+      "text": "I dislike these AI companies but let&#x27;s be clear here: the copyright holders are the ones locking these books up. If they don&#x27;t want to print more copies, then they could release the copyright on them.<p>Instead, they enforce the copyright and force AI companies to shred books they want to ingest.<p>edit: Also, an AI company would only ever care to purchase, scan, destroy a book once. Presumably many books have more than one copy.",
+      "responseHash": "4098d61c8cc40e5a8f91be2edc94012eed094dd6d8c5154ab5c621d5c317d69f"
+    },
+    {
+      "id": 49384180,
+      "type": "story",
+      "by": "rdmuser",
+      "time": 1787290294,
+      "title": "Japan tried to build an operating system for the world, the US intervened",
+      "url": "https://www.xda-developers.com/japan-tried-build-operating-system-entire-world-us-government-intervened/",
+      "responseHash": "caf541cc75f20f2617096b46b51b9f437e7f43e3a3db7a42a7c479b1edc2ffe2"
+    },
+    {
+      "id": 49384210,
+      "type": "story",
+      "by": "underdeserver",
+      "time": 1787290658,
+      "title": "Stop Making TUIs",
+      "url": "https://sockpuppet.org/blog/2026/08/20/stop-making-tuis/",
+      "responseHash": "0bd32df1f0564e47ba1be09105196ef2f97c2b3a3e1f9e5b5f4610b726a0d410"
+    },
+    {
+      "id": 49384267,
+      "type": "comment",
+      "parent": 49384180,
+      "by": "ColdStream",
+      "time": 1787291356,
+      "text": "I think it is like most software, especially in the OS space. The technology doesn&#x27;t have to be the best, it just needs to get lucky enough to become a standard and build a moat with that.<p>And by the mid 80&#x27;s the moats were already very deep.<p>Amiga couldn&#x27;t over come the PC. IBM couldn&#x27;t over come the moat of Windows with OS2. Intel couldn&#x27;t overcome x86 with the i432 or Itanium. Luck and market forces from said luck played a huge part in determining who won.",
+      "responseHash": "225d8a6e330ab8d06897e651d398b716f27154c74db2ccbd15922952ec3ab28e"
+    },
+    {
+      "id": 49384354,
+      "type": "comment",
+      "parent": 49384267,
+      "by": "specproc",
+      "time": 1787292299,
+      "text": "&gt; The report stated that the US had concerns about Japanese government market intervention to support the TRON OS and identified two specific markets where TRON was receiving government advantage.<p>The US government is one hell of a moat.",
+      "responseHash": "ccf018f17b739a5552272dc96b7d7903ff9a037823077f1ef71a62f97b806d3c"
+    },
+    {
+      "id": 49384447,
+      "type": "comment",
+      "parent": 49378957,
+      "by": "afc",
+      "time": 1787293215,
+      "text": "&gt; Both incidents were capacity failures at their core. We failed to scale critical components before demand exceeded their capacity.<p>This is the wrong way to think about this because there&#x27;s no such thing as infinite capacity. A large distributed system will be simultaneously mostly idle and (in some subcomponents) overloaded. The root cause is not &quot;a component didn&#x27;t have enough capacity (because of auto scaling failures)&quot;, but rather &quot;this complex system collapses (rather than degrade gracefully) when demand exceeds capacity&quot;.<p>When components reach capacity limits, the excess traffic of the lowest priority should be rejected. Rejected traffic should not be retried — in fact, not only should clients not retry these errors, these errors should cause client-side throttling. Traffic isolation should be applied — if the cause of the overload is a single client&#x2F;customer system, no other system should be affected.<p>Nearly a decade ago I wrote about some of the techniques we applied at Google to implement these protections: <a href=\"https:&#x2F;&#x2F;sre.google&#x2F;sre-book&#x2F;handling-overload&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;sre.google&#x2F;sre-book&#x2F;handling-overload&#x2F;</a> Most other large internet services have since copied them, afaik.",
+      "responseHash": "79d4d62a6eca7bc14629bfdfdc5001ceb5a65f8c597d08c28d187846e11900c1"
+    },
+    {
+      "id": 49384928,
+      "type": "comment",
+      "parent": 49384210,
+      "by": "JoshTriplett",
+      "time": 1787297338,
+      "text": "You know what&#x27;s awesome about TUIs? They live in a tab in my terminal. 95% of the time, my system has three windows open: terminal, browser, Signal.<p>Please, make more TUIs and web apps, so they can live in my terminal or my browser.",
+      "responseHash": "b86f3122734abb641676de67910e00307d9b1ff69a464feccae2cb179e18dd37"
+    },
+    {
+      "id": 49386699,
+      "type": "story",
+      "by": "rcymerys",
+      "time": 1787312885,
+      "title": "I'm becoming AI-blind",
+      "url": "https://cymerys.com/w/im-becoming-ai-blind",
+      "responseHash": "5a20e08f9d1448028f893696603c56a0f4d8ae45ef5bca021068899982aea1be"
+    },
+    {
+      "id": 49386895,
+      "type": "story",
+      "by": "floathub",
+      "time": 1787314213,
+      "title": "Felony charges for citizen deleting phone data at US Border",
+      "text": "<a href=\"https:&#x2F;&#x2F;archive.ph&#x2F;SflVC\" rel=\"nofollow\">https:&#x2F;&#x2F;archive.ph&#x2F;SflVC</a><p><a href=\"https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=_2rokxux5cU\" rel=\"nofollow\">https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=_2rokxux5cU</a>",
+      "url": "https://www.nytimes.com/2026/08/21/us/politics/samuel-tunick-deleted-phone-felony.html",
+      "responseHash": "dbae0ee79e05d35941f8d9e5cd3f037b2f5fd298936674ea8b658a27add700b4"
+    },
+    {
+      "id": 49387497,
+      "type": "story",
+      "by": "throw7",
+      "time": 1787317471,
+      "title": "Grand jury declines to indict Ohio man charged with destroying Flock camera",
+      "url": "https://san.com/cc/grand-jury-declines-to-indict-ohio-man-charged-with-destroying-flock-camera/",
+      "responseHash": "dc733eeb0c1183403cda628b1773f8ab70d6c2587acb6d2ae7a076d6a8b87c23"
+    },
+    {
+      "id": 49387525,
+      "type": "story",
+      "by": "speckx",
+      "time": 1787317646,
+      "title": "New Worlds: We are living in the future of J.G. Ballard or William Gibson",
+      "url": "https://precastreinforced.co.uk/2026/08/16/new-worlds/",
+      "responseHash": "7b31b41596b33d22d4e7d042226246f05b1d4c53e6c10426f844212fddf52d74"
+    },
+    {
+      "id": 49388070,
+      "type": "comment",
+      "parent": 49383026,
+      "by": "thread_id",
+      "time": 1787320273,
+      "text": "I don&#x27;t see any mention of Project Ocean - AKA Google books. Before AI they endevoured to digitize books in a massive online library.  This inccluded rare and out of print books many which are archived at libraries.  Because they had to preserve the books and return them in the condition they received then they created elaborate technology to accomplish this.  The project was met with significant legal challenges from authors and publishers which was eventually overcome.  The legal precedents that were established from Project Ocean laid the ground work for the process as it exists today.  Books from libraries are still being preserved.<p><a href=\"https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Google_Books\" rel=\"nofollow\">https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Google_Books</a><p><a href=\"https:&#x2F;&#x2F;arstechnica.com&#x2F;tech-policy&#x2F;2015&#x2F;10&#x2F;appeals-court-rules-that-google-book-scanning-is-fair-use&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;arstechnica.com&#x2F;tech-policy&#x2F;2015&#x2F;10&#x2F;appeals-court-ru...</a><p><a href=\"https:&#x2F;&#x2F;arstechnica.com&#x2F;ai&#x2F;2025&#x2F;06&#x2F;anthropic-destroyed-millions-of-print-books-to-build-its-ai-models&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;arstechnica.com&#x2F;ai&#x2F;2025&#x2F;06&#x2F;anthropic-destroyed-milli...</a>",
+      "responseHash": "213d4fdc92acd0fbf79bf1e3fa5973f7cf6c8ad46111f55b48f298528f831c6f"
+    },
+    {
+      "id": 49388154,
+      "type": "story",
+      "by": "speckx",
+      "time": 1787320597,
+      "title": "Kagi added a setting for removing paywalled links from search results",
+      "url": "https://kagi.com/changelog#11296",
+      "responseHash": "798d681380dbddcb386a128dbb75ae4bf39c2deeb9b8ae3f3e29319a75d80fb3"
+    },
+    {
+      "id": 49388526,
+      "type": "comment",
+      "parent": 49386699,
+      "by": "causal",
+      "time": 1787322018,
+      "text": "There&#x27;s some psychological mechanism by which my brain immediately recognizes AI generated text and just short-circuits to &quot;there is no information here&quot;.<p>And when I force myself to read AI-generated text I realize I&#x27;m making my brain do creative work to impart meaning to the words. It is exhausting because my brain is literally trying to do a just-in-time rewrite of the text into something valuable.<p>Something is deeply wrong with AI generated output, and I say this as someone who is typically very impressed by AI.",
+      "responseHash": "ed384449caa82f26734ef9ce7d4c003b61dcc5e9fc0af68c73890309118c08fb"
+    },
+    {
+      "id": 49388752,
+      "type": "story",
+      "by": "aakil",
+      "time": 1787322712,
+      "title": "Claudette: Make Claude stop talking like a BuzzFeed article",
+      "url": "https://github.com/adnanakil/nobuzz/blob/main/README.md",
+      "responseHash": "8f65f1b0def335b5fb50c10672f211f969daaa58541a7c52590b181e8fe5d209"
+    },
+    {
+      "id": 49388910,
+      "type": "comment",
+      "parent": 49388154,
+      "by": "delis-thumbs-7e",
+      "time": 1787323341,
+      "text": "I think this is amazing. Love Kagi. I’m happy to pay for a good search.<p>Nobody speaks about their AI Assistant, but it is really good. They somehow harnessed it so that it mainly searches info first and sticks to the verifiable data. I prefer it to Claude or any other, because it actually answers the question I need without fluff or “Great question! Here’s some plausible nonsense you can trip over instead of doing actual research!”.",
+      "responseHash": "22bb9305cc6f20c9616a54540b299ea59b1b0c42bf7de6d654d442f2604a4f6b"
+    },
+    {
+      "id": 49389170,
+      "type": "comment",
+      "parent": 49388526,
+      "by": "TalkingCodeMonk",
+      "time": 1787324417,
+      "text": "The &quot;something deeply wrong&quot; part about AI, that even most technology enthusiasts evidently do not seem to grasp, is that it is still fundamentally a statistical model — an algorithmic construct — and does not possess any real intelligence or critical thought whatsoever.<p>No matter how much investors and tech companies want you to believe that they are on the verge of super intelligence, nothing I&#x27;ve seen to date can not easily be explained by &quot;correlation engine&quot;, including the &quot;novel&quot; math solutions, all of which appear to just be &quot;a composition of solutions humans have developed and documented elsewhere&quot; upon deeper inspection.",
+      "responseHash": "3cfcad002823f943d225b4b13bfe4223b6359b0515874199a6ee3dbb945b6508"
+    },
+    {
+      "id": 49389182,
+      "type": "comment",
+      "parent": 49387497,
+      "by": "openasocket",
+      "time": 1787324462,
+      "text": "For those that don&#x27;t know, grand juries declining an indictment is extremely rare. A grand jury is basically a check on prosecution, that they have to have some initial evidence before charging someone with a felony. The standards are much lower than the subsequent criminal proceedings.<p>The grand jury only hears from the prosecution, there is no defense involved. Only a majority of the grand jury has to sign off, not unanimous like in an actual trial. The standard of evidence is just probable cause, not beyond a reasonable doubt. The rules of evidence are relaxed, meaning hearsay and other evidence can potentially be introduced that would normally be barred from a trial.<p>Because of the above, the rate of indictment from a grand jury is very high, over 90%. Most prosecutors will go their entire careers without getting a &quot;no true bill&quot; (meaning the grand jury did not sign off on an indictment). There&#x27;s a saying that &quot;a grand jury would indict a ham sandwich.&quot; So the fact that there was no indictment here is a big deal. It will probably hurt that prosecutor&#x27;s career.",
+      "responseHash": "98da1c74fcef1102401048ad24a05307efdf76ddc33690ff5602bb318639464c"
+    },
+    {
+      "id": 49389372,
+      "type": "comment",
+      "parent": 49387525,
+      "by": "keiferski",
+      "time": 1787325183,
+      "text": "I am a big fan of both, but I think what&#x27;s missing in reality, but in their fiction (and cyberpunk fiction in general) is a sense of <i>coolness</i> and caring about aesthetics. For all the evil that the mega corporations do in a Gibson novel, they still have an aesthetic appeal.<p>Real-world corporations aren&#x27;t that interesting. Amazon, Facebook, or Google have nothing &quot;culturally&quot; or aesthetically on Hosaka, Arasaka or Sense&#x2F;Net.<p>Which is really the tragedy of it all: we are getting the cyberpunk dystopia with none of the aesthetics that have made it a household word.",
+      "responseHash": "68ff32f0472edd7c8e68ec34c916fe9be405c41b650f46a4384ae837f1e19a2d"
+    },
+    {
+      "id": 49389430,
+      "type": "story",
+      "by": "colinprince",
+      "time": 1787325424,
+      "title": "Felony Bench",
+      "url": "https://www.felonybench.com/",
+      "responseHash": "96d3c3fe913fdbe2dd0811efe163433498170ba36b992fb84db8553e67a9b8c5"
+    },
+    {
+      "id": 49389501,
+      "type": "comment",
+      "parent": 49388752,
+      "by": "mmastrac",
+      "time": 1787325700,
+      "text": "I&#x27;ve started giving these instructions and I think I&#x27;ve been much more successful in generating clear output:<p>Comment blocks are &lt;= 7 words, function names &lt;= 4 words. User-facing message strings should be &lt;= 10 words. Use an active voice, no stage performances, and pick the most common word when choosing among alternatives.<p>Limiting the number of words is the strongest factor in cleaning up the output, IMO.<p>For older code I&#x27;ve instructed it to delete all the comments, and then I re-comment it using a new session and these guidelines, asking it to rejustify the need for every comment to itself.",
+      "responseHash": "c5c5e70bde4ee313d1085b2f189465ee4df007bd2c4ff1a3f7cb241c70557a0f"
+    },
+    {
+      "id": 49389738,
+      "type": "comment",
+      "parent": 49389182,
+      "by": "aqme28",
+      "time": 1787326626,
+      "text": "Though sometimes a prosecutors office will use a grand jury to fail to indict intentionally, like when the accused is a police officer they work with. It&#x27;s a good way to launder away a prosecution that the DA doesn&#x27;t want to pursue for political reasons.",
+      "responseHash": "8d8e0745e7f76c137671fb4fa0440f04c1a5cfbddec368efdea57709de7c0abc"
+    },
+    {
+      "id": 49390427,
+      "type": "story",
+      "by": "thepoet",
+      "time": 1787329525,
+      "title": "Kobo can run apps now",
+      "url": "https://bandarlabs.github.io/Cobalt/",
+      "responseHash": "9f291632fbf5719fd4caeb31a861dc005a8e4f2df2f8dfd8e43ce9a8541aced3"
+    },
+    {
+      "id": 49390842,
+      "type": "comment",
+      "parent": 49384210,
+      "by": "joshka",
+      "time": 1787331343,
+      "text": "As a ratatui library maintainer, NO - please don&#x27;t stop making TUIs ;)<p>As a developer outside of that, I love the scratch the itch apps stuff mentioned in here. I have a vibe coded SwiftUI chess repertoire builder app that fits in that same sort of space that I&#x27;m currently working on, where I&#x27;d probably not have chosen to explore the idea if not for coding agents.<p>I agree with the article that the terminal is an odd shape which you&#x27;re fighting against historical specs, etc. The key observation I have though is that the mismatch of terminal apps and libraries to deal with this are all fundamentally built around character cells and cursor movement plus various CSI&#x2F;OSC&#x2F;ASC&#x2F;DEC&#x2F;xterm&#x2F;... protocols which are complex and have varying support and interact in weird ways.<p>To get a good terminal UX, I think the answer to this is probably to throw all that compatibility mess away and redesign a modern terminal protocol that bakes in accessibility, regions, scrolling, selection, proper keyboard, etc.<p>I know Mitchell Hashimoto has a bit of a different perspective on this, which seems like it&#x27;s to define some more protocol stuff and continue to build up on things. I think that probably gets to 95% pretty well. But a 100% good is a full replacement.",
+      "responseHash": "2b35002e3d3cce9a372ec54479a8aff7d7d762d47acb60ce9926fd24d7820b1b"
+    },
+    {
+      "id": 49391720,
+      "type": "comment",
+      "parent": 49389430,
+      "by": "rfw300",
+      "time": 1787335063,
+      "text": "The way that OpenAI has communicated around the HuggingFace incident makes me feel crazy. You created a machine that undertook a malicious campaign of harm against an innocent third-party! You should be doing deep introspection about how your company culture and approach to R&amp;D produces criminal outcomes.<p>Instead, they treat their own felonious behavior like it is an uncontrollable act of God. From Greg Brockman&#x27;s post a few days ago:<p>&gt; The OpenAI-Hugging Face incident (opens in a new window) was a watershed moment for cybersecurity because it gave a peek into how the capabilities of a typical threat actor will evolve in upcoming months.<p>I suppose if OpenAI burns someone&#x27;s house down with a drone, that is a &quot;watershed moment&quot; for arson, too. Either way, I would hope that the people responsible would be prosecuted.",
+      "responseHash": "76ecfae5f7bafe1e8737ca5badfbcf184533c555de99d69c2f548a1f364341d3"
+    },
+    {
+      "id": 49391865,
+      "type": "comment",
+      "parent": 49389501,
+      "by": "graemep",
+      "time": 1787335845,
+      "text": "Claude not only writes verbose comments, it also writes comments about how things used to work when refactoring. That might have a place in version control comments, but not in the code.",
+      "responseHash": "c11e7b3836826aa419d9026e6b783d771681f8d7cc65ef7e46c846f03a08194d"
+    },
+    {
+      "id": 49391973,
+      "type": "comment",
+      "parent": 49390427,
+      "by": "the-grump",
+      "time": 1787336334,
+      "text": "For the unaware, there is an existing solution that integrates with Kobo&#x27;s native software (Nickel).<p>It has been maintained for years, and it supports every Kobo AFAIK.<p>It&#x27;s called NickelMenu, and it&#x27;s great. I&#x27;m in the Kobo ecosystem because of NickelMenu and Plato.<p>One note if you&#x27;re thinking about getting a kobo due its relative openness: consider getting a two-core device. I did not do my homework and got a Clara BW because I don&#x27;t want the color display. Later I found out that color is the only one with the two-core CPU.",
+      "responseHash": "2d178a8bddaa253886e0c525e12a774eeffb9af3ec6d72946c60e45a61a4bcde"
+    },
+    {
+      "id": 49392339,
+      "type": "comment",
+      "parent": 49386895,
+      "by": "simonebrunozzi",
+      "time": 1787338154,
+      "text": "All Archive pages, when accessed from Italy, now are blocked by the Government:<p>&quot;PAGINA INTERDETTA DAL CENTRO NAZIONALE PER IL CONTRASTO DELLA PEDOPORNOGRAFIA ONLINE (C.N.C.P.O.)&quot;<p>“PAGE BLOCKED BY THE NATIONAL CENTER FOR COMBATING ONLINE CHILD PORNOGRAPHY (C.N.C.P.O.)”<p>Oh, we live in an interesting age.",
+      "responseHash": "5e62abcb80dd9b3276372374ff81b911af1c324d149a1767cc8ba6284426d1d0"
+    },
+    {
+      "id": 49392826,
+      "type": "comment",
+      "parent": 49386895,
+      "by": "Zak",
+      "time": 1787340638,
+      "text": "For exactly the border search scenario, I wish smartphones could be imaged and restored as easily as PCs. Imagine booting the phone from a flash drive, making an encrypted image of the phone on said drive, and writing a fresh OS before reaching the border.<p>There&#x27;s no deception required to protect sensitive data or avoid the seizure of an expensive phone. Consent to unlocking the phone, refuse to unlock the drive. The drive gets seized and you go on your way (if you&#x27;re a US citizen entering the USA).<p>Some time ago, Android with a custom recovery could come close to that, but it was fussy and as far as I know, no longer viable. Increased use of TPMs for storing credentials seems to be at least one of the reasons.",
+      "responseHash": "20a6e82b7dc459072c775019c9b8dcc74be6569d12eda5c9fde6a90298a88ab0"
+    },
+    {
+      "id": 49392888,
+      "type": "comment",
+      "parent": 49392826,
+      "by": "solid_fuel",
+      "time": 1787341004,
+      "text": "It may be fun to fantasize about these things some times, but there is no technical solution to tyranny.  Laws are not like code, intent matters.  Ultimately if the intent is that the government wants to see your private data, hiding it in any way will be charged - it doesn&#x27;t matter if you jump through hoops to avoid this specific instance.",
+      "responseHash": "05eb7083b2ee47098334529aaa74d3e8645b49cd05f58d5f44b304d366c1ae78"
+    },
+    {
+      "id": 49393051,
+      "type": "story",
+      "by": "speckx",
+      "time": 1787341908,
+      "title": "A week of using Codex more than Claude",
+      "url": "https://allaboutcoding.ghinda.com/a-week-of-using-codex-more-than-claude/",
+      "responseHash": "2f5710955a04c8903b8103b362a51f6c64fc12ffd73f5154f6e07629aaf38ee4"
+    },
+    {
+      "id": 49393076,
+      "type": "comment",
+      "parent": 49386895,
+      "by": "btbuildem",
+      "time": 1787342011,
+      "text": "The naivete of some of the comments here is astounding. It doesn&#x27;t matter whether you&#x27;re right, it doesn&#x27;t matter whether it&#x27;s the law, it&#x27;s irrelevant that you have rights, etc. Those things are of the past now, for the US.<p>I think it would be easier to understand the playing field and choose your actions accordingly, if you accept the US has entered its East Germany &#x2F; late 20th century Soviet era -- except of course with 1000x more invasive and effective surveillance tech.<p>The social dynamics are the same - the abuses, the selective enforcement, the lack of recourse, the same characters in the roles of various levels of &quot;law enforcement&quot; and &quot;politics&quot;. I&#x27;m so very sorry, but the best you can do from here is speedrun the collapse.",
+      "responseHash": "e05ec517ed1e5b68e84706ba586a8a627af1ac88c4dc08a5291d5fc9ee5a8261"
+    },
+    {
+      "id": 49393422,
+      "type": "comment",
+      "parent": 49393076,
+      "by": "deepfriedbits",
+      "time": 1787344292,
+      "text": "With all due respect, this is a wild take. Things aren&#x27;t great in the U.S. right now, but they&#x27;re not even in the same universe as what the Stasi was doing.<p>&gt; I think it would be easier to understand the playing field and choose your actions accordingly, if you accept the US has entered its East Germany &#x2F; late 20th century Soviet era -- except of course with 1000x more invasive and effective surveillance tech.",
+      "responseHash": "01b5e0359bfd1ac7d004110993c549d666f5173ead5a988ac50aac77deeaf597"
+    },
+    {
+      "id": 49393603,
+      "type": "comment",
+      "parent": 49393051,
+      "by": "217",
+      "time": 1787345285,
+      "text": "while everyone is somehow still stuck on and fascinated by claude, heres your quick update on the sota of coding models and harnesses mid august 2026<p>codex is good, both cli and desktop app, you get lots of usage on any plan. \nsol is good! and gets the job done, write or dictate a very long and thoughtful prompt, and leave sol xhigh or max fast working on it for an hour or so<p>omp is an amazing harness, any feature claude code or codex is adding has likely already been here for a couple months.\ngood harness which im suggesting to all my developer friends, but for everyone else codex is the better option due to its simplicity and being the plug and play option<p>claude is decent, but not great. all models are somehow getting restrictive. you get basically unlimited opus on max plans, fable is good but slow and the random guardrails suck soo much which is why i havent used it once in weeks now.<p>gemini 3.7 is great for speed. everyone is sleeping on it, including even me<p>kimi k3 - great for frontend, one of the few models thats willing to commit crimes for you AND has the intelligence to have a chance at actually succeeding;<p>ds pro and flash are fast but not something id actually use for important things, unlike sol, fable and maybe 3.7 here and there<p>glm 5.3 i haven&#x27;t tested yet<p>honorable mention to local models which are actually getting good now! 5090s will continue to get more and more expensive in the coming months. sadly.<p>theres way way more than claude in this world and its taking people surprisingly long to figure that out. maybe its for the best!",
+      "responseHash": "60ea6b493748b9e1d79339ee00cf9fd5b3c1ce99741f9873b19141c44c692a23"
+    },
+    {
+      "id": 49395024,
+      "type": "comment",
+      "parent": 49386895,
+      "by": "gblargg",
+      "time": 1787355030,
+      "text": "The decoy passcode feature should boot into a separate partition that looks like a normal phone setup, and during that time quietly erase the user&#x27;s actual data. They would never have known if it worked like this.",
+      "responseHash": "002eac5e9f527f56c6d5313754752d41f78e1e919f1dd4d774d92014f87250bc"
+    },
+    {
+      "id": 49395071,
+      "type": "comment",
+      "parent": 49395024,
+      "by": "az226",
+      "time": 1787355431,
+      "text": "Probably, but it will be more valuable for society for him to be tried and found not guilty, setting a legal precedent.",
+      "responseHash": "da6db22073357089e85c4cd1d61e60359d504cfe0889d41962ef3f5295daafdc"
+    },
+    {
+      "id": 49395628,
+      "type": "story",
+      "by": "Jach",
+      "time": 1787360777,
+      "title": "There's no reason for software to be slow anymore",
+      "url": "https://danluu.com/perf-opt/",
+      "responseHash": "4707f2ae16b982991c20e5607b934d1348ef83c292623244b3065d9e751dfc13"
+    },
+    {
+      "id": 49395998,
+      "type": "comment",
+      "parent": 49395628,
+      "by": "ehnto",
+      "time": 1787365286,
+      "text": "One of the biggest causes of slowness is just waiting for web requests. The fact that so much software is either online or built using the same stack even if it isn&#x27;t, puts all that software in this blocked&#x2F;waiting state constantly while using it.<p>Anyone not in the US feels this even more since so much online is US hosted, 300ms for every little interaction adds up quick.<p>If your software has the affordance of a waiting dialogue or loading wheel for many of its UI controls, you are building with this default blocked assumption. Even if you are building something web based, ask yourself if that&#x27;s actually necessary for your software or if you could build it differently to avoid constant UI blocking.",
+      "responseHash": "c165bc46940f37c14f64ba7aff45650ddec91cf191502de8c1425cc05120d9be"
+    },
+    {
+      "id": 49396467,
+      "type": "comment",
+      "parent": 49386895,
+      "by": "Animats",
+      "time": 1787371554,
+      "text": "Legal question: if you had whole-disk encryption, and the duress password just zeroized the decryption key, would that be &quot;destroying evidence?&quot; Especially if there was a recovery possible but not instantly available, such as a Yubikey in a safe deposit box in a bank. That would take a subpoena to get, and there is an opportunity to challenge the subpoena in court first. Not instantly at the border.<p>Something like that should be a standard feature of a secure phone.",
+      "responseHash": "5447320cb1f79580f3f10354f45fe8e38080547603c9bc1c65af1444ec768b56"
+    },
+    {
+      "id": 49396801,
+      "type": "comment",
+      "parent": 49396467,
+      "by": "seanhunter",
+      "time": 1787376262,
+      "text": "If you want actual legal advice pay for an actual lawyer. You aren’t going to get it asking a bunch of randoms on a tech forum.<p>Since we’re techies we tend to think about technological nuances and have a certain literal frame of mind (eg “They can’t make it illegal for me to just type the wrong pin” is the type of thinking I’m talking about here) whereas in law weird precedents and your intent really matter so you really need expert advice and either way, you are throwing yourself at the mercy of a stochastic process that depends on a bunch of fallible humans along the way many of whom have the power to make your life extremely miserable.<p>Technicalities of destroying the data vs destroying the key to the data, destroying the data when you have a backup etc may matter a lot to us but may not mean anything in an actual judicial process depending on how it goes.<p>It seems to me if you have data you don’t want subject to seizure at a border it is best not to travel over the border carrying that data.  If you have a backup (in your scenario), why not restore your phone from that backup after you have travelled, and not cross the border with anything that is likely to be a problem if seized?  Then you’re not putting yourself at risk from this process.",
+      "responseHash": "7bb019171b3b3dca071b2197faee575ecf8ef329122a187bb79dc19704505a66"
+    },
+    {
+      "id": 49397074,
+      "type": "story",
+      "by": "tartoran",
+      "time": 1787379417,
+      "title": "Canada will match US tariffs 'dollar for dollar' as trade talks break down",
+      "text": "<a href=\"https:&#x2F;&#x2F;www.pm.gc.ca&#x2F;en&#x2F;news&#x2F;statements&#x2F;2026&#x2F;08&#x2F;21&#x2F;statement-prime-minister-carney-canada-us-trade-negotiations\" rel=\"nofollow\">https:&#x2F;&#x2F;www.pm.gc.ca&#x2F;en&#x2F;news&#x2F;statements&#x2F;2026&#x2F;08&#x2F;21&#x2F;statement...</a>",
+      "url": "https://www.bbc.com/news/articles/cvgvyy4x2mvo",
+      "responseHash": "a42bb6fe2186f1286e25c8d8cd282b1872abc068b203aa3d604fede2b5318bf6"
+    },
+    {
+      "id": 49397785,
+      "type": "comment",
+      "parent": 49386895,
+      "by": "raluk",
+      "time": 1787387628,
+      "text": "From  Universal Declaration of Human Rights (UDHR) accepted by the United Nations General Assembly on 10 December 1948<p>--------\nArticle 12<p>No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks.<p><a href=\"https:&#x2F;&#x2F;www.un.org&#x2F;en&#x2F;about-us&#x2F;universal-declaration-of-human-rights\" rel=\"nofollow\">https:&#x2F;&#x2F;www.un.org&#x2F;en&#x2F;about-us&#x2F;universal-declaration-of-huma...</a>",
+      "responseHash": "caac09c1e9f8607891e39de2ab85f92db62142d74a69e3856bbc71c14b8a3e35"
+    },
+    {
+      "id": 49397823,
+      "type": "comment",
+      "parent": 49397785,
+      "by": "usern20260720",
+      "time": 1787388110,
+      "text": "The US is not a country governed by the rule of the law",
+      "responseHash": "7f60522f6ed7b85d5d13a10b2f11dfcecdaae89e12a3c43bd96c15b8d2b23ae9"
+    },
+    {
+      "id": 49398416,
+      "type": "comment",
+      "parent": 49397074,
+      "by": "Phelinofist",
+      "time": 1787395993,
+      "text": "Good for Canada, quite a shame the EU folded so easily",
+      "responseHash": "bebe5cf05dcf2dcb12280734db9dffc08bb10f5820589ac7e0f0b6ad0302bae7"
+    },
+    {
+      "id": 49398422,
+      "type": "comment",
+      "parent": 49398416,
+      "by": "linohh",
+      "time": 1787396127,
+      "text": "He&#x27;ll be nullifying any agreement within two or three tantrums anyway, eventually we will learn and retaliate.",
+      "responseHash": "2724bd0e2a0827e48fd21e782c0056413865aa94eb9d079c481cc19ad54050f8"
+    },
+    {
+      "id": 49398678,
+      "type": "comment",
+      "parent": 49397074,
+      "by": "fidotron",
+      "time": 1787398600,
+      "text": "This was totally the right move, if for no other reason than it&#x27;s the only thing that this US admin will respect in the long run.<p>Being in Canada though this does look v. short sighted of the US. All this is going to achieve is pushing Canada much closer to other countries, particularly China, which at least superficially these negotiations were meant to prevent.",
+      "responseHash": "ee57e46d8ccdf8922b9ec7bf2a72c1a72d36009d5c1a89ccd9332afe5d205314"
+    },
+    {
+      "id": 49398764,
+      "type": "comment",
+      "parent": 49397074,
+      "by": "robmccoll",
+      "time": 1787399154,
+      "text": "Huh 30% of our lumber just got 50% more expensive. Good thing we don&#x27;t have shortages of affordable housing that need new construction to solve. Brilliant stuff Donald. Truly some 4D chess moves.",
+      "responseHash": "feebb64ba18eadc291767e7c7df9db7bda4ffac235ecf92ea62bb2d389753a4a"
+    },
+    {
+      "id": 49398869,
+      "type": "comment",
+      "parent": 49398764,
+      "by": "watutalkinbout",
+      "time": 1787400082,
+      "text": "You still think any of his moves are driven by &#x27;what&#x27;s good for the US&#x27;?<p>I think it&#x27;s motivated entirely by schemes to stuff his pockets with money.",
+      "responseHash": "cf371ad38669dca90a73e79106c0148e39efa196869a56d8664471c640b06314"
+    },
+    {
+      "id": 49399591,
+      "type": "story",
+      "by": "pentagrama",
+      "time": 1787405494,
+      "title": "New MCP Roadmap",
+      "url": "https://blog.modelcontextprotocol.io/posts/mcp-roadmap/",
+      "responseHash": "7f2e67027302ed0ee863e59891c8bcc8f96d5c5539dff48220ae57d1f81d247a"
+    },
+    {
+      "id": 49400071,
+      "type": "comment",
+      "parent": 49399591,
+      "by": "rco8786",
+      "time": 1787408665,
+      "text": "&gt; With the 2026-07-28 release, a remote MCP server is now no different from any other HTTP workload<p>Good. Introducing a bespoke new protocol was one of the more bone-headed things MCP did on initial release.",
+      "responseHash": "4dd3de23d277d2f4cf97a25b83a9d6555496b0e6f32c11d860bf51f0986f07de"
+    },
+    {
+      "id": 49400145,
+      "type": "comment",
+      "parent": 49397074,
+      "by": "hunglee2",
+      "time": 1787409092,
+      "text": "The world should&#x27;ve collectively recognised what Liberation Day was and responded together, in lock step, and in kind.<p>Instead, the Europeans caved, Japanese caved (PM resigned after doing so), Republic of Korea caved (PM resigned after doing so), India of course caved and so on, shattering any prospect of collective action which might pull the rogue hegemon back into line.<p>Now, the US is simply able to renege or renegotiate the bilateral deals whenever he feels like it, forcing the other party to face down the US by themselves - not many can do this, maybe only China. Anyways, I wish the Canadians well and I hope they gain global support",
+      "responseHash": "6fb4d58f603d37807410596d5d9e881a4a1efa512279c2728dd60c40507d12df"
+    },
+    {
+      "id": 49400408,
+      "type": "story",
+      "by": "jemoka",
+      "time": 1787410447,
+      "title": "ElevenLabs, TwelveLabs, ThirteenLabs",
+      "url": "https://quantumi.sh/public/labs.html",
+      "responseHash": "c0a1c7c5c3eb58e375b299a575e80a655c9426c27adb26db56304092e04e3cfb"
+    },
+    {
+      "id": 49400901,
+      "type": "comment",
+      "parent": 49400145,
+      "by": "Chyzwar",
+      "time": 1787413596,
+      "text": "That not how politics works. It is much slower and hidden process. EU fast tracked Mercosur and other trade deals. China and Japan is slowly dumping US treasury bills, Canada is in open trade confrontation and is diversifying toward China. Everybody is shifting away from US weapons suppliers. Nobody is willing to help with Iran even on symbolic level.",
+      "responseHash": "1d758df2381071348f9770a38d57be7df313a7134c23e3271de8f2ef25fb0b29"
+    },
+    {
+      "id": 49401019,
+      "type": "comment",
+      "parent": 49400408,
+      "by": "WhatsName",
+      "time": 1787414391,
+      "text": "Tried to register sixsevenlabs, too late unfortunately...",
+      "responseHash": "d33833699c396a89ebcce0c92ee389449ba8ec2f082ccf4093220ea950c059e6"
+    },
+    {
+      "id": 49401179,
+      "type": "comment",
+      "parent": 49384210,
+      "by": "ricardobeat",
+      "time": 1787415379,
+      "text": "Hard disagree. Make more TUIs!<p>TUIs have downsides like accessibility, poor mouse support, but work really well if you focus on <i>keyboard</i> input. It is a better&#x2F;faster input mode to begin with, especially for power users, but also for average people; you&#x27;d be surprised at how much more user-friendly an arrow-keys driven UI can be vs modern web interfaces.<p>I&#x27;ve been building my own TUI framework [1] and getting amazing results. Good TUIs are more of a GUI than a dumb text terminal.<p><i>If</i> we had a cross-platform usable GUI framework, and more consistency across OSes, the story would be different.<p>[1] <a href=\"https:&#x2F;&#x2F;github.com&#x2F;ricardobeat&#x2F;milktea\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;ricardobeat&#x2F;milktea</a>",
+      "responseHash": "c4c5bb6a729fbbc16385569c50cebd158ffa0bd547c85836a8cabe73c7cb6427"
+    },
+    {
+      "id": 49401215,
+      "type": "comment",
+      "parent": 49400901,
+      "by": "LeFantome",
+      "time": 1787415679,
+      "text": "You are both right. The world capitulates more than it should. But the world is also moving away and building contingencies.<p>The world needs leadership. And Canada is helping with that.<p>I do not think that reciprocal tariffs are actually the answer though. They hurt both sides and the US is not a rational enough actor to respond like you hope they will. The answer is in shifting trade away from the US and isolating their economy. It takes longer but it is what will work. And even if their behaviour does not change, their power will fade with their economy.",
+      "responseHash": "bbad695afb3fad3bc994e6d6bbe25edc388e53b16b85ec328211c8e2722ffe52"
+    },
+    {
+      "id": 49401429,
+      "type": "comment",
+      "parent": 49401019,
+      "by": "possibilistic",
+      "time": 1787417038,
+      "text": "All of them copied 15.ai<p>ElevenLabs was a commercial version of 15.ai. It&#x27;s crazy, because 15.ai could have had the venture-scale outcomes if he&#x27;d fundraised and turned it into a SaaS product. He was in the right place, right time, with tremendous attention, but missed the opportunity.<p>The other &quot;labs&quot; followed the trend. The {number}labs &#x2F; {number}.ai domains all quickly got squatted.<p>I was in the same space and watched it happening. I launched FakeYou about the same time as 15.ai, but 15 had the backing of 4chan and a better model. I still made it to 7M MAU and a million in revenue despite that.<p>Just last year, Fish Audio picked up where 15.ai &#x2F; FakeYou &#x2F; UberDuck &#x2F; Weights.gg left off and made it to $20M ARR, which is a lesson about abandoning under-served markets when you still have tremendous gravity.",
+      "responseHash": "37d8b07a6c64b5baf68243665da33eaf8b6bb1dc03cfb619f5897d09f16584c1"
+    },
+    {
+      "id": 49401549,
+      "type": "story",
+      "by": "matthieu_bl",
+      "time": 1787417929,
+      "title": "Anthropic appears to be A/B testing reduced effort levels in Claude Code",
+      "url": "https://twitter.com/argofowl/status/2091150597374537729",
+      "responseHash": "d470a93af0c7dafeeef76b20e023ec0d0a88afc0a80fb0049f729cec8a0e07a8"
+    },
+    {
+      "id": 49401875,
+      "type": "comment",
+      "parent": 49400408,
+      "by": "progbits",
+      "time": 1787420149,
+      "text": "<a href=\"https:&#x2F;&#x2F;www.twelvelabs.io&#x2F;blog&#x2F;introducing-the-multimodal-ai-23labs-hackathon\" rel=\"nofollow\">https:&#x2F;&#x2F;www.twelvelabs.io&#x2F;blog&#x2F;introducing-the-multimodal-ai...</a><p>&gt; Twelve Labs and ElevenLabs are co-hosting the 23Labs Hackathon",
+      "responseHash": "bc3611bc3179436ca0b7903b8ff99990767e30971ebd57c1408635c239dd6711"
+    },
+    {
+      "id": 49401913,
+      "type": "comment",
+      "parent": 49401429,
+      "by": "inigyou",
+      "time": 1787420361,
+      "text": "I got 99 labs but bringing value to society ain&#x27;t one",
+      "responseHash": "3808875060deecb2e6249883b65b1b6f89f1a7fe76a18e1b4dee2462180971e3"
+    },
+    {
+      "id": 49401919,
+      "type": "comment",
+      "parent": 49401549,
+      "by": "pizzafeelsright",
+      "time": 1787420390,
+      "text": "Whatever Opus 5 is doing should not happen.<p>Prompt was &quot;read and update the config file with new data&quot;.  This work on 4.6 takes &lt;2 \nminutes to read the file, parse the new data, and patch.<p>Opus 5 Result: 43 minutes of pulling containers, running sandboxes, creating testing suites, which included evaluating the entire repo beyond the scope of the config file.<p>Both: one file modification",
+      "responseHash": "13d1b763ae829aeab9e9f45fda41156eab9d54fb2d4e41bc4c7464150b7a800d"
+    },
+    {
+      "id": 49402189,
+      "type": "story",
+      "by": "tosh",
+      "time": 1787422136,
+      "title": "Scrap (2006)",
+      "text": "<a href=\"https:&#x2F;&#x2F;xcancel.com&#x2F;moxie&#x2F;status&#x2F;2091218652133732491\" rel=\"nofollow\">https:&#x2F;&#x2F;xcancel.com&#x2F;moxie&#x2F;status&#x2F;2091218652133732491</a>",
+      "url": "https://twitter.com/moxie/status/2091218652133732491",
+      "responseHash": "216da94c7edd63b6d7952c35b304282d580acf8d0d08ed597799f526f52ceb9f"
+    },
+    {
+      "id": 49402232,
+      "type": "story",
+      "by": "felineflock",
+      "time": 1787422456,
+      "title": "Why your local LLM feels dumber than it is",
+      "url": "https://forum.level1techs.com/t/why-your-local-llm-feels-dumber-than-it-is/253917",
+      "responseHash": "fa84a20d50333f176389e7c0d8e4d49b7575a6c54b0abd3ed83d473185f3069b"
+    },
+    {
+      "id": 49402424,
+      "type": "comment",
+      "parent": 49397074,
+      "by": "cdrnsf",
+      "time": 1787423506,
+      "text": "Everything the current US administration has done has been an unmitigated disaster. Tariffs are taxes. Manufacturing is still declining, not returning and a man who could not run casinos successfully is not going to change that. His economic and foreign policy are dictated entirely based on who flatters him the most. Add to that continued environmental damage, domestic policy dictated by a regressive religious minority and a lack of interest in performing the duties of the position in favor of caring about only what it can be leveraged for. A failing state operating on grievances and stupidity.",
+      "responseHash": "9d2ff82cbd4cce5ed0a2b17da9135c3d95d482f2f37c484bdae4106500cf003a"
+    },
+    {
+      "id": 49402473,
+      "type": "comment",
+      "parent": 49351802,
+      "by": "asciimoo",
+      "time": 1787423791,
+      "text": "Ohi, author here! Thanks for posting Hister. Feel free to A.M.A.<p>My first free software search project was Searx, a privacy respecting metasearch engine, but because of the limitations of the metasearch concept, I&#x27;ve decided to take a different approach.<p>Hister builds a personal search index from pages you visit, bookmarks, browser history, local files, and crawled websites. It stores extracted content with offline result previews, so information remains searchable even when the original page changes or disappears. It supports full text and semantic search, can run entirely on your own machine, and includes a web interface, command line tools, and an MCP endpoint for assistant integrations.<p>Project page: <a href=\"https:&#x2F;&#x2F;github.com&#x2F;asciimoo&#x2F;hister\" rel=\"nofollow\">https:&#x2F;&#x2F;github.com&#x2F;asciimoo&#x2F;hister</a><p>Tiny read-only demo: <a href=\"https:&#x2F;&#x2F;demo.hister.org&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;demo.hister.org&#x2F;</a>",
+      "responseHash": "13cdb852f1c6e1dfa6a2f3152f3d380ce0345d89dc3063ca4ab537da4e031caf"
+    },
+    {
+      "id": 49403023,
+      "type": "comment",
+      "parent": 49402424,
+      "by": "brightball",
+      "time": 1787427103,
+      "text": "I get that statistics can be manipulated but...<p><a href=\"https:&#x2F;&#x2F;www.ismworld.org&#x2F;supply-management-news-and-reports&#x2F;reports&#x2F;ism-pmi-reports&#x2F;pmi&#x2F;july&#x2F;\" rel=\"nofollow\">https:&#x2F;&#x2F;www.ismworld.org&#x2F;supply-management-news-and-reports&#x2F;...</a><p>&gt; Economic activity in the manufacturing sector expanded in July for the seventh consecutive month, say the nation’s supply executives in the latest ISM® Manufacturing PMI® Report.<p>&gt; The report was issued today by Susan Spence, MBA, Chair of the Institute for Supply Management® (ISM®) Manufacturing Business Survey Committee.<p>&gt; “The Manufacturing PMI® registered 55.6 percent in July, 2.3 percentage points above the June figure and the highest reading since May 2022 (55.9 percent). The overall economy continued in expansion for the 21st month in a row.",
+      "responseHash": "0f25c9d3e80b9f199efcafd3d9768b03c9710d75ca57b038c21d8763d3b9d105"
+    },
+    {
+      "id": 49403193,
+      "type": "comment",
+      "parent": 49402189,
+      "by": "ChrisMarshallNY",
+      "time": 1787428375,
+      "text": "One convenient fiction that many wealthy people (in the US) tell themselves, is that poor people are &quot;lazy&quot;; and that&#x27;s why they&#x27;re poor.<p>I know <i>lots</i> of folks without a pot to piss in, or a window to throw it out, and not one single one, is &quot;lazy.&quot; In fact, a few have more than one (difficult) job.<p>I am old enough to see a few of them getting into the back nine, with no cushion.<p>I&#x27;m <i>extremely</i> grateful for what I have.<p><i>[EDIT] Added &quot;many&quot; because it&#x27;s more appropriate, and short-circuits the implied &quot;all.&quot;</i>",
+      "responseHash": "fabe9433677be425a3c703ecc3d38c7b10d166c2f3a018eb6811b4427721b164"
+    },
+    {
+      "id": 49403412,
+      "type": "comment",
+      "parent": 49402232,
+      "by": "jonplackett",
+      "time": 1787429680,
+      "text": "I just got qwen 3.8 27b mlx running on my Macbook Pro and honestly I’m pretty blown away by how not-dumb it is.",
+      "responseHash": "6c4d4338c11d73ec835a6be0822220545df96445ddf77acf08f89066b4a3e1f8"
+    },
+    {
+      "id": 49403620,
+      "type": "comment",
+      "parent": 49403023,
+      "by": "lawsthro0532",
+      "time": 1787430826,
+      "text": "PMI is a sentiment survey of 400 manufacturing executives. Vibes only.",
+      "responseHash": "fa02740a40268ac6073ae1fe704ed0101f3d602cd95fbadeed585d3bd4302e5e"
+    },
+    {
+      "id": 49403945,
+      "type": "comment",
+      "parent": 49401429,
+      "by": "rozab",
+      "time": 1787433279,
+      "text": "For context, 15 was some brony tf2 player who cracked deep voice synthesis in order to make My Little Pony characters say funny things. He then offered this for free on his site. It was never a clever branding thing, it was just his username.<p>It&#x27;s funny seeing HN types being genuinely confused as to why someone would just make interesting things for the sake of making them, and then offer them freely for the good of others. He used to be on HN, there&#x27;s good insights in his posts: <a href=\"https:&#x2F;&#x2F;news.ycombinator.com&#x2F;user?id=15ai\">https:&#x2F;&#x2F;news.ycombinator.com&#x2F;user?id=15ai</a>",
+      "responseHash": "865fe20035d020adf9f417f9dc1bd1493ea2fff01f31a2b67f764bdc45eaf323"
+    },
+    {
+      "id": 49405870,
+      "type": "story",
+      "by": "andsoitis",
+      "time": 1787455945,
+      "title": "To become a better writer, read as much as you can",
+      "url": "https://nappertime.com/the-golden-rule-of-becoming-a-better-writer/",
+      "responseHash": "077036e77aadaf2f06f8afa87f0ba09efe02f6ecd0dc7c0cc8e5cab15fad7fed"
+    },
+    {
+      "id": 49406539,
+      "type": "story",
+      "by": "taubek",
+      "time": 1787467311,
+      "title": "Wi-Fi 8 is the first wireless upgrade in years that isn't chasing speed",
+      "url": "https://www.xda-developers.com/wi-fi-8-first-wireless-upgrade-years-isnt-chasing-speed-home-networks-need-it/",
+      "responseHash": "e31075292edeb1b087ebf178558a0493a5177f9f314eb1c7e418da4761e923d3"
+    },
+    {
+      "id": 49406822,
+      "type": "comment",
+      "parent": 49406539,
+      "by": "avhception",
+      "time": 1787470974,
+      "text": "We need reliable, real-world ~20mbit&#x2F;s for our warehouse scanners, not 382722 theoretical Gbit&#x2F;s 5cm from the access point. And roaming that works instead of stupid clients clinging to somewhere or being thrown into a reconnect loop when the AP tries to get them to roam.\nI know this is theoretically possible today. But in the real world, I have inherited the setup, so AP locations are fixed for now, clients are some random old handhold motorola android devices and interference is high.<p>In comparison, DECT has been flawless in the same space. Set and forget, just works. I always wondered if we could have a kind of DECT proxy on the LAN, and have the ERP application talk to that proxy using DECT... I mean, it&#x27;s a few EANs and stuff, DECT could handle this easily.",
+      "responseHash": "da361a81e7ddb48c9ef7d7c3047094bf1e81c2febf02fa4a1d46660484fd1fa6"
+    },
+    {
+      "id": 49407075,
+      "type": "comment",
+      "parent": 49405870,
+      "by": "vintagedave",
+      "time": 1787474096,
+      "text": "&gt; <i>Why be a writer if you don’t love reading? Why devote your intellectual and emotional energy to creating a book, when it’s a form you’re not invested in? Why write, when you aren’t steeped in wonder of storytelling?</i><p>This is the key point, I think. I&#x27;ve seen the same as the author: people who want to be writers but rarely read books. And I don&#x27;t <i>get it.</i><p>I recently finished a novel (now shopping around for agents, which was hard enough pre-AI but now...) and reading was integral to writing it. I know good sentences. I know the style of prose I like to read. I know how things can veer between florid and poetic and where the line is. I know how a sentence can be completely different if you read it as though it was spoken, instead of to yourself (some of mine are written to be read.)<p>I know the things that annoy me: dropping out to put thoughts in italics; descriptions that specify instead of evoke; characters talking without it leading somewhere. (And much more.)<p>How do I know this? <i>From reading.</i><p>And I want to tell the story. It was a story that grew, that I think will anger the right people (it&#x27;s not too kind to Musk or VCs or the Russian Orthodox Church), and yet is simply an adventure, tumbling our characters from situation to situation like they fell overboard while navigating rapids. Ultimately I wrote a book I wanted to read. It turned out to be about post-apocalyptic startups and sea monsters.<p>Someday I&#x27;ll publish, I hope. And no doubt someone will read it and find style they dislike, learn from it things they don&#x27;t want to do in their writing, either. But I also hope that there are moments in the book that will inspire someone else, in that they too will want to write, based on what they read.",
+      "responseHash": "91e6729e89cca3c96738d1d6309370d4c59b362907de9baead856ef6db4dd961"
+    },
+    {
+      "id": 49408550,
+      "type": "story",
+      "by": "campuscodi",
+      "time": 1787490338,
+      "title": "Malware infects Android-based automotive head unit firmware",
+      "url": "https://securelist.com/android-head-unit-malware/121106/",
+      "responseHash": "ed426a56dc90ff14ace22e638559f9105707ff706157473e0fcea28983c0af03"
+    },
+    {
+      "id": 49409002,
+      "type": "comment",
+      "parent": 49408550,
+      "by": "spicyjpeg",
+      "time": 1787494287,
+      "text": "The article does not make it particularly clear, but the malware in question is delivered through <i>official first-party</i> OTA updates on cheap Chinese aftermarket head units that happen to run Android. It cannot self-propagate to any Android-based head unit, nor does it affect Android Auto which is a &quot;dumb&quot; screen mirroring protocol with the bulk of the software running on the connected phone rather than the head unit. This seems to be a very similar situation to that of cheap generic Android TV streaming boxes, which often come pre-infected from the factory with residential proxies and other malware as well; most of the infrastructure is likely shared.",
+      "responseHash": "3b644a3d468c643a7d5ba202be1b91c110be2048b6f4fb1f8a564ee24d124c69"
+    }
+  ],
+  "resolutions": [
+    {
+      "messageId": 32847,
+      "selectedCommentId": 49348450,
+      "displayedStoryId": 49348055,
+      "ancestorIds": [
+        49348055
+      ],
+      "resolvedRootId": 49348055
+    },
+    {
+      "messageId": 32848,
+      "selectedCommentId": 49353141,
+      "displayedStoryId": 49344643,
+      "ancestorIds": [
+        49344643
+      ],
+      "resolvedRootId": 49344643
+    },
+    {
+      "messageId": 32849,
+      "selectedCommentId": 49357415,
+      "displayedStoryId": 49321298,
+      "ancestorIds": [
+        49353702,
+        49321298
+      ],
+      "resolvedRootId": 49321298
+    },
+    {
+      "messageId": 32850,
+      "selectedCommentId": 49360220,
+      "displayedStoryId": 49321298,
+      "ancestorIds": [
+        49321298
+      ],
+      "resolvedRootId": 49321298
+    },
+    {
+      "messageId": 32851,
+      "selectedCommentId": 49356163,
+      "displayedStoryId": 49348912,
+      "ancestorIds": [
+        49348912
+      ],
+      "resolvedRootId": 49348912
+    },
+    {
+      "messageId": 32852,
+      "selectedCommentId": 49363352,
+      "displayedStoryId": 49362934,
+      "ancestorIds": [
+        49362934
+      ],
+      "resolvedRootId": 49362934
+    },
+    {
+      "messageId": 32853,
+      "selectedCommentId": 49353104,
+      "displayedStoryId": 49344643,
+      "ancestorIds": [
+        49344643
+      ],
+      "resolvedRootId": 49344643
+    },
+    {
+      "messageId": 32854,
+      "selectedCommentId": 49367035,
+      "displayedStoryId": 49364745,
+      "ancestorIds": [
+        49364745
+      ],
+      "resolvedRootId": 49364745
+    },
+    {
+      "messageId": 32855,
+      "selectedCommentId": 49348358,
+      "displayedStoryId": 49348055,
+      "ancestorIds": [
+        49348055
+      ],
+      "resolvedRootId": 49348055
+    },
+    {
+      "messageId": 32856,
+      "selectedCommentId": 49356976,
+      "displayedStoryId": 49355825,
+      "ancestorIds": [
+        49356512,
+        49355825
+      ],
+      "resolvedRootId": 49355825
+    },
+    {
+      "messageId": 32857,
+      "selectedCommentId": 49364238,
+      "displayedStoryId": 49360015,
+      "ancestorIds": [
+        49360015
+      ],
+      "resolvedRootId": 49360015
+    },
+    {
+      "messageId": 32858,
+      "selectedCommentId": 49363671,
+      "displayedStoryId": 49363433,
+      "ancestorIds": [
+        49363433
+      ],
+      "resolvedRootId": 49363433
+    },
+    {
+      "messageId": 32859,
+      "selectedCommentId": 49350308,
+      "displayedStoryId": 49349984,
+      "ancestorIds": [
+        49349984
+      ],
+      "resolvedRootId": 49349984
+    },
+    {
+      "messageId": 32860,
+      "selectedCommentId": 49367354,
+      "displayedStoryId": 49362887,
+      "ancestorIds": [
+        49363529,
+        49362887
+      ],
+      "resolvedRootId": 49362887
+    },
+    {
+      "messageId": 32861,
+      "selectedCommentId": 49366396,
+      "displayedStoryId": 49364559,
+      "ancestorIds": [
+        49364559
+      ],
+      "resolvedRootId": 49364559
+    },
+    {
+      "messageId": 32862,
+      "selectedCommentId": 49354775,
+      "displayedStoryId": 49321298,
+      "ancestorIds": [
+        49321298
+      ],
+      "resolvedRootId": 49321298
+    },
+    {
+      "messageId": 32863,
+      "selectedCommentId": 49369163,
+      "displayedStoryId": 49364745,
+      "ancestorIds": [
+        49364745
+      ],
+      "resolvedRootId": 49364745
+    },
+    {
+      "messageId": 32864,
+      "selectedCommentId": 49369163,
+      "displayedStoryId": 49364745,
+      "ancestorIds": [
+        49364745
+      ],
+      "resolvedRootId": 49364745
+    },
+    {
+      "messageId": 32865,
+      "selectedCommentId": 49372025,
+      "displayedStoryId": 49371857,
+      "ancestorIds": [
+        49371857
+      ],
+      "resolvedRootId": 49371857
+    },
+    {
+      "messageId": 32866,
+      "selectedCommentId": 49363706,
+      "displayedStoryId": 49360015,
+      "ancestorIds": [
+        49360015
+      ],
+      "resolvedRootId": 49360015
+    },
+    {
+      "messageId": 32867,
+      "selectedCommentId": 49371925,
+      "displayedStoryId": 49371006,
+      "ancestorIds": [
+        49371006
+      ],
+      "resolvedRootId": 49371006
+    },
+    {
+      "messageId": 32868,
+      "selectedCommentId": 49372995,
+      "displayedStoryId": 49372583,
+      "ancestorIds": [
+        49372945,
+        49372583
+      ],
+      "resolvedRootId": 49372583
+    },
+    {
+      "messageId": 32869,
+      "selectedCommentId": 49361052,
+      "displayedStoryId": 49360242,
+      "ancestorIds": [
+        49360904,
+        49360242
+      ],
+      "resolvedRootId": 49360242
+    },
+    {
+      "messageId": 32870,
+      "selectedCommentId": 49353539,
+      "displayedStoryId": 49352794,
+      "ancestorIds": [
+        49352794
+      ],
+      "resolvedRootId": 49352794
+    },
+    {
+      "messageId": 32871,
+      "selectedCommentId": 49350799,
+      "displayedStoryId": 49349984,
+      "ancestorIds": [
+        49349984
+      ],
+      "resolvedRootId": 49349984
+    },
+    {
+      "messageId": 32872,
+      "selectedCommentId": 49376987,
+      "displayedStoryId": 49347543,
+      "ancestorIds": [
+        49347543
+      ],
+      "resolvedRootId": 49347543
+    },
+    {
+      "messageId": 32873,
+      "selectedCommentId": 49361132,
+      "displayedStoryId": 49360242,
+      "ancestorIds": [
+        49360242
+      ],
+      "resolvedRootId": 49360242
+    },
+    {
+      "messageId": 32874,
+      "selectedCommentId": 49364136,
+      "displayedStoryId": 49362887,
+      "ancestorIds": [
+        49363529,
+        49362887
+      ],
+      "resolvedRootId": 49362887
+    },
+    {
+      "messageId": 32875,
+      "selectedCommentId": 49355650,
+      "displayedStoryId": 49355105,
+      "ancestorIds": [
+        49355105
+      ],
+      "resolvedRootId": 49355105
+    },
+    {
+      "messageId": 32876,
+      "selectedCommentId": 49367810,
+      "displayedStoryId": 49364745,
+      "ancestorIds": [
+        49366367,
+        49364745
+      ],
+      "resolvedRootId": 49364745
+    },
+    {
+      "messageId": 32877,
+      "selectedCommentId": 49366580,
+      "displayedStoryId": 49365405,
+      "ancestorIds": [
+        49365405
+      ],
+      "resolvedRootId": 49365405
+    },
+    {
+      "messageId": 32878,
+      "selectedCommentId": 49370357,
+      "displayedStoryId": 49323795,
+      "ancestorIds": [
+        49323795
+      ],
+      "resolvedRootId": 49323795
+    },
+    {
+      "messageId": 32879,
+      "selectedCommentId": 49370357,
+      "displayedStoryId": 49323795,
+      "ancestorIds": [
+        49323795
+      ],
+      "resolvedRootId": 49323795
+    },
+    {
+      "messageId": 32880,
+      "selectedCommentId": 49379781,
+      "displayedStoryId": 49379550,
+      "ancestorIds": [
+        49379550
+      ],
+      "resolvedRootId": 49379550
+    },
+    {
+      "messageId": 32881,
+      "selectedCommentId": 49379412,
+      "displayedStoryId": 49378630,
+      "ancestorIds": [
+        49378630
+      ],
+      "resolvedRootId": 49378630
+    },
+    {
+      "messageId": 32882,
+      "selectedCommentId": 49377240,
+      "displayedStoryId": 49368886,
+      "ancestorIds": [
+        49368886
+      ],
+      "resolvedRootId": 49368886
+    },
+    {
+      "messageId": 32883,
+      "selectedCommentId": 49377553,
+      "displayedStoryId": 49368886,
+      "ancestorIds": [
+        49377240,
+        49368886
+      ],
+      "resolvedRootId": 49368886
+    },
+    {
+      "messageId": 32884,
+      "selectedCommentId": 49379179,
+      "displayedStoryId": 49378957,
+      "ancestorIds": [
+        49378957
+      ],
+      "resolvedRootId": 49378957
+    },
+    {
+      "messageId": 32885,
+      "selectedCommentId": 49381236,
+      "displayedStoryId": 49378957,
+      "ancestorIds": [
+        49380648,
+        49378957
+      ],
+      "resolvedRootId": 49378957
+    },
+    {
+      "messageId": 32886,
+      "selectedCommentId": 49362986,
+      "displayedStoryId": 49348141,
+      "ancestorIds": [
+        49348141
+      ],
+      "resolvedRootId": 49348141
+    },
+    {
+      "messageId": 32887,
+      "selectedCommentId": 49380648,
+      "displayedStoryId": 49378957,
+      "ancestorIds": [
+        49378957
+      ],
+      "resolvedRootId": 49378957
+    },
+    {
+      "messageId": 32888,
+      "selectedCommentId": 49372945,
+      "displayedStoryId": 49372583,
+      "ancestorIds": [
+        49372583
+      ],
+      "resolvedRootId": 49372583
+    },
+    {
+      "messageId": 32889,
+      "selectedCommentId": 49376834,
+      "displayedStoryId": 49375996,
+      "ancestorIds": [
+        49375996
+      ],
+      "resolvedRootId": 49375996
+    },
+    {
+      "messageId": 32890,
+      "selectedCommentId": 49380602,
+      "displayedStoryId": 49378446,
+      "ancestorIds": [
+        49378446
+      ],
+      "resolvedRootId": 49378446
+    },
+    {
+      "messageId": 32891,
+      "selectedCommentId": 49383354,
+      "displayedStoryId": 49383026,
+      "ancestorIds": [
+        49383026
+      ],
+      "resolvedRootId": 49383026
+    },
+    {
+      "messageId": 32892,
+      "selectedCommentId": 49380334,
+      "displayedStoryId": 49378768,
+      "ancestorIds": [
+        49378768
+      ],
+      "resolvedRootId": 49378768
+    },
+    {
+      "messageId": 32893,
+      "selectedCommentId": 49384447,
+      "displayedStoryId": 49378957,
+      "ancestorIds": [
+        49378957
+      ],
+      "resolvedRootId": 49378957
+    },
+    {
+      "messageId": 32894,
+      "selectedCommentId": 49381689,
+      "displayedStoryId": 49378446,
+      "ancestorIds": [
+        49380602,
+        49378446
+      ],
+      "resolvedRootId": 49378446
+    },
+    {
+      "messageId": 32895,
+      "selectedCommentId": 49389182,
+      "displayedStoryId": 49387497,
+      "ancestorIds": [
+        49387497
+      ],
+      "resolvedRootId": 49387497
+    },
+    {
+      "messageId": 32896,
+      "selectedCommentId": 49388070,
+      "displayedStoryId": 49385994,
+      "ancestorIds": [
+        49383026
+      ],
+      "resolvedRootId": 49383026
+    },
+    {
+      "messageId": 32897,
+      "selectedCommentId": 49388910,
+      "displayedStoryId": 49388154,
+      "ancestorIds": [
+        49388154
+      ],
+      "resolvedRootId": 49388154
+    },
+    {
+      "messageId": 32898,
+      "selectedCommentId": 49384928,
+      "displayedStoryId": 49384210,
+      "ancestorIds": [
+        49384210
+      ],
+      "resolvedRootId": 49384210
+    },
+    {
+      "messageId": 32899,
+      "selectedCommentId": 49376272,
+      "displayedStoryId": 49372583,
+      "ancestorIds": [
+        49372583
+      ],
+      "resolvedRootId": 49372583
+    },
+    {
+      "messageId": 32900,
+      "selectedCommentId": 49375609,
+      "displayedStoryId": 49374269,
+      "ancestorIds": [
+        49374269
+      ],
+      "resolvedRootId": 49374269
+    },
+    {
+      "messageId": 32901,
+      "selectedCommentId": 49388526,
+      "displayedStoryId": 49386699,
+      "ancestorIds": [
+        49386699
+      ],
+      "resolvedRootId": 49386699
+    },
+    {
+      "messageId": 32902,
+      "selectedCommentId": 49391720,
+      "displayedStoryId": 49389430,
+      "ancestorIds": [
+        49389430
+      ],
+      "resolvedRootId": 49389430
+    },
+    {
+      "messageId": 32903,
+      "selectedCommentId": 49384354,
+      "displayedStoryId": 49384180,
+      "ancestorIds": [
+        49384267,
+        49384180
+      ],
+      "resolvedRootId": 49384180
+    },
+    {
+      "messageId": 32904,
+      "selectedCommentId": 49393076,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32905,
+      "selectedCommentId": 49392888,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49392826,
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32906,
+      "selectedCommentId": 49382571,
+      "displayedStoryId": 49382152,
+      "ancestorIds": [
+        49382152
+      ],
+      "resolvedRootId": 49382152
+    },
+    {
+      "messageId": 32907,
+      "selectedCommentId": 49391973,
+      "displayedStoryId": 49390427,
+      "ancestorIds": [
+        49390427
+      ],
+      "resolvedRootId": 49390427
+    },
+    {
+      "messageId": 32908,
+      "selectedCommentId": 49395071,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49395024,
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32909,
+      "selectedCommentId": 49395024,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32910,
+      "selectedCommentId": 49395998,
+      "displayedStoryId": 49395628,
+      "ancestorIds": [
+        49395628
+      ],
+      "resolvedRootId": 49395628
+    },
+    {
+      "messageId": 32911,
+      "selectedCommentId": 49391865,
+      "displayedStoryId": 49388752,
+      "ancestorIds": [
+        49389501,
+        49388752
+      ],
+      "resolvedRootId": 49388752
+    },
+    {
+      "messageId": 32912,
+      "selectedCommentId": 49398764,
+      "displayedStoryId": 49398304,
+      "ancestorIds": [
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32913,
+      "selectedCommentId": 49390842,
+      "displayedStoryId": 49384210,
+      "ancestorIds": [
+        49384210
+      ],
+      "resolvedRootId": 49384210
+    },
+    {
+      "messageId": 32914,
+      "selectedCommentId": 49398416,
+      "displayedStoryId": 49398304,
+      "ancestorIds": [
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32915,
+      "selectedCommentId": 49398869,
+      "displayedStoryId": 49398304,
+      "ancestorIds": [
+        49398764,
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32916,
+      "selectedCommentId": 49398678,
+      "displayedStoryId": 49398304,
+      "ancestorIds": [
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32917,
+      "selectedCommentId": 49397785,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32918,
+      "selectedCommentId": 49400145,
+      "displayedStoryId": 49397074,
+      "ancestorIds": [
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32919,
+      "selectedCommentId": 49402424,
+      "displayedStoryId": 49397074,
+      "ancestorIds": [
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32920,
+      "selectedCommentId": 49397823,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49397785,
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32921,
+      "selectedCommentId": 49389372,
+      "displayedStoryId": 49387525,
+      "ancestorIds": [
+        49387525
+      ],
+      "resolvedRootId": 49387525
+    },
+    {
+      "messageId": 32922,
+      "selectedCommentId": 49389170,
+      "displayedStoryId": 49386699,
+      "ancestorIds": [
+        49388526,
+        49386699
+      ],
+      "resolvedRootId": 49386699
+    },
+    {
+      "messageId": 32923,
+      "selectedCommentId": 49382737,
+      "displayedStoryId": 49381896,
+      "ancestorIds": [
+        49381896
+      ],
+      "resolvedRootId": 49381896
+    },
+    {
+      "messageId": 32924,
+      "selectedCommentId": 49400071,
+      "displayedStoryId": 49399591,
+      "ancestorIds": [
+        49399591
+      ],
+      "resolvedRootId": 49399591
+    },
+    {
+      "messageId": 32925,
+      "selectedCommentId": 49400901,
+      "displayedStoryId": 49397074,
+      "ancestorIds": [
+        49400145,
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32926,
+      "selectedCommentId": 49401919,
+      "displayedStoryId": 49401549,
+      "ancestorIds": [
+        49401549
+      ],
+      "resolvedRootId": 49401549
+    },
+    {
+      "messageId": 32927,
+      "selectedCommentId": 49403193,
+      "displayedStoryId": 49402189,
+      "ancestorIds": [
+        49402189
+      ],
+      "resolvedRootId": 49402189
+    },
+    {
+      "messageId": 32928,
+      "selectedCommentId": 49401179,
+      "displayedStoryId": 49384210,
+      "ancestorIds": [
+        49384210
+      ],
+      "resolvedRootId": 49384210
+    },
+    {
+      "messageId": 32929,
+      "selectedCommentId": 49393603,
+      "displayedStoryId": 49393051,
+      "ancestorIds": [
+        49393051
+      ],
+      "resolvedRootId": 49393051
+    },
+    {
+      "messageId": 32930,
+      "selectedCommentId": 49401875,
+      "displayedStoryId": 49400408,
+      "ancestorIds": [
+        49400408
+      ],
+      "resolvedRootId": 49400408
+    },
+    {
+      "messageId": 32931,
+      "selectedCommentId": 49393422,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49393076,
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32932,
+      "selectedCommentId": 49403412,
+      "displayedStoryId": 49402232,
+      "ancestorIds": [
+        49402232
+      ],
+      "resolvedRootId": 49402232
+    },
+    {
+      "messageId": 32933,
+      "selectedCommentId": 49392339,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32934,
+      "selectedCommentId": 49392826,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32935,
+      "selectedCommentId": 49389738,
+      "displayedStoryId": 49387497,
+      "ancestorIds": [
+        49389182,
+        49387497
+      ],
+      "resolvedRootId": 49387497
+    },
+    {
+      "messageId": 32936,
+      "selectedCommentId": 49401215,
+      "displayedStoryId": 49397074,
+      "ancestorIds": [
+        49400901,
+        49400145,
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32937,
+      "selectedCommentId": 49401019,
+      "displayedStoryId": 49400408,
+      "ancestorIds": [
+        49400408
+      ],
+      "resolvedRootId": 49400408
+    },
+    {
+      "messageId": 32938,
+      "selectedCommentId": 49406822,
+      "displayedStoryId": 49406539,
+      "ancestorIds": [
+        49406539
+      ],
+      "resolvedRootId": 49406539
+    },
+    {
+      "messageId": 32939,
+      "selectedCommentId": 49401913,
+      "displayedStoryId": 49400408,
+      "ancestorIds": [
+        49401429,
+        49401019,
+        49400408
+      ],
+      "resolvedRootId": 49400408
+    },
+    {
+      "messageId": 32940,
+      "selectedCommentId": 49409002,
+      "displayedStoryId": 49408550,
+      "ancestorIds": [
+        49408550
+      ],
+      "resolvedRootId": 49408550
+    },
+    {
+      "messageId": 32941,
+      "selectedCommentId": 49403620,
+      "displayedStoryId": 49397074,
+      "ancestorIds": [
+        49403023,
+        49402424,
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32942,
+      "selectedCommentId": 49407075,
+      "displayedStoryId": 49405870,
+      "ancestorIds": [
+        49405870
+      ],
+      "resolvedRootId": 49405870
+    },
+    {
+      "messageId": 32943,
+      "selectedCommentId": 49396801,
+      "displayedStoryId": 49386895,
+      "ancestorIds": [
+        49396467,
+        49386895
+      ],
+      "resolvedRootId": 49386895
+    },
+    {
+      "messageId": 32944,
+      "selectedCommentId": 49402473,
+      "displayedStoryId": 49351802,
+      "ancestorIds": [
+        49351802
+      ],
+      "resolvedRootId": 49351802
+    },
+    {
+      "messageId": 32945,
+      "selectedCommentId": 49398422,
+      "displayedStoryId": 49397074,
+      "ancestorIds": [
+        49398416,
+        49397074
+      ],
+      "resolvedRootId": 49397074
+    },
+    {
+      "messageId": 32946,
+      "selectedCommentId": 49403945,
+      "displayedStoryId": 49400408,
+      "ancestorIds": [
+        49401429,
+        49401019,
+        49400408
+      ],
+      "resolvedRootId": 49400408
+    }
+  ]
+}
