@@ -34,7 +34,7 @@ Generated on 2026-08-24 from `docs/telegram-hn-technical-knowledge-project-resea
 | Plan | Title | Priority | Effort | Depends on | Status |
 |---|---|---|---|---|---|
 | 001 | Establish the project foundation and decision record | P1 | L | — | DONE |
-| 002 | Implement deterministic selection ingestion and HN resolution | P1 | L | 001 | TODO |
+| 002 | Implement deterministic selection ingestion and HN resolution | P1 | L | 001 | DONE |
 | 003 | Implement grounded classification and the evaluation harness | P1 | L | 002 | TODO |
 | 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 | TODO |
 | 005 | Implement the private knowledge-feed APIs and reconciliation | P1 | L | 004 | TODO |
