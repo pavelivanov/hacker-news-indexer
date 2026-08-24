@@ -1,0 +1,113 @@
+{
+  "reportVersion": 1,
+  "mode": "benchmark",
+  "corpus": "evaluation/gold-v1.jsonl",
+  "corpusSha256": "826c97f5678b3ab56d2970d498668051f90f86ac6ee615cfdf7e4643eed87e7a",
+  "provider": "openai",
+  "modelId": "gpt-5.6-sol",
+  "modelConfigId": "openai-responses:gpt-5.6-sol:reasoning-low:max-output-8192:strict-json-schema:store-false:v1",
+  "promptVersion": "classification-prompt.v1",
+  "promptHash": "10f0ba3a3e44902ebbc5c03cafd4de7dbc66a797320ee9471612ca0ba4a41a01",
+  "schemaVersion": "classification.v1",
+  "split": "development",
+  "rows": 69,
+  "terminalRuns": 69,
+  "activatedDecisions": 0,
+  "configuration": {
+    "endpoint": "responses",
+    "reasoningEffort": "low",
+    "structuredOutput": "strict-json-schema",
+    "toolsEnabled": false,
+    "parallelToolCalls": false,
+    "requestStorage": false,
+    "timeoutMs": 45000,
+    "concurrency": 2
+  },
+  "confusionMatrix": {
+    "DISCOVERY": {
+      "DISCOVERY": 3,
+      "EXPERT_NOTE": 1,
+      "REJECTED": 1,
+      "REVIEW": 3,
+      "INVALID": 0
+    },
+    "EXPERT_NOTE": {
+      "DISCOVERY": 0,
+      "EXPERT_NOTE": 13,
+      "REJECTED": 0,
+      "REVIEW": 3,
+      "INVALID": 0
+    },
+    "REJECTED": {
+      "DISCOVERY": 0,
+      "EXPERT_NOTE": 2,
+      "REJECTED": 39,
+      "REVIEW": 4,
+      "INVALID": 0
+    }
+  },
+  "classMetrics": {
+    "DISCOVERY": {
+      "precision": 1,
+      "recall": 0.375,
+      "f1": 0.5454545454545454
+    },
+    "EXPERT_NOTE": {
+      "precision": 0.8125,
+      "recall": 0.8125,
+      "f1": 0.8125
+    },
+    "REJECTED": {
+      "precision": 0.975,
+      "recall": 0.8666666666666667,
+      "f1": 0.9176470588235294
+    }
+  },
+  "macroF1": 0.7585338680926915,
+  "discoveryPrecision": 1,
+  "expertNotePrecision": 0.8125,
+  "urlGroundingPrecision": 1,
+  "inventedUrlCount": 0,
+  "evidenceOriginAccuracy": 0.5172413793103449,
+  "spanValidation": 1,
+  "schemaValidRate": 0.9710144927536232,
+  "reviewRate": 0.11594202898550725,
+  "latencyMs": {
+    "p50": 4742,
+    "p95": 8894
+  },
+  "usage": {
+    "inputTokens": 111389,
+    "outputTokens": 14265,
+    "pricing": {
+      "inputUsdPerMillionTokens": 4,
+      "outputUsdPerMillionTokens": 20,
+      "observedAt": "2026-08-24",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol"
+    },
+    "estimatedUpperBoundUsd": 0.730856,
+    "estimateAssumesAllInputTokensUncached": true
+  },
+  "failures": {
+    "SUBJECT_NAME_UNSUPPORTED": 2
+  },
+  "adversarial": {
+    "cases": 4,
+    "terminalRuns": 4,
+    "failures": 0,
+    "toolActions": 0,
+    "networkActions": 0
+  },
+  "acceptance": {
+    "macroF1": false,
+    "discoveryPrecision": true,
+    "expertNotePrecision": false,
+    "urlGroundingPrecision": true,
+    "inventedUrlCount": true,
+    "evidenceOriginAccuracy": false,
+    "spanValidation": true,
+    "schemaValidRate": false,
+    "adversarialToolAndNetworkActions": true
+  },
+  "passed": false
+}
