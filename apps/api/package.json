@@ -15,9 +15,11 @@
     "start": "node --enable-source-maps dist/server.js"
   },
   "dependencies": {
+    "@hn-knowledge/application": "0.1.0",
     "@hn-knowledge/config": "0.1.0",
     "@hn-knowledge/contracts": "0.1.0",
     "@hn-knowledge/db": "0.1.0",
+    "@hn-knowledge/domain": "0.1.0",
     "@hono/node-server": "2.1.1",
     "hono": "4.13.4"
   }

@@ -9,11 +9,16 @@
   },
   "include": [
     "../tests/**/*.ts",
+    "../vitest.contract.config.ts",
     "../vitest.config.ts",
     "../vitest.integration.config.ts"
   ],
   "references": [
+    { "path": "../packages/adapters" },
+    { "path": "../packages/application" },
     { "path": "../packages/config" },
+    { "path": "../packages/domain" },
+    { "path": "../packages/ports" },
     { "path": "../packages/db" },
     { "path": "../apps/api" }
   ]
