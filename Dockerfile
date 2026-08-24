@@ -55,6 +55,7 @@ ENV NODE_ENV=production
 
 COPY --from=runtime-dependencies --chown=node:node /app/node_modules ./node_modules
 COPY --from=runtime-dependencies --chown=node:node /app/package.json ./package.json
+COPY --from=runtime-dependencies --chown=node:node /app/package-lock.json ./package-lock.json
 COPY --from=runtime-dependencies --chown=node:node /app/apps/api/package.json ./apps/api/package.json
 COPY --from=runtime-dependencies --chown=node:node /app/apps/worker/package.json ./apps/worker/package.json
 COPY --from=runtime-dependencies --chown=node:node /app/packages ./packages

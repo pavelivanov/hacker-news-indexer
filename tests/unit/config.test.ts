@@ -13,6 +13,8 @@ describe("application configuration", () => {
       TELEGRAM_ENABLED: false,
       CLASSIFIER_ENABLED: false,
       DATABASE_READY_TIMEOUT_MS: 2_000,
+      INGESTION_MAX_RANGE: 1_000,
+      WORKER_CONCURRENCY: 4,
     });
     expect(config.TELEGRAM_API_HASH).toBeUndefined();
     expect(config.CLASSIFIER_API_TOKEN).toBeUndefined();
