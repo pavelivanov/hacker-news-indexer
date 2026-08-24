@@ -6,3 +6,276 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum SelectionSource {
+  TELEGRAM
+  FIXTURE
+}
+
+enum IngestionRunStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  PARTIAL
+  FAILED
+}
+
+enum OccurrenceStatus {
+  OBSERVED
+  MISSING
+  DELETED
+  RESOLVED
+  FAILED
+}
+
+enum HnReferenceRole {
+  DISPLAYED_STORY_REFERENCE
+  SELECTED_COMMENT
+  INLINE_HN_REFERENCE
+}
+
+enum PipelineJobType {
+  INGEST_SELECTION_RANGE
+  RESOLVE_HN_COMMENT
+}
+
+enum PipelineJobState {
+  AVAILABLE
+  LEASED
+  COMPLETED
+  RETRYABLE
+  TERMINAL
+}
+
+enum HnItemType {
+  comment
+  story
+  poll
+  pollopt
+  job
+}
+
+enum HnAvailabilityState {
+  AVAILABLE
+  DELETED
+  DEAD
+  MISSING
+}
+
+enum MultipartState {
+  AWAITING_PARTS
+  COMPLETE_MATCH
+  COMPLETE_MISMATCH
+  INCOMPLETE_SNAPSHOT
+  CONFLICTING_PARTS
+}
+
+enum UrlValidationState {
+  CANDIDATE
+  VALID
+  REJECTED
+}
+
+model IngestionRun {
+  id             String             @id @default(uuid()) @db.Uuid
+  source         SelectionSource
+  sourceKey      String             @map("source_key")
+  minId          BigInt             @map("min_id")
+  maxId          BigInt             @map("max_id")
+  cursor         BigInt?
+  requestKey     String             @unique @map("request_key")
+  codeVersion    String             @default("development") @map("code_version")
+  status         IngestionRunStatus @default(PENDING)
+  observedCount  Int                @default(0) @map("observed_count")
+  resolvedCount  Int                @default(0) @map("resolved_count")
+  terminalCount  Int                @default(0) @map("terminal_count")
+  failureSummary String?            @map("failure_summary")
+  startedAt      DateTime?          @map("started_at") @db.Timestamptz(3)
+  completedAt    DateTime?          @map("completed_at") @db.Timestamptz(3)
+  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  occurrences    IngestionRunOccurrence[]
+  jobs           PipelineJob[]
+
+  @@index([status, createdAt])
+  @@map("ingestion_runs")
+}
+
+model SelectionOccurrence {
+  id           String           @id @default(uuid()) @db.Uuid
+  source       SelectionSource
+  sourceKey    String           @map("source_key")
+  externalId   BigInt           @map("external_id")
+  occurredAt   DateTime?        @map("occurred_at") @db.Timestamptz(3)
+  editedAt     DateTime?        @map("edited_at") @db.Timestamptz(3)
+  contentHash  String?          @map("content_hash")
+  status       OccurrenceStatus @default(OBSERVED)
+  firstSeenAt  DateTime         @default(now()) @map("first_seen_at") @db.Timestamptz(3)
+  lastSeenAt   DateTime         @updatedAt @map("last_seen_at") @db.Timestamptz(3)
+  runs         IngestionRunOccurrence[]
+  telegram     TelegramMessage?
+  references   HnReference[]
+  multipartPart MultipartPart?
+
+  @@unique([source, sourceKey, externalId])
+  @@index([status, occurredAt])
+  @@map("selection_occurrences")
+}
+
+model IngestionRunOccurrence {
+  ingestionRunId String @map("ingestion_run_id") @db.Uuid
+  occurrenceId   String @map("occurrence_id") @db.Uuid
+  attachedAt     DateTime @default(now()) @map("attached_at") @db.Timestamptz(3)
+  ingestionRun   IngestionRun @relation(fields: [ingestionRunId], references: [id], onDelete: Cascade)
+  occurrence     SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+
+  @@id([ingestionRunId, occurrenceId])
+  @@map("ingestion_run_occurrences")
+}
+
+model TelegramMessage {
+  occurrenceId     String   @id @map("occurrence_id") @db.Uuid
+  entities         Json
+  displayedTextHash String? @map("displayed_text_hash")
+  bodySnapshot     String?  @map("body_snapshot")
+  multipartPart    Int?     @map("multipart_part")
+  multipartTotal   Int?     @map("multipart_total")
+  deleted          Boolean  @default(false)
+  occurrence       SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+
+  @@map("telegram_messages")
+}
+
+model HnReference {
+  id              String          @id @default(uuid()) @db.Uuid
+  occurrenceId    String          @map("occurrence_id") @db.Uuid
+  hnItemId        BigInt          @map("hn_item_id")
+  role            HnReferenceRole
+  entityOffset    Int             @map("entity_offset")
+  entityLength    Int             @map("entity_length")
+  parseConfidence Float           @map("parse_confidence")
+  occurrence      SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+
+  @@unique([occurrenceId, role, entityOffset, hnItemId])
+  @@index([hnItemId])
+  @@map("hn_references")
+}
+
+model PipelineJob {
+  id              String           @id @default(uuid()) @db.Uuid
+  ingestionRunId  String?          @map("ingestion_run_id") @db.Uuid
+  type            PipelineJobType
+  payload         Json
+  idempotencyKey  String           @unique @map("idempotency_key")
+  state           PipelineJobState @default(AVAILABLE)
+  attempts        Int              @default(0)
+  availableAt     DateTime         @default(now()) @map("available_at") @db.Timestamptz(3)
+  leaseOwner      String?          @map("lease_owner")
+  leaseExpiresAt  DateTime?        @map("lease_expires_at") @db.Timestamptz(3)
+  lastErrorCode   String?          @map("last_error_code")
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  ingestionRun    IngestionRun?    @relation(fields: [ingestionRunId], references: [id], onDelete: Cascade)
+
+  @@index([state, availableAt, createdAt])
+  @@index([leaseExpiresAt])
+  @@map("pipeline_jobs")
+}
+
+model HnItem {
+  id             BigInt              @id
+  type           HnItemType
+  parentId       BigInt?              @map("parent_id")
+  author         String?
+  time           DateTime?            @db.Timestamptz(3)
+  title          String?
+  textHtml       String?              @map("text_html")
+  textPlain      String?              @map("text_plain")
+  url            String?
+  availability   HnAvailabilityState
+  fetchedAt      DateTime             @map("fetched_at") @db.Timestamptz(3)
+  responseHash   String               @map("response_hash")
+  selectedComment SelectedComment?
+  urlCandidates  UrlCandidate[]
+
+  @@index([parentId])
+  @@index([type, availability])
+  @@map("hn_items")
+}
+
+model SelectedComment {
+  id             BigInt              @id
+  rootId         BigInt               @map("root_id")
+  canonicalHtml  String               @map("canonical_html")
+  canonicalText  String               @map("canonical_text")
+  contentHash    String               @map("content_hash")
+  availability   HnAvailabilityState
+  firstSeenAt    DateTime             @default(now()) @map("first_seen_at") @db.Timestamptz(3)
+  lastSeenAt     DateTime             @updatedAt @map("last_seen_at") @db.Timestamptz(3)
+  item           HnItem               @relation(fields: [id], references: [id], onDelete: Restrict)
+  resolutionPath ResolutionPath?
+  multipartGroup MultipartGroup?
+
+  @@index([rootId])
+  @@map("selected_comments")
+}
+
+model ResolutionPath {
+  id                String   @id @default(uuid()) @db.Uuid
+  selectedCommentId BigInt   @unique @map("selected_comment_id")
+  ancestorIds       BigInt[] @map("ancestor_ids")
+  displayedStoryId  BigInt?  @map("displayed_story_id")
+  resolvedRootId    BigInt   @map("resolved_root_id")
+  resolverVersion   String   @map("resolver_version")
+  resolvedAt        DateTime @default(now()) @map("resolved_at") @db.Timestamptz(3)
+  selectedComment   SelectedComment @relation(fields: [selectedCommentId], references: [id], onDelete: Cascade)
+
+  @@index([resolvedRootId])
+  @@map("resolution_paths")
+}
+
+model MultipartGroup {
+  id                String         @id @default(uuid()) @db.Uuid
+  selectedCommentId BigInt         @unique @map("selected_comment_id")
+  expectedParts     Int            @map("expected_parts")
+  state             MultipartState
+  canonicalSource   String         @default("HN") @map("canonical_source")
+  snapshotHash      String?        @map("snapshot_hash")
+  selectedComment   SelectedComment @relation(fields: [selectedCommentId], references: [id], onDelete: Cascade)
+  parts             MultipartPart[]
+
+  @@map("multipart_groups")
+}
+
+model MultipartPart {
+  id             String   @id @default(uuid()) @db.Uuid
+  groupId        String   @map("group_id") @db.Uuid
+  occurrenceId   String   @unique @map("occurrence_id") @db.Uuid
+  partNo         Int      @map("part_no")
+  observedTotal  Int      @map("observed_total")
+  fragmentHash   String   @map("fragment_hash")
+  fragmentSnapshot String? @map("fragment_snapshot")
+  group          MultipartGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  occurrence     SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, partNo])
+  @@map("multipart_parts")
+}
+
+model UrlCandidate {
+  id             String             @id @default(uuid()) @db.Uuid
+  hnItemId       BigInt?            @map("hn_item_id")
+  rawUrl         String             @map("raw_url")
+  canonicalUrl   String?            @map("canonical_url")
+  sourceDocument String             @map("source_document")
+  originField    String             @map("origin_field")
+  scheme         String?
+  host           String?
+  validationState UrlValidationState @default(CANDIDATE) @map("validation_state")
+  contentHash    String             @map("content_hash")
+  hnItem         HnItem?            @relation(fields: [hnItemId], references: [id], onDelete: Cascade)
+
+  @@unique([contentHash, sourceDocument, originField])
+  @@index([hnItemId])
+  @@map("url_candidates")
+}
