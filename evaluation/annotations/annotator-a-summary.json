@@ -1,0 +1,53 @@
+{
+  "annotator": {
+    "id": "A",
+    "method": "independent-fixture-review"
+  },
+  "source": {
+    "packet": "/tmp/hn-evaluation-source.json",
+    "guide": "docs/annotation-guide.md",
+    "scope": "98 unique canonical selected HN comments"
+  },
+  "counts": {
+    "total": 98,
+    "uniqueCommentIds": 98,
+    "DISCOVERY": 13,
+    "EXPERT_NOTE": 30,
+    "REJECTED": 55
+  },
+  "unresolvedIssues": [
+    {
+      "code": "FLAGGED_CONTENT",
+      "commentIds": [49361132],
+      "detail": "The frozen selected-comment body is only [flagged], so it was rejected as unavailable and explicitly flagged for review."
+    },
+    {
+      "code": "LOW_CONFIDENCE",
+      "commentIds": [49376272, 49382737],
+      "detail": "One note contains a clearly marked browser-behavior hypothesis; the other relies on the resolved root for the stealth model identity and reports security-sensitive probing."
+    },
+    {
+      "code": "AMBIGUOUS_CLASSIFICATION",
+      "commentIds": [49380334],
+      "detail": "The agent-programming comparison is reusable but primarily conceptual and should be checked during adjudication against the material-technical threshold."
+    },
+    {
+      "code": "POLICY_REVIEW_REQUIRED",
+      "commentIds": [
+        49348358, 49353104, 49363671, 49367810, 49369163, 49375609, 49379412,
+        49382737, 49388070, 49392826, 49393603, 49395024, 49396801, 49409002
+      ],
+      "detail": "These retained rows include legal, medical, security-sensitive, destructive, or evasion-oriented claims and carry bounded review flags in the JSONL."
+    }
+  ],
+  "validation": {
+    "jsonLinesValid": true,
+    "strictlySortedByCommentId": true,
+    "selectedIdSetMatchesPacket": true,
+    "classInvariantsValid": true,
+    "evidenceUtf16SlicesValid": true,
+    "evidenceOriginsValid": true,
+    "urlCandidatesGrounded": true
+  },
+  "jsonlSha256": "aa80d45d2d68b0ca2f032e2e95d51fb316cdbb12e0a3746e131b307e1ddc9fbc"
+}

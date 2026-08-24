@@ -1,3 +1,4 @@
+export * from "./classifier.js";
 export * from "./hn-items.js";
 export * from "./jobs.js";
 export * from "./repositories.js";

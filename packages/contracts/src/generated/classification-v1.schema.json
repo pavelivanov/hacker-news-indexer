@@ -1,0 +1,448 @@
+{
+  "type": "object",
+  "required": [
+    "schema_version",
+    "primary_decision",
+    "decision_confidence",
+    "comment_relevance",
+    "rejection_reasons",
+    "discoveries",
+    "expert_note",
+    "review"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "classification.v1"
+    },
+    "primary_decision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "DISCOVERY"
+        },
+        {
+          "type": "string",
+          "const": "EXPERT_NOTE"
+        },
+        {
+          "type": "string",
+          "const": "REJECTED"
+        },
+        {
+          "type": "string",
+          "const": "REVIEW"
+        }
+      ]
+    },
+    "decision_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "comment_relevance": {
+      "type": "object",
+      "required": ["is_materially_technical", "reason", "evidence_span_ids"],
+      "properties": {
+        "is_materially_technical": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "evidence_span_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^span:[0-9]+$"
+          },
+          "maxItems": 12,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "rejection_reasons": {
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "const": "POLITICS_NO_TECHNICAL_SUBJECT"
+          },
+          {
+            "type": "string",
+            "const": "JOKE_OR_ONE_LINER"
+          },
+          {
+            "type": "string",
+            "const": "GENERIC_OPINION"
+          },
+          {
+            "type": "string",
+            "const": "PERSONAL_STORY_NO_USABLE_SUBJECT"
+          },
+          {
+            "type": "string",
+            "const": "INCIDENTAL_MENTION"
+          },
+          {
+            "type": "string",
+            "const": "NEWS_WITHOUT_REUSABLE_DETAIL"
+          },
+          {
+            "type": "string",
+            "const": "UNAVAILABLE_CONTENT"
+          }
+        ]
+      },
+      "maxItems": 7,
+      "uniqueItems": true
+    },
+    "discoveries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "subject_type",
+          "name",
+          "aliases",
+          "description_claim",
+          "evidence_origin",
+          "evidence_span_ids",
+          "url_candidate_ids",
+          "url_grounding",
+          "root_story_only",
+          "confidence"
+        ],
+        "properties": {
+          "subject_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "PROJECT"
+              },
+              {
+                "type": "string",
+                "const": "TOOL"
+              },
+              {
+                "type": "string",
+                "const": "LIBRARY"
+              },
+              {
+                "type": "string",
+                "const": "SERVICE"
+              },
+              {
+                "type": "string",
+                "const": "PRODUCT"
+              },
+              {
+                "type": "string",
+                "const": "FEATURE"
+              },
+              {
+                "type": "string",
+                "const": "PLUGIN"
+              },
+              {
+                "type": "string",
+                "const": "AGENT_SKILL"
+              },
+              {
+                "type": "string",
+                "const": "GUIDE"
+              },
+              {
+                "type": "string",
+                "const": "RESOURCE"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 160
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "maxItems": 10,
+            "uniqueItems": true
+          },
+          "description_claim": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "evidence_origin": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "COMMENT"
+              },
+              {
+                "type": "string",
+                "const": "ROOT_STORY"
+              },
+              {
+                "type": "string",
+                "const": "BOTH"
+              }
+            ]
+          },
+          "evidence_span_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^span:[0-9]+$"
+            },
+            "minItems": 1,
+            "maxItems": 12,
+            "uniqueItems": true
+          },
+          "url_candidate_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^url:[0-9]+$"
+            },
+            "maxItems": 12,
+            "uniqueItems": true
+          },
+          "url_grounding": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "GROUNDED"
+              },
+              {
+                "type": "string",
+                "const": "NONE"
+              }
+            ]
+          },
+          "root_story_only": {
+            "type": "boolean"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "maxItems": 5
+    },
+    "expert_note": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "note_type",
+            "title",
+            "summary",
+            "evidence_origin",
+            "evidence_span_ids",
+            "related_subject_names",
+            "qualifiers",
+            "confidence"
+          ],
+          "properties": {
+            "note_type": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "TECHNICAL_EXPLANATION"
+                },
+                {
+                  "type": "string",
+                  "const": "CORRECTION"
+                },
+                {
+                  "type": "string",
+                  "const": "PRODUCT_EXPERIENCE"
+                },
+                {
+                  "type": "string",
+                  "const": "IMPLEMENTATION_CAVEAT"
+                },
+                {
+                  "type": "string",
+                  "const": "SECURITY"
+                },
+                {
+                  "type": "string",
+                  "const": "OPERATIONS"
+                },
+                {
+                  "type": "string",
+                  "const": "COMPARISON"
+                },
+                {
+                  "type": "string",
+                  "const": "GUIDE"
+                }
+              ]
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2000
+            },
+            "evidence_origin": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "const": "COMMENT"
+                },
+                {
+                  "type": "string",
+                  "const": "ROOT_STORY"
+                },
+                {
+                  "type": "string",
+                  "const": "BOTH"
+                }
+              ]
+            },
+            "evidence_span_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^span:[0-9]+$"
+              },
+              "minItems": 1,
+              "maxItems": 16,
+              "uniqueItems": true
+            },
+            "related_subject_names": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "maxItems": 12,
+              "uniqueItems": true
+            },
+            "qualifiers": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 300
+              },
+              "maxItems": 12,
+              "uniqueItems": true
+            },
+            "confidence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "review": {
+      "type": "object",
+      "required": ["required", "reasons"],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "MISSING_CANONICAL_URL"
+              },
+              {
+                "type": "string",
+                "const": "AMBIGUOUS_CANONICAL_URL"
+              },
+              {
+                "type": "string",
+                "const": "ROOT_ONLY_DISCOVERY"
+              },
+              {
+                "type": "string",
+                "const": "LEGAL_RECOMMENDATION"
+              },
+              {
+                "type": "string",
+                "const": "MEDICAL_RECOMMENDATION"
+              },
+              {
+                "type": "string",
+                "const": "SECURITY_RECOMMENDATION"
+              },
+              {
+                "type": "string",
+                "const": "DESTRUCTIVE_OR_EVASION_ADVICE"
+              },
+              {
+                "type": "string",
+                "const": "LOW_CONFIDENCE"
+              },
+              {
+                "type": "string",
+                "const": "PROMPT_INJECTION"
+              },
+              {
+                "type": "string",
+                "const": "UNAVAILABLE_CONTENT"
+              },
+              {
+                "type": "string",
+                "const": "TELEGRAM_HN_DIVERGENCE"
+              },
+              {
+                "type": "string",
+                "const": "CONFLICTING_EVIDENCE_ORIGIN"
+              },
+              {
+                "type": "string",
+                "const": "INVALID_EVIDENCE_SPAN"
+              },
+              {
+                "type": "string",
+                "const": "UNSUPPORTED_URL"
+              },
+              {
+                "type": "string",
+                "const": "AMBIGUOUS_CLASSIFICATION"
+              }
+            ]
+          },
+          "maxItems": 12,
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$id": "classification.v1",
+  "title": "Grounded classification result v1",
+  "additionalProperties": false
+}
