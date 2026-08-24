@@ -55,6 +55,9 @@ jobs:
           npm run build
           npm test
 
+      - name: Verify grounded classification replay
+        run: npm run test:evaluation
+
       - name: Verify PostgreSQL integration
         run: |
           npm run db:test:wait
