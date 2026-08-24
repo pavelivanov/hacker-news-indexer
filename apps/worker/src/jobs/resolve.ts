@@ -8,6 +8,7 @@ import type {
   Hasher,
   HnResolutionRepository,
   OccurrenceRepository,
+  PipelineJobPublisher,
 } from "@hn-knowledge/ports";
 
 import { WorkerJobError } from "./errors.js";
@@ -22,6 +23,7 @@ export const createResolveJobHandler =
     resolutions: HnResolutionRepository,
     clock: Clock,
     hasher: Hasher,
+    jobs: PipelineJobPublisher,
   ): ResolveJobHandler =>
   async (job): Promise<void> => {
     if (job.ingestionRunId === null) {
@@ -45,5 +47,6 @@ export const createResolveJobHandler =
       resolutions,
       clock,
       hasher,
+      jobs,
     )({ runId: job.ingestionRunId, selectedCommentId: selectedId });
   };

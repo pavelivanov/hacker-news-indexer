@@ -220,6 +220,16 @@ export const createJobQueue = (client: PrismaClient): JobQueue => ({
                 AND prerequisite.state <> 'COMPLETED'
             )
           )
+          AND (
+            queued.type <> 'CLASSIFY_COMMENT'
+            OR NOT EXISTS (
+              SELECT 1
+              FROM pipeline_jobs AS prerequisite
+              WHERE prerequisite.ingestion_run_id = queued.ingestion_run_id
+                AND prerequisite.type = 'RESOLVE_HN_COMMENT'
+                AND prerequisite.state <> 'COMPLETED'
+            )
+          )
         ORDER BY queued.available_at ASC, queued.created_at ASC, queued.id ASC
         FOR UPDATE SKIP LOCKED
         LIMIT 1

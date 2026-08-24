@@ -3,6 +3,7 @@ import type { IngestionRunId, PipelineJobId } from "./identities.js";
 export const PIPELINE_JOB_TYPES = [
   "INGEST_SELECTION_RANGE",
   "RESOLVE_HN_COMMENT",
+  "CLASSIFY_COMMENT",
 ] as const;
 export type PipelineJobType = (typeof PIPELINE_JOB_TYPES)[number];
 

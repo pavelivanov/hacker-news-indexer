@@ -37,6 +37,7 @@ enum HnReferenceRole {
 enum PipelineJobType {
   INGEST_SELECTION_RANGE
   RESOLVE_HN_COMMENT
+  CLASSIFY_COMMENT
 }
 
 enum PipelineJobState {
@@ -74,6 +75,29 @@ enum UrlValidationState {
   CANDIDATE
   VALID
   REJECTED
+}
+
+enum ClassificationRunStatus {
+  SUCCEEDED
+  REVIEW
+  FAILED
+}
+
+enum ContentDecisionClass {
+  DISCOVERY
+  EXPERT_NOTE
+  REJECTED
+  REVIEW
+}
+
+enum ContentDecisionSource {
+  MODEL
+  MANUAL
+}
+
+enum EvidenceOrigin {
+  COMMENT
+  ROOT_STORY
 }
 
 model IngestionRun {
@@ -215,9 +239,81 @@ model SelectedComment {
   item           HnItem               @relation(fields: [id], references: [id], onDelete: Restrict)
   resolutionPath ResolutionPath?
   multipartGroup MultipartGroup?
+  classificationRuns ClassificationRun[]
+  contentDecisions ContentDecision[] @relation("CommentDecisions")
+  activeDecisionId String? @unique @map("active_decision_id") @db.Uuid
+  activeDecision ContentDecision? @relation("ActiveContentDecision", fields: [activeDecisionId], references: [id], onDelete: SetNull)
 
   @@index([rootId])
   @@map("selected_comments")
+}
+
+model ClassificationRun {
+  id                String                  @id @default(uuid()) @db.Uuid
+  commentId         BigInt                  @map("comment_id")
+  inputHash         String                  @map("input_hash")
+  promptVersion     String                  @map("prompt_version")
+  promptHash        String                  @map("prompt_hash")
+  schemaVersion     String                  @map("schema_version")
+  modelConfigId     String                  @map("model_config_id")
+  provider          String
+  modelId           String                  @map("model_id")
+  outputHash        String?                 @map("output_hash")
+  providerOutput    Json?                   @map("provider_output")
+  latencyMs         Int?                    @map("latency_ms")
+  inputTokens       Int?                    @map("input_tokens")
+  outputTokens      Int?                    @map("output_tokens")
+  status            ClassificationRunStatus
+  errorCode         String?                 @map("error_code")
+  createdAt         DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
+  comment           SelectedComment         @relation(fields: [commentId], references: [id], onDelete: Restrict)
+  contentDecision   ContentDecision?
+
+  @@unique([commentId, inputHash, promptVersion, schemaVersion, modelConfigId])
+  @@index([commentId, createdAt])
+  @@index([status, createdAt])
+  @@map("classification_runs")
+}
+
+model ContentDecision {
+  id                 String                @id @default(uuid()) @db.Uuid
+  commentId          BigInt                @map("comment_id")
+  classificationRunId String?              @unique @map("classification_run_id") @db.Uuid
+  source             ContentDecisionSource
+  primaryDecision    ContentDecisionClass  @map("primary_decision")
+  decisionConfidence Float                 @map("decision_confidence")
+  materiallyTechnical Boolean              @map("materially_technical")
+  reviewRequired     Boolean               @map("review_required")
+  validatedOutput    Json                  @map("validated_output")
+  manualOverrideOfId String?               @map("manual_override_of_id") @db.Uuid
+  createdAt          DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  comment            SelectedComment       @relation("CommentDecisions", fields: [commentId], references: [id], onDelete: Restrict)
+  classificationRun  ClassificationRun?    @relation(fields: [classificationRunId], references: [id], onDelete: Restrict)
+  manualOverrideOf   ContentDecision?      @relation("ManualDecisionOverrides", fields: [manualOverrideOfId], references: [id], onDelete: Restrict)
+  manualOverrides    ContentDecision[]     @relation("ManualDecisionOverrides")
+  evidenceSpans      EvidenceSpan[]
+  activeFor          SelectedComment?      @relation("ActiveContentDecision")
+
+  @@index([commentId, createdAt])
+  @@index([manualOverrideOfId])
+  @@map("content_decisions")
+}
+
+model EvidenceSpan {
+  id                String          @id @default(uuid()) @db.Uuid
+  contentDecisionId String          @map("content_decision_id") @db.Uuid
+  spanId            String          @map("span_id")
+  sourceDocument    String          @map("source_document")
+  origin            EvidenceOrigin
+  startOffset       Int             @map("start_offset")
+  endOffset         Int             @map("end_offset")
+  textHash          String          @map("text_hash")
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  contentDecision   ContentDecision @relation(fields: [contentDecisionId], references: [id], onDelete: Restrict)
+
+  @@unique([contentDecisionId, spanId])
+  @@index([sourceDocument])
+  @@map("evidence_spans")
 }
 
 model ResolutionPath {
