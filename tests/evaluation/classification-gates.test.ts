@@ -90,6 +90,8 @@ describe("classification evaluation gates", () => {
     ["benchmark-openai-gpt-5-6-luna-medium-v1.json", "gpt-5.6-luna"],
     ["benchmark-openai-gpt-5-6-terra-low-v1.json", "gpt-5.6-terra"],
     ["benchmark-openai-gpt-5-6-terra-medium-v1.json", "gpt-5.6-terra"],
+    ["benchmark-openai-gpt-5-6-sol-low-v1.json", "gpt-5.6-sol"],
+    ["benchmark-openai-gpt-5-6-sol-medium-v1.json", "gpt-5.6-sol"],
   ])("records a development-only rejection in %s", async (name, modelId) => {
     const report = await load(name);
 
@@ -111,6 +113,8 @@ describe("classification evaluation gates", () => {
       "benchmark-openai-gpt-5-6-luna-medium-v1.json",
       "benchmark-openai-gpt-5-6-terra-low-v1.json",
       "benchmark-openai-gpt-5-6-terra-medium-v1.json",
+      "benchmark-openai-gpt-5-6-sol-low-v1.json",
+      "benchmark-openai-gpt-5-6-sol-medium-v1.json",
     ];
     for (const name of names) {
       const text = await readFile(`evaluation/reports/${name}`, "utf8");
@@ -126,6 +130,8 @@ describe("classification evaluation gates", () => {
       "holdout-openai-gpt-5-6-luna-medium-v1.json",
       "holdout-openai-gpt-5-6-terra-low-v1.json",
       "holdout-openai-gpt-5-6-terra-medium-v1.json",
+      "holdout-openai-gpt-5-6-sol-low-v1.json",
+      "holdout-openai-gpt-5-6-sol-medium-v1.json",
     ]) {
       await expect(
         readFile(`evaluation/reports/${name}`, "utf8"),
