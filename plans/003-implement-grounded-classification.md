@@ -6,6 +6,9 @@
 
 ## Status
 
+- **Execution status**: BLOCKED — deterministic fixture/shadow gates pass, but
+  no classifier credential or owner-approved live model configuration is
+  available for the required measured provider selection.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH
