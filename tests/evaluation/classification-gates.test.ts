@@ -86,14 +86,16 @@ describe("classification evaluation gates", () => {
   });
 
   it.each([
-    "benchmark-openai-gpt-5-6-luna-low-v1.json",
-    "benchmark-openai-gpt-5-6-luna-medium-v1.json",
-  ])("records a development-only rejection in %s", async (name) => {
+    ["benchmark-openai-gpt-5-6-luna-low-v1.json", "gpt-5.6-luna"],
+    ["benchmark-openai-gpt-5-6-luna-medium-v1.json", "gpt-5.6-luna"],
+    ["benchmark-openai-gpt-5-6-terra-low-v1.json", "gpt-5.6-terra"],
+    ["benchmark-openai-gpt-5-6-terra-medium-v1.json", "gpt-5.6-terra"],
+  ])("records a development-only rejection in %s", async (name, modelId) => {
     const report = await load(name);
 
     expect(report).toMatchObject({
       provider: "openai",
-      modelId: "gpt-5.6-luna",
+      modelId,
       mode: "benchmark",
       split: "development",
       rows: 69,
@@ -107,6 +109,8 @@ describe("classification evaluation gates", () => {
     const names = [
       "benchmark-openai-gpt-5-6-luna-low-v1.json",
       "benchmark-openai-gpt-5-6-luna-medium-v1.json",
+      "benchmark-openai-gpt-5-6-terra-low-v1.json",
+      "benchmark-openai-gpt-5-6-terra-medium-v1.json",
     ];
     for (const name of names) {
       const text = await readFile(`evaluation/reports/${name}`, "utf8");
@@ -117,11 +121,15 @@ describe("classification evaluation gates", () => {
       expect(text).not.toContain("authorization");
     }
 
-    await expect(
-      readFile(
-        "evaluation/reports/holdout-openai-gpt-5-6-luna-low-v1.json",
-        "utf8",
-      ),
-    ).rejects.toMatchObject({ code: "ENOENT" });
+    for (const name of [
+      "holdout-openai-gpt-5-6-luna-low-v1.json",
+      "holdout-openai-gpt-5-6-luna-medium-v1.json",
+      "holdout-openai-gpt-5-6-terra-low-v1.json",
+      "holdout-openai-gpt-5-6-terra-medium-v1.json",
+    ]) {
+      await expect(
+        readFile(`evaluation/reports/${name}`, "utf8"),
+      ).rejects.toMatchObject({ code: "ENOENT" });
+    }
   });
 });
