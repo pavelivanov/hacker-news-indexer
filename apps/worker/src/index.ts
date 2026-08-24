@@ -8,6 +8,7 @@ import { HnParentChainResolver } from "@hn-knowledge/application";
 import { createLogger, getConfig, redactConfig } from "@hn-knowledge/config";
 import {
   createDatabase,
+  createClassificationRepository,
   createHnResolutionRepository,
   createIngestionRunRepository,
   createJobQueue,
@@ -17,6 +18,7 @@ import type { IngestionRange, PipelineJob } from "@hn-knowledge/domain";
 import type { SelectionSource } from "@hn-knowledge/ports";
 
 import { jobError, WorkerJobError } from "./jobs/errors.js";
+import { createClassifyJobHandler } from "./jobs/classify.js";
 import { createIngestJobHandler } from "./jobs/ingest.js";
 import { createResolveJobHandler } from "./jobs/resolve.js";
 
@@ -31,6 +33,7 @@ const database = createDatabase({ connectionString: config.DATABASE_URL });
 const runs = createIngestionRunRepository(database.client);
 const occurrences = createOccurrenceRepository(database.client);
 const resolutions = createHnResolutionRepository(database.client);
+const classifications = createClassificationRepository(database.client);
 const queue = createJobQueue(database.client);
 const hnItems = new HackerNewsApiItems({
   clock,
@@ -86,6 +89,13 @@ const resolve = createResolveJobHandler(
   resolutions,
   clock,
   hasher,
+  queue,
+);
+const classify = createClassifyJobHandler(
+  null,
+  classifications,
+  hasher,
+  config.WORKER_MAX_ATTEMPTS,
 );
 
 const workerId = `worker-${randomUUID()}`;
@@ -133,8 +143,10 @@ const processJob = async (job: PipelineJob): Promise<void> => {
   try {
     if (job.type === "INGEST_SELECTION_RANGE") {
       await ingest(job);
-    } else {
+    } else if (job.type === "RESOLVE_HN_COMMENT") {
       await resolve(job);
+    } else {
+      await classify(job);
     }
     await queue.complete(job.id, workerId);
   } catch (error) {

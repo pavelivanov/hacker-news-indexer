@@ -9,6 +9,7 @@ import type {
   Hasher,
   HnResolutionRepository,
   OccurrenceRepository,
+  PipelineJobPublisher,
 } from "@hn-knowledge/ports";
 
 import { normalizeHnCommentHtml } from "../normalize/hn-html.js";
@@ -37,6 +38,7 @@ export const createResolveSelectedComment =
     resolutions: HnResolutionRepository,
     clock: Clock,
     hasher: Hasher,
+    jobs: PipelineJobPublisher,
   ): ResolveSelectedComment =>
   async (input): Promise<void> => {
     const contexts = await occurrences.listSelectedCommentOccurrences(
@@ -126,4 +128,11 @@ export const createResolveSelectedComment =
         await occurrences.setStatus(context.occurrenceId, "RESOLVED");
       }),
     );
+
+    await jobs.enqueue({
+      type: "CLASSIFY_COMMENT",
+      ingestionRunId: input.runId,
+      payload: { selectedCommentId: input.selectedCommentId },
+      idempotencyKey: `classify:${input.selectedCommentId}:${selected.contentHash}`,
+    });
   };

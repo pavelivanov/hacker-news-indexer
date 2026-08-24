@@ -16,3 +16,4 @@ export {
 export { createIngestionRunRepository } from "./repositories/ingestion-runs.js";
 export { createOccurrenceRepository } from "./repositories/occurrences.js";
 export { createHnResolutionRepository } from "./repositories/hn-resolution.js";
+export { createClassificationRepository } from "./repositories/classification.js";

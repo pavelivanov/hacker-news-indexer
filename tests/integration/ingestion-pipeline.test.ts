@@ -4,11 +4,13 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 
 import {
   createIngestSelectionRange,
+  loadClassifierInput,
   createResolveSelectedComment,
   createStartIngestion,
   HnParentChainResolver,
 } from "@hn-knowledge/application";
 import {
+  createClassificationRepository,
   createDatabase,
   createHnResolutionRepository,
   createIngestionRunRepository,
@@ -39,6 +41,7 @@ const clock = { now: () => now };
 const runs = createIngestionRunRepository(database.client);
 const occurrences = createOccurrenceRepository(database.client);
 const resolutions = createHnResolutionRepository(database.client);
+const classifications = createClassificationRepository(database.client);
 const queue = createJobQueue(database.client);
 
 const cleanDatabase = async (): Promise<void> => {
@@ -198,15 +201,50 @@ describe("ingestion pipeline", () => {
       resolutions,
       clock,
       hasher,
+      queue,
     )({ runId: started.run.id, selectedCommentId: hnItemId(200) });
+    const classifierInput = await loadClassifierInput(
+      hnItemId(200),
+      classifications,
+      hasher,
+    );
+    expect(classifierInput).toMatchObject({
+      selectedCommentId: 200,
+      rootId: 100,
+      documents: [
+        { id: "comment:200", origin: "COMMENT" },
+        { id: "root-title:100", origin: "ROOT_STORY" },
+        { id: "root-text:100", origin: "ROOT_STORY" },
+      ],
+    });
+    await expect(
+      queue.claim({
+        leaseOwner: "premature-classify-worker",
+        leaseDurationMs: 30_000,
+        ingestionRunId: started.run.id,
+      }),
+    ).resolves.toBeNull();
     await queue.complete(resolveJob.id, "resolve-worker");
+    const classifyJob = await queue.claim({
+      leaseOwner: "classify-worker",
+      leaseDurationMs: 30_000,
+      ingestionRunId: started.run.id,
+    });
+    if (classifyJob === null) {
+      throw new Error("Expected classification job");
+    }
+    expect(classifyJob).toMatchObject({
+      type: "CLASSIFY_COMMENT",
+      payload: { selectedCommentId: 200 },
+    });
+    await queue.complete(classifyJob.id, "classify-worker");
     const completed = await runs.reconcile(started.run.id);
     const replay = await startRun();
 
     expect(completed.status).toBe("COMPLETED");
     expect(replay).toMatchObject({ created: false });
     expect(replay.run.id).toBe(started.run.id);
-    expect(await database.client.pipelineJob.count()).toBe(2);
+    expect(await database.client.pipelineJob.count()).toBe(3);
     expect(await database.client.selectedComment.count()).toBe(1);
     await expect(
       database.client.telegramMessage.findFirstOrThrow(),
