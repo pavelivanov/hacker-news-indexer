@@ -9,6 +9,11 @@
     "start": "node --enable-source-maps dist/index.js"
   },
   "dependencies": {
-    "@hn-knowledge/config": "0.1.0"
+    "@hn-knowledge/adapters": "0.1.0",
+    "@hn-knowledge/application": "0.1.0",
+    "@hn-knowledge/config": "0.1.0",
+    "@hn-knowledge/db": "0.1.0",
+    "@hn-knowledge/domain": "0.1.0",
+    "@hn-knowledge/ports": "0.1.0"
   }
 }

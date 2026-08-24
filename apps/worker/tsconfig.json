@@ -7,5 +7,12 @@
     "tsBuildInfoFile": "dist/.tsbuildinfo"
   },
   "include": ["src/**/*.ts"],
-  "references": [{ "path": "../../packages/config" }]
+  "references": [
+    { "path": "../../packages/adapters" },
+    { "path": "../../packages/application" },
+    { "path": "../../packages/config" },
+    { "path": "../../packages/db" },
+    { "path": "../../packages/domain" },
+    { "path": "../../packages/ports" }
+  ]
 }

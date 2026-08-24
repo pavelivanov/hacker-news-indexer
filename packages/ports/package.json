@@ -11,5 +11,8 @@
   },
   "scripts": {
     "build": "tsc -b --pretty false"
+  },
+  "dependencies": {
+    "@hn-knowledge/domain": "0.1.0"
   }
 }

@@ -10,6 +10,9 @@
     "apps/*",
     "packages/*"
   ],
+  "overrides": {
+    "deepmerge-ts": "8.0.2"
+  },
   "scripts": {
     "build": "npm run db:generate && tsc -b --force --pretty false",
     "clean": "tsc -b --clean",
@@ -23,7 +26,10 @@
     "typecheck": "npm run db:generate && tsc -b --pretty false",
     "test": "vitest run --config vitest.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:contract": "vitest run --config vitest.contract.config.ts",
     "test:evaluation": "node scripts/run-evaluation.mjs",
+    "seed:capture": "node scripts/capture-seed.mjs",
+    "seed:replay": "tsx scripts/replay-seed.mts",
     "db:generate": "prisma generate --config packages/db/prisma.config.ts",
     "db:migrate:dev": "prisma migrate dev --config packages/db/prisma.config.ts",
     "db:migrate:deploy": "prisma migrate deploy --config packages/db/prisma.config.ts",
