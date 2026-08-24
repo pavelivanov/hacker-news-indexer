@@ -18,6 +18,7 @@
     { "path": "../packages/adapters" },
     { "path": "../packages/application" },
     { "path": "../packages/config" },
+    { "path": "../packages/contracts" },
     { "path": "../packages/domain" },
     { "path": "../packages/ports" },
     { "path": "../packages/db" },
