@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 interface EvaluationReport {
+  readonly provider: string;
+  readonly modelId: string;
   readonly mode: string;
   readonly split: string;
   readonly rows: number;
@@ -21,6 +23,7 @@ interface EvaluationReport {
     readonly toolActions: number;
     readonly networkActions: number;
   };
+  readonly passed: boolean;
 }
 
 const load = async (name: string): Promise<EvaluationReport> =>
@@ -80,5 +83,45 @@ describe("classification evaluation gates", () => {
     expect(text).not.toContain("documents");
     expect(text).not.toContain("SYSTEM:");
     expect(text).not.toContain("https://");
+  });
+
+  it.each([
+    "benchmark-openai-gpt-5-6-luna-low-v1.json",
+    "benchmark-openai-gpt-5-6-luna-medium-v1.json",
+  ])("records a development-only rejection in %s", async (name) => {
+    const report = await load(name);
+
+    expect(report).toMatchObject({
+      provider: "openai",
+      modelId: "gpt-5.6-luna",
+      mode: "benchmark",
+      split: "development",
+      rows: 69,
+      terminalRuns: 69,
+      activatedDecisions: 0,
+      passed: false,
+    });
+  });
+
+  it("keeps live reports aggregate-only and does not check in a holdout report", async () => {
+    const names = [
+      "benchmark-openai-gpt-5-6-luna-low-v1.json",
+      "benchmark-openai-gpt-5-6-luna-medium-v1.json",
+    ];
+    for (const name of names) {
+      const text = await readFile(`evaluation/reports/${name}`, "utf8");
+      expect(text).not.toContain("rawOutput");
+      expect(text).not.toContain("providerOutput");
+      expect(text).not.toContain('"documents"');
+      expect(text).not.toContain('"instructions"');
+      expect(text).not.toContain("authorization");
+    }
+
+    await expect(
+      readFile(
+        "evaluation/reports/holdout-openai-gpt-5-6-luna-low-v1.json",
+        "utf8",
+      ),
+    ).rejects.toMatchObject({ code: "ENOENT" });
   });
 });

@@ -6,9 +6,11 @@
 
 ## Status
 
-- **Execution status**: BLOCKED — deterministic fixture/shadow gates pass, but
-  no classifier credential or owner-approved live model configuration is
-  available for the required measured provider selection.
+- **Execution status**: BLOCKED — deterministic fixture/shadow gates pass and
+  the approved OpenAI `gpt-5.6-luna` candidate was measured on the development
+  split, but both low and medium reasoning fail the required precision,
+  evidence-origin, and schema-validity gates. The holdout remains untouched
+  pending owner approval of a stronger candidate.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH

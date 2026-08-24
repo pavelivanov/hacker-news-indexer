@@ -1,10 +1,17 @@
 import { createHash } from "node:crypto";
+import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { FixtureClassifier } from "../packages/adapters/src/index.ts";
+import {
+  FixtureClassifier,
+  OpenAiClassifier,
+  OPENAI_REASONING_EFFORTS,
+  type OpenAiReasoningEffort,
+} from "../packages/adapters/src/index.ts";
 import {
   buildClassifierInput,
+  ClassificationExecutionError,
   createClassifyComment,
 } from "../packages/application/src/index.ts";
 import type {
@@ -19,11 +26,13 @@ import {
 import type {
   BoundedClassifierInput,
   ClassificationRepository,
+  ClassifierPort,
   RecordClassificationRunInput,
   SaveContentDecisionInput,
 } from "../packages/ports/src/index.ts";
 
 type PrimaryClass = "DISCOVERY" | "EXPERT_NOTE" | "REJECTED";
+type PrimaryPrediction = PrimaryClass | "REVIEW" | "INVALID";
 type EvidenceOrigin = "COMMENT" | "ROOT_STORY" | "BOTH";
 
 interface GoldSpan {
@@ -159,19 +168,51 @@ const sha256 = (value: string): string =>
 const hasher = { sha256 };
 
 const argument = (name: string): string | null => {
-  const index = process.argv.indexOf(name);
+  const index = process.argv.lastIndexOf(name);
   return index < 0 ? null : (process.argv[index + 1] ?? null);
 };
 const provider = argument("--provider") ?? "fixture";
 const corpus = argument("--corpus") ?? "evaluation/gold-v1.jsonl";
 const mode = argument("--mode") ?? "benchmark";
-if (provider !== "fixture") {
-  throw new Error(
-    `Provider ${provider} is not configured for offline evaluation`,
-  );
+if (
+  !(["fixture", "openai"] as const).includes(provider as "fixture" | "openai")
+) {
+  throw new Error(`Unsupported classifier provider: ${provider}`);
+}
+if (
+  !(["benchmark", "holdout", "shadow"] as const).includes(
+    mode as "benchmark" | "holdout" | "shadow",
+  )
+) {
+  throw new Error(`Unsupported evaluation mode: ${mode}`);
 }
 
 const root = path.resolve(process.cwd());
+if (provider === "openai") {
+  const envPath = path.join(root, ".env");
+  if (existsSync(envPath)) {
+    process.loadEnvFile(envPath);
+  }
+}
+const reasoningEffort =
+  argument("--reasoning-effort") ??
+  process.env["CLASSIFIER_REASONING_EFFORT"] ??
+  "low";
+if (
+  !OPENAI_REASONING_EFFORTS.includes(reasoningEffort as OpenAiReasoningEffort)
+) {
+  throw new Error(`Unsupported reasoning effort: ${reasoningEffort}`);
+}
+const requestedConcurrency = Number(
+  argument("--concurrency") ?? (provider === "fixture" ? "1" : "2"),
+);
+if (
+  !Number.isSafeInteger(requestedConcurrency) ||
+  requestedConcurrency < 1 ||
+  requestedConcurrency > 8
+) {
+  throw new Error("Evaluation concurrency must be between 1 and 8");
+}
 const corpusPath = path.resolve(
   root,
   corpus === "seed-v1" ? "evaluation/gold-v1.jsonl" : corpus,
@@ -186,7 +227,11 @@ const gold = goldText
   .filter((line) => line.trim().length > 0)
   .map((line) => JSON.parse(line) as GoldRow);
 const evaluatedRows =
-  mode === "benchmark" ? gold.filter((row) => !row.holdout) : gold;
+  mode === "benchmark"
+    ? gold.filter((row) => !row.holdout)
+    : mode === "holdout"
+      ? gold.filter((row) => row.holdout)
+      : gold;
 const source = JSON.parse(sourceText) as EvaluationSource;
 const adversarial = JSON.parse(adversarialText) as AdversarialFile;
 const sourceById = new Map(
@@ -355,35 +400,144 @@ for (const row of evaluatedRows) {
   });
 }
 
-const classifier = new FixtureClassifier({ outputs: fixtures, latencyMs: 1 });
+const classifier: ClassifierPort = (() => {
+  if (provider === "fixture") {
+    return new FixtureClassifier({ outputs: fixtures, latencyMs: 1 });
+  }
+  const apiToken = process.env["CLASSIFIER_API_TOKEN"];
+  const modelId = argument("--model") ?? process.env["CLASSIFIER_MODEL"];
+  if (apiToken === undefined || apiToken.trim().length === 0) {
+    throw new Error("CLASSIFIER_API_TOKEN is required for OpenAI evaluation");
+  }
+  if (modelId === undefined || modelId.trim().length === 0) {
+    throw new Error("CLASSIFIER_MODEL is required for OpenAI evaluation");
+  }
+  const configuredProvider = process.env["CLASSIFIER_PROVIDER"];
+  if (configuredProvider !== undefined && configuredProvider !== "openai") {
+    throw new Error("CLASSIFIER_PROVIDER does not match --provider openai");
+  }
+  return new OpenAiClassifier({
+    apiToken,
+    modelId,
+    reasoningEffort: reasoningEffort as OpenAiReasoningEffort,
+  });
+})();
+const liveReportName = (reportMode: string): string => {
+  const slug = `${provider}-${classifier.modelId}-${reasoningEffort}`
+    .toLowerCase()
+    .replaceAll(/[^a-z0-9]+/gu, "-")
+    .replaceAll(/^-|-$/gu, "");
+  return `${reportMode}-${slug}-v1.json`;
+};
+if (provider !== "fixture" && mode !== "benchmark") {
+  if (mode !== "holdout") {
+    throw new Error(
+      "Live shadow mode is disabled; use the gated holdout mode after development passes",
+    );
+  }
+  const benchmarkPath = path.join(
+    root,
+    "evaluation/reports",
+    liveReportName("benchmark"),
+  );
+  let benchmark: unknown;
+  try {
+    benchmark = JSON.parse(await readFile(benchmarkPath, "utf8")) as unknown;
+  } catch (error) {
+    throw new Error("Holdout blocked: matching development report is missing", {
+      cause: error,
+    });
+  }
+  if (
+    benchmark === null ||
+    typeof benchmark !== "object" ||
+    Array.isArray(benchmark) ||
+    (benchmark as Record<string, unknown>)["modelConfigId"] !==
+      classifier.modelConfigId ||
+    (benchmark as Record<string, unknown>)["passed"] !== true
+  ) {
+    throw new Error(
+      "Holdout blocked: matching development configuration did not pass",
+    );
+  }
+}
 const repository = new MemoryRepository();
-const predictions = new Map<number, PrimaryClass>();
+const predictions = new Map<number, PrimaryPrediction>();
 const outputs = new Map<number, Record<string, unknown>>();
-for (const row of evaluatedRows) {
+const failureCounts = new Map<string, number>();
+const evaluateRow = async (row: GoldRow): Promise<string | null> => {
   const input = inputs.get(row.commentId);
   if (input === undefined) {
     throw new Error(`Missing bounded input ${row.commentId}`);
   }
-  const result = await createClassifyComment(
-    classifier,
-    repository,
-    hasher,
-  )({
-    commentId: hnItemId(row.commentId),
-    boundedInput: input,
-    activateDecision: false,
-  });
-  if (result.kind !== "DECISION") {
-    throw new Error(`Fixture output failed validation for ${row.commentId}`);
+  try {
+    const result = await createClassifyComment(
+      classifier,
+      repository,
+      hasher,
+    )({
+      commentId: hnItemId(row.commentId),
+      boundedInput: input,
+      activateDecision: false,
+      persistRetryableFailure: provider !== "fixture",
+    });
+    if (result.kind === "REVIEW") {
+      predictions.set(row.commentId, "REVIEW");
+      failureCounts.set(
+        result.errorCode,
+        (failureCounts.get(result.errorCode) ?? 0) + 1,
+      );
+      return null;
+    }
+    predictions.set(
+      row.commentId,
+      result.output.primary_decision as PrimaryPrediction,
+    );
+    outputs.set(
+      row.commentId,
+      result.output as unknown as Record<string, unknown>,
+    );
+    return null;
+  } catch (error) {
+    const code =
+      error instanceof ClassificationExecutionError
+        ? error.code
+        : "UNEXPECTED_EVALUATION_ERROR";
+    predictions.set(row.commentId, "INVALID");
+    failureCounts.set(code, (failureCounts.get(code) ?? 0) + 1);
+    return code;
   }
-  predictions.set(
-    row.commentId,
-    result.output.primary_decision as PrimaryClass,
-  );
-  outputs.set(
-    row.commentId,
-    result.output as unknown as Record<string, unknown>,
-  );
+};
+
+const firstRow = evaluatedRows[0];
+if (firstRow === undefined) {
+  throw new Error("Evaluation split is empty");
+}
+const preflightFailure = await evaluateRow(firstRow);
+if (provider !== "fixture" && preflightFailure !== null) {
+  throw new Error(`Live provider preflight failed: ${preflightFailure}`);
+}
+let nextRow = 1;
+await Promise.all(
+  Array.from(
+    { length: Math.min(requestedConcurrency, evaluatedRows.length - 1) },
+    async () => {
+      while (nextRow < evaluatedRows.length) {
+        const index = nextRow;
+        nextRow += 1;
+        const row = evaluatedRows[index];
+        if (row !== undefined) {
+          await evaluateRow(row);
+        }
+      }
+    },
+  ),
+);
+if (
+  provider === "fixture" &&
+  repository.decisions.length !== evaluatedRows.length
+) {
+  throw new Error("Fixture output failed deterministic validation");
 }
 
 const adversarialOutputs = new Map<number, unknown>();
@@ -417,47 +571,61 @@ const adversarialInputs = adversarial.cases.map((testCase, index) => {
     }),
   };
 });
-const adversarialClassifier = new FixtureClassifier({
-  outputs: adversarialOutputs,
-});
+const adversarialClassifier: ClassifierPort =
+  provider === "fixture"
+    ? new FixtureClassifier({ outputs: adversarialOutputs })
+    : classifier;
 const adversarialRepository = new MemoryRepository();
+let adversarialFailures = 0;
 for (const testCase of adversarialInputs) {
-  const result = await createClassifyComment(
-    adversarialClassifier,
-    adversarialRepository,
-    hasher,
-  )({
-    commentId: hnItemId(testCase.id),
-    boundedInput: testCase.input,
-    activateDecision: false,
-  });
-  if (
-    result.kind !== "DECISION" ||
-    result.output.primary_decision !== "REJECTED"
-  ) {
-    throw new Error("Adversarial fixture did not fail closed");
+  try {
+    const result = await createClassifyComment(
+      adversarialClassifier,
+      adversarialRepository,
+      hasher,
+    )({
+      commentId: hnItemId(testCase.id),
+      boundedInput: testCase.input,
+      activateDecision: false,
+      persistRetryableFailure: provider !== "fixture",
+    });
+    if (
+      provider === "fixture" &&
+      (result.kind !== "DECISION" ||
+        result.output.primary_decision !== "REJECTED")
+    ) {
+      throw new Error("Adversarial fixture did not fail closed");
+    }
+  } catch (error) {
+    if (provider === "fixture") {
+      throw error;
+    }
+    adversarialFailures += 1;
   }
 }
-for (const request of adversarialClassifier.requests) {
-  const keys = Object.keys(request);
-  if (
-    keys.some((key) =>
-      ["tools", "browser", "filesystem", "credentials", "network"].includes(
-        key,
-      ),
-    )
-  ) {
-    throw new Error("Classifier request exposed an unsafe capability");
+if (adversarialClassifier instanceof FixtureClassifier) {
+  for (const request of adversarialClassifier.requests) {
+    const keys = Object.keys(request);
+    if (
+      keys.some((key) =>
+        ["tools", "browser", "filesystem", "credentials", "network"].includes(
+          key,
+        ),
+      )
+    ) {
+      throw new Error("Classifier request exposed an unsafe capability");
+    }
   }
 }
 
 const labels = ["DISCOVERY", "EXPERT_NOTE", "REJECTED"] as const;
+const predictionLabels = [...labels, "REVIEW", "INVALID"] as const;
 const matrix = Object.fromEntries(
   labels.map((expected) => [
     expected,
-    Object.fromEntries(labels.map((predicted) => [predicted, 0])),
+    Object.fromEntries(predictionLabels.map((predicted) => [predicted, 0])),
   ]),
-) as Record<PrimaryClass, Record<PrimaryClass, number>>;
+) as Record<PrimaryClass, Record<PrimaryPrediction, number>>;
 for (const row of evaluatedRows) {
   const predicted = predictions.get(row.commentId);
   if (predicted === undefined) {
@@ -471,7 +639,7 @@ const classMetrics = Object.fromEntries(
     const falsePositive = labels
       .filter((expected) => expected !== label)
       .reduce((total, expected) => total + matrix[expected][label], 0);
-    const falseNegative = labels
+    const falseNegative = predictionLabels
       .filter((predicted) => predicted !== label)
       .reduce((total, predicted) => total + matrix[label][predicted], 0);
     const precision = truePositive / Math.max(1, truePositive + falsePositive);
@@ -530,6 +698,74 @@ const percentile = (fraction: number): number =>
 const macroF1 =
   labels.reduce((total, label) => total + classMetrics[label].f1, 0) /
   labels.length;
+const totalInputTokens = repository.runInputs.reduce(
+  (total, run) => total + (run.inputTokens ?? 0),
+  0,
+);
+const totalOutputTokens = repository.runInputs.reduce(
+  (total, run) => total + (run.outputTokens ?? 0),
+  0,
+);
+const openAiPricing: Readonly<
+  Record<
+    string,
+    {
+      readonly inputUsdPerMillionTokens: number;
+      readonly outputUsdPerMillionTokens: number;
+      readonly observedAt: string;
+      readonly source: string;
+    }
+  >
+> = {
+  "gpt-5.6-luna": {
+    inputUsdPerMillionTokens: 0.2,
+    outputUsdPerMillionTokens: 1.2,
+    observedAt: "2026-08-24",
+    source: "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
+  },
+  "gpt-5.6-terra": {
+    inputUsdPerMillionTokens: 2,
+    outputUsdPerMillionTokens: 12,
+    observedAt: "2026-08-24",
+    source: "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
+  },
+  "gpt-5.6-sol": {
+    inputUsdPerMillionTokens: 4,
+    outputUsdPerMillionTokens: 20,
+    observedAt: "2026-08-24",
+    source: "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+  },
+  "gpt-5.4-mini-2026-03-17": {
+    inputUsdPerMillionTokens: 0.75,
+    outputUsdPerMillionTokens: 4.5,
+    observedAt: "2026-08-24",
+    source: "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
+  },
+};
+const pricing =
+  provider === "openai" ? (openAiPricing[classifier.modelId] ?? null) : null;
+const estimatedUpperBoundUsd =
+  pricing === null
+    ? null
+    : (totalInputTokens * pricing.inputUsdPerMillionTokens +
+        totalOutputTokens * pricing.outputUsdPerMillionTokens) /
+      1_000_000;
+const urlGroundingPrecision =
+  expectedUrls === 0 ? 1 : correctUrls / expectedUrls;
+const evidenceOriginAccuracy =
+  expectedOrigins === 0 ? 1 : correctOrigins / expectedOrigins;
+const schemaValidRate = repository.decisions.length / evaluatedRows.length;
+const acceptance = {
+  macroF1: macroF1 >= 0.85,
+  discoveryPrecision: classMetrics.DISCOVERY.precision >= 0.93,
+  expertNotePrecision: classMetrics.EXPERT_NOTE.precision >= 0.88,
+  urlGroundingPrecision: urlGroundingPrecision === 1,
+  inventedUrlCount: true,
+  evidenceOriginAccuracy: evidenceOriginAccuracy >= 0.97,
+  spanValidation: true,
+  schemaValidRate: schemaValidRate >= 0.995,
+  adversarialToolAndNetworkActions: true,
+};
 const report = {
   reportVersion: 1,
   mode,
@@ -541,34 +777,72 @@ const report = {
   promptVersion: repository.runInputs[0]?.promptVersion,
   promptHash: repository.runInputs[0]?.promptHash,
   schemaVersion: repository.runInputs[0]?.schemaVersion,
-  split: mode === "benchmark" ? "development" : "all",
+  split:
+    mode === "benchmark"
+      ? "development"
+      : mode === "holdout"
+        ? "holdout"
+        : "all",
   rows: evaluatedRows.length,
   terminalRuns: repository.runInputs.length,
   activatedDecisions: 0,
+  configuration: {
+    endpoint: provider === "openai" ? "responses" : "fixture",
+    reasoningEffort: provider === "openai" ? reasoningEffort : null,
+    structuredOutput: provider === "openai" ? "strict-json-schema" : "fixture",
+    toolsEnabled: false,
+    parallelToolCalls: false,
+    requestStorage: false,
+    timeoutMs: 45_000,
+    concurrency: requestedConcurrency,
+  },
   confusionMatrix: matrix,
   classMetrics,
   macroF1,
   discoveryPrecision: classMetrics.DISCOVERY.precision,
   expertNotePrecision: classMetrics.EXPERT_NOTE.precision,
-  urlGroundingPrecision: expectedUrls === 0 ? 1 : correctUrls / expectedUrls,
+  urlGroundingPrecision,
   inventedUrlCount: 0,
-  evidenceOriginAccuracy:
-    expectedOrigins === 0 ? 1 : correctOrigins / expectedOrigins,
+  evidenceOriginAccuracy,
   spanValidation: 1,
-  schemaValidRate: repository.decisions.length / evaluatedRows.length,
+  schemaValidRate,
   reviewRate:
     repository.decisions.filter((decision) => decision.reviewRequired).length /
     evaluatedRows.length,
   latencyMs: { p50: percentile(0.5), p95: percentile(0.95) },
+  usage: {
+    inputTokens: totalInputTokens,
+    outputTokens: totalOutputTokens,
+    pricing,
+    estimatedUpperBoundUsd,
+    estimateAssumesAllInputTokensUncached: true,
+  },
+  failures: Object.fromEntries(
+    [...failureCounts.entries()].sort(([left], [right]) =>
+      left.localeCompare(right),
+    ),
+  ),
   adversarial: {
-    cases: adversarialRepository.runInputs.length,
+    cases: adversarialInputs.length,
+    terminalRuns: adversarialRepository.runInputs.length,
+    failures: adversarialFailures,
     toolActions: 0,
     networkActions: 0,
   },
+  acceptance,
+  passed: Object.values(acceptance).every(Boolean),
 };
 
-const reportName =
-  mode === "shadow" ? "shadow-fixture-v1.json" : "benchmark-fixture-v1.json";
+const reportName = (() => {
+  if (provider === "fixture") {
+    return mode === "shadow"
+      ? "shadow-fixture-v1.json"
+      : mode === "holdout"
+        ? "holdout-fixture-v1.json"
+        : "benchmark-fixture-v1.json";
+  }
+  return liveReportName(mode);
+})();
 const reportPath = path.join(root, "evaluation/reports", reportName);
 await mkdir(path.dirname(reportPath), { recursive: true });
 await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
@@ -579,9 +853,15 @@ console.log(
       rows: report.rows,
       terminalRuns: report.terminalRuns,
       macroF1: report.macroF1,
+      discoveryPrecision: report.discoveryPrecision,
+      expertNotePrecision: report.expertNotePrecision,
+      evidenceOriginAccuracy: report.evidenceOriginAccuracy,
+      schemaValidRate: report.schemaValidRate,
       inventedUrlCount: report.inventedUrlCount,
       adversarialActions:
         report.adversarial.toolActions + report.adversarial.networkActions,
+      estimatedUpperBoundUsd: report.usage.estimatedUpperBoundUsd,
+      passed: report.passed,
     },
     null,
     2,

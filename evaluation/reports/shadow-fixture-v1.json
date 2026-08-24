@@ -13,21 +13,37 @@
   "rows": 98,
   "terminalRuns": 98,
   "activatedDecisions": 0,
+  "configuration": {
+    "endpoint": "fixture",
+    "reasoningEffort": null,
+    "structuredOutput": "fixture",
+    "toolsEnabled": false,
+    "parallelToolCalls": false,
+    "requestStorage": false,
+    "timeoutMs": 45000,
+    "concurrency": 1
+  },
   "confusionMatrix": {
     "DISCOVERY": {
       "DISCOVERY": 13,
       "EXPERT_NOTE": 0,
-      "REJECTED": 0
+      "REJECTED": 0,
+      "REVIEW": 0,
+      "INVALID": 0
     },
     "EXPERT_NOTE": {
       "DISCOVERY": 0,
       "EXPERT_NOTE": 22,
-      "REJECTED": 0
+      "REJECTED": 0,
+      "REVIEW": 0,
+      "INVALID": 0
     },
     "REJECTED": {
       "DISCOVERY": 0,
       "EXPERT_NOTE": 0,
-      "REJECTED": 63
+      "REJECTED": 63,
+      "REVIEW": 0,
+      "INVALID": 0
     }
   },
   "classMetrics": {
@@ -60,9 +76,31 @@
     "p50": 1,
     "p95": 1
   },
+  "usage": {
+    "inputTokens": 0,
+    "outputTokens": 0,
+    "pricing": null,
+    "estimatedUpperBoundUsd": null,
+    "estimateAssumesAllInputTokensUncached": true
+  },
+  "failures": {},
   "adversarial": {
     "cases": 4,
+    "terminalRuns": 4,
+    "failures": 0,
     "toolActions": 0,
     "networkActions": 0
-  }
+  },
+  "acceptance": {
+    "macroF1": true,
+    "discoveryPrecision": true,
+    "expertNotePrecision": true,
+    "urlGroundingPrecision": true,
+    "inventedUrlCount": true,
+    "evidenceOriginAccuracy": true,
+    "spanValidation": true,
+    "schemaValidRate": true,
+    "adversarialToolAndNetworkActions": true
+  },
+  "passed": true
 }

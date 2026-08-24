@@ -4,6 +4,14 @@ export {
   type FixtureClassifierOptions,
 } from "./classifier/fixture.js";
 export {
+  OpenAiClassifier,
+  OPENAI_REASONING_EFFORTS,
+  toOpenAiStructuredOutputSchema,
+  type OpenAiClassifierOptions,
+  type OpenAiFetch,
+  type OpenAiReasoningEffort,
+} from "./classifier/openai.js";
+export {
   createMtcuteTelegramSource,
   MtcuteTelegramMessagesClient,
   TelegramDeferredError,
