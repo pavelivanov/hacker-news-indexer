@@ -1,0 +1,46 @@
+{
+  "name": "hacker-news-indexer",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run db:generate && tsc -b --force --pretty false",
+    "clean": "tsc -b --clean",
+    "dev:api": "npm run dev -w @hn-knowledge/api",
+    "dev:worker": "npm run dev -w @hn-knowledge/worker",
+    "start:api": "npm run start -w @hn-knowledge/api",
+    "start:worker": "npm run start -w @hn-knowledge/worker",
+    "format": "prettier --write . --ignore-unknown",
+    "format:check": "prettier --check . --ignore-unknown",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "npm run db:generate && tsc -b --pretty false",
+    "test": "vitest run --config vitest.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:evaluation": "node scripts/run-evaluation.mjs",
+    "db:generate": "prisma generate --config packages/db/prisma.config.ts",
+    "db:migrate:dev": "prisma migrate dev --config packages/db/prisma.config.ts",
+    "db:migrate:deploy": "prisma migrate deploy --config packages/db/prisma.config.ts",
+    "db:validate": "prisma validate --config packages/db/prisma.config.ts",
+    "db:test:wait": "node scripts/wait-for-db.mjs",
+    "db:test:reset": "node scripts/reset-test-db.mjs",
+    "container:smoke": "bash scripts/container-smoke.sh"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "26.2.0",
+    "eslint": "10.9.0",
+    "prettier": "3.9.6",
+    "prisma": "7.9.1",
+    "tsx": "4.23.12",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.67.0",
+    "vitest": "4.1.11"
+  }
+}

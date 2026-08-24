@@ -1,0 +1,9 @@
+node_modules/
+**/dist/
+.build/
+coverage/
+packages/db/src/generated/
+package-lock.json
+plans/
+docs/telegram-hn-technical-knowledge-project-research-plan.md
+.idea/
