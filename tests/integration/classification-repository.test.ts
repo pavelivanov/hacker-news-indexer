@@ -146,7 +146,7 @@ describe("classification repository", () => {
     ).rejects.toThrow(/append-only/u);
   });
 
-  it("switches the active pointer without rewriting historical decisions", async () => {
+  it("appends manual decisions but reserves activation for review", async () => {
     const { run } = await repository.recordRun(successfulRun());
     const modelDecision = await repository.saveDecision({
       commentId,
@@ -173,18 +173,13 @@ describe("classification repository", () => {
       evidenceSpans: [],
     });
 
-    await repository.activateDecision(commentId, modelDecision.id);
-    expect((await repository.getActiveDecision(commentId))?.id).toBe(
-      modelDecision.id,
-    );
-    await repository.activateDecision(commentId, manualDecision.id);
-
     await expect(
-      repository.getActiveDecision(commentId),
-    ).resolves.toMatchObject({
-      id: manualDecision.id,
-      manualOverrideOfId: modelDecision.id,
-    });
+      database.client.selectedComment.update({
+        where: { id: BigInt(commentId) },
+        data: { activeDecisionId: manualDecision.id },
+      }),
+    ).rejects.toThrow(/active decision requires approved review/u);
+    await expect(repository.getActiveDecision(commentId)).resolves.toBeNull();
     expect(await database.client.contentDecision.count()).toBe(2);
   });
 

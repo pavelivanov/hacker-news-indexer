@@ -31,6 +31,30 @@ const enqueue = async (key: string) =>
   });
 
 describe("PostgreSQL job queue", () => {
+  it("makes newly enqueued work immediately claimable at database precision", async () => {
+    const precisionRows = await database.client.$queryRaw<
+      { datetimePrecision: number | null }[]
+    >`
+      SELECT datetime_precision AS "datetimePrecision"
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'pipeline_jobs'
+        AND column_name = 'available_at'
+    `;
+    expect(precisionRows).toEqual([{ datetimePrecision: 6 }]);
+
+    for (let index = 0; index < 25; index += 1) {
+      const enqueued = await enqueue(`immediate:${index}`);
+      const claimed = await queue.claim({
+        leaseOwner: "immediate-worker",
+        leaseDurationMs: 30_000,
+      });
+
+      expect(claimed?.id).toBe(enqueued.id);
+      await queue.complete(enqueued.id, "immediate-worker");
+    }
+  });
+
   it("lets concurrent claimers lease each job at most once", async () => {
     await Promise.all([enqueue("concurrent:1"), enqueue("concurrent:2")]);
 
@@ -130,7 +154,9 @@ describe("PostgreSQL job queue", () => {
       pipelineJobId(enqueued.id),
       "worker-a",
       "UPSTREAM_TIMEOUT",
-      new Date(Date.now() - 1),
+      // Use a meaningful margin because Node and PostgreSQL do not share a
+      // monotonic clock and may differ by more than one millisecond.
+      new Date(Date.now() - 1_000),
     );
     const retried = await queue.claim({
       leaseOwner: "worker-b",

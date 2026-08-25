@@ -2,7 +2,6 @@ import type {
   ClassificationRun,
   ClassificationRunId,
   ContentDecision,
-  ContentDecisionId,
   HnItemId,
 } from "@hn-knowledge/domain";
 import {
@@ -362,22 +361,6 @@ export const createClassificationRepository = (
         include: { evidenceSpans: true },
       });
       return toDecision(created);
-    });
-  },
-
-  async activateDecision(commentId: HnItemId, decisionId: ContentDecisionId) {
-    await client.$transaction(async (transaction) => {
-      const decision = await transaction.contentDecision.findFirst({
-        where: { id: decisionId, commentId: BigInt(commentId) },
-        select: { id: true },
-      });
-      if (decision === null) {
-        throw new TypeError("Active decision must belong to the comment");
-      }
-      await transaction.selectedComment.update({
-        where: { id: BigInt(commentId) },
-        data: { activeDecisionId: decisionId },
-      });
     });
   },
 

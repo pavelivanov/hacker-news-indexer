@@ -1,3 +1,10 @@
+import type {
+  ContentDecisionId,
+  HnItemId,
+  ManualOverrideEventId,
+  ReviewTaskId,
+} from "./identities.js";
+
 export const REVIEW_REASON_CODES = [
   "PROMPT_INJECTION",
   "DESTRUCTIVE_OR_EVASION_ADVICE",
@@ -27,6 +34,56 @@ export const REVIEW_PRIORITIES = [
   "CRITICAL",
 ] as const;
 export type ReviewPriority = (typeof REVIEW_PRIORITIES)[number];
+
+export const REVIEW_TASK_STATES = [
+  "OPEN",
+  "APPROVED",
+  "REJECTED",
+  "SUPERSEDED",
+] as const;
+export type ReviewTaskState = (typeof REVIEW_TASK_STATES)[number];
+
+export const REVIEW_AUDIT_ACTIONS = [
+  "OPENED",
+  "APPROVED",
+  "REJECTED",
+  "REOPENED",
+  "SUPERSEDED",
+] as const;
+export type ReviewAuditAction = (typeof REVIEW_AUDIT_ACTIONS)[number];
+
+export interface ReviewTask {
+  readonly id: ReviewTaskId;
+  readonly commentId: HnItemId;
+  readonly contentDecisionId: ContentDecisionId;
+  readonly state: ReviewTaskState;
+  readonly priority: Exclude<ReviewPriority, "NONE">;
+  readonly reasonCodes: readonly ReviewReasonCode[];
+  readonly version: number;
+  readonly revision: number;
+  readonly supersedesTaskId: ReviewTaskId | null;
+  readonly resolutionReason: string | null;
+  readonly resolvedBy: string | null;
+  readonly resolvedAt: Date | null;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+}
+
+export interface ManualOverrideEvent {
+  readonly id: ManualOverrideEventId;
+  readonly reviewTaskId: ReviewTaskId;
+  readonly commentId: HnItemId;
+  readonly action: ReviewAuditAction;
+  readonly previousDecisionId: ContentDecisionId | null;
+  readonly newDecisionId: ContentDecisionId | null;
+  readonly actorId: string;
+  readonly requestHash: string;
+  readonly previousValueHash: string;
+  readonly newValueHash: string;
+  readonly reason: string;
+  readonly commandKey: string;
+  readonly createdAt: Date;
+}
 
 export interface ReviewPolicyInput {
   readonly decisionSource: "MODEL" | "MANUAL";

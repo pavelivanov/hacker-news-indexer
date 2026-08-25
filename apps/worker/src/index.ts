@@ -4,7 +4,10 @@ import {
   createMtcuteTelegramSource,
   HackerNewsApiItems,
 } from "@hn-knowledge/adapters";
-import { HnParentChainResolver } from "@hn-knowledge/application";
+import {
+  createReviewService,
+  HnParentChainResolver,
+} from "@hn-knowledge/application";
 import { createLogger, getConfig, redactConfig } from "@hn-knowledge/config";
 import {
   createDatabase,
@@ -13,6 +16,7 @@ import {
   createIngestionRunRepository,
   createJobQueue,
   createOccurrenceRepository,
+  createReviewRepository,
 } from "@hn-knowledge/db";
 import type { IngestionRange, PipelineJob } from "@hn-knowledge/domain";
 import type { SelectionSource } from "@hn-knowledge/ports";
@@ -34,6 +38,10 @@ const runs = createIngestionRunRepository(database.client);
 const occurrences = createOccurrenceRepository(database.client);
 const resolutions = createHnResolutionRepository(database.client);
 const classifications = createClassificationRepository(database.client);
+const reviews = createReviewService(
+  createReviewRepository(database.client),
+  hasher,
+);
 const queue = createJobQueue(database.client);
 const hnItems = new HackerNewsApiItems({
   clock,
@@ -95,6 +103,7 @@ const classify = createClassifyJobHandler(
   null,
   classifications,
   hasher,
+  reviews,
   config.WORKER_MAX_ATTEMPTS,
 );
 

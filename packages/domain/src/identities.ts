@@ -9,6 +9,8 @@ export type SelectionOccurrenceId = Brand<string, "SelectionOccurrenceId">;
 export type PipelineJobId = Brand<string, "PipelineJobId">;
 export type ClassificationRunId = Brand<string, "ClassificationRunId">;
 export type ContentDecisionId = Brand<string, "ContentDecisionId">;
+export type ReviewTaskId = Brand<string, "ReviewTaskId">;
+export type ManualOverrideEventId = Brand<string, "ManualOverrideEventId">;
 
 const positiveSafeInteger = (value: number, name: string): number => {
   if (!Number.isSafeInteger(value) || value <= 0) {
@@ -45,3 +47,12 @@ export const classificationRunId = (value: string): ClassificationRunId =>
 
 export const contentDecisionId = (value: string): ContentDecisionId =>
   nonEmptyIdentifier(value, "Content decision ID") as ContentDecisionId;
+
+export const reviewTaskId = (value: string): ReviewTaskId =>
+  nonEmptyIdentifier(value, "Review task ID") as ReviewTaskId;
+
+export const manualOverrideEventId = (value: string): ManualOverrideEventId =>
+  nonEmptyIdentifier(
+    value,
+    "Manual override event ID",
+  ) as ManualOverrideEventId;

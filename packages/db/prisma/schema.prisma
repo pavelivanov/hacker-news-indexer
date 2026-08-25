@@ -100,24 +100,46 @@ enum EvidenceOrigin {
   ROOT_STORY
 }
 
+enum ReviewTaskState {
+  OPEN
+  APPROVED
+  REJECTED
+  SUPERSEDED
+}
+
+enum ReviewPriority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ReviewAuditAction {
+  OPENED
+  APPROVED
+  REJECTED
+  REOPENED
+  SUPERSEDED
+}
+
 model IngestionRun {
-  id             String             @id @default(uuid()) @db.Uuid
+  id             String                   @id @default(uuid()) @db.Uuid
   source         SelectionSource
-  sourceKey      String             @map("source_key")
-  minId          BigInt             @map("min_id")
-  maxId          BigInt             @map("max_id")
+  sourceKey      String                   @map("source_key")
+  minId          BigInt                   @map("min_id")
+  maxId          BigInt                   @map("max_id")
   cursor         BigInt?
-  requestKey     String             @unique @map("request_key")
-  codeVersion    String             @default("development") @map("code_version")
-  status         IngestionRunStatus @default(PENDING)
-  observedCount  Int                @default(0) @map("observed_count")
-  resolvedCount  Int                @default(0) @map("resolved_count")
-  terminalCount  Int                @default(0) @map("terminal_count")
-  failureSummary String?            @map("failure_summary")
-  startedAt      DateTime?          @map("started_at") @db.Timestamptz(3)
-  completedAt    DateTime?          @map("completed_at") @db.Timestamptz(3)
-  createdAt      DateTime           @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt      DateTime           @updatedAt @map("updated_at") @db.Timestamptz(3)
+  requestKey     String                   @unique @map("request_key")
+  codeVersion    String                   @default("development") @map("code_version")
+  status         IngestionRunStatus       @default(PENDING)
+  observedCount  Int                      @default(0) @map("observed_count")
+  resolvedCount  Int                      @default(0) @map("resolved_count")
+  terminalCount  Int                      @default(0) @map("terminal_count")
+  failureSummary String?                  @map("failure_summary")
+  startedAt      DateTime?                @map("started_at") @db.Timestamptz(3)
+  completedAt    DateTime?                @map("completed_at") @db.Timestamptz(3)
+  createdAt      DateTime                 @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
   occurrences    IngestionRunOccurrence[]
   jobs           PipelineJob[]
 
@@ -126,19 +148,19 @@ model IngestionRun {
 }
 
 model SelectionOccurrence {
-  id           String           @id @default(uuid()) @db.Uuid
-  source       SelectionSource
-  sourceKey    String           @map("source_key")
-  externalId   BigInt           @map("external_id")
-  occurredAt   DateTime?        @map("occurred_at") @db.Timestamptz(3)
-  editedAt     DateTime?        @map("edited_at") @db.Timestamptz(3)
-  contentHash  String?          @map("content_hash")
-  status       OccurrenceStatus @default(OBSERVED)
-  firstSeenAt  DateTime         @default(now()) @map("first_seen_at") @db.Timestamptz(3)
-  lastSeenAt   DateTime         @updatedAt @map("last_seen_at") @db.Timestamptz(3)
-  runs         IngestionRunOccurrence[]
-  telegram     TelegramMessage?
-  references   HnReference[]
+  id            String                   @id @default(uuid()) @db.Uuid
+  source        SelectionSource
+  sourceKey     String                   @map("source_key")
+  externalId    BigInt                   @map("external_id")
+  occurredAt    DateTime?                @map("occurred_at") @db.Timestamptz(3)
+  editedAt      DateTime?                @map("edited_at") @db.Timestamptz(3)
+  contentHash   String?                  @map("content_hash")
+  status        OccurrenceStatus         @default(OBSERVED)
+  firstSeenAt   DateTime                 @default(now()) @map("first_seen_at") @db.Timestamptz(3)
+  lastSeenAt    DateTime                 @updatedAt @map("last_seen_at") @db.Timestamptz(3)
+  runs          IngestionRunOccurrence[]
+  telegram      TelegramMessage?
+  references    HnReference[]
   multipartPart MultipartPart?
 
   @@unique([source, sourceKey, externalId])
@@ -147,10 +169,10 @@ model SelectionOccurrence {
 }
 
 model IngestionRunOccurrence {
-  ingestionRunId String @map("ingestion_run_id") @db.Uuid
-  occurrenceId   String @map("occurrence_id") @db.Uuid
-  attachedAt     DateTime @default(now()) @map("attached_at") @db.Timestamptz(3)
-  ingestionRun   IngestionRun @relation(fields: [ingestionRunId], references: [id], onDelete: Cascade)
+  ingestionRunId String              @map("ingestion_run_id") @db.Uuid
+  occurrenceId   String              @map("occurrence_id") @db.Uuid
+  attachedAt     DateTime            @default(now()) @map("attached_at") @db.Timestamptz(3)
+  ingestionRun   IngestionRun        @relation(fields: [ingestionRunId], references: [id], onDelete: Cascade)
   occurrence     SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
 
   @@id([ingestionRunId, occurrenceId])
@@ -158,26 +180,26 @@ model IngestionRunOccurrence {
 }
 
 model TelegramMessage {
-  occurrenceId     String   @id @map("occurrence_id") @db.Uuid
-  entities         Json
-  displayedTextHash String? @map("displayed_text_hash")
-  bodySnapshot     String?  @map("body_snapshot")
-  multipartPart    Int?     @map("multipart_part")
-  multipartTotal   Int?     @map("multipart_total")
-  deleted          Boolean  @default(false)
-  occurrence       SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+  occurrenceId      String              @id @map("occurrence_id") @db.Uuid
+  entities          Json
+  displayedTextHash String?             @map("displayed_text_hash")
+  bodySnapshot      String?             @map("body_snapshot")
+  multipartPart     Int?                @map("multipart_part")
+  multipartTotal    Int?                @map("multipart_total")
+  deleted           Boolean             @default(false)
+  occurrence        SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
 
   @@map("telegram_messages")
 }
 
 model HnReference {
-  id              String          @id @default(uuid()) @db.Uuid
-  occurrenceId    String          @map("occurrence_id") @db.Uuid
-  hnItemId        BigInt          @map("hn_item_id")
+  id              String              @id @default(uuid()) @db.Uuid
+  occurrenceId    String              @map("occurrence_id") @db.Uuid
+  hnItemId        BigInt              @map("hn_item_id")
   role            HnReferenceRole
-  entityOffset    Int             @map("entity_offset")
-  entityLength    Int             @map("entity_length")
-  parseConfidence Float           @map("parse_confidence")
+  entityOffset    Int                 @map("entity_offset")
+  entityLength    Int                 @map("entity_length")
+  parseConfidence Float               @map("parse_confidence")
   occurrence      SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
 
   @@unique([occurrenceId, role, entityOffset, hnItemId])
@@ -186,20 +208,20 @@ model HnReference {
 }
 
 model PipelineJob {
-  id              String           @id @default(uuid()) @db.Uuid
-  ingestionRunId  String?          @map("ingestion_run_id") @db.Uuid
-  type            PipelineJobType
-  payload         Json
-  idempotencyKey  String           @unique @map("idempotency_key")
-  state           PipelineJobState @default(AVAILABLE)
-  attempts        Int              @default(0)
-  availableAt     DateTime         @default(now()) @map("available_at") @db.Timestamptz(3)
-  leaseOwner      String?          @map("lease_owner")
-  leaseExpiresAt  DateTime?        @map("lease_expires_at") @db.Timestamptz(3)
-  lastErrorCode   String?          @map("last_error_code")
-  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
-  ingestionRun    IngestionRun?    @relation(fields: [ingestionRunId], references: [id], onDelete: Cascade)
+  id             String           @id @default(uuid()) @db.Uuid
+  ingestionRunId String?          @map("ingestion_run_id") @db.Uuid
+  type           PipelineJobType
+  payload        Json
+  idempotencyKey String           @unique @map("idempotency_key")
+  state          PipelineJobState @default(AVAILABLE)
+  attempts       Int              @default(0)
+  availableAt    DateTime         @default(now()) @map("available_at") @db.Timestamptz(6)
+  leaseOwner     String?          @map("lease_owner")
+  leaseExpiresAt DateTime?        @map("lease_expires_at") @db.Timestamptz(3)
+  lastErrorCode  String?          @map("last_error_code")
+  createdAt      DateTime         @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime         @updatedAt @map("updated_at") @db.Timestamptz(3)
+  ingestionRun   IngestionRun?    @relation(fields: [ingestionRunId], references: [id], onDelete: Cascade)
 
   @@index([state, availableAt, createdAt])
   @@index([leaseExpiresAt])
@@ -207,20 +229,20 @@ model PipelineJob {
 }
 
 model HnItem {
-  id             BigInt              @id
-  type           HnItemType
-  parentId       BigInt?              @map("parent_id")
-  author         String?
-  time           DateTime?            @db.Timestamptz(3)
-  title          String?
-  textHtml       String?              @map("text_html")
-  textPlain      String?              @map("text_plain")
-  url            String?
-  availability   HnAvailabilityState
-  fetchedAt      DateTime             @map("fetched_at") @db.Timestamptz(3)
-  responseHash   String               @map("response_hash")
+  id              BigInt              @id
+  type            HnItemType
+  parentId        BigInt?             @map("parent_id")
+  author          String?
+  time            DateTime?           @db.Timestamptz(3)
+  title           String?
+  textHtml        String?             @map("text_html")
+  textPlain       String?             @map("text_plain")
+  url             String?
+  availability    HnAvailabilityState
+  fetchedAt       DateTime            @map("fetched_at") @db.Timestamptz(3)
+  responseHash    String              @map("response_hash")
   selectedComment SelectedComment?
-  urlCandidates  UrlCandidate[]
+  urlCandidates   UrlCandidate[]
 
   @@index([parentId])
   @@index([type, availability])
@@ -228,48 +250,50 @@ model HnItem {
 }
 
 model SelectedComment {
-  id             BigInt              @id
-  rootId         BigInt               @map("root_id")
-  canonicalHtml  String               @map("canonical_html")
-  canonicalText  String               @map("canonical_text")
-  contentHash    String               @map("content_hash")
-  availability   HnAvailabilityState
-  firstSeenAt    DateTime             @default(now()) @map("first_seen_at") @db.Timestamptz(3)
-  lastSeenAt     DateTime             @updatedAt @map("last_seen_at") @db.Timestamptz(3)
-  item           HnItem               @relation(fields: [id], references: [id], onDelete: Restrict)
-  resolutionPath ResolutionPath?
-  multipartGroup MultipartGroup?
-  classificationRuns ClassificationRun[]
-  contentDecisions ContentDecision[] @relation("CommentDecisions")
-  activeDecisionId String? @unique @map("active_decision_id") @db.Uuid
-  activeDecision ContentDecision? @relation("ActiveContentDecision", fields: [activeDecisionId], references: [id], onDelete: SetNull)
+  id                   BigInt                @id
+  rootId               BigInt                @map("root_id")
+  canonicalHtml        String                @map("canonical_html")
+  canonicalText        String                @map("canonical_text")
+  contentHash          String                @map("content_hash")
+  availability         HnAvailabilityState
+  firstSeenAt          DateTime              @default(now()) @map("first_seen_at") @db.Timestamptz(3)
+  lastSeenAt           DateTime              @updatedAt @map("last_seen_at") @db.Timestamptz(3)
+  item                 HnItem                @relation(fields: [id], references: [id], onDelete: Restrict)
+  resolutionPath       ResolutionPath?
+  multipartGroup       MultipartGroup?
+  classificationRuns   ClassificationRun[]
+  contentDecisions     ContentDecision[]     @relation("CommentDecisions")
+  activeDecisionId     String?               @unique @map("active_decision_id") @db.Uuid
+  activeDecision       ContentDecision?      @relation("ActiveContentDecision", fields: [activeDecisionId], references: [id], onDelete: SetNull)
+  reviewTasks          ReviewTask[]
+  manualOverrideEvents ManualOverrideEvent[]
 
   @@index([rootId])
   @@map("selected_comments")
 }
 
 model ClassificationRun {
-  id                String                  @id @default(uuid()) @db.Uuid
-  commentId         BigInt                  @map("comment_id")
-  inputHash         String                  @map("input_hash")
-  promptVersion     String                  @map("prompt_version")
-  promptHash        String                  @map("prompt_hash")
-  schemaVersion     String                  @map("schema_version")
-  modelConfigId     String                  @map("model_config_id")
-  provider          String
-  modelId           String                  @map("model_id")
-  outputHash        String?                 @map("output_hash")
-  providerOutput    Json?                   @map("provider_output")
-  latencyMs         Int?                    @map("latency_ms")
-  inputTokens       Int?                    @map("input_tokens")
-  cachedInputTokens Int?                    @map("cached_input_tokens")
-  cacheWriteInputTokens Int?                 @map("cache_write_input_tokens")
-  outputTokens      Int?                    @map("output_tokens")
-  status            ClassificationRunStatus
-  errorCode         String?                 @map("error_code")
-  createdAt         DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
-  comment           SelectedComment         @relation(fields: [commentId], references: [id], onDelete: Restrict)
-  contentDecision   ContentDecision?
+  id                    String                  @id @default(uuid()) @db.Uuid
+  commentId             BigInt                  @map("comment_id")
+  inputHash             String                  @map("input_hash")
+  promptVersion         String                  @map("prompt_version")
+  promptHash            String                  @map("prompt_hash")
+  schemaVersion         String                  @map("schema_version")
+  modelConfigId         String                  @map("model_config_id")
+  provider              String
+  modelId               String                  @map("model_id")
+  outputHash            String?                 @map("output_hash")
+  providerOutput        Json?                   @map("provider_output")
+  latencyMs             Int?                    @map("latency_ms")
+  inputTokens           Int?                    @map("input_tokens")
+  cachedInputTokens     Int?                    @map("cached_input_tokens")
+  cacheWriteInputTokens Int?                    @map("cache_write_input_tokens")
+  outputTokens          Int?                    @map("output_tokens")
+  status                ClassificationRunStatus
+  errorCode             String?                 @map("error_code")
+  createdAt             DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
+  comment               SelectedComment         @relation(fields: [commentId], references: [id], onDelete: Restrict)
+  contentDecision       ContentDecision?
 
   @@unique([commentId, inputHash, promptVersion, schemaVersion, modelConfigId])
   @@index([commentId, createdAt])
@@ -278,27 +302,82 @@ model ClassificationRun {
 }
 
 model ContentDecision {
-  id                 String                @id @default(uuid()) @db.Uuid
-  commentId          BigInt                @map("comment_id")
-  classificationRunId String?              @unique @map("classification_run_id") @db.Uuid
-  source             ContentDecisionSource
-  primaryDecision    ContentDecisionClass  @map("primary_decision")
-  decisionConfidence Float                 @map("decision_confidence")
-  materiallyTechnical Boolean              @map("materially_technical")
-  reviewRequired     Boolean               @map("review_required")
-  validatedOutput    Json                  @map("validated_output")
-  manualOverrideOfId String?               @map("manual_override_of_id") @db.Uuid
-  createdAt          DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
-  comment            SelectedComment       @relation("CommentDecisions", fields: [commentId], references: [id], onDelete: Restrict)
-  classificationRun  ClassificationRun?    @relation(fields: [classificationRunId], references: [id], onDelete: Restrict)
-  manualOverrideOf   ContentDecision?      @relation("ManualDecisionOverrides", fields: [manualOverrideOfId], references: [id], onDelete: Restrict)
-  manualOverrides    ContentDecision[]     @relation("ManualDecisionOverrides")
-  evidenceSpans      EvidenceSpan[]
-  activeFor          SelectedComment?      @relation("ActiveContentDecision")
+  id                   String                @id @default(uuid()) @db.Uuid
+  commentId            BigInt                @map("comment_id")
+  classificationRunId  String?               @unique @map("classification_run_id") @db.Uuid
+  source               ContentDecisionSource
+  primaryDecision      ContentDecisionClass  @map("primary_decision")
+  decisionConfidence   Float                 @map("decision_confidence")
+  materiallyTechnical  Boolean               @map("materially_technical")
+  reviewRequired       Boolean               @map("review_required")
+  validatedOutput      Json                  @map("validated_output")
+  manualOverrideOfId   String?               @map("manual_override_of_id") @db.Uuid
+  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  comment              SelectedComment       @relation("CommentDecisions", fields: [commentId], references: [id], onDelete: Restrict)
+  classificationRun    ClassificationRun?    @relation(fields: [classificationRunId], references: [id], onDelete: Restrict)
+  manualOverrideOf     ContentDecision?      @relation("ManualDecisionOverrides", fields: [manualOverrideOfId], references: [id], onDelete: Restrict)
+  manualOverrides      ContentDecision[]     @relation("ManualDecisionOverrides")
+  evidenceSpans        EvidenceSpan[]
+  activeFor            SelectedComment?      @relation("ActiveContentDecision")
+  reviewTasks          ReviewTask[]
+  previousReviewEvents ManualOverrideEvent[] @relation("PreviousReviewDecision")
+  newReviewEvents      ManualOverrideEvent[] @relation("NewReviewDecision")
 
   @@index([commentId, createdAt])
   @@index([manualOverrideOfId])
   @@map("content_decisions")
+}
+
+model ReviewTask {
+  id                String                @id @default(uuid()) @db.Uuid
+  commentId         BigInt                @map("comment_id")
+  contentDecisionId String                @map("content_decision_id") @db.Uuid
+  state             ReviewTaskState       @default(OPEN)
+  priority          ReviewPriority
+  reasonCodes       String[]              @map("reason_codes")
+  version           Int                   @default(1)
+  revision          Int                   @default(1)
+  supersedesTaskId  String?               @map("supersedes_task_id") @db.Uuid
+  resolutionReason  String?               @map("resolution_reason")
+  resolvedBy        String?               @map("resolved_by")
+  resolvedAt        DateTime?             @map("resolved_at") @db.Timestamptz(3)
+  createdAt         DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  comment           SelectedComment       @relation(fields: [commentId], references: [id], onDelete: Restrict)
+  contentDecision   ContentDecision       @relation(fields: [contentDecisionId], references: [id], onDelete: Restrict)
+  supersedesTask    ReviewTask?           @relation("ReviewTaskRevisions", fields: [supersedesTaskId], references: [id], onDelete: Restrict)
+  supersededByTasks ReviewTask[]          @relation("ReviewTaskRevisions")
+  auditEvents       ManualOverrideEvent[]
+
+  @@unique([contentDecisionId, revision])
+  @@index([state, priority, createdAt, id])
+  @@index([commentId, createdAt])
+  @@index([supersedesTaskId])
+  @@map("review_tasks")
+}
+
+model ManualOverrideEvent {
+  id                 String            @id @default(uuid()) @db.Uuid
+  reviewTaskId       String            @map("review_task_id") @db.Uuid
+  commentId          BigInt            @map("comment_id")
+  action             ReviewAuditAction
+  previousDecisionId String?           @map("previous_decision_id") @db.Uuid
+  newDecisionId      String?           @map("new_decision_id") @db.Uuid
+  actorId            String            @map("actor_id")
+  requestHash        String            @map("request_hash")
+  previousValueHash  String            @map("previous_value_hash")
+  newValueHash       String            @map("new_value_hash")
+  reason             String
+  commandKey         String            @unique @map("command_key")
+  createdAt          DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  reviewTask         ReviewTask        @relation(fields: [reviewTaskId], references: [id], onDelete: Restrict)
+  comment            SelectedComment   @relation(fields: [commentId], references: [id], onDelete: Restrict)
+  previousDecision   ContentDecision?  @relation("PreviousReviewDecision", fields: [previousDecisionId], references: [id], onDelete: Restrict)
+  newDecision        ContentDecision?  @relation("NewReviewDecision", fields: [newDecisionId], references: [id], onDelete: Restrict)
+
+  @@index([reviewTaskId, createdAt])
+  @@index([commentId, createdAt])
+  @@map("manual_override_events")
 }
 
 model EvidenceSpan {
@@ -319,13 +398,13 @@ model EvidenceSpan {
 }
 
 model ResolutionPath {
-  id                String   @id @default(uuid()) @db.Uuid
-  selectedCommentId BigInt   @unique @map("selected_comment_id")
-  ancestorIds       BigInt[] @map("ancestor_ids")
-  displayedStoryId  BigInt?  @map("displayed_story_id")
-  resolvedRootId    BigInt   @map("resolved_root_id")
-  resolverVersion   String   @map("resolver_version")
-  resolvedAt        DateTime @default(now()) @map("resolved_at") @db.Timestamptz(3)
+  id                String          @id @default(uuid()) @db.Uuid
+  selectedCommentId BigInt          @unique @map("selected_comment_id")
+  ancestorIds       BigInt[]        @map("ancestor_ids")
+  displayedStoryId  BigInt?         @map("displayed_story_id")
+  resolvedRootId    BigInt          @map("resolved_root_id")
+  resolverVersion   String          @map("resolver_version")
+  resolvedAt        DateTime        @default(now()) @map("resolved_at") @db.Timestamptz(3)
   selectedComment   SelectedComment @relation(fields: [selectedCommentId], references: [id], onDelete: Cascade)
 
   @@index([resolvedRootId])
@@ -333,12 +412,12 @@ model ResolutionPath {
 }
 
 model MultipartGroup {
-  id                String         @id @default(uuid()) @db.Uuid
-  selectedCommentId BigInt         @unique @map("selected_comment_id")
-  expectedParts     Int            @map("expected_parts")
+  id                String          @id @default(uuid()) @db.Uuid
+  selectedCommentId BigInt          @unique @map("selected_comment_id")
+  expectedParts     Int             @map("expected_parts")
   state             MultipartState
-  canonicalSource   String         @default("HN") @map("canonical_source")
-  snapshotHash      String?        @map("snapshot_hash")
+  canonicalSource   String          @default("HN") @map("canonical_source")
+  snapshotHash      String?         @map("snapshot_hash")
   selectedComment   SelectedComment @relation(fields: [selectedCommentId], references: [id], onDelete: Cascade)
   parts             MultipartPart[]
 
@@ -346,32 +425,32 @@ model MultipartGroup {
 }
 
 model MultipartPart {
-  id             String   @id @default(uuid()) @db.Uuid
-  groupId        String   @map("group_id") @db.Uuid
-  occurrenceId   String   @unique @map("occurrence_id") @db.Uuid
-  partNo         Int      @map("part_no")
-  observedTotal  Int      @map("observed_total")
-  fragmentHash   String   @map("fragment_hash")
-  fragmentSnapshot String? @map("fragment_snapshot")
-  group          MultipartGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  occurrence     SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
+  id               String              @id @default(uuid()) @db.Uuid
+  groupId          String              @map("group_id") @db.Uuid
+  occurrenceId     String              @unique @map("occurrence_id") @db.Uuid
+  partNo           Int                 @map("part_no")
+  observedTotal    Int                 @map("observed_total")
+  fragmentHash     String              @map("fragment_hash")
+  fragmentSnapshot String?             @map("fragment_snapshot")
+  group            MultipartGroup      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  occurrence       SelectionOccurrence @relation(fields: [occurrenceId], references: [id], onDelete: Cascade)
 
   @@unique([groupId, partNo])
   @@map("multipart_parts")
 }
 
 model UrlCandidate {
-  id             String             @id @default(uuid()) @db.Uuid
-  hnItemId       BigInt?            @map("hn_item_id")
-  rawUrl         String             @map("raw_url")
-  canonicalUrl   String?            @map("canonical_url")
-  sourceDocument String             @map("source_document")
-  originField    String             @map("origin_field")
-  scheme         String?
-  host           String?
+  id              String             @id @default(uuid()) @db.Uuid
+  hnItemId        BigInt?            @map("hn_item_id")
+  rawUrl          String             @map("raw_url")
+  canonicalUrl    String?            @map("canonical_url")
+  sourceDocument  String             @map("source_document")
+  originField     String             @map("origin_field")
+  scheme          String?
+  host            String?
   validationState UrlValidationState @default(CANDIDATE) @map("validation_state")
-  contentHash    String             @map("content_hash")
-  hnItem         HnItem?            @relation(fields: [hnItemId], references: [id], onDelete: Cascade)
+  contentHash     String             @map("content_hash")
+  hnItem          HnItem?            @relation(fields: [hnItemId], references: [id], onDelete: Cascade)
 
   @@unique([contentHash, sourceDocument, originField])
   @@index([hnItemId])

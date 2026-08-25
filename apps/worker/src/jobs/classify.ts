@@ -2,6 +2,7 @@ import {
   ClassificationExecutionError,
   createClassifyComment,
   loadClassifierInput,
+  type ClassificationReviewQueue,
 } from "@hn-knowledge/application";
 import { hnItemId, type PipelineJob } from "@hn-knowledge/domain";
 import type {
@@ -18,12 +19,13 @@ export const createClassifyJobHandler = (
   classifier: ClassifierPort | null,
   repository: ClassificationRepository,
   hasher: Hasher,
+  reviewQueue: ClassificationReviewQueue,
   maximumAttempts: number,
 ): ClassifyJobHandler => {
   const classify =
     classifier === null
       ? null
-      : createClassifyComment(classifier, repository, hasher);
+      : createClassifyComment(classifier, repository, hasher, reviewQueue);
   return async (job): Promise<void> => {
     if (job.ingestionRunId === null) {
       throw new WorkerJobError("CLASSIFY_JOB_WITHOUT_RUN", false);

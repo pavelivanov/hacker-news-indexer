@@ -14,6 +14,11 @@ import type {
   MultipartPart,
   OccurrenceStatus,
   PipelineJob,
+  ManualOverrideEvent,
+  ReviewPriority,
+  ReviewReasonCode,
+  ReviewTask,
+  ReviewTaskId,
   ResolutionPath,
   SelectedComment,
   SelectionOccurrence,
@@ -76,11 +81,67 @@ export interface ClassificationRepository {
   ): Promise<RecordClassificationRunResult>;
   getRun(id: ClassificationRunId): Promise<ClassificationRun | null>;
   saveDecision(input: SaveContentDecisionInput): Promise<ContentDecision>;
-  activateDecision(
-    commentId: HnItemId,
-    decisionId: ContentDecisionId,
-  ): Promise<void>;
   getActiveDecision(commentId: HnItemId): Promise<ContentDecision | null>;
+}
+
+export interface OpenReviewTaskInput {
+  readonly commentId: HnItemId;
+  readonly contentDecisionId: ContentDecisionId;
+  readonly priority: Exclude<ReviewPriority, "NONE">;
+  readonly reasonCodes: readonly ReviewReasonCode[];
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}
+
+export interface OpenReviewTaskResult {
+  readonly task: ReviewTask;
+  readonly event: ManualOverrideEvent;
+  readonly created: boolean;
+}
+
+export interface ResolveReviewTaskInput {
+  readonly taskId: ReviewTaskId;
+  readonly expectedVersion: number;
+  readonly outcome: "APPROVED" | "REJECTED";
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}
+
+export type ResolveReviewTaskResult =
+  | {
+      readonly kind: "RESOLVED";
+      readonly task: ReviewTask;
+      readonly event: ManualOverrideEvent;
+      readonly replayed: boolean;
+    }
+  | { readonly kind: "NOT_FOUND" }
+  | {
+      readonly kind: "VERSION_CONFLICT";
+      readonly currentVersion: number;
+    }
+  | {
+      readonly kind: "INVALID_STATE";
+      readonly state: ReviewTask["state"];
+    }
+  | { readonly kind: "IDEMPOTENCY_CONFLICT" };
+
+export interface ReviewTaskPage {
+  readonly items: readonly ReviewTask[];
+  readonly nextCursor: ReviewTaskId | null;
+}
+
+export interface ReviewRepository {
+  openTask(input: OpenReviewTaskInput): Promise<OpenReviewTaskResult>;
+  getTask(id: ReviewTaskId): Promise<ReviewTask | null>;
+  listOpenTasks(
+    limit: number,
+    afterId: ReviewTaskId | null,
+  ): Promise<ReviewTaskPage>;
+  resolveTask(input: ResolveReviewTaskInput): Promise<ResolveReviewTaskResult>;
 }
 
 export interface StartIngestionResult {
