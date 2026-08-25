@@ -14,6 +14,10 @@
 
 ## Status
 
+- **Execution status**: IN PROGRESS — mandatory-review policy, append-only
+  decision-review storage, authenticated approve/reject API, and model-decision
+  activation guard are implemented. Subject identity, materialization,
+  merge/URL review actions, dedup evaluation, and review-load reporting remain.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH
@@ -162,7 +166,7 @@ Required gates: subject-dedup precision ≥ 0.97 and recall ≥ 0.90. Do not low
 - [ ] Every discovery/note/mention traces to a classification run and evidence spans.
 - [ ] Name-only matches never auto-merge.
 - [ ] Root-only duplicate discoveries collapse correctly.
-- [ ] Review policy covers every mandatory reason from the research plan.
+- [x] Review policy covers every mandatory reason from the research plan.
 - [ ] Review mutations are authenticated, optimistic, idempotent, and audited.
 - [ ] Dedup precision ≥ 0.97 and recall ≥ 0.90.
 - [ ] Global verification/evaluation gates pass and Plan 004 is `DONE`.

@@ -10,6 +10,7 @@ describe("application configuration", () => {
       NODE_ENV: "development",
       LOG_LEVEL: "info",
       PORT: 3000,
+      APP_REVIEW_ACTOR_ID: "owner",
       TELEGRAM_ENABLED: false,
       CLASSIFIER_ENABLED: false,
       CLASSIFIER_REASONING_EFFORT: "low",

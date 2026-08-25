@@ -10,6 +10,7 @@ import {
 } from "@hn-knowledge/application";
 import type { ClassificationRun, ContentDecision } from "@hn-knowledge/domain";
 import {
+  UNPROMOTED_MODEL_REVIEW_DECISION,
   classificationRunId,
   contentDecisionId,
   hnItemId,
@@ -161,14 +162,19 @@ describe("classify comment", () => {
       outputs: new Map([[Number(commentId), validOutput]]),
     });
     const repository = new MemoryClassificationRepository();
+    const openedReviews: unknown[] = [];
 
-    const result = await createClassifyComment(
-      classifier,
-      repository,
-      hasher,
-    )({ commentId, boundedInput });
+    const result = await createClassifyComment(classifier, repository, hasher, {
+      openPolicyReview: (input) => {
+        openedReviews.push(input);
+        return Promise.resolve();
+      },
+    })({ commentId, boundedInput });
 
     expect(result.kind).toBe("DECISION");
+    if (result.kind !== "DECISION") {
+      throw new Error("Expected a persisted classification decision");
+    }
     expect(repository.runs[0]).toMatchObject({
       status: "REVIEW",
       provider: "fixture",
@@ -181,6 +187,13 @@ describe("classify comment", () => {
     });
     expect(repository.decisions[0]?.evidenceSpans).toHaveLength(1);
     expect(repository.activeDecisionId).toBeNull();
+    expect(openedReviews).toEqual([
+      {
+        commentId,
+        contentDecisionId: result.decision.id,
+        policy: UNPROMOTED_MODEL_REVIEW_DECISION,
+      },
+    ]);
     expect(classifier.requests[0]?.timeoutMs).toBe(
       CLASSIFIER_REQUEST_TIMEOUT_MS,
     );
@@ -202,6 +215,7 @@ describe("classify comment", () => {
         classifier,
         repository,
         hasher,
+        null,
       )({
         commentId,
         boundedInput,
@@ -222,6 +236,7 @@ describe("classify comment", () => {
       classifier,
       repository,
       hasher,
+      null,
     )({ commentId, boundedInput });
 
     expect(result).toMatchObject({ kind: "REVIEW", errorCode: "JSON_INVALID" });
@@ -251,6 +266,7 @@ describe("classify comment", () => {
       classifier,
       repository,
       hasher,
+      null,
     )({
       commentId,
       boundedInput,

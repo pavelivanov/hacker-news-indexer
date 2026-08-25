@@ -535,6 +535,7 @@ const evaluateRow = async (row: GoldRow): Promise<string | null> => {
       classifier,
       repository,
       hasher,
+      null,
     )({
       commentId: hnItemId(row.commentId),
       boundedInput: input,
@@ -641,6 +642,7 @@ for (const testCase of adversarialInputs) {
       adversarialClassifier,
       adversarialRepository,
       hasher,
+      null,
     )({
       commentId: hnItemId(testCase.id),
       boundedInput: testCase.input,

@@ -25,6 +25,7 @@ import {
   validateClassifierOutput,
   type ClassifierOutputValidationErrorCode,
 } from "./validate-output.js";
+import type { OpenPolicyReviewInput } from "../review/review-service.js";
 
 export const CLASSIFIER_REQUEST_TIMEOUT_MS = 45_000;
 export const CLASSIFICATION_SCHEMA_VERSION = "classification.v1";
@@ -59,6 +60,10 @@ export type ClassifyCommentResult =
       readonly run: ClassificationRun;
       readonly errorCode: ClassifierOutputValidationErrorCode;
     };
+
+export interface ClassificationReviewQueue {
+  readonly openPolicyReview: (input: OpenPolicyReviewInput) => Promise<unknown>;
+}
 
 const sumUsage = (
   responses: readonly ClassifierResponse[],
@@ -100,6 +105,7 @@ export const createClassifyComment =
     classifier: ClassifierPort,
     repository: ClassificationRepository,
     hasher: Hasher,
+    reviewQueue: ClassificationReviewQueue | null,
   ) =>
   async (input: ClassifyCommentInput): Promise<ClassifyCommentResult> => {
     if (input.boundedInput.selectedCommentId !== input.commentId) {
@@ -251,6 +257,13 @@ export const createClassifyComment =
           textHash: span.textHash,
         })),
       });
+      if (reviewQueue !== null) {
+        await reviewQueue.openPolicyReview({
+          commentId: input.commentId,
+          contentDecisionId: decision.id,
+          policy: UNPROMOTED_MODEL_REVIEW_DECISION,
+        });
+      }
       return { kind: "DECISION", run: recorded.run, decision, output };
     }
 

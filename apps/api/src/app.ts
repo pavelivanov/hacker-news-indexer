@@ -1,13 +1,16 @@
 import { createHash, randomUUID } from "node:crypto";
 
 import {
+  createReviewService,
   createStartIngestion,
+  type ReviewService,
   type StartIngestion,
 } from "@hn-knowledge/application";
 import { createLogger, getConfig } from "@hn-knowledge/config";
 import {
   checkDatabaseReadiness,
   createIngestionRunRepository,
+  createReviewRepository,
   getDatabase,
 } from "@hn-knowledge/db";
 import { Hono } from "hono";
@@ -15,6 +18,7 @@ import { Hono } from "hono";
 import { createBearerAuth } from "./middleware/bearer-auth.js";
 import { registerHealthRoutes, type HealthBindings } from "./routes/health.js";
 import { registerIngestionRoutes } from "./routes/ingestion.js";
+import { registerReviewRoutes } from "./routes/review.js";
 
 const SAFE_REQUEST_ID = /^[A-Za-z0-9._-]{1,128}$/u;
 
@@ -31,6 +35,8 @@ export interface AppOptions {
   readonly apiToken?: string;
   readonly maxIngestionRange?: number;
   readonly startIngestion?: StartIngestion;
+  readonly reviewService?: ReviewService;
+  readonly reviewActorId?: string;
 }
 
 export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
@@ -44,6 +50,11 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
   const startIngestion =
     options.startIngestion ??
     createStartIngestion(createIngestionRunRepository(getDatabase().client), {
+      sha256: (value) => createHash("sha256").update(value).digest("hex"),
+    });
+  const reviewService =
+    options.reviewService ??
+    createReviewService(createReviewRepository(getDatabase().client), {
       sha256: (value) => createHash("sha256").update(value).digest("hex"),
     });
 
@@ -64,6 +75,10 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
   registerIngestionRoutes(app, {
     maxRange: options.maxIngestionRange ?? config.INGESTION_MAX_RANGE,
     startIngestion,
+  });
+  registerReviewRoutes(app, {
+    service: reviewService,
+    actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
   });
 
   app.notFound((context) =>

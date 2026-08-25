@@ -57,6 +57,10 @@ const environmentSchema = z
       z.url().startsWith("postgresql://").default(DEFAULT_DATABASE_URL),
     ),
     APP_API_TOKEN: optionalString,
+    APP_REVIEW_ACTOR_ID: z.preprocess(
+      emptyToUndefined,
+      z.string().trim().min(1).max(128).default("owner"),
+    ),
     INGESTION_MAX_RANGE: integer(1_000, 1, 100_000),
     DATABASE_READY_TIMEOUT_MS: integer(2_000, 100, 60_000),
     SHUTDOWN_TIMEOUT_MS: integer(10_000, 100, 60_000),

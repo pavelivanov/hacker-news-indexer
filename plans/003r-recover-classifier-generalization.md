@@ -12,8 +12,9 @@
 ## Status
 
 - **Execution status**: IN PROGRESS — cycle locking, v1 terminal hashes,
-  no-rerun enforcement, and model non-activation are implemented. Fresh source
-  capture and independent v2 annotation remain.
+  no-rerun enforcement, model non-activation, and authenticated manual decision
+  review are implemented. Fresh source capture and independent v2 annotation
+  remain.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -121,7 +122,7 @@ classification remains disabled.
       split validate.
 - [ ] No v1 holdout row or diagnostic was used to tune the compatibility set.
 - [ ] Two-stage routing and application-owned mandatory review are tested.
-- [ ] Model decisions remain inactive; only authenticated manual review can
+- [x] Model decisions remain inactive; only authenticated manual review can
       activate them.
 - [ ] One v2 candidate passes all development and one-time holdout gates.
 - [ ] Provider ADR is updated with quality, latency, and actual cost evidence.
