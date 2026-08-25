@@ -25,6 +25,11 @@ export type ResolveSelectedComment = (
   input: ResolveSelectedCommentInput,
 ) => Promise<void>;
 
+export interface SelectedCommentResolutionTelemetry {
+  readonly rejectedUrls: (count: number) => void;
+  readonly multipartIncomplete: () => void;
+}
+
 const telegramFragment = (text: string): string => {
   const headerEnd = text.indexOf("\n\n");
   const body = headerEnd < 0 ? text : text.slice(headerEnd + 2);
@@ -39,6 +44,7 @@ export const createResolveSelectedComment =
     clock: Clock,
     hasher: Hasher,
     jobs: PipelineJobPublisher,
+    telemetry: SelectedCommentResolutionTelemetry | null = null,
   ): ResolveSelectedComment =>
   async (input): Promise<void> => {
     const contexts = await occurrences.listSelectedCommentOccurrences(
@@ -75,6 +81,11 @@ export const createResolveSelectedComment =
       firstSeenAt: now,
       lastSeenAt: now,
     };
+    telemetry?.rejectedUrls(
+      normalized.urlCandidates.filter(
+        (candidate) => candidate.validationState === "REJECTED",
+      ).length,
+    );
     await resolutions.saveResolution(
       resolved.path,
       selected,
@@ -113,6 +124,9 @@ export const createResolveSelectedComment =
         canonicalText: normalized.canonicalText,
         parts,
       });
+      if (reconstruction.state !== "COMPLETE_MATCH") {
+        telemetry?.multipartIncomplete();
+      }
       await resolutions.saveMultipart(
         reconstruction,
         parts,

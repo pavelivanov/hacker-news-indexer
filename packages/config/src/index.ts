@@ -1,2 +1,3 @@
 export { getConfig, parseConfig, redactConfig, type AppConfig } from "./env.js";
-export { createLogger } from "./logger.js";
+export { createLogger, redactLogFields } from "./logger.js";
+export * from "./metrics.js";

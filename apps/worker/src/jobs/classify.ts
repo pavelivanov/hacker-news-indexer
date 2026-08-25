@@ -4,6 +4,7 @@ import {
   loadClassifierInput,
   type ClassificationReviewQueue,
 } from "@hn-knowledge/application";
+import type { PipelineMetrics } from "@hn-knowledge/config";
 import { hnItemId, type PipelineJob } from "@hn-knowledge/domain";
 import type {
   ClassificationRepository,
@@ -21,6 +22,7 @@ export const createClassifyJobHandler = (
   hasher: Hasher,
   reviewQueue: ClassificationReviewQueue,
   maximumAttempts: number,
+  metrics: PipelineMetrics | null = null,
 ): ClassifyJobHandler => {
   const classify =
     classifier === null
@@ -43,12 +45,20 @@ export const createClassifyJobHandler = (
       });
     }
     const input = await loadClassifierInput(selectedId, repository, hasher);
+    metrics?.increment("classification_total");
+    const startedAt = Date.now();
     try {
-      await classify({
+      const result = await classify({
         commentId: selectedId,
         boundedInput: input,
         persistRetryableFailure: job.attempts >= maximumAttempts,
       });
+      if (
+        result.kind === "REVIEW" &&
+        result.errorCode.toLowerCase().includes("schema")
+      ) {
+        metrics?.increment("classification_schema_error_total");
+      }
     } catch (error) {
       if (error instanceof ClassificationExecutionError) {
         throw new WorkerJobError(
@@ -59,6 +69,11 @@ export const createClassifyJobHandler = (
         );
       }
       throw error;
+    } finally {
+      metrics?.observe(
+        "classification_latency_seconds",
+        (Date.now() - startedAt) / 1_000,
+      );
     }
   };
 };

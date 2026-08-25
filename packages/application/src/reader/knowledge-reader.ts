@@ -328,7 +328,11 @@ export const createKnowledgeReader = (
       );
       const remaining = pageAfter(primary, cursor?.after_id ?? null);
       const page = remaining.slice(0, PAGE_SIZE);
-      const pageRoots = new Set(page.map((record) => record.resolvedRootId));
+      const pageRoots = new Set(
+        page
+          .filter((record) => (metadata.get(record.id)?.position ?? 1) === 1)
+          .map((record) => record.resolvedRootId),
+      );
       const extras = ranked.filter(
         (record) =>
           pageRoots.has(record.resolvedRootId) &&

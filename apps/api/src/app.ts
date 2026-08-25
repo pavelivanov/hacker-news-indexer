@@ -8,7 +8,12 @@ import {
   type ReviewService,
   type StartIngestion,
 } from "@hn-knowledge/application";
-import { createLogger, getConfig } from "@hn-knowledge/config";
+import {
+  createLogger,
+  getConfig,
+  pipelineMetrics,
+  type PipelineMetrics,
+} from "@hn-knowledge/config";
 import {
   checkDatabaseReadiness,
   createIngestionRunRepository,
@@ -23,6 +28,10 @@ import { registerHealthRoutes, type HealthBindings } from "./routes/health.js";
 import { registerIngestionRoutes } from "./routes/ingestion.js";
 import { registerReviewRoutes } from "./routes/review.js";
 import { registerReaderRoutes } from "./routes/reader.js";
+import {
+  registerMetricsRoute,
+  type ReviewQueueMeasurement,
+} from "./routes/metrics.js";
 
 const SAFE_REQUEST_ID = /^[A-Za-z0-9._-]{1,128}$/u;
 
@@ -42,6 +51,8 @@ export interface AppOptions {
   readonly reviewService?: ReviewService;
   readonly reviewActorId?: string;
   readonly knowledgeReader?: KnowledgeReader;
+  readonly metrics?: PipelineMetrics;
+  readonly measureReviewQueue?: () => Promise<ReviewQueueMeasurement>;
 }
 
 export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
@@ -63,6 +74,7 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
       sha256: (value) => createHash("sha256").update(value).digest("hex"),
     });
   const apiToken = options.apiToken ?? config.APP_API_TOKEN;
+  const metrics = options.metrics ?? pipelineMetrics;
   const knowledgeReader =
     options.knowledgeReader ??
     createKnowledgeReader(
@@ -85,6 +97,29 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
   });
 
   registerHealthRoutes(app, checkReadiness);
+  registerMetricsRoute(app, {
+    apiToken,
+    metrics,
+    measureReviewQueue:
+      options.measureReviewQueue ??
+      (async () => {
+        const queue = await getDatabase().client.reviewTask.aggregate({
+          where: { state: "OPEN" },
+          _count: { id: true },
+          _min: { createdAt: true },
+        });
+        return {
+          depth: queue._count.id,
+          oldestAgeSeconds:
+            queue._min.createdAt === null
+              ? 0
+              : Math.max(
+                  0,
+                  (Date.now() - queue._min.createdAt.getTime()) / 1_000,
+                ),
+        };
+      }),
+  });
   app.use("/v1/*", createBearerAuth(apiToken));
   registerIngestionRoutes(app, {
     maxRange: options.maxIngestionRange ?? config.INGESTION_MAX_RANGE,
@@ -94,7 +129,7 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
     service: reviewService,
     actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
   });
-  registerReaderRoutes(app, { reader: knowledgeReader });
+  registerReaderRoutes(app, { reader: knowledgeReader, metrics });
 
   app.notFound((context) =>
     context.json(

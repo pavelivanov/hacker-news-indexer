@@ -2,6 +2,7 @@ import {
   createResolveSelectedComment,
   type HnParentChainResolver,
 } from "@hn-knowledge/application";
+import type { PipelineMetrics } from "@hn-knowledge/config";
 import { hnItemId, type PipelineJob } from "@hn-knowledge/domain";
 import type {
   Clock,
@@ -24,6 +25,7 @@ export const createResolveJobHandler =
     clock: Clock,
     hasher: Hasher,
     jobs: PipelineJobPublisher,
+    metrics: PipelineMetrics | null = null,
   ): ResolveJobHandler =>
   async (job): Promise<void> => {
     if (job.ingestionRunId === null) {
@@ -48,5 +50,16 @@ export const createResolveJobHandler =
       clock,
       hasher,
       jobs,
+      metrics === null
+        ? null
+        : {
+            rejectedUrls: (count) => {
+              if (count > 0) {
+                metrics.increment("url_candidate_rejected_total", count);
+              }
+            },
+            multipartIncomplete: () =>
+              metrics.increment("multipart_incomplete_total"),
+          },
     )({ runId: job.ingestionRunId, selectedCommentId: selectedId });
   };
