@@ -1,6 +1,6 @@
 # ADR 0005: Classifier provider selection
 
-- Status: GPT-5.6 Sol low selected on development; sealed holdout pending
+- Status: No provider promoted; GPT-5.6 Sol low failed the sealed holdout
 - Date: 2026-08-25
 
 ## Context
@@ -58,18 +58,70 @@ Five development rows had been changed from unanimous `EXPERT_NOTE` labels to
 `REJECTED` to reproduce the historical aggregate counts. V3 restores the two
 independent annotations and prevents future development consensus overrides.
 The four actual annotation disagreements stay outside hard selection metrics.
-The sealed 29-row holdout subset is byte-for-byte unchanged.
+The sealed 29-row holdout subset was byte-for-byte unchanged before its single
+formal evaluation.
 
-Keep `CLASSIFIER_ENABLED=false`. Sol is eligible for exactly one sealed holdout
-evaluation, but the worker adapter and publication remain disabled until that
-holdout is explicitly authorized and passes.
+Keep `CLASSIFIER_ENABLED=false`. The explicitly authorized Sol-low/prompt-v3
+holdout failed stable macro F1 and Expert-note precision. Sol is therefore not
+eligible for production, the worker adapter and publication remain disabled,
+and the opened holdout must not be used for tuning or rerun as a fresh gate.
 
 ## Measurements
 
-All live reports exercise only the 69-row development split. V2 reports add
-comment IDs, expected/predicted enum values, review flags, counts, and failure
-codes for diagnosis. They contain no prompts, source bodies, credentials, or
-raw provider outputs.
+All model-selection reports exercise only the 69-row development split. The
+single promotion report exercises the 29-row holdout only after configuration
+selection and explicit authorization. V2/v3 reports add comment IDs,
+expected/predicted enum values, review flags, counts, and failure codes for
+diagnosis. They contain no prompts, source bodies, credentials, or raw provider
+outputs.
+
+### Sealed v3 holdout result
+
+The selected `gpt-5.6-sol` low / `classification-prompt.v3` compatibility set
+was evaluated once on the sealed 29-row holdout with no prompt, model,
+reasoning, schema, threshold, or scoring-rule changes. The report is preserved
+as the terminal promotion result. It fails stable macro F1 at 0.6190 and stable
+Expert-note precision at 0.4000. On the stable slice, five rejected comments
+were promoted to Expert notes, one Discovery was demoted to Expert note, and
+one Discovery was rejected. This is a substantive class-generalization failure
+despite perfect Discovery precision, URL-grounding precision, validation,
+coverage, and safety metrics.
+
+| Metric                          | Required |  Full 29 | Stable 23 |
+| ------------------------------- | -------: | -------: | --------: |
+| Macro F1                        |   ≥ 0.85 |   0.6254 |    0.6190 |
+| Discovery precision             |   ≥ 0.93 |     1.00 |      1.00 |
+| Discovery recall                | recorded |   0.4000 |    0.3333 |
+| Expert-note precision           |   ≥ 0.88 |   0.4000 |    0.4000 |
+| Expert-note recall              | recorded |     1.00 |      1.00 |
+| URL-grounding precision         |     1.00 |     1.00 |      1.00 |
+| URL-grounding recall            | recorded |   0.6000 |    0.5000 |
+| Classification coverage         |   ≥ 0.80 |     1.00 |      1.00 |
+| Automatic coverage              | recorded |     1.00 |         — |
+| Automatic accuracy              | recorded |   0.6552 |         — |
+| Evidence-origin consistency     |   ≥ 0.97 |     1.00 |         — |
+| Gold-origin agreement           | recorded |   0.9000 |    0.8333 |
+| Evidence-span validation        |     1.00 |     1.00 |         — |
+| JSON/schema-valid outputs       |  ≥ 0.995 |     1.00 |         — |
+| Application-valid outputs       |   ≥ 0.95 |     1.00 |         — |
+| Invented URL count              |        0 |        0 |         — |
+| Adversarial tool/network calls  |        0 |        0 |         — |
+| Latency p95                     |   < 60 s |  7.992 s |         — |
+| Usage-priced cost, all 33 calls | recorded | $0.26266 |         — |
+| All-input-uncached comparison   | recorded | $0.43484 |         — |
+| Highest-input-rate bound        | recorded | $0.50490 |         — |
+
+- V3 Sol-low holdout report:
+  `evaluation/reports/holdout-openai-gpt-5-6-sol-low-v3.json`
+- V3 Sol-low holdout report SHA-256:
+  `e6044a42c1a594d525fc03d79e925c1b6351f08947359d1df094d0affd21f145`
+- Total usage: 70,060 input tokens (52,640 cached, 17,321 cache-write,
+  99 other uncached) and 7,730 output tokens across 33 terminal runs
+- Prompt version: `classification-prompt.v3`
+- Prompt hash:
+  `30d391239d4301e68a242fdad1bf992a61c2ca0891ff986860383990c70b3001`
+- Gold corpus SHA-256:
+  `7d23a114c404e30858a1b9c3d2ab7f66349ec41a3cdbf5405dd5fcd0447a95ce`
 
 ### Selected v3 measurement
 
@@ -326,13 +378,11 @@ replays through the production input, schema, validation, evidence-hashing,
 and application paths. Their perfect scores prove pipeline behavior and are
 not evidence of model quality.
 
-## Promotion criteria
+## Promotion outcome
 
-1. Obtain explicit authorization to open the sealed 29-row holdout exactly
-   once for the selected Sol-low/prompt-v3 compatibility set.
-2. Require the holdout report to meet every precision, URL, validation, safety,
-   latency, and coverage gate without prompt/model tuning.
-3. Enable the selected adapter only after the holdout passes; otherwise keep
-   classification disabled and document the failed generalization result.
-
-The thresholds were not weakened. The holdout has not been opened.
+The holdout was explicitly authorized, opened exactly once, and failed the
+unchanged promotion gates. The thresholds were not weakened and classification
+remains disabled. Any future classifier effort must begin a new development
+cycle and reserve a new untouched holdout before a new promotion attempt; this
+opened holdout may be used only as historical evidence, not as a tuning target
+or reusable gate.

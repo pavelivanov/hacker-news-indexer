@@ -326,7 +326,42 @@ describe("classification evaluation gates", () => {
     );
   });
 
-  it("keeps live reports free of source/provider bodies and does not check in a holdout report", async () => {
+  it("records the single sealed Sol holdout failure without tuning", async () => {
+    const report = await load("holdout-openai-gpt-5-6-sol-low-v3.json");
+
+    expect(report).toMatchObject({
+      reportVersion: 3,
+      provider: "openai",
+      modelId: "gpt-5.6-sol",
+      promptVersion: "classification-prompt.v3",
+      mode: "holdout",
+      split: "holdout",
+      rows: 29,
+      terminalRuns: 29,
+      activatedDecisions: 0,
+      classificationCoverage: 1,
+      automaticCoverage: 1,
+      schemaValidRate: 1,
+      applicationValidRate: 1,
+      failures: {},
+      stableGold: { rows: 23, macroF1: 0.6190476190476191 },
+      usage: {
+        accountingVersion: 2,
+        runs: 33,
+        tokenUsageComplete: true,
+        estimatedUsd: 0.262657,
+        estimateIncludesAdversarialCalls: true,
+      },
+      passed: false,
+    });
+    expect(report.stableGold.classMetrics.DISCOVERY.precision).toBe(1);
+    expect(report.stableGold.classMetrics.EXPERT_NOTE.precision).toBe(0.4);
+    expect(report.stableGold.extraction.urlGroundingPrecision).toBe(1);
+    expect(report.acceptance["stableGoldMacroF1"]).toBe(false);
+    expect(report.acceptance["stableGoldExpertNotePrecision"]).toBe(false);
+  });
+
+  it("keeps live reports free of source/provider bodies and records only the authorized holdout", async () => {
     const names = [
       "benchmark-openai-gpt-5-6-luna-low-v1.json",
       "benchmark-openai-gpt-5-6-luna-medium-v1.json",
@@ -338,6 +373,7 @@ describe("classification evaluation gates", () => {
       "benchmark-openai-gpt-5-6-sol-low-v2.json",
       "benchmark-openai-gpt-5-6-sol-low-v3.json",
       "benchmark-openai-gpt-5-6-terra-low-v3.json",
+      "holdout-openai-gpt-5-6-sol-low-v3.json",
     ];
     for (const name of names) {
       const text = await readFile(`evaluation/reports/${name}`, "utf8");
@@ -359,7 +395,6 @@ describe("classification evaluation gates", () => {
       "holdout-openai-gpt-5-6-sol-medium-v2.json",
       "holdout-openai-gpt-5-6-luna-low-v2.json",
       "holdout-openai-gpt-5-6-luna-medium-v2.json",
-      "holdout-openai-gpt-5-6-sol-low-v3.json",
       "holdout-openai-gpt-5-6-sol-medium-v3.json",
       "holdout-openai-gpt-5-6-luna-low-v3.json",
       "holdout-openai-gpt-5-6-luna-medium-v3.json",
