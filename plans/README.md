@@ -36,7 +36,8 @@ Generated on 2026-08-24 from `docs/telegram-hn-technical-knowledge-project-resea
 | 001 | Establish the project foundation and decision record | P1 | L | — | DONE |
 | 002 | Implement deterministic selection ingestion and HN resolution | P1 | L | 001 | DONE |
 | 003 | Implement grounded classification and the evaluation harness | P1 | L | 002 | BLOCKED (Sol prompt-v3 failed the single sealed holdout) |
-| 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 | TODO |
+| 003R | Recover classifier generalization on a fresh evaluation cycle | P1 | M | 003 implementation | IN PROGRESS (cycle locks and shadow-only safety complete; fresh v2 data pending) |
+| 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 implementation | TODO (may proceed review-only in parallel with 003R) |
 | 005 | Implement the private knowledge-feed APIs and reconciliation | P1 | L | 004 | TODO |
 | 006 | Implement the FindThatProject export outbox | P2 | M | 004 | TODO |
 | 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | TODO |
@@ -51,14 +52,18 @@ Updating the relevant status row in this file is always in scope for an executor
 ```text
 001 foundation
   -> 002 ingestion + HN resolution
-      -> 003 classification + evaluation
-          -> 004 subjects + review
+      -> 003 classification + evaluation (v1 promotion blocked)
+          -> 003R fresh evaluation recovery -----------+
+          -> 004 subjects + mandatory human review ----+
               -> 005 feed + reconciliation -> 007 Railway production
               -> 006 export ---------------/
               -> 008 optional web UI
 ```
 
-Plans 005 and 006 may run in parallel after Plan 004. Plan 008 is not on the backend v1 critical path.
+Plan 004 may proceed while 003R runs, but all model-derived decisions remain
+inactive and mandatory-review until 003R passes. Plans 005 and 006 may run in
+parallel after Plan 004; they may consume only manually approved content while
+003R is incomplete. Plan 008 is not on the backend v1 critical path.
 
 ## Global verification gate
 

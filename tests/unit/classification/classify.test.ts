@@ -156,7 +156,7 @@ class SequenceClassifier implements ClassifierPort {
 }
 
 describe("classify comment", () => {
-  it("uses the provider-neutral fixture and persists grounded evidence", async () => {
+  it("persists grounded model evidence without activating the decision", async () => {
     const classifier = new FixtureClassifier({
       outputs: new Map([[Number(commentId), validOutput]]),
     });
@@ -166,18 +166,21 @@ describe("classify comment", () => {
       classifier,
       repository,
       hasher,
-    )({ commentId, boundedInput, activateDecision: true });
+    )({ commentId, boundedInput });
 
     expect(result.kind).toBe("DECISION");
     expect(repository.runs[0]).toMatchObject({
-      status: "SUCCEEDED",
+      status: "REVIEW",
       provider: "fixture",
       schemaVersion: "classification.v1",
     });
+    expect(repository.decisions[0]).toMatchObject({
+      source: "MODEL",
+      reviewRequired: true,
+      validatedOutput: { review: { required: false } },
+    });
     expect(repository.decisions[0]?.evidenceSpans).toHaveLength(1);
-    expect(repository.activeDecisionId).toBe(
-      "00000000-0000-4000-8000-000000000002",
-    );
+    expect(repository.activeDecisionId).toBeNull();
     expect(classifier.requests[0]?.timeoutMs).toBe(
       CLASSIFIER_REQUEST_TIMEOUT_MS,
     );

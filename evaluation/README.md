@@ -25,6 +25,59 @@ The development/holdout split is immutable. `holdout-v1.json` selects 29 IDs by
 sorting all comment IDs on `SHA-256(gold-v1-holdout:<commentId>)` and taking the
 first 29. The holdout must not be used for prompt or provider tuning.
 
+`evaluation/cycles/v1.json` is the machine-readable terminal record for this
+cycle. It pins the source, both independent annotation passes, gold corpus,
+split, selected development report, and holdout result by SHA-256. Validate all
+cycle records without printing source text:
+
+```bash
+npm run evaluation:validate-cycles
+```
+
+## Starting a fresh evaluation cycle
+
+A replacement promotion gate must use a later, non-overlapping HN comment
+window. First capture at least 90 canonical evaluation documents in the same
+safe `{"documents":[...]}` source format used by the evaluator. Before either
+annotator labels a row or any prompt work starts, freeze the new split exactly
+once:
+
+```bash
+npm run evaluation:prepare-cycle -- \
+  --cycle v2 \
+  --source evaluation/source-v2.json
+```
+
+The command refuses duplicate IDs, fewer than 90 rows, overlap with any earlier
+cycle, an HN ID window that is not later than the preceding cycle, skipped
+cycle numbers, or an existing output. It writes `holdout-v2.json` and
+`cycles/v2.json` with exclusive-create semantics and a deterministic 30% split.
+The split fields and source digest must never change after that commit.
+
+Annotator A and B then label independently. Record both distinct file digests
+and the adjudicated gold digest in the cycle manifest. Only development rows
+may guide taxonomy, prompt, model, reasoning-effort, or price decisions. After
+one configuration passes every development gate, record that exact candidate
+and its passing report, set the cycle to `CANDIDATE_SELECTED`, and review the
+manifest change before opening the holdout. Do not lower a gate after candidate
+selection.
+
+Live holdout mode requires the matching cycle explicitly:
+
+```bash
+npm run eval -- \
+  --mode holdout \
+  --cycle v2 \
+  --provider openai \
+  --model <frozen-model> \
+  --reasoning-effort <frozen-effort>
+```
+
+The evaluator refuses a cycle whose holdout was already opened, lacks a frozen
+passing candidate, or differs in corpus, provider, model configuration, prompt
+version, or prompt hash. Cycle v1 is terminal `OPENED_FAILED`, so it cannot be
+run again even if a matching development report is present.
+
 Validate the corpus without printing source text:
 
 ```bash
@@ -89,4 +142,4 @@ comparison, and a conservative bound that prices every input token at the
 highest published input/cache-write rate. Use `--mode holdout` only after a
 development report passes every acceptance gate. Never use the holdout for
 prompt, model, or reasoning-effort tuning. The authorized Sol-low/prompt-v3
-holdout has already run and failed; do not rerun it.
+holdout has already run and failed; the cycle guard rejects any rerun.

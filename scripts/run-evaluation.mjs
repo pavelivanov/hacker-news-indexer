@@ -15,6 +15,7 @@ const run = (command, args) => {
 };
 
 run("npm", ["run", "evaluation:validate-corpus"]);
+run("npm", ["run", "evaluation:validate-cycles"]);
 run("npm", [
   "run",
   "eval",

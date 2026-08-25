@@ -65,6 +65,12 @@ Keep `CLASSIFIER_ENABLED=false`. The explicitly authorized Sol-low/prompt-v3
 holdout failed stable macro F1 and Expert-note precision. Sol is therefore not
 eligible for production, the worker adapter and publication remain disabled,
 and the opened holdout must not be used for tuning or rerun as a fresh gate.
+The application classification use case marks every model decision as
+review-required and cannot activate one at all; activation is reserved for the
+future authenticated human-review path.
+Evaluation cycle manifests pin source, annotation, split, candidate, and result
+hashes, and live holdout mode refuses an already-opened cycle before making a
+provider request.
 
 ## Measurements
 

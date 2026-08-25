@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { format } from "prettier";
@@ -15,6 +15,7 @@ import {
   buildClassifierInput,
   calculateClassificationMetrics,
   calculateExtractionMetrics,
+  assertEvaluationHoldoutMayOpen,
   CLASSIFICATION_PROMPT_VERSION,
   CLASSIFICATION_SYSTEM_PROMPT,
   ClassificationExecutionError,
@@ -22,6 +23,9 @@ import {
   EVALUATION_PREDICTIONS,
   EVALUATION_PRIMARY_CLASSES,
   matchEvaluationDiscoveries,
+  parseEvaluationCycleManifest,
+  validateEvaluationCycleSet,
+  type EvaluationCycleManifest,
   type EvaluationConfusionMatrix,
   type EvaluationPrediction,
   type EvaluationPrimaryClass,
@@ -455,6 +459,37 @@ if (provider !== "fixture" && mode !== "benchmark") {
       "Live shadow mode is disabled; use the gated holdout mode after development passes",
     );
   }
+  const cycleId = argument("--cycle");
+  if (cycleId === null) {
+    throw new Error("Holdout blocked: --cycle is required");
+  }
+  const cycleDirectory = path.join(root, "evaluation/cycles");
+  const cycleNames = (await readdir(cycleDirectory)).filter((name) =>
+    /^v[1-9][0-9]*\.json$/u.test(name),
+  );
+  const cycles: EvaluationCycleManifest[] = [];
+  for (const name of cycleNames) {
+    cycles.push(
+      parseEvaluationCycleManifest(
+        JSON.parse(
+          await readFile(path.join(cycleDirectory, name), "utf8"),
+        ) as unknown,
+      ),
+    );
+  }
+  validateEvaluationCycleSet(cycles);
+  const cycle = cycles.find((entry) => entry.cycleId === cycleId);
+  if (cycle === undefined) {
+    throw new Error(`Holdout blocked: unknown evaluation cycle ${cycleId}`);
+  }
+  assertEvaluationHoldoutMayOpen(cycle, {
+    corpusSha256: sha256(goldText),
+    provider,
+    modelId: classifier.modelId,
+    modelConfigId: classifier.modelConfigId,
+    promptVersion: CLASSIFICATION_PROMPT_VERSION,
+    promptHash: sha256(CLASSIFICATION_SYSTEM_PROMPT),
+  });
   const benchmarkPath = path.join(
     root,
     "evaluation/reports",
@@ -503,7 +538,6 @@ const evaluateRow = async (row: GoldRow): Promise<string | null> => {
     )({
       commentId: hnItemId(row.commentId),
       boundedInput: input,
-      activateDecision: false,
       persistRetryableFailure: provider !== "fixture",
     });
     if (result.kind === "REVIEW") {
@@ -610,7 +644,6 @@ for (const testCase of adversarialInputs) {
     )({
       commentId: hnItemId(testCase.id),
       boundedInput: testCase.input,
-      activateDecision: false,
       persistRetryableFailure: provider !== "fixture",
     });
     if (
