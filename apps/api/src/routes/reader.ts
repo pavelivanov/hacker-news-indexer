@@ -2,12 +2,14 @@ import {
   KnowledgeReaderError,
   type KnowledgeReader,
 } from "@hn-knowledge/application";
+import type { PipelineMetrics } from "@hn-knowledge/config";
 import type { Context, Hono } from "hono";
 
 import type { HealthBindings } from "./health.js";
 
 export interface RegisterReaderRoutesOptions {
   readonly reader: KnowledgeReader;
+  readonly metrics: PipelineMetrics;
 }
 
 const POSITIVE_HN_ID = /^[1-9][0-9]{0,15}$/u;
@@ -90,7 +92,33 @@ export const registerReaderRoutes = (
       if (kind !== "discovery" && kind !== "expert_note") {
         throw new TypeError("Feed kind is required");
       }
-      return options.reader.getFeed({ kind, cursor: params.get("cursor") });
+      const feed = await options.reader.getFeed({
+        kind,
+        cursor: params.get("cursor"),
+      });
+      const rootCounts = new Map<number, number>();
+      for (const item of feed.items) {
+        rootCounts.set(
+          item.resolved_root_id,
+          (rootCounts.get(item.resolved_root_id) ?? 0) + 1,
+        );
+      }
+      for (const cluster of feed.story_clusters) {
+        rootCounts.set(
+          cluster.resolved_root_id,
+          (rootCounts.get(cluster.resolved_root_id) ?? 0) +
+            cluster.items.length,
+        );
+      }
+      const total = [...rootCounts.values()].reduce(
+        (sum, value) => sum + value,
+        0,
+      );
+      options.metrics.set(
+        "feed_root_concentration",
+        total === 0 ? 0 : Math.max(...rootCounts.values()) / total,
+      );
+      return feed;
     }),
   );
 

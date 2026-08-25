@@ -8,7 +8,12 @@ import {
   createReviewService,
   HnParentChainResolver,
 } from "@hn-knowledge/application";
-import { createLogger, getConfig, redactConfig } from "@hn-knowledge/config";
+import {
+  createLogger,
+  getConfig,
+  pipelineMetrics,
+  redactConfig,
+} from "@hn-knowledge/config";
 import {
   createDatabase,
   createClassificationRepository,
@@ -91,7 +96,15 @@ const resolve = createResolveJobHandler(
   (runId) => {
     let resolver = resolvers.get(runId);
     if (resolver === undefined) {
-      resolver = new HnParentChainResolver(hnItems);
+      resolver = new HnParentChainResolver(hnItems, undefined, undefined, {
+        cacheHit: () => pipelineMetrics.increment("hn_cache_hit_total"),
+        resolved: ({ depth, displayedRootMismatch }) => {
+          pipelineMetrics.observe("hn_resolution_depth", depth);
+          if (displayedRootMismatch) {
+            pipelineMetrics.increment("displayed_root_mismatch_total");
+          }
+        },
+      });
       resolvers.set(runId, resolver);
     }
     return resolver;
@@ -101,6 +114,7 @@ const resolve = createResolveJobHandler(
   clock,
   hasher,
   queue,
+  pipelineMetrics,
 );
 const classify = createClassifyJobHandler(
   null,
@@ -108,6 +122,7 @@ const classify = createClassifyJobHandler(
   hasher,
   reviews,
   config.WORKER_MAX_ATTEMPTS,
+  pipelineMetrics,
 );
 const reconcileHn = createReconcileHnJobHandler(
   hnItems,
@@ -159,7 +174,19 @@ const processJob = async (job: PipelineJob): Promise<void> => {
   let errorCode: string | null = null;
   try {
     if (job.type === "INGEST_SELECTION_RANGE") {
-      await ingest(job);
+      const result = await ingest(job);
+      pipelineMetrics.increment(
+        "ingestion_messages_total",
+        result.occurrenceCount,
+      );
+      const minId = job.payload["minId"];
+      const maxId = job.payload["maxId"];
+      if (typeof minId === "number" && typeof maxId === "number") {
+        const gaps = Math.max(0, maxId - minId + 1 - result.occurrenceCount);
+        if (gaps > 0) {
+          pipelineMetrics.increment("ingestion_gap_total", gaps);
+        }
+      }
     } else if (job.type === "RESOLVE_HN_COMMENT") {
       await resolve(job);
     } else if (job.type === "CLASSIFY_COMMENT") {
@@ -171,6 +198,7 @@ const processJob = async (job: PipelineJob): Promise<void> => {
   } catch (error) {
     const failure = jobError(error);
     errorCode = failure.code;
+    pipelineMetrics.increment("pipeline_failure_total");
     if (failure.retryable && job.attempts < config.WORKER_MAX_ATTEMPTS) {
       finalState = "RETRYABLE";
       const retryAfterMs =

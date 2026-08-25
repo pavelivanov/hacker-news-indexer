@@ -15,6 +15,14 @@ export interface ResolveHnCommentInput {
   readonly displayedStoryId: HnItemId | null;
 }
 
+export interface HnResolutionTelemetry {
+  readonly cacheHit: () => void;
+  readonly resolved: (input: {
+    readonly depth: number;
+    readonly displayedRootMismatch: boolean;
+  }) => void;
+}
+
 export class HnParentChainResolver {
   private readonly cache = new Map<number, Promise<HnFetchResult>>();
 
@@ -22,6 +30,7 @@ export class HnParentChainResolver {
     private readonly items: HnItems,
     private readonly maxDepth = DEFAULT_MAX_DEPTH,
     private readonly resolverVersion = DEFAULT_RESOLVER_VERSION,
+    private readonly telemetry: HnResolutionTelemetry | null = null,
   ) {
     if (!Number.isSafeInteger(maxDepth) || maxDepth < 1) {
       throw new TypeError("maxDepth must be a positive safe integer");
@@ -32,6 +41,7 @@ export class HnParentChainResolver {
     const key = Number(id);
     const existing = this.cache.get(key);
     if (existing !== undefined) {
+      this.telemetry?.cacheHit();
       return existing;
     }
     const pending = this.items.get(id);
@@ -98,7 +108,7 @@ export class HnParentChainResolver {
       );
     }
 
-    return {
+    const result = {
       selectedItem: selected,
       rootItem: current,
       fetchedItems,
@@ -110,5 +120,12 @@ export class HnParentChainResolver {
         resolverVersion: this.resolverVersion,
       },
     };
+    this.telemetry?.resolved({
+      depth: ancestorIds.length,
+      displayedRootMismatch:
+        input.displayedStoryId !== null &&
+        input.displayedStoryId !== current.id,
+    });
+    return result;
   }
 }
