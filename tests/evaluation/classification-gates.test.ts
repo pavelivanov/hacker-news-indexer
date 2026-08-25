@@ -32,6 +32,8 @@ interface EvaluationReport {
   readonly schemaValidRate: number;
   readonly applicationValidRate: number;
   readonly latencyMs: { readonly p95: number };
+  readonly configuration: { readonly reasoningEffort: string | null };
+  readonly failures: Readonly<Record<string, number>>;
   readonly cases: readonly {
     readonly commentId: number;
     readonly expected: string;
@@ -174,6 +176,33 @@ describe("classification evaluation gates", () => {
     expect(report.stableGold.extraction.urlGroundingPrecision).toBeLessThan(1);
   });
 
+  it("records the corrected Luna rejection without opening holdout", async () => {
+    const report = await load("benchmark-openai-gpt-5-6-luna-low-v2.json");
+
+    expect(report).toMatchObject({
+      provider: "openai",
+      modelId: "gpt-5.6-luna",
+      mode: "benchmark",
+      split: "development",
+      rows: 69,
+      terminalRuns: 69,
+      activatedDecisions: 0,
+      configuration: { reasoningEffort: "low" },
+      failures: { CLASSIFIER_TIMEOUT: 2 },
+      schemaValidRate: 1,
+      passed: false,
+    });
+    expect(report.cases).toHaveLength(69);
+    expect(report.stableGold.macroF1).toBeGreaterThanOrEqual(0.85);
+    expect(report.stableGold.classMetrics.DISCOVERY.precision).toBeLessThan(
+      0.93,
+    );
+    expect(report.stableGold.classMetrics.EXPERT_NOTE.precision).toBeLessThan(
+      0.88,
+    );
+    expect(report.stableGold.extraction.urlGroundingPrecision).toBeLessThan(1);
+  });
+
   it("keeps live reports free of source/provider bodies and does not check in a holdout report", async () => {
     const names = [
       "benchmark-openai-gpt-5-6-luna-low-v1.json",
@@ -182,6 +211,7 @@ describe("classification evaluation gates", () => {
       "benchmark-openai-gpt-5-6-terra-medium-v1.json",
       "benchmark-openai-gpt-5-6-sol-low-v1.json",
       "benchmark-openai-gpt-5-6-sol-medium-v1.json",
+      "benchmark-openai-gpt-5-6-luna-low-v2.json",
       "benchmark-openai-gpt-5-6-sol-low-v2.json",
     ];
     for (const name of names) {
@@ -202,6 +232,8 @@ describe("classification evaluation gates", () => {
       "holdout-openai-gpt-5-6-sol-medium-v1.json",
       "holdout-openai-gpt-5-6-sol-low-v2.json",
       "holdout-openai-gpt-5-6-sol-medium-v2.json",
+      "holdout-openai-gpt-5-6-luna-low-v2.json",
+      "holdout-openai-gpt-5-6-luna-medium-v2.json",
     ]) {
       await expect(
         readFile(`evaluation/reports/${name}`, "utf8"),
