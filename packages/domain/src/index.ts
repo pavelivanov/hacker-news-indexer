@@ -5,3 +5,4 @@ export * from "./ingestion.js";
 export * from "./jobs.js";
 export * from "./multipart.js";
 export * from "./review.js";
+export * from "./subjects.js";
