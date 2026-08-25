@@ -140,10 +140,8 @@ const documents = selected.map((resolution) => {
   };
 });
 
-if (documents.length !== 98) {
-  throw new Error(
-    `Expected 98 selected comments, received ${documents.length}`,
-  );
+if (documents.length === 0) {
+  throw new Error("Evaluation source must contain at least one comment");
 }
 
 await writeFile(

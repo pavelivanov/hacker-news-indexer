@@ -61,8 +61,10 @@ architecture, not weaker thresholds or more attempts against the opened split.
 
 Capture a new bounded selection window after the v1 maximum comment ID. Build
 canonical comment/root packets with the existing provenance and URL rules. Run
-`evaluation:prepare-cycle` before labeling; commit the source digest, immutable
-split, and holdout ID file.
+`evaluation:capture-source`, then the corpus-size-neutral
+`evaluation:build-source`, then `evaluation:prepare-cycle` before labeling.
+Commit the source digest, immutable split, and holdout ID file. Every capture
+uses a new directory and refuses overwrite.
 
 **Verify**: `npm run evaluation:validate-cycles` reports v1 terminal and v2
 `SPLIT_FROZEN`; overlap is zero; v2 has at least 90 rows; source text and secrets

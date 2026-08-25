@@ -37,10 +37,28 @@ npm run evaluation:validate-cycles
 ## Starting a fresh evaluation cycle
 
 A replacement promotion gate must use a later, non-overlapping HN comment
-window. First capture at least 90 canonical evaluation documents in the same
-safe `{"documents":[...]}` source format used by the evaluator. Before either
-annotator labels a row or any prompt work starts, freeze the new split exactly
-once:
+window. Capture 90 to 150 new public `@hn_best_comments` messages into a new
+directory; the command refuses to overwrite any capture file:
+
+```bash
+npm run evaluation:capture-source -- \
+  --min-id FIRST_MESSAGE_ID \
+  --max-id LAST_MESSAGE_ID \
+  --output-dir evaluation/captures/v2
+```
+
+Build the canonical comment/root packets from that capture. This builder is
+corpus-size-neutral; the cycle preparation gate, not the builder, enforces at
+least 90 unique canonical comments:
+
+```bash
+npm run evaluation:build-source -- \
+  evaluation/captures/v2/hn-items.json \
+  evaluation/source-v2.json
+```
+
+Before either annotator labels a row or any prompt work starts, freeze the new
+split exactly once:
 
 ```bash
 npm run evaluation:prepare-cycle -- \
