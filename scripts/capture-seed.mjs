@@ -1,14 +1,46 @@
 import { createHash } from "node:crypto";
-import { mkdir, writeFile } from "node:fs/promises";
+import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { Element, Text } from "domhandler";
 import { parseDocument } from "htmlparser2";
 
+const argument = (name) => {
+  const index = process.argv.lastIndexOf(name);
+  return index === -1 ? undefined : process.argv[index + 1];
+};
+const integerArgument = (name, fallback) => {
+  const value = Number(argument(name) ?? fallback);
+  if (!Number.isSafeInteger(value) || value <= 0) {
+    throw new TypeError(`${name} must be a positive integer`);
+  }
+  return value;
+};
+
 const sourceKey = "hn_best_comments";
-const minId = 32_847;
-const maxId = 32_946;
-const outputDirectory = path.resolve("tests/fixtures/seed");
+const minId = integerArgument("--min-id", 32_847);
+const maxId = integerArgument("--max-id", 32_946);
+const messageCount = maxId - minId + 1;
+if (messageCount < 90 || messageCount > 150) {
+  throw new TypeError("Capture window must contain 90 to 150 messages");
+}
+const outputDirectory = path.resolve(
+  argument("--output-dir") ?? "tests/fixtures/seed",
+);
+await mkdir(outputDirectory, { recursive: true });
+const outputPaths = [
+  path.join(outputDirectory, `window-${minId}-${maxId}.json`),
+  path.join(outputDirectory, "hn-items.json"),
+  path.join(outputDirectory, "manifest.json"),
+];
+for (const outputPath of outputPaths) {
+  try {
+    await access(outputPath);
+  } catch {
+    continue;
+  }
+  throw new Error(`Refusing to overwrite existing capture file: ${outputPath}`);
+}
 const retryCount = 3;
 const capturedAt = new Date().toISOString();
 
@@ -298,14 +330,10 @@ const manifest = {
   counts,
 };
 
-await mkdir(outputDirectory, { recursive: true });
 await Promise.all([
-  writeFile(
-    path.join(outputDirectory, "window-32847-32946.json"),
-    telegramJson,
-  ),
-  writeFile(path.join(outputDirectory, "hn-items.json"), hnJson),
-  writeFile(path.join(outputDirectory, "manifest.json"), serialize(manifest)),
+  writeFile(outputPaths[0], telegramJson, { flag: "wx" }),
+  writeFile(outputPaths[1], hnJson, { flag: "wx" }),
+  writeFile(outputPaths[2], serialize(manifest), { flag: "wx" }),
 ]);
 
 console.log(JSON.stringify(manifest, null, 2));
