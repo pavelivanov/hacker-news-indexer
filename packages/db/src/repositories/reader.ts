@@ -301,6 +301,7 @@ export const createKnowledgeReaderRepository = (
           ),
         ],
         ...selected.publication,
+        publicationRevision: discovery.publicationRevision,
         updatedAt:
           discovery.updatedAt > selected.publication.updatedAt
             ? discovery.updatedAt
@@ -358,6 +359,7 @@ export const createKnowledgeReaderRepository = (
             : hnItemId(Number(selected.resolutionPath.displayedStoryId)),
         sourceOccurrenceIds: occurrences.get(selected.id) ?? [],
         ...published,
+        publicationRevision: note.publicationRevision,
         updatedAt:
           note.updatedAt > published.updatedAt
             ? note.updatedAt

@@ -13,6 +13,7 @@ import {
   createDatabase,
   createClassificationRepository,
   createHnResolutionRepository,
+  createHnReconciliationRepository,
   createIngestionRunRepository,
   createJobQueue,
   createOccurrenceRepository,
@@ -25,6 +26,7 @@ import { jobError, WorkerJobError } from "./jobs/errors.js";
 import { createClassifyJobHandler } from "./jobs/classify.js";
 import { createIngestJobHandler } from "./jobs/ingest.js";
 import { createResolveJobHandler } from "./jobs/resolve.js";
+import { createReconcileHnJobHandler } from "./jobs/reconcile.js";
 
 const config = getConfig();
 const logger = createLogger(config, { component: "worker", role: "worker" });
@@ -37,6 +39,7 @@ const database = createDatabase({ connectionString: config.DATABASE_URL });
 const runs = createIngestionRunRepository(database.client);
 const occurrences = createOccurrenceRepository(database.client);
 const resolutions = createHnResolutionRepository(database.client);
+const reconciliations = createHnReconciliationRepository(database.client);
 const classifications = createClassificationRepository(database.client);
 const reviews = createReviewService(
   createReviewRepository(database.client),
@@ -106,6 +109,11 @@ const classify = createClassifyJobHandler(
   reviews,
   config.WORKER_MAX_ATTEMPTS,
 );
+const reconcileHn = createReconcileHnJobHandler(
+  hnItems,
+  reconciliations,
+  hasher,
+);
 
 const workerId = `worker-${randomUUID()}`;
 let stopping = false;
@@ -154,8 +162,10 @@ const processJob = async (job: PipelineJob): Promise<void> => {
       await ingest(job);
     } else if (job.type === "RESOLVE_HN_COMMENT") {
       await resolve(job);
-    } else {
+    } else if (job.type === "CLASSIFY_COMMENT") {
       await classify(job);
+    } else {
+      await reconcileHn(job);
     }
     await queue.complete(job.id, workerId);
   } catch (error) {

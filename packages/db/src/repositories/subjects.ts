@@ -567,6 +567,13 @@ const ensureDiscovery = async (
       },
     },
   });
+  await transaction.discovery.updateMany({
+    where: { id: stored.id, status: "SUPERSEDED" },
+    data: {
+      status: "REVIEW_PENDING",
+      publicationRevision: { increment: 1 },
+    },
+  });
 };
 
 const ensureExpertNote = async (

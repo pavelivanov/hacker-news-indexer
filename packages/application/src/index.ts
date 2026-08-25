@@ -37,3 +37,4 @@ export * from "./review/review-service.js";
 export * from "./subjects/materialize-classification.js";
 export * from "./reader/knowledge-reader.js";
 export * from "./reader/safe-html.js";
+export * from "./reconcile/reconcile-hn-item.js";

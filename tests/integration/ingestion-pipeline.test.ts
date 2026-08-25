@@ -47,9 +47,13 @@ const queue = createJobQueue(database.client);
 const cleanDatabase = async (): Promise<void> => {
   await database.client.multipartPart.deleteMany();
   await database.client.multipartGroup.deleteMany();
+  await database.client.hnReconciliationEvent.deleteMany();
+  await database.client.resolutionPathRevision.deleteMany();
+  await database.client.selectedCommentRevision.deleteMany();
   await database.client.resolutionPath.deleteMany();
   await database.client.selectedComment.deleteMany();
   await database.client.urlCandidate.deleteMany();
+  await database.client.hnItemRevision.deleteMany();
   await database.client.hnItem.deleteMany();
   await database.client.hnReference.deleteMany();
   await database.client.telegramMessage.deleteMany();

@@ -16,35 +16,58 @@ export const createHnResolutionRepository = (
   async saveItem(item: HnItem): Promise<void> {
     const retainedHtml =
       item.availability === "AVAILABLE" ? item.textHtml : null;
-    await client.hnItem.upsert({
-      where: { id: BigInt(item.id) },
-      create: {
-        id: BigInt(item.id),
-        type: item.type,
-        parentId: item.parentId === null ? null : BigInt(item.parentId),
-        author: item.author,
-        time: item.time,
-        title: item.title,
-        textHtml: retainedHtml,
-        textPlain: null,
-        url: item.url,
-        availability: item.availability,
-        fetchedAt: item.fetchedAt,
-        responseHash: item.responseHash,
-      },
-      update: {
-        type: item.type,
-        parentId: item.parentId === null ? null : BigInt(item.parentId),
-        author: item.author,
-        time: item.time,
-        title: item.title,
-        textHtml: retainedHtml,
-        ...(item.availability === "AVAILABLE" ? {} : { textPlain: null }),
-        url: item.url,
-        availability: item.availability,
-        fetchedAt: item.fetchedAt,
-        responseHash: item.responseHash,
-      },
+    await client.$transaction(async (transaction) => {
+      await transaction.hnItem.upsert({
+        where: { id: BigInt(item.id) },
+        create: {
+          id: BigInt(item.id),
+          type: item.type,
+          parentId: item.parentId === null ? null : BigInt(item.parentId),
+          author: item.author,
+          time: item.time,
+          title: item.title,
+          textHtml: retainedHtml,
+          textPlain: null,
+          url: item.url,
+          availability: item.availability,
+          fetchedAt: item.fetchedAt,
+          responseHash: item.responseHash,
+        },
+        update: {
+          type: item.type,
+          parentId: item.parentId === null ? null : BigInt(item.parentId),
+          author: item.author,
+          time: item.time,
+          title: item.title,
+          textHtml: retainedHtml,
+          ...(item.availability === "AVAILABLE" ? {} : { textPlain: null }),
+          url: item.url,
+          availability: item.availability,
+          fetchedAt: item.fetchedAt,
+          responseHash: item.responseHash,
+        },
+      });
+      await transaction.hnItemRevision.upsert({
+        where: {
+          hnItemId_responseHash: {
+            hnItemId: BigInt(item.id),
+            responseHash: item.responseHash,
+          },
+        },
+        create: {
+          hnItemId: BigInt(item.id),
+          type: item.type,
+          parentId: item.parentId === null ? null : BigInt(item.parentId),
+          title: item.title,
+          textHtml: retainedHtml,
+          textPlain: null,
+          url: item.url,
+          availability: item.availability,
+          responseHash: item.responseHash,
+          observedAt: item.fetchedAt,
+        },
+        update: { observedAt: item.fetchedAt },
+      });
     });
   },
 
@@ -54,6 +77,10 @@ export const createHnResolutionRepository = (
     urlCandidates: readonly UrlCandidate[],
   ): Promise<void> {
     await client.$transaction(async (transaction) => {
+      const previous = await transaction.selectedComment.findUnique({
+        where: { id: BigInt(selected.id) },
+        include: { resolutionPath: true },
+      });
       await transaction.selectedComment.upsert({
         where: { id: BigInt(selected.id) },
         create: {
@@ -98,6 +125,74 @@ export const createHnResolutionRepository = (
           resolvedAt: selected.lastSeenAt,
         },
       });
+      const existingContentRevision =
+        await transaction.selectedCommentRevision.findUnique({
+          where: {
+            selectedCommentId_contentHash: {
+              selectedCommentId: BigInt(selected.id),
+              contentHash: selected.contentHash,
+            },
+          },
+        });
+      if (existingContentRevision === null) {
+        const aggregate = await transaction.selectedCommentRevision.aggregate({
+          where: { selectedCommentId: BigInt(selected.id) },
+          _max: { revision: true },
+        });
+        await transaction.selectedCommentRevision.updateMany({
+          where: {
+            selectedCommentId: BigInt(selected.id),
+            supersededAt: null,
+          },
+          data: { supersededAt: selected.lastSeenAt },
+        });
+        await transaction.selectedCommentRevision.create({
+          data: {
+            selectedCommentId: BigInt(selected.id),
+            revision: (aggregate._max.revision ?? 0) + 1,
+            rootId: BigInt(selected.rootId),
+            canonicalHtml: selected.canonicalHtml,
+            canonicalText: selected.canonicalText,
+            contentHash: selected.contentHash,
+            availability: selected.availability,
+            createdAt: selected.firstSeenAt,
+          },
+        });
+      }
+      const previousPath = previous?.resolutionPath;
+      const nextAncestors = path.ancestorIds.map(BigInt);
+      const pathChanged =
+        previousPath === null ||
+        previousPath === undefined ||
+        previousPath.resolvedRootId !== BigInt(path.resolvedRootId) ||
+        previousPath.displayedStoryId !==
+          (path.displayedStoryId === null
+            ? null
+            : BigInt(path.displayedStoryId)) ||
+        previousPath.ancestorIds.length !== nextAncestors.length ||
+        previousPath.ancestorIds.some(
+          (value, index) => value !== nextAncestors[index],
+        );
+      if (pathChanged) {
+        const aggregate = await transaction.resolutionPathRevision.aggregate({
+          where: { selectedCommentId: BigInt(selected.id) },
+          _max: { revision: true },
+        });
+        await transaction.resolutionPathRevision.create({
+          data: {
+            selectedCommentId: BigInt(selected.id),
+            revision: (aggregate._max.revision ?? 0) + 1,
+            ancestorIds: nextAncestors,
+            displayedStoryId:
+              path.displayedStoryId === null
+                ? null
+                : BigInt(path.displayedStoryId),
+            resolvedRootId: BigInt(path.resolvedRootId),
+            resolverVersion: path.resolverVersion,
+            resolvedAt: selected.lastSeenAt,
+          },
+        });
+      }
       await transaction.hnItem.update({
         where: { id: BigInt(selected.id) },
         data: {
