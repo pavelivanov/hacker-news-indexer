@@ -43,6 +43,7 @@
     "seed:capture": "node scripts/capture-seed.mjs",
     "seed:replay": "tsx scripts/replay-seed.mts",
     "seed:materialize-shadow": "npm run evaluation:build-source && tsx scripts/materialize-seed-shadow.mts",
+    "reconcile:schedule": "tsx scripts/schedule-reconciliation.mts",
     "db:generate": "prisma generate --config packages/db/prisma.config.ts",
     "db:migrate:dev": "prisma migrate dev --config packages/db/prisma.config.ts",
     "db:migrate:deploy": "prisma migrate deploy --config packages/db/prisma.config.ts",

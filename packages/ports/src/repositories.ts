@@ -461,3 +461,55 @@ export interface HnResolutionRepository {
     snapshotHash: string | null,
   ): Promise<void>;
 }
+
+export type HnReconciliationOutcome =
+  "UNCHANGED" | "CONTENT_CHANGED" | "ROOT_CHANGED" | "TOMBSTONED";
+
+export interface HnReconciliationTarget {
+  readonly selectedCommentId: HnItemId;
+  readonly displayedStoryId: HnItemId | null;
+  readonly resolvedRootId: HnItemId;
+  readonly contentHash: string;
+  readonly responseHash: string;
+}
+
+export interface ApplyHnReconciliationInput {
+  readonly selected: SelectedComment;
+  readonly path: ResolutionPath;
+  readonly fetchedItems: readonly HnItem[];
+  readonly urlCandidates: readonly UrlCandidate[];
+  readonly idempotencyKey: string;
+}
+
+export interface ApplyHnTombstoneInput {
+  readonly selectedCommentId: HnItemId;
+  readonly availability: "DELETED" | "DEAD" | "MISSING";
+  readonly responseHash: string;
+  readonly fetchedAt: Date;
+  readonly item: HnItem | null;
+  readonly idempotencyKey: string;
+}
+
+export interface HnReconciliationResult {
+  readonly outcome: HnReconciliationOutcome;
+  readonly changed: boolean;
+  readonly classificationEnqueued: boolean;
+  readonly reviewOpened: boolean;
+  readonly replayed: boolean;
+}
+
+export interface ReconciliationScheduleResult {
+  readonly lockAcquired: boolean;
+  readonly scheduled: number;
+}
+
+export interface HnReconciliationRepository {
+  loadTarget(id: HnItemId): Promise<HnReconciliationTarget | null>;
+  apply(input: ApplyHnReconciliationInput): Promise<HnReconciliationResult>;
+  tombstone(input: ApplyHnTombstoneInput): Promise<HnReconciliationResult>;
+  schedule(
+    scheduleKey: string,
+    availableAt: Date,
+    limit: number,
+  ): Promise<ReconciliationScheduleResult>;
+}

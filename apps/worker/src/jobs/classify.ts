@@ -27,9 +27,6 @@ export const createClassifyJobHandler = (
       ? null
       : createClassifyComment(classifier, repository, hasher, reviewQueue);
   return async (job): Promise<void> => {
-    if (job.ingestionRunId === null) {
-      throw new WorkerJobError("CLASSIFY_JOB_WITHOUT_RUN", false);
-    }
     if (classify === null) {
       throw new WorkerJobError("CLASSIFIER_DISABLED", false);
     }
