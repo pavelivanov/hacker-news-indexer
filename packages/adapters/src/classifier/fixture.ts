@@ -43,6 +43,8 @@ export class FixtureClassifier implements ClassifierPort {
       modelConfigId: this.modelConfigId,
       latencyMs: this.latencyMs,
       inputTokens: null,
+      cachedInputTokens: null,
+      cacheWriteInputTokens: null,
       outputTokens: null,
     });
   }

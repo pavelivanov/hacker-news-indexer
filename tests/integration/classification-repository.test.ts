@@ -76,6 +76,8 @@ const successfulRun = (inputHash = hash("input")) => ({
   providerOutput: { schema_version: "classification.v1" },
   latencyMs: 3,
   inputTokens: 120,
+  cachedInputTokens: 80,
+  cacheWriteInputTokens: 20,
   outputTokens: 42,
   status: "SUCCEEDED" as const,
   errorCode: null,
@@ -93,6 +95,12 @@ describe("classification repository", () => {
     expect(new Set([first.created, duplicate.created])).toEqual(
       new Set([true, false]),
     );
+    expect(first.run).toMatchObject({
+      inputTokens: 120,
+      cachedInputTokens: 80,
+      cacheWriteInputTokens: 20,
+      outputTokens: 42,
+    });
     expect(changed.run.id).not.toBe(first.run.id);
     expect(await database.client.classificationRun.count()).toBe(2);
   });

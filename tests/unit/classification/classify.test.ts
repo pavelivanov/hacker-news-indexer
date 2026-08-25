@@ -148,6 +148,8 @@ class SequenceClassifier implements ClassifierPort {
       modelConfigId: this.modelConfigId,
       latencyMs: 5,
       inputTokens: 10,
+      cachedInputTokens: 4,
+      cacheWriteInputTokens: 1,
       outputTokens: 20,
     });
   }
@@ -225,6 +227,8 @@ describe("classify comment", () => {
       errorCode: "JSON_INVALID",
       latencyMs: 10,
       inputTokens: 20,
+      cachedInputTokens: 8,
+      cacheWriteInputTokens: 2,
       outputTokens: 40,
     });
     expect(repository.decisions).toHaveLength(0);

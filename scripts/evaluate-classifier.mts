@@ -717,19 +717,76 @@ const percentile = (fraction: number): number =>
     Math.min(latencies.length - 1, Math.floor(latencies.length * fraction))
   ] ?? 0;
 const macroF1 = classificationMetrics.macroF1;
-const totalInputTokens = repository.runInputs.reduce(
-  (total, run) => total + (run.inputTokens ?? 0),
-  0,
-);
-const totalOutputTokens = repository.runInputs.reduce(
-  (total, run) => total + (run.outputTokens ?? 0),
-  0,
-);
+interface UsageTotals {
+  readonly runs: number;
+  readonly inputTokens: number;
+  readonly cachedInputTokens: number;
+  readonly cacheWriteInputTokens: number;
+  readonly uncachedInputTokens: number | null;
+  readonly outputTokens: number;
+  readonly inputTokenBreakdownComplete: boolean;
+  readonly outputTokenUsageComplete: boolean;
+  readonly tokenUsageComplete: boolean;
+}
+
+const aggregateUsage = (
+  runs: readonly RecordClassificationRunInput[],
+): UsageTotals => {
+  const inputTokens = runs.reduce(
+    (total, run) => total + (run.inputTokens ?? 0),
+    0,
+  );
+  const cachedInputTokens = runs.reduce(
+    (total, run) => total + (run.cachedInputTokens ?? 0),
+    0,
+  );
+  const cacheWriteInputTokens = runs.reduce(
+    (total, run) => total + (run.cacheWriteInputTokens ?? 0),
+    0,
+  );
+  const inputTokenBreakdownComplete = runs.every(
+    (run) =>
+      run.inputTokens !== null &&
+      run.cachedInputTokens !== null &&
+      run.cacheWriteInputTokens !== null &&
+      run.cachedInputTokens + run.cacheWriteInputTokens <= run.inputTokens,
+  );
+  const outputTokenUsageComplete = runs.every(
+    (run) => run.outputTokens !== null,
+  );
+  const tokenUsageComplete =
+    inputTokenBreakdownComplete && outputTokenUsageComplete;
+  return {
+    runs: runs.length,
+    inputTokens,
+    cachedInputTokens,
+    cacheWriteInputTokens,
+    uncachedInputTokens: inputTokenBreakdownComplete
+      ? inputTokens - cachedInputTokens - cacheWriteInputTokens
+      : null,
+    outputTokens: runs.reduce(
+      (total, run) => total + (run.outputTokens ?? 0),
+      0,
+    ),
+    inputTokenBreakdownComplete,
+    outputTokenUsageComplete,
+    tokenUsageComplete,
+  };
+};
+
+const mainUsage = aggregateUsage(repository.runInputs);
+const adversarialUsage = aggregateUsage(adversarialRepository.runInputs);
+const totalUsage = aggregateUsage([
+  ...repository.runInputs,
+  ...adversarialRepository.runInputs,
+]);
 const openAiPricing: Readonly<
   Record<
     string,
     {
       readonly inputUsdPerMillionTokens: number;
+      readonly cachedInputUsdPerMillionTokens: number;
+      readonly cacheWriteInputUsdPerMillionTokens: number;
       readonly outputUsdPerMillionTokens: number;
       readonly observedAt: string;
       readonly source: string;
@@ -738,24 +795,32 @@ const openAiPricing: Readonly<
 > = {
   "gpt-5.6-luna": {
     inputUsdPerMillionTokens: 0.2,
+    cachedInputUsdPerMillionTokens: 0.02,
+    cacheWriteInputUsdPerMillionTokens: 0.25,
     outputUsdPerMillionTokens: 1.2,
     observedAt: "2026-08-24",
     source: "https://developers.openai.com/api/docs/models/gpt-5.6-luna",
   },
   "gpt-5.6-terra": {
     inputUsdPerMillionTokens: 2,
+    cachedInputUsdPerMillionTokens: 0.2,
+    cacheWriteInputUsdPerMillionTokens: 2.5,
     outputUsdPerMillionTokens: 12,
-    observedAt: "2026-08-24",
+    observedAt: "2026-08-25",
     source: "https://developers.openai.com/api/docs/models/gpt-5.6-terra",
   },
   "gpt-5.6-sol": {
     inputUsdPerMillionTokens: 4,
+    cachedInputUsdPerMillionTokens: 0.4,
+    cacheWriteInputUsdPerMillionTokens: 5,
     outputUsdPerMillionTokens: 20,
-    observedAt: "2026-08-24",
+    observedAt: "2026-08-25",
     source: "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
   },
   "gpt-5.4-mini-2026-03-17": {
     inputUsdPerMillionTokens: 0.75,
+    cachedInputUsdPerMillionTokens: 0.075,
+    cacheWriteInputUsdPerMillionTokens: 0.9375,
     outputUsdPerMillionTokens: 4.5,
     observedAt: "2026-08-24",
     source: "https://developers.openai.com/api/docs/models/gpt-5.4-mini",
@@ -763,11 +828,33 @@ const openAiPricing: Readonly<
 };
 const pricing =
   provider === "openai" ? (openAiPricing[classifier.modelId] ?? null) : null;
-const estimatedUpperBoundUsd =
-  pricing === null
+const estimatedAllInputUncachedUsd =
+  pricing === null || !totalUsage.tokenUsageComplete
     ? null
-    : (totalInputTokens * pricing.inputUsdPerMillionTokens +
-        totalOutputTokens * pricing.outputUsdPerMillionTokens) /
+    : (totalUsage.inputTokens * pricing.inputUsdPerMillionTokens +
+        totalUsage.outputTokens * pricing.outputUsdPerMillionTokens) /
+      1_000_000;
+const estimatedUpperBoundUsd =
+  pricing === null || !totalUsage.tokenUsageComplete
+    ? null
+    : (totalUsage.inputTokens *
+        Math.max(
+          pricing.inputUsdPerMillionTokens,
+          pricing.cachedInputUsdPerMillionTokens,
+          pricing.cacheWriteInputUsdPerMillionTokens,
+        ) +
+        totalUsage.outputTokens * pricing.outputUsdPerMillionTokens) /
+      1_000_000;
+const estimatedUsd =
+  pricing === null ||
+  !totalUsage.tokenUsageComplete ||
+  totalUsage.uncachedInputTokens === null
+    ? null
+    : (totalUsage.uncachedInputTokens * pricing.inputUsdPerMillionTokens +
+        totalUsage.cachedInputTokens * pricing.cachedInputUsdPerMillionTokens +
+        totalUsage.cacheWriteInputTokens *
+          pricing.cacheWriteInputUsdPerMillionTokens +
+        totalUsage.outputTokens * pricing.outputUsdPerMillionTokens) /
       1_000_000;
 const failureTotal = (codes: readonly string[]): number =>
   codes.reduce((total, code) => total + (failureCounts.get(code) ?? 0), 0);
@@ -990,11 +1077,16 @@ const report = {
   reviewRouting,
   latencyMs: { p50: percentile(0.5), p95: latencyP95 },
   usage: {
-    inputTokens: totalInputTokens,
-    outputTokens: totalOutputTokens,
+    accountingVersion: 2,
+    ...totalUsage,
+    main: mainUsage,
+    adversarial: adversarialUsage,
     pricing,
+    estimatedUsd,
+    estimatedAllInputUncachedUsd,
     estimatedUpperBoundUsd,
-    estimateAssumesAllInputTokensUncached: true,
+    estimatedUpperBoundAssumesHighestPublishedInputRate: true,
+    estimateIncludesAdversarialCalls: true,
   },
   failures: Object.fromEntries(
     [...failureCounts.entries()].sort(([left], [right]) =>
@@ -1054,6 +1146,7 @@ console.log(
       inventedUrlCount: report.inventedUrlCount,
       adversarialActions:
         report.adversarial.toolActions + report.adversarial.networkActions,
+      estimatedUsd: report.usage.estimatedUsd,
       estimatedUpperBoundUsd: report.usage.estimatedUpperBoundUsd,
       passed: report.passed,
     },

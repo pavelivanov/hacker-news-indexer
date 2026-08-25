@@ -34,6 +34,22 @@ interface EvaluationReport {
   readonly schemaValidRate: number;
   readonly applicationValidRate: number;
   readonly latencyMs: { readonly p95: number };
+  readonly usage: {
+    readonly accountingVersion?: number;
+    readonly runs?: number;
+    readonly inputTokens: number;
+    readonly cachedInputTokens?: number;
+    readonly cacheWriteInputTokens?: number;
+    readonly uncachedInputTokens?: number | null;
+    readonly outputTokens: number;
+    readonly inputTokenBreakdownComplete?: boolean;
+    readonly outputTokenUsageComplete?: boolean;
+    readonly tokenUsageComplete?: boolean;
+    readonly estimatedUsd?: number | null;
+    readonly estimatedAllInputUncachedUsd?: number | null;
+    readonly estimatedUpperBoundUsd: number | null;
+    readonly estimateIncludesAdversarialCalls?: boolean;
+  };
   readonly configuration: { readonly reasoningEffort: string | null };
   readonly failures: Readonly<Record<string, number>>;
   readonly acceptance: Readonly<Record<string, boolean>>;
@@ -266,6 +282,50 @@ describe("classification evaluation gates", () => {
     expect(Object.values(report.acceptance).every(Boolean)).toBe(true);
   });
 
+  it("records Terra v3 cost accurately and rejects it on Discovery precision", async () => {
+    const report = await load("benchmark-openai-gpt-5-6-terra-low-v3.json");
+
+    expect(report).toMatchObject({
+      reportVersion: 3,
+      provider: "openai",
+      modelId: "gpt-5.6-terra",
+      promptVersion: "classification-prompt.v3",
+      mode: "benchmark",
+      split: "development",
+      rows: 69,
+      terminalRuns: 69,
+      activatedDecisions: 0,
+      configuration: { reasoningEffort: "low" },
+      failures: {},
+      stableGold: { rows: 65 },
+      usage: {
+        accountingVersion: 2,
+        runs: 73,
+        inputTokenBreakdownComplete: true,
+        outputTokenUsageComplete: true,
+        tokenUsageComplete: true,
+        estimateIncludesAdversarialCalls: true,
+      },
+      passed: false,
+    });
+    expect(report.stableGold.macroF1).toBeGreaterThanOrEqual(0.85);
+    expect(report.stableGold.classMetrics.DISCOVERY.precision).toBeLessThan(
+      0.93,
+    );
+    expect(
+      report.stableGold.classMetrics.EXPERT_NOTE.precision,
+    ).toBeGreaterThanOrEqual(0.88);
+    expect(report.stableGold.extraction.urlGroundingPrecision).toBe(1);
+    expect(report.usage.cachedInputTokens).toBeGreaterThan(0);
+    expect(report.usage.cacheWriteInputTokens).toBeGreaterThan(0);
+    expect(report.usage.estimatedUsd).toBeLessThan(
+      report.usage.estimatedAllInputUncachedUsd ?? 0,
+    );
+    expect(report.usage.estimatedAllInputUncachedUsd).toBeLessThan(
+      report.usage.estimatedUpperBoundUsd ?? 0,
+    );
+  });
+
   it("keeps live reports free of source/provider bodies and does not check in a holdout report", async () => {
     const names = [
       "benchmark-openai-gpt-5-6-luna-low-v1.json",
@@ -277,6 +337,7 @@ describe("classification evaluation gates", () => {
       "benchmark-openai-gpt-5-6-luna-low-v2.json",
       "benchmark-openai-gpt-5-6-sol-low-v2.json",
       "benchmark-openai-gpt-5-6-sol-low-v3.json",
+      "benchmark-openai-gpt-5-6-terra-low-v3.json",
     ];
     for (const name of names) {
       const text = await readFile(`evaluation/reports/${name}`, "utf8");
@@ -302,6 +363,8 @@ describe("classification evaluation gates", () => {
       "holdout-openai-gpt-5-6-sol-medium-v3.json",
       "holdout-openai-gpt-5-6-luna-low-v3.json",
       "holdout-openai-gpt-5-6-luna-medium-v3.json",
+      "holdout-openai-gpt-5-6-terra-low-v3.json",
+      "holdout-openai-gpt-5-6-terra-medium-v3.json",
     ]) {
       await expect(
         readFile(`evaluation/reports/${name}`, "utf8"),

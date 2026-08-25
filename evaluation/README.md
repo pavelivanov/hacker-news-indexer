@@ -80,6 +80,11 @@ npm run eval -- --provider openai --reasoning-effort low --concurrency 2
 ```
 
 The command sends only the 69-row development split, uses strict JSON Schema
-output with no tools and `store: false`, and writes an aggregate report. Use
-`--mode holdout` only after a development report passes every acceptance gate.
-Never use the holdout for prompt, model, or reasoning-effort tuning.
+output with no tools and `store: false`, and writes an aggregate report. Usage
+accounting includes the four adversarial calls and separates uncached input,
+cached input, cache-write input, and output tokens using the provider's token
+details. The report records the resulting price estimate, an all-input-uncached
+comparison, and a conservative bound that prices every input token at the
+highest published input/cache-write rate. Use `--mode holdout` only after a
+development report passes every acceptance gate. Never use the holdout for
+prompt, model, or reasoning-effort tuning.

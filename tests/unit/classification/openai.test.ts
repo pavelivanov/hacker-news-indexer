@@ -40,7 +40,15 @@ const completedResponse = (rawOutput: string): Response =>
           content: [{ type: "output_text", text: rawOutput }],
         },
       ],
-      usage: { input_tokens: 123, output_tokens: 45, total_tokens: 168 },
+      usage: {
+        input_tokens: 123,
+        input_tokens_details: {
+          cached_tokens: 100,
+          cache_write_tokens: 10,
+        },
+        output_tokens: 45,
+        total_tokens: 168,
+      },
     }),
     { status: 200, headers: { "content-type": "application/json" } },
   );
@@ -63,6 +71,8 @@ describe("OpenAI classifier adapter", () => {
       provider: "openai",
       modelId: "gpt-5.6-luna",
       inputTokens: 123,
+      cachedInputTokens: 100,
+      cacheWriteInputTokens: 10,
       outputTokens: 45,
     });
 
