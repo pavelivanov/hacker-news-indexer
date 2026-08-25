@@ -8,11 +8,13 @@ const Confidence = Type.Number({ minimum: 0, maximum: 1 });
 const BoundedReason = Type.String({ minLength: 1, maxLength: 500 });
 const SpanId = Type.String({ pattern: "^span:[0-9]+$" });
 const UrlCandidateId = Type.String({ pattern: "^url:[0-9]+$" });
-const EvidenceOrigin = Type.Union([
-  Type.Literal("COMMENT"),
-  Type.Literal("ROOT_STORY"),
-  Type.Literal("BOTH"),
-]);
+const EvidenceOrigin = Type.Union(
+  [Type.Literal("COMMENT"), Type.Literal("ROOT_STORY"), Type.Literal("BOTH")],
+  {
+    description:
+      "Exact origin of the cited evidence spans: COMMENT, ROOT_STORY, or BOTH when spans from both origins are cited.",
+  },
+);
 
 const CommentRelevance = exactObject({
   is_materially_technical: Type.Boolean(),
@@ -36,7 +38,12 @@ const Discovery = exactObject({
     Type.Literal("GUIDE"),
     Type.Literal("RESOURCE"),
   ]),
-  name: Type.String({ minLength: 1, maxLength: 160 }),
+  name: Type.String({
+    minLength: 1,
+    maxLength: 160,
+    description:
+      "Subject surface form that appears case-insensitively and verbatim in a cited evidence span.",
+  }),
   aliases: Type.Array(Type.String({ minLength: 1, maxLength: 160 }), {
     maxItems: 10,
     uniqueItems: true,
@@ -88,7 +95,10 @@ const ExpertNote = exactObject({
 });
 
 const Review = exactObject({
-  required: Type.Boolean(),
+  required: Type.Boolean({
+    description:
+      "Whether human review is required independently of the retained content class.",
+  }),
   reasons: Type.Array(
     Type.Union([
       Type.Literal("MISSING_CANONICAL_URL"),
@@ -114,12 +124,18 @@ const Review = exactObject({
 export const ClassificationV1Schema = Type.Object(
   {
     schema_version: Type.Literal("classification.v1"),
-    primary_decision: Type.Union([
-      Type.Literal("DISCOVERY"),
-      Type.Literal("EXPERT_NOTE"),
-      Type.Literal("REJECTED"),
-      Type.Literal("REVIEW"),
-    ]),
+    primary_decision: Type.Union(
+      [
+        Type.Literal("DISCOVERY"),
+        Type.Literal("EXPERT_NOTE"),
+        Type.Literal("REJECTED"),
+        Type.Literal("REVIEW"),
+      ],
+      {
+        description:
+          "Principal content class. Use REVIEW only when the content class itself cannot be determined; otherwise choose DISCOVERY, EXPERT_NOTE, or REJECTED and set review.required separately.",
+      },
+    ),
     decision_confidence: Confidence,
     comment_relevance: CommentRelevance,
     rejection_reasons: Type.Array(
@@ -186,6 +202,9 @@ export const validateClassificationV1 = (
     return { ok: false, code: "PRIMARY_DECISION_CONTENT_MISMATCH" };
   }
   if (value.review.required !== value.review.reasons.length > 0) {
+    return { ok: false, code: "REVIEW_STATE_MISMATCH" };
+  }
+  if (value.primary_decision === "REVIEW" && !value.review.required) {
     return { ok: false, code: "REVIEW_STATE_MISMATCH" };
   }
   for (const discovery of value.discoveries) {

@@ -6,11 +6,12 @@
 
 ## Status
 
-- **Execution status**: BLOCKED — deterministic fixture/shadow gates pass and
-  the approved OpenAI `gpt-5.6-luna` candidate was measured on the development
-  split, but both low and medium reasoning fail the required precision,
-  evidence-origin, and schema-validity gates. The holdout remains untouched
-  pending owner approval of a stronger candidate.
+- **Execution status**: BLOCKED — deterministic fixture/shadow v2 gates pass
+  and `gpt-5.6-sol` low was measured with the corrected prompt/evaluator on the
+  development split. The 60-row stable-gold slice passes macro F1 and
+  Expert-note precision but still misses Discovery and URL-grounding
+  precision. Nine machine-disputed development labels require independent
+  adjudication. The 29-row holdout remains untouched.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH

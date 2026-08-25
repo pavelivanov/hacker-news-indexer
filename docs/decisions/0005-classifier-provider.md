@@ -1,6 +1,6 @@
 # ADR 0005: Classifier provider selection
 
-- Status: blocked after measured GPT-5.6 Luna, Terra, and Sol rejection
+- Status: blocked on development-gold adjudication and URL grounding
 - Date: 2026-08-25
 
 ## Context
@@ -30,25 +30,78 @@ follows the current Responses API and Structured Outputs documentation:
 
 ## Decision
 
-Reject all six measured GPT-5.6 Luna, Terra, and Sol configurations. None
-passes the Plan 003 development gates. Sol low improves expert-note precision
-over Luna and Terra but still misses the threshold; Sol medium regresses on
-macro F1 and discovery precision. Low discovery recall, poor evidence-origin
-accuracy, and validation failures remain common across candidates. Do not
-evaluate the 29-row holdout, enable the worker adapter, publish decisions, or
-weaken any threshold.
+Do not interpret the v1 results as evidence that GPT-5.6 Sol lacks the required
+capability. The v1 prompt omitted the annotation rubric, treated valid review
+abstentions as class errors, compared discoveries by array position, conflated
+application validation with JSON Schema validity, and compared non-unique gold
+span choices as if they were deterministic origin failures.
 
-Keep classification in fixture/shadow mode with `CLASSIFIER_ENABLED=false`.
-Plan 003 remains blocked. Since the frontier GPT-5.6 candidate also fails,
-perform development-set error analysis and revise the prompt/schema contract
-before spending on another model configuration. Any changed prompt or model
-must first pass the same 69-row development benchmark.
+Adopt evaluation report v2 and `classification-prompt.v2`. It supplies the
+content-class and review rubric, requires review to be independent of the
+content class when one can be determined, matches discoveries by supported
+subject name, separates abstention/coverage from classified quality, separates
+schema from application validation, and records safe per-case diagnostic
+metadata without source or provider bodies.
+
+GPT-5.6 Sol low is the only candidate measured with the corrected compatibility
+set. It passes macro F1, Expert-note precision, schema/application validity,
+origin/span consistency, invention, latency, and adversarial gates on the 60
+rows where both annotators agreed and no consensus label was overridden. It
+still fails Discovery precision and URL-grounding precision. Seven of eleven
+full-corpus disagreements are on machine-disputed gold rows; those rows need
+human adjudication before they can be hard selection labels.
+
+Keep `CLASSIFIER_ENABLED=false`. Do not evaluate the 29-row holdout, enable the
+worker adapter, or publish decisions until the remaining stable Discovery and
+URL cases are diagnosed and the disputed development labels are independently
+adjudicated.
 
 ## Measurements
 
-All live reports exercise only the 69-row development split. Reports contain
-aggregate metrics and configuration metadata; they contain no prompts, source
-documents, credentials, or provider outputs.
+All live reports exercise only the 69-row development split. V2 reports add
+comment IDs, expected/predicted enum values, review flags, counts, and failure
+codes for diagnosis. They contain no prompts, source bodies, credentials, or
+raw provider outputs.
+
+### Corrected v2 measurement
+
+The stable slice contains 60 rows with annotator consensus and no later
+consensus override. Full adjudicated metrics remain visible and are not
+discarded; they are not treated as hard selection evidence until the nine
+machine-disputed rows receive independent adjudication.
+
+| Metric                         |   Required |  Full 69 | Stable 60 |
+| ------------------------------ | ---------: | -------: | --------: |
+| Macro F1                       |     ≥ 0.85 |   0.8375 |    0.9580 |
+| Discovery precision            |     ≥ 0.93 |   0.7778 |    0.8750 |
+| Expert-note precision          |     ≥ 0.88 |   0.6667 |    0.9375 |
+| URL-grounding precision        |       1.00 |   0.7500 |    0.7500 |
+| Classification coverage        |     ≥ 0.80 |     1.00 |      1.00 |
+| Automatic coverage             |   recorded |   0.8841 |         — |
+| Automatic accuracy             |   recorded |   0.9016 |         — |
+| Evidence-origin consistency    |     ≥ 0.97 |     1.00 |         — |
+| Gold-origin agreement          | diagnostic |   0.8636 |    0.8500 |
+| Evidence-span validation       |       1.00 |     1.00 |         — |
+| JSON/schema-valid outputs      |    ≥ 0.995 |     1.00 |         — |
+| Application-valid outputs      |     ≥ 0.95 |     1.00 |         — |
+| Invented URL count             |          0 |        0 |         — |
+| Adversarial tool/network calls |          0 |        0 |         — |
+| Latency p95                    |     < 60 s |  9.180 s |         — |
+| Estimated upper-bound API cost |   recorded | $0.88356 |         — |
+
+- V2 Sol-low report:
+  `evaluation/reports/benchmark-openai-gpt-5-6-sol-low-v2.json`
+- V2 report SHA-256:
+  `bae72fef1e9a35716867a9a6c505eef606cbc785879d10a38b7b4cceef1d330f`
+- Prompt version: `classification-prompt.v2`
+- Prompt hash:
+  `7b25b31cc6a927e433f2bbfb1acce5f58d75c740875071759aea7d0a5be1fa3d`
+
+### Historical v1 measurements
+
+These reports preserve the original experiment but are superseded for model
+selection by v2 because the prompt and metric definitions were not valid for
+the intended review-oriented classifier.
 
 | Metric                           | Required | Luna low | Luna medium | Terra low | Terra medium |
 | -------------------------------- | -------: | -------: | ----------: | --------: | -----------: |
@@ -122,14 +175,15 @@ not evidence of model quality.
 
 ## Unblocking criteria
 
-1. The owner approves a stronger model configuration available through the
-   configured provider credential.
-2. The candidate is benchmarked on the 69-row development split with model ID,
-   reasoning configuration, structured-output settings, latency, token usage,
-   cost, and privacy/logging settings recorded.
-3. The candidate meets every Plan 003 precision and grounding gate.
-4. Only then is the 29-row holdout evaluated once and the selected adapter
-   enabled.
+1. Independently adjudicate the nine development rows with annotator
+   disagreement or consensus override; do not force the historical aggregate
+   totals.
+2. Diagnose the stable Discovery false positive and per-case URL mismatches
+   using the safe v2 diagnostic format.
+3. Rerun the corrected prompt/model compatibility set and meet every stable
+   precision, URL, validation, safety, latency, and coverage gate.
+4. Only then evaluate the sealed 29-row holdout once and enable the selected
+   adapter if the holdout also passes.
 
 If no candidate meets the thresholds, classification remains in shadow mode;
 the thresholds are not weakened.

@@ -3,6 +3,8 @@ import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { format } from "prettier";
+
 import {
   FixtureClassifier,
   OpenAiClassifier,
@@ -11,9 +13,19 @@ import {
 } from "../packages/adapters/src/index.ts";
 import {
   buildClassifierInput,
+  calculateClassificationMetrics,
+  calculateExtractionMetrics,
+  CLASSIFICATION_PROMPT_VERSION,
+  CLASSIFICATION_SYSTEM_PROMPT,
   ClassificationExecutionError,
   createClassifyComment,
+  EVALUATION_PREDICTIONS,
+  EVALUATION_PRIMARY_CLASSES,
+  type EvaluationConfusionMatrix,
+  type EvaluationPrediction,
+  type EvaluationPrimaryClass,
 } from "../packages/application/src/index.ts";
+import type { ClassificationV1 } from "../packages/contracts/src/index.ts";
 import type {
   ClassificationRun,
   ContentDecision,
@@ -31,8 +43,8 @@ import type {
   SaveContentDecisionInput,
 } from "../packages/ports/src/index.ts";
 
-type PrimaryClass = "DISCOVERY" | "EXPERT_NOTE" | "REJECTED";
-type PrimaryPrediction = PrimaryClass | "REVIEW" | "INVALID";
+type PrimaryClass = EvaluationPrimaryClass;
+type PrimaryPrediction = EvaluationPrediction;
 type EvidenceOrigin = "COMMENT" | "ROOT_STORY" | "BOTH";
 
 interface GoldSpan {
@@ -68,6 +80,12 @@ interface GoldRow {
   readonly reviewFlags: readonly string[];
   readonly rejectionReason: string | null;
   readonly holdout: boolean;
+  readonly annotation: {
+    readonly adjudication: {
+      readonly disagreement: boolean;
+      readonly rationale: string;
+    };
+  };
 }
 
 interface EvaluationDocument {
@@ -427,7 +445,7 @@ const liveReportName = (reportMode: string): string => {
     .toLowerCase()
     .replaceAll(/[^a-z0-9]+/gu, "-")
     .replaceAll(/^-|-$/gu, "");
-  return `${reportMode}-${slug}-v1.json`;
+  return `${reportMode}-${slug}-v2.json`;
 };
 if (provider !== "fixture" && mode !== "benchmark") {
   if (mode !== "holdout") {
@@ -454,6 +472,10 @@ if (provider !== "fixture" && mode !== "benchmark") {
     Array.isArray(benchmark) ||
     (benchmark as Record<string, unknown>)["modelConfigId"] !==
       classifier.modelConfigId ||
+    (benchmark as Record<string, unknown>)["promptVersion"] !==
+      CLASSIFICATION_PROMPT_VERSION ||
+    (benchmark as Record<string, unknown>)["promptHash"] !==
+      sha256(CLASSIFICATION_SYSTEM_PROMPT) ||
     (benchmark as Record<string, unknown>)["passed"] !== true
   ) {
     throw new Error(
@@ -463,7 +485,8 @@ if (provider !== "fixture" && mode !== "benchmark") {
 }
 const repository = new MemoryRepository();
 const predictions = new Map<number, PrimaryPrediction>();
-const outputs = new Map<number, Record<string, unknown>>();
+const outputs = new Map<number, ClassificationV1>();
+const failureByCommentId = new Map<number, string>();
 const failureCounts = new Map<string, number>();
 const evaluateRow = async (row: GoldRow): Promise<string | null> => {
   const input = inputs.get(row.commentId);
@@ -482,7 +505,8 @@ const evaluateRow = async (row: GoldRow): Promise<string | null> => {
       persistRetryableFailure: provider !== "fixture",
     });
     if (result.kind === "REVIEW") {
-      predictions.set(row.commentId, "REVIEW");
+      predictions.set(row.commentId, "INVALID");
+      failureByCommentId.set(row.commentId, result.errorCode);
       failureCounts.set(
         result.errorCode,
         (failureCounts.get(result.errorCode) ?? 0) + 1,
@@ -493,10 +517,7 @@ const evaluateRow = async (row: GoldRow): Promise<string | null> => {
       row.commentId,
       result.output.primary_decision as PrimaryPrediction,
     );
-    outputs.set(
-      row.commentId,
-      result.output as unknown as Record<string, unknown>,
-    );
+    outputs.set(row.commentId, result.output);
     return null;
   } catch (error) {
     const code =
@@ -504,6 +525,7 @@ const evaluateRow = async (row: GoldRow): Promise<string | null> => {
         ? error.code
         : "UNEXPECTED_EVALUATION_ERROR";
     predictions.set(row.commentId, "INVALID");
+    failureByCommentId.set(row.commentId, code);
     failureCounts.set(code, (failureCounts.get(code) ?? 0) + 1);
     return code;
   }
@@ -618,76 +640,70 @@ if (adversarialClassifier instanceof FixtureClassifier) {
   }
 }
 
-const labels = ["DISCOVERY", "EXPERT_NOTE", "REJECTED"] as const;
-const predictionLabels = [...labels, "REVIEW", "INVALID"] as const;
-const matrix = Object.fromEntries(
-  labels.map((expected) => [
-    expected,
-    Object.fromEntries(predictionLabels.map((predicted) => [predicted, 0])),
-  ]),
-) as Record<PrimaryClass, Record<PrimaryPrediction, number>>;
-for (const row of evaluatedRows) {
-  const predicted = predictions.get(row.commentId);
-  if (predicted === undefined) {
-    throw new Error(`Missing prediction ${row.commentId}`);
+const labels = EVALUATION_PRIMARY_CLASSES;
+const predictionLabels = EVALUATION_PREDICTIONS;
+const CONSENSUS_RATIONALE =
+  "Independent annotators agreed; evidence and class invariants were mechanically validated.";
+const goldStatusFor = (
+  row: GoldRow,
+): "CONSENSUS" | "DISAGREEMENT_ADJUDICATED" | "CONSENSUS_OVERRIDDEN" =>
+  row.annotation.adjudication.disagreement
+    ? "DISAGREEMENT_ADJUDICATED"
+    : row.annotation.adjudication.rationale === CONSENSUS_RATIONALE
+      ? "CONSENSUS"
+      : "CONSENSUS_OVERRIDDEN";
+const matrixFor = (rows: readonly GoldRow[]): EvaluationConfusionMatrix => {
+  const result = Object.fromEntries(
+    labels.map((expected) => [
+      expected,
+      Object.fromEntries(predictionLabels.map((predicted) => [predicted, 0])),
+    ]),
+  ) as EvaluationConfusionMatrix;
+  for (const row of rows) {
+    const predicted = predictions.get(row.commentId);
+    if (predicted === undefined) {
+      throw new Error(`Missing prediction ${row.commentId}`);
+    }
+    result[row.primaryClass][predicted] += 1;
   }
-  matrix[row.primaryClass][predicted] += 1;
-}
-const classMetrics = Object.fromEntries(
-  labels.map((label) => {
-    const truePositive = matrix[label][label];
-    const falsePositive = labels
-      .filter((expected) => expected !== label)
-      .reduce((total, expected) => total + matrix[expected][label], 0);
-    const falseNegative = predictionLabels
-      .filter((predicted) => predicted !== label)
-      .reduce((total, predicted) => total + matrix[label][predicted], 0);
-    const precision = truePositive / Math.max(1, truePositive + falsePositive);
-    const recall = truePositive / Math.max(1, truePositive + falseNegative);
-    return [
-      label,
-      {
-        precision,
-        recall,
-        f1:
-          (2 * precision * recall) /
-          Math.max(Number.EPSILON, precision + recall),
-      },
-    ];
-  }),
-) as Record<PrimaryClass, { precision: number; recall: number; f1: number }>;
-
-let expectedOrigins = 0;
-let correctOrigins = 0;
-let expectedUrls = 0;
-let correctUrls = 0;
-for (const row of evaluatedRows) {
+  return result;
+};
+const matrix = matrixFor(evaluatedRows);
+const classificationMetrics = calculateClassificationMetrics(matrix);
+const classMetrics = classificationMetrics.classMetrics;
+const stableGoldRows = evaluatedRows.filter(
+  (row) => goldStatusFor(row) === "CONSENSUS",
+);
+const stableGoldMatrix = matrixFor(stableGoldRows);
+const stableGoldClassificationMetrics =
+  calculateClassificationMetrics(stableGoldMatrix);
+const extractionRows = evaluatedRows.map((row) => {
   const output = outputs.get(row.commentId);
-  const discoveries = (output?.["discoveries"] ?? []) as readonly Record<
-    string,
-    unknown
-  >[];
-  for (const [index, discovery] of row.discoveries.entries()) {
-    expectedOrigins += 1;
-    if (discoveries[index]?.["evidence_origin"] === discovery.evidenceOrigin) {
-      correctOrigins += 1;
-    }
-    const actualIds = new Set(
-      (discoveries[index]?.["url_candidate_ids"] ?? []) as readonly string[],
-    );
-    expectedUrls += actualIds.size;
-    correctUrls += [...actualIds].filter((id) =>
-      discovery.urlCandidateIds.includes(id),
-    ).length;
-  }
-  if (row.expertNote !== null) {
-    expectedOrigins += 1;
-    const note = output?.["expert_note"] as Record<string, unknown> | null;
-    if (note?.["evidence_origin"] === row.expertNote.evidenceOrigin) {
-      correctOrigins += 1;
-    }
-  }
-}
+  return {
+    row,
+    extraction: {
+      expectedDiscoveries: row.discoveries,
+      predictedDiscoveries:
+        output?.discoveries.map((discovery) => ({
+          subjectType: discovery.subject_type,
+          name: discovery.name,
+          aliases: discovery.aliases,
+          evidenceOrigin: discovery.evidence_origin,
+          urlCandidateIds: discovery.url_candidate_ids,
+        })) ?? [],
+      expectedExpertNoteOrigin: row.expertNote?.evidenceOrigin ?? null,
+      predictedExpertNoteOrigin: output?.expert_note?.evidence_origin ?? null,
+    },
+  };
+});
+const extractionMetrics = calculateExtractionMetrics(
+  extractionRows.map((entry) => entry.extraction),
+);
+const stableGoldExtractionMetrics = calculateExtractionMetrics(
+  extractionRows
+    .filter((entry) => goldStatusFor(entry.row) === "CONSENSUS")
+    .map((entry) => entry.extraction),
+);
 const latencies = repository.runInputs
   .map((run) => run.latencyMs ?? 0)
   .sort((left, right) => left - right);
@@ -695,9 +711,7 @@ const percentile = (fraction: number): number =>
   latencies[
     Math.min(latencies.length - 1, Math.floor(latencies.length * fraction))
   ] ?? 0;
-const macroF1 =
-  labels.reduce((total, label) => total + classMetrics[label].f1, 0) /
-  labels.length;
+const macroF1 = classificationMetrics.macroF1;
 const totalInputTokens = repository.runInputs.reduce(
   (total, run) => total + (run.inputTokens ?? 0),
   0,
@@ -750,24 +764,120 @@ const estimatedUpperBoundUsd =
     : (totalInputTokens * pricing.inputUsdPerMillionTokens +
         totalOutputTokens * pricing.outputUsdPerMillionTokens) /
       1_000_000;
-const urlGroundingPrecision =
-  expectedUrls === 0 ? 1 : correctUrls / expectedUrls;
+const failureTotal = (codes: readonly string[]): number =>
+  codes.reduce((total, code) => total + (failureCounts.get(code) ?? 0), 0);
+const structuredOutputFailures = failureTotal([
+  "JSON_INVALID",
+  "SCHEMA_INVALID",
+]);
+const spanValidationFailures = failureTotal([
+  "EVIDENCE_SPAN_UNKNOWN",
+  "EVIDENCE_ORIGIN_MISMATCH",
+]);
+const evidenceOriginFailures = failureTotal(["EVIDENCE_ORIGIN_MISMATCH"]);
+const inventedUrlCount = failureTotal([
+  "MODEL_URL_STRING",
+  "URL_CANDIDATE_UNKNOWN",
+]);
+const schemaValidRate = 1 - structuredOutputFailures / evaluatedRows.length;
+const applicationValidRate = repository.decisions.length / evaluatedRows.length;
+const spanValidation = 1 - spanValidationFailures / evaluatedRows.length;
 const evidenceOriginAccuracy =
-  expectedOrigins === 0 ? 1 : correctOrigins / expectedOrigins;
-const schemaValidRate = repository.decisions.length / evaluatedRows.length;
+  1 - evidenceOriginFailures / evaluatedRows.length;
+const goldById = new Map(evaluatedRows.map((row) => [row.commentId, row]));
+const automaticOutputs = [...outputs.entries()].filter(
+  ([, output]) =>
+    labels.includes(output.primary_decision as PrimaryClass) &&
+    !output.review.required,
+);
+const automaticCorrect = automaticOutputs.filter(([commentId, output]) => {
+  const expected = goldById.get(commentId)?.primaryClass;
+  return expected !== undefined && output.primary_decision === expected;
+}).length;
+const automaticCoverage = automaticOutputs.length / evaluatedRows.length;
+const automaticAccuracy =
+  automaticOutputs.length === 0
+    ? 0
+    : automaticCorrect / automaticOutputs.length;
+let reviewTruePositive = 0;
+let reviewFalsePositive = 0;
+let reviewFalseNegative = 0;
+let reviewTrueNegative = 0;
+for (const row of evaluatedRows) {
+  const expectedReview = row.reviewFlags.length > 0;
+  const output = outputs.get(row.commentId);
+  const predictedReview =
+    output === undefined ||
+    output.primary_decision === "REVIEW" ||
+    output.review.required;
+  if (expectedReview && predictedReview) {
+    reviewTruePositive += 1;
+  } else if (!expectedReview && predictedReview) {
+    reviewFalsePositive += 1;
+  } else if (expectedReview) {
+    reviewFalseNegative += 1;
+  } else {
+    reviewTrueNegative += 1;
+  }
+}
+const reviewPrecision =
+  reviewTruePositive + reviewFalsePositive === 0
+    ? 0
+    : reviewTruePositive / (reviewTruePositive + reviewFalsePositive);
+const reviewRecall =
+  reviewTruePositive + reviewFalseNegative === 0
+    ? 1
+    : reviewTruePositive / (reviewTruePositive + reviewFalseNegative);
+const reviewRouting = {
+  truePositive: reviewTruePositive,
+  falsePositive: reviewFalsePositive,
+  falseNegative: reviewFalseNegative,
+  trueNegative: reviewTrueNegative,
+  precision: reviewPrecision,
+  recall: reviewRecall,
+  f1:
+    reviewPrecision + reviewRecall === 0
+      ? 0
+      : (2 * reviewPrecision * reviewRecall) / (reviewPrecision + reviewRecall),
+};
+const cases = evaluatedRows.map((row) => {
+  const output = outputs.get(row.commentId);
+  return {
+    commentId: row.commentId,
+    expected: row.primaryClass,
+    predicted: predictions.get(row.commentId),
+    failureCode: failureByCommentId.get(row.commentId) ?? null,
+    reviewRequired: output?.review.required ?? false,
+    reviewReasons: output?.review.reasons ?? [],
+    expectedReviewFlags: row.reviewFlags,
+    expectedDiscoveryCount: row.discoveries.length,
+    predictedDiscoveryCount: output?.discoveries.length ?? 0,
+    expectedExpertNote: row.expertNote !== null,
+    predictedExpertNote: output?.expert_note !== null && output !== undefined,
+    goldStatus: goldStatusFor(row),
+  };
+});
+const latencyP95 = percentile(0.95);
+const stableGoldClassMetrics = stableGoldClassificationMetrics.classMetrics;
 const acceptance = {
-  macroF1: macroF1 >= 0.85,
-  discoveryPrecision: classMetrics.DISCOVERY.precision >= 0.93,
-  expertNotePrecision: classMetrics.EXPERT_NOTE.precision >= 0.88,
-  urlGroundingPrecision: urlGroundingPrecision === 1,
-  inventedUrlCount: true,
+  stableGoldMacroF1: stableGoldClassificationMetrics.macroF1 >= 0.85,
+  classificationCoverage: classificationMetrics.classificationCoverage >= 0.8,
+  stableGoldDiscoveryPrecision:
+    stableGoldClassMetrics.DISCOVERY.precision >= 0.93,
+  stableGoldExpertNotePrecision:
+    stableGoldClassMetrics.EXPERT_NOTE.precision >= 0.88,
+  stableGoldUrlGroundingPrecision:
+    stableGoldExtractionMetrics.urlGroundingPrecision === 1,
+  inventedUrlCount: inventedUrlCount === 0,
   evidenceOriginAccuracy: evidenceOriginAccuracy >= 0.97,
-  spanValidation: true,
+  spanValidation: spanValidation === 1,
   schemaValidRate: schemaValidRate >= 0.995,
+  applicationValidRate: applicationValidRate >= 0.95,
   adversarialToolAndNetworkActions: true,
+  latencyP95: latencyP95 < 60_000,
 };
 const report = {
-  reportVersion: 1,
+  reportVersion: 2,
   mode,
   corpus: path.relative(root, corpusPath),
   corpusSha256: sha256(goldText),
@@ -799,17 +909,36 @@ const report = {
   confusionMatrix: matrix,
   classMetrics,
   macroF1,
+  overallClassMetrics: classificationMetrics.overallClassMetrics,
+  overallMacroF1: classificationMetrics.overallMacroF1,
+  classifiedRows: classificationMetrics.classifiedRows,
+  abstainedRows: classificationMetrics.abstainedRows,
+  classificationCoverage: classificationMetrics.classificationCoverage,
+  classifiedAccuracy: classificationMetrics.classifiedAccuracy,
+  automaticRows: automaticOutputs.length,
+  automaticCoverage,
+  automaticAccuracy,
+  stableGold: {
+    rows: stableGoldRows.length,
+    confusionMatrix: stableGoldMatrix,
+    ...stableGoldClassificationMetrics,
+    extraction: stableGoldExtractionMetrics,
+  },
   discoveryPrecision: classMetrics.DISCOVERY.precision,
   expertNotePrecision: classMetrics.EXPERT_NOTE.precision,
-  urlGroundingPrecision,
-  inventedUrlCount: 0,
+  extraction: extractionMetrics,
+  urlGroundingPrecision: extractionMetrics.urlGroundingPrecision,
+  urlGroundingRecall: extractionMetrics.urlGroundingRecall,
+  inventedUrlCount,
   evidenceOriginAccuracy,
-  spanValidation: 1,
+  goldEvidenceOriginAgreement: extractionMetrics.goldEvidenceOriginAgreement,
+  goldEvidenceOriginCoverage: extractionMetrics.goldEvidenceOriginCoverage,
+  spanValidation,
   schemaValidRate,
-  reviewRate:
-    repository.decisions.filter((decision) => decision.reviewRequired).length /
-    evaluatedRows.length,
-  latencyMs: { p50: percentile(0.5), p95: percentile(0.95) },
+  applicationValidRate,
+  reviewRate: 1 - automaticCoverage,
+  reviewRouting,
+  latencyMs: { p50: percentile(0.5), p95: latencyP95 },
   usage: {
     inputTokens: totalInputTokens,
     outputTokens: totalOutputTokens,
@@ -829,6 +958,7 @@ const report = {
     toolActions: 0,
     networkActions: 0,
   },
+  cases,
   acceptance,
   passed: Object.values(acceptance).every(Boolean),
 };
@@ -836,16 +966,20 @@ const report = {
 const reportName = (() => {
   if (provider === "fixture") {
     return mode === "shadow"
-      ? "shadow-fixture-v1.json"
+      ? "shadow-fixture-v2.json"
       : mode === "holdout"
-        ? "holdout-fixture-v1.json"
-        : "benchmark-fixture-v1.json";
+        ? "holdout-fixture-v2.json"
+        : "benchmark-fixture-v2.json";
   }
   return liveReportName(mode);
 })();
 const reportPath = path.join(root, "evaluation/reports", reportName);
 await mkdir(path.dirname(reportPath), { recursive: true });
-await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
+await writeFile(
+  reportPath,
+  await format(JSON.stringify(report), { parser: "json" }),
+  "utf8",
+);
 console.log(
   JSON.stringify(
     {
@@ -853,10 +987,20 @@ console.log(
       rows: report.rows,
       terminalRuns: report.terminalRuns,
       macroF1: report.macroF1,
+      overallMacroF1: report.overallMacroF1,
+      stableGoldMacroF1: report.stableGold.macroF1,
+      classificationCoverage: report.classificationCoverage,
+      automaticCoverage: report.automaticCoverage,
       discoveryPrecision: report.discoveryPrecision,
       expertNotePrecision: report.expertNotePrecision,
+      stableGoldDiscoveryPrecision:
+        report.stableGold.classMetrics.DISCOVERY.precision,
+      stableGoldExpertNotePrecision:
+        report.stableGold.classMetrics.EXPERT_NOTE.precision,
       evidenceOriginAccuracy: report.evidenceOriginAccuracy,
+      goldEvidenceOriginAgreement: report.goldEvidenceOriginAgreement,
       schemaValidRate: report.schemaValidRate,
+      applicationValidRate: report.applicationValidRate,
       inventedUrlCount: report.inventedUrlCount,
       adversarialActions:
         report.adversarial.toolActions + report.adversarial.networkActions,

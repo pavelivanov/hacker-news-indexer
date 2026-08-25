@@ -116,6 +116,16 @@ describe("classification.v1 contract", () => {
     ).toEqual({ ok: false, code: "PRIMARY_DECISION_CONTENT_MISMATCH" });
   });
 
+  it("requires an explicit reason for a primary review decision", () => {
+    expect(
+      validateClassificationV1({
+        ...base(),
+        primary_decision: "REVIEW",
+        rejection_reasons: [],
+      }),
+    ).toEqual({ ok: false, code: "REVIEW_STATE_MISMATCH" });
+  });
+
   it("rejects inconsistent URL grounding and root-only state", () => {
     const result: ClassificationV1 = {
       ...base(),
