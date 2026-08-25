@@ -35,3 +35,5 @@ export * from "./classification/prompt.js";
 export * from "./classification/validate-output.js";
 export * from "./review/review-service.js";
 export * from "./subjects/materialize-classification.js";
+export * from "./reader/knowledge-reader.js";
+export * from "./reader/safe-html.js";

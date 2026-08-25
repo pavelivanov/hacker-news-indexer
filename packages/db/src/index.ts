@@ -19,3 +19,4 @@ export { createHnResolutionRepository } from "./repositories/hn-resolution.js";
 export { createClassificationRepository } from "./repositories/classification.js";
 export { createReviewRepository } from "./repositories/review.js";
 export { createSubjectMaterializationRepository } from "./repositories/subjects.js";
+export { createKnowledgeReaderRepository } from "./repositories/reader.js";

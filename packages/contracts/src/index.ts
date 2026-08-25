@@ -8,3 +8,4 @@ export interface ErrorResponse {
 }
 
 export * from "./classification-v1.js";
+export * from "./reader-v1.js";

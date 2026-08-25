@@ -320,6 +320,105 @@ export interface SubjectMaterializationRepository {
   ): Promise<MaterializeClassificationResult>;
 }
 
+export interface ReaderSubjectLinkRecord {
+  readonly id: string;
+  readonly name: string;
+  readonly type: SubjectType;
+}
+
+export interface ReaderEvidenceRecord {
+  readonly origin: "COMMENT" | "ROOT_STORY";
+  readonly hnItemId: HnItemId;
+  readonly start: number;
+  readonly end: number;
+  readonly excerpt: string;
+}
+
+export interface ReaderPublicationRecord {
+  readonly publishedAt: Date;
+  readonly updatedAt: Date;
+  readonly reviewRevision: number;
+  readonly publicationRevision: number;
+}
+
+export interface ReaderContentProvenanceRecord {
+  readonly selectedCommentId: HnItemId;
+  readonly resolvedRootId: HnItemId;
+  readonly displayedStoryId: HnItemId | null;
+  readonly sourceOccurrenceIds: readonly string[];
+}
+
+export interface ReaderDiscoveryRecord
+  extends ReaderPublicationRecord, ReaderContentProvenanceRecord {
+  readonly id: string;
+  readonly kind: "discovery";
+  readonly title: string;
+  readonly summary: string;
+  readonly confidence: number;
+  readonly subjects: readonly ReaderSubjectLinkRecord[];
+  readonly evidence: readonly ReaderEvidenceRecord[];
+}
+
+export interface ReaderExpertNoteRecord
+  extends ReaderPublicationRecord, ReaderContentProvenanceRecord {
+  readonly id: string;
+  readonly kind: "expert_note";
+  readonly noteType: ExpertNoteType;
+  readonly title: string;
+  readonly summary: string;
+  readonly confidence: number;
+  readonly subjects: readonly ReaderSubjectLinkRecord[];
+  readonly evidence: readonly ReaderEvidenceRecord[];
+}
+
+export type ReaderContentRecord =
+  ReaderDiscoveryRecord | ReaderExpertNoteRecord;
+
+export interface ReaderContentFilter {
+  readonly kind: ReaderContentRecord["kind"] | null;
+  readonly selectedCommentId: HnItemId | null;
+  readonly resolvedRootId: HnItemId | null;
+  readonly subjectId: SubjectId | null;
+  readonly limit: number;
+}
+
+export interface ReaderCommentRecord {
+  readonly id: HnItemId;
+  readonly author: string | null;
+  readonly canonicalHtml: string;
+  readonly canonicalText: string;
+  readonly createdAt: Date | null;
+  readonly resolvedRootId: HnItemId;
+  readonly displayedStoryId: HnItemId | null;
+  readonly sourceOccurrenceIds: readonly string[];
+}
+
+export interface ReaderStoryRecord {
+  readonly id: HnItemId;
+  readonly title: string | null;
+  readonly author: string | null;
+  readonly canonicalHtml: string;
+  readonly canonicalText: string;
+  readonly url: string | null;
+  readonly createdAt: Date | null;
+}
+
+export interface ReaderSubjectRecord extends ReaderSubjectLinkRecord {
+  readonly aliases: readonly string[];
+  readonly canonicalUrl: string | null;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+}
+
+export interface KnowledgeReaderRepository {
+  listPublishedContent(
+    filter: ReaderContentFilter,
+  ): Promise<readonly ReaderContentRecord[]>;
+  getAvailableComment(id: HnItemId): Promise<ReaderCommentRecord | null>;
+  getAvailableStory(id: HnItemId): Promise<ReaderStoryRecord | null>;
+  getActiveSubject(id: SubjectId): Promise<ReaderSubjectRecord | null>;
+}
+
 export interface StartIngestionResult {
   readonly run: IngestionRun;
   readonly job: PipelineJob;
