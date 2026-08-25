@@ -107,11 +107,24 @@ export const createHnResolutionRepository = (
               : null,
         },
       });
-      const sourceDocument = `hn:item:${selected.id}`;
-      await transaction.urlCandidate.deleteMany({ where: { sourceDocument } });
-      if (urlCandidates.length > 0) {
-        await transaction.urlCandidate.createMany({
-          data: urlCandidates.map((candidate) => ({
+      await transaction.urlCandidate.updateMany({
+        where: {
+          hnItemId: BigInt(selected.id),
+          classifierEligible: true,
+        },
+        data: { classifierEligible: false },
+      });
+      for (const [sourceOrdinal, candidate] of urlCandidates.entries()) {
+        await transaction.urlCandidate.upsert({
+          where: {
+            contentHash_sourceDocument_originField_sourceOrdinal: {
+              contentHash: candidate.contentHash,
+              sourceDocument: candidate.sourceDocument,
+              originField: candidate.originField,
+              sourceOrdinal,
+            },
+          },
+          create: {
             hnItemId: BigInt(selected.id),
             rawUrl: candidate.rawUrl,
             canonicalUrl: candidate.canonicalUrl,
@@ -121,8 +134,18 @@ export const createHnResolutionRepository = (
             host: candidate.host,
             validationState: candidate.validationState,
             contentHash: candidate.contentHash,
-          })),
-          skipDuplicates: true,
+            sourceOrdinal,
+            classifierEligible: true,
+          },
+          update: {
+            hnItemId: BigInt(selected.id),
+            rawUrl: candidate.rawUrl,
+            canonicalUrl: candidate.canonicalUrl,
+            scheme: candidate.scheme,
+            host: candidate.host,
+            validationState: candidate.validationState,
+            classifierEligible: true,
+          },
         });
       }
     });

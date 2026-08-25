@@ -3,6 +3,8 @@ import type {
   HnItemId,
   ManualOverrideEventId,
   ReviewTaskId,
+  SubjectId,
+  UrlCandidateId,
 } from "./identities.js";
 
 export const REVIEW_REASON_CODES = [
@@ -35,6 +37,13 @@ export const REVIEW_PRIORITIES = [
 ] as const;
 export type ReviewPriority = (typeof REVIEW_PRIORITIES)[number];
 
+export const REVIEW_TASK_KINDS = [
+  "CONTENT_DECISION",
+  "SUBJECT_MERGE",
+  "URL_RESOLUTION",
+] as const;
+export type ReviewTaskKind = (typeof REVIEW_TASK_KINDS)[number];
+
 export const REVIEW_TASK_STATES = [
   "OPEN",
   "APPROVED",
@@ -56,6 +65,7 @@ export interface ReviewTask {
   readonly id: ReviewTaskId;
   readonly commentId: HnItemId;
   readonly contentDecisionId: ContentDecisionId;
+  readonly kind: ReviewTaskKind;
   readonly state: ReviewTaskState;
   readonly priority: Exclude<ReviewPriority, "NONE">;
   readonly reasonCodes: readonly ReviewReasonCode[];
@@ -76,6 +86,10 @@ export interface ManualOverrideEvent {
   readonly action: ReviewAuditAction;
   readonly previousDecisionId: ContentDecisionId | null;
   readonly newDecisionId: ContentDecisionId | null;
+  readonly affectedSubjectId: SubjectId | null;
+  readonly relatedSubjectId: SubjectId | null;
+  readonly previousUrlCandidateId: UrlCandidateId | null;
+  readonly newUrlCandidateId: UrlCandidateId | null;
   readonly actorId: string;
   readonly requestHash: string;
   readonly previousValueHash: string;
@@ -141,6 +155,21 @@ const priorityFor = (score: number): ReviewPriority => {
   return score > 0 ? "LOW" : "NONE";
 };
 
+export const reviewPolicyFromReasons = (
+  values: readonly ReviewReasonCode[],
+): ReviewPolicyDecision => {
+  const reasons = REVIEW_REASON_CODES.filter((reason) =>
+    values.includes(reason),
+  );
+  const priorityScore = Math.max(0, ...reasons.map((reason) => SCORES[reason]));
+  return {
+    required: reasons.length > 0,
+    reasons,
+    priority: priorityFor(priorityScore),
+    priorityScore,
+  };
+};
+
 export const evaluateReviewPolicy = (
   input: ReviewPolicyInput,
 ): ReviewPolicyDecision => {
@@ -187,19 +216,7 @@ export const evaluateReviewPolicy = (
     reasons.add("UNPROMOTED_MODEL_DECISION");
   }
 
-  const orderedReasons = REVIEW_REASON_CODES.filter((reason) =>
-    reasons.has(reason),
-  );
-  const priorityScore = Math.max(
-    0,
-    ...orderedReasons.map((reason) => SCORES[reason]),
-  );
-  return {
-    required: orderedReasons.length > 0,
-    reasons: orderedReasons,
-    priority: priorityFor(priorityScore),
-    priorityScore,
-  };
+  return reviewPolicyFromReasons([...reasons]);
 };
 
 export const UNPROMOTED_MODEL_REVIEW_DECISION = evaluateReviewPolicy({

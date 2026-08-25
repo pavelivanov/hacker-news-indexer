@@ -3,18 +3,26 @@ import { createHash } from "node:crypto";
 import {
   REVIEW_REASON_CODES,
   contentDecisionId,
+  createSubjectIdentity,
   hnItemId,
   manualOverrideEventId,
   reviewTaskId,
+  subjectId,
+  urlCandidateId,
   type ManualOverrideEvent,
   type ReviewReasonCode,
   type ReviewTask,
 } from "@hn-knowledge/domain";
 import type {
+  EntityReviewMutationResult,
+  MergeSubjectsReviewInput,
   OpenReviewTaskInput,
   OpenReviewTaskResult,
   ResolveReviewTaskInput,
   ResolveReviewTaskResult,
+  ResolveSubjectUrlReviewInput,
+  ReopenReviewTaskInput,
+  ReopenReviewTaskResult,
   ReviewRepository,
 } from "@hn-knowledge/ports";
 
@@ -71,6 +79,7 @@ const toTask = (task: DatabaseTask): ReviewTask => ({
   id: reviewTaskId(task.id),
   commentId: hnItemId(Number(task.commentId)),
   contentDecisionId: contentDecisionId(task.contentDecisionId),
+  kind: task.kind,
   state: task.state,
   priority: task.priority,
   reasonCodes: reasonCodes(task.reasonCodes),
@@ -98,6 +107,20 @@ const toEvent = (event: DatabaseEvent): ManualOverrideEvent => ({
     event.newDecisionId === null
       ? null
       : contentDecisionId(event.newDecisionId),
+  affectedSubjectId:
+    event.affectedSubjectId === null
+      ? null
+      : subjectId(event.affectedSubjectId),
+  relatedSubjectId:
+    event.relatedSubjectId === null ? null : subjectId(event.relatedSubjectId),
+  previousUrlCandidateId:
+    event.previousUrlCandidateId === null
+      ? null
+      : urlCandidateId(event.previousUrlCandidateId),
+  newUrlCandidateId:
+    event.newUrlCandidateId === null
+      ? null
+      : urlCandidateId(event.newUrlCandidateId),
   actorId: event.actorId,
   requestHash: event.requestHash,
   previousValueHash: event.previousValueHash,
@@ -111,6 +134,7 @@ const taskValueHash = (task: DatabaseTask): string =>
   sha256(
     JSON.stringify({
       id: task.id,
+      kind: task.kind,
       state: task.state,
       priority: task.priority,
       reasonCodes: task.reasonCodes,
@@ -130,12 +154,22 @@ const assertOpenInput = (input: OpenReviewTaskInput): void => {
   reasonCodes(input.reasonCodes);
 };
 
-const assertResolveInput = (input: ResolveReviewTaskInput): void => {
+const assertCommandInput = (input: {
+  readonly expectedVersion: number;
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}): void => {
   positiveInteger(input.expectedVersion, "expectedVersion");
   requiredText(input.actorId, "actorId", 128);
   requiredText(input.commandKey, "commandKey", 256);
   requiredText(input.requestHash, "requestHash", 256);
   requiredText(input.reason, "reason", 1_000);
+};
+
+const assertResolveInput = (input: ResolveReviewTaskInput): void => {
+  assertCommandInput(input);
 };
 
 const sameReasons = (
@@ -151,8 +185,9 @@ const findOpenResult = async (
 ): Promise<OpenReviewTaskResult | null> => {
   const task = await client.reviewTask.findUnique({
     where: {
-      contentDecisionId_revision: {
+      contentDecisionId_kind_revision: {
         contentDecisionId: input.contentDecisionId,
+        kind: input.kind,
         revision: 1,
       },
     },
@@ -162,6 +197,7 @@ const findOpenResult = async (
   }
   if (
     task.commentId !== BigInt(input.commentId) ||
+    task.kind !== input.kind ||
     task.priority !== input.priority ||
     !sameReasons(task.reasonCodes, input.reasonCodes)
   ) {
@@ -230,6 +266,169 @@ const resolutionAfterSerializationConflict = async (
   return { kind: "VERSION_CONFLICT", currentVersion: current.version };
 };
 
+const replayReopen = async (
+  client: ReviewClient,
+  input: ReopenReviewTaskInput,
+): Promise<ReopenReviewTaskResult | null> => {
+  const event = await client.manualOverrideEvent.findUnique({
+    where: { commandKey: input.commandKey },
+  });
+  if (event === null) {
+    return null;
+  }
+  if (event.action !== "REOPENED" || event.requestHash !== input.requestHash) {
+    return { kind: "IDEMPOTENCY_CONFLICT" };
+  }
+  const task = await client.reviewTask.findUnique({
+    where: { id: event.reviewTaskId },
+  });
+  if (task === null || task.supersedesTaskId !== input.taskId) {
+    return { kind: "IDEMPOTENCY_CONFLICT" };
+  }
+  return {
+    kind: "REOPENED",
+    task: toTask(task),
+    event: toEvent(event),
+    replayed: true,
+  };
+};
+
+const replayEntityMutation = async (
+  client: ReviewClient,
+  input: MergeSubjectsReviewInput | ResolveSubjectUrlReviewInput,
+): Promise<EntityReviewMutationResult | null> => {
+  const event = await client.manualOverrideEvent.findUnique({
+    where: { commandKey: input.commandKey },
+  });
+  if (event === null) {
+    return null;
+  }
+  const matches =
+    event.reviewTaskId === input.taskId &&
+    event.action === "APPROVED" &&
+    event.requestHash === input.requestHash &&
+    ("sourceSubjectId" in input
+      ? event.affectedSubjectId === input.sourceSubjectId &&
+        event.relatedSubjectId === input.targetSubjectId
+      : event.affectedSubjectId === input.subjectId &&
+        event.newUrlCandidateId === input.urlCandidateId);
+  if (!matches) {
+    return { kind: "IDEMPOTENCY_CONFLICT" };
+  }
+  const task = await client.reviewTask.findUnique({
+    where: { id: input.taskId },
+  });
+  if (task === null) {
+    throw new Error("REVIEW_EVENT_TASK_MISSING");
+  }
+  return {
+    kind: "RESOLVED",
+    task: toTask(task),
+    event: toEvent(event),
+    replayed: true,
+  };
+};
+
+const taskMutationState = async (
+  client: PrismaClient,
+  taskId: string,
+): Promise<EntityReviewMutationResult> => {
+  const task = await client.reviewTask.findUnique({
+    where: { id: taskId },
+    select: { state: true, version: true },
+  });
+  if (task === null) {
+    return { kind: "NOT_FOUND" };
+  }
+  if (task.state !== "OPEN") {
+    return { kind: "INVALID_STATE", state: task.state };
+  }
+  return { kind: "VERSION_CONFLICT", currentVersion: task.version };
+};
+
+const reopenState = async (
+  client: PrismaClient,
+  taskId: string,
+): Promise<ReopenReviewTaskResult> => {
+  const task = await client.reviewTask.findUnique({
+    where: { id: taskId },
+    select: { state: true, version: true },
+  });
+  if (task === null) {
+    return { kind: "NOT_FOUND" };
+  }
+  if (task.state === "OPEN") {
+    return { kind: "INVALID_STATE", state: task.state };
+  }
+  return { kind: "VERSION_CONFLICT", currentVersion: task.version };
+};
+
+const completeEntityReview = async (
+  transaction: Prisma.TransactionClient,
+  task: DatabaseTask,
+  input: MergeSubjectsReviewInput | ResolveSubjectUrlReviewInput,
+  previousValueHash: string,
+  newValueHash: string,
+  entity: {
+    readonly affectedSubjectId: string;
+    readonly relatedSubjectId: string | null;
+    readonly previousUrlCandidateId: string | null;
+    readonly newUrlCandidateId: string | null;
+  },
+): Promise<EntityReviewMutationResult> => {
+  const selected = await transaction.selectedComment.findUniqueOrThrow({
+    where: { id: task.commentId },
+    select: { activeDecisionId: true },
+  });
+  const resolvedAt = new Date();
+  const updated = await transaction.reviewTask.updateMany({
+    where: {
+      id: task.id,
+      state: "OPEN",
+      version: input.expectedVersion,
+    },
+    data: {
+      state: "APPROVED",
+      version: { increment: 1 },
+      resolutionReason: requiredText(input.reason, "reason", 1_000),
+      resolvedBy: requiredText(input.actorId, "actorId", 128),
+      resolvedAt,
+    },
+  });
+  if (updated.count !== 1) {
+    const current = await transaction.reviewTask.findUniqueOrThrow({
+      where: { id: task.id },
+      select: { version: true },
+    });
+    return { kind: "VERSION_CONFLICT", currentVersion: current.version };
+  }
+  const event = await transaction.manualOverrideEvent.create({
+    data: {
+      reviewTaskId: task.id,
+      commentId: task.commentId,
+      action: "APPROVED",
+      previousDecisionId: selected.activeDecisionId,
+      newDecisionId: task.contentDecisionId,
+      ...entity,
+      actorId: requiredText(input.actorId, "actorId", 128),
+      requestHash: requiredText(input.requestHash, "requestHash", 256),
+      previousValueHash,
+      newValueHash,
+      reason: requiredText(input.reason, "reason", 1_000),
+      commandKey: requiredText(input.commandKey, "commandKey", 256),
+    },
+  });
+  const resolved = await transaction.reviewTask.findUniqueOrThrow({
+    where: { id: task.id },
+  });
+  return {
+    kind: "RESOLVED",
+    task: toTask(resolved),
+    event: toEvent(event),
+    replayed: false,
+  };
+};
+
 export const createReviewRepository = (
   client: PrismaClient,
 ): ReviewRepository => ({
@@ -262,6 +461,7 @@ export const createReviewRepository = (
             data: {
               commentId: BigInt(input.commentId),
               contentDecisionId: input.contentDecisionId,
+              kind: input.kind,
               priority: input.priority,
               reasonCodes: [...input.reasonCodes],
             },
@@ -351,6 +551,12 @@ export const createReviewRepository = (
               currentVersion: task.version,
             };
           }
+          if (
+            input.outcome === "APPROVED" &&
+            task.kind !== "CONTENT_DECISION"
+          ) {
+            return { kind: "POLICY_INVALID" };
+          }
           const selected = await transaction.selectedComment.findUniqueOrThrow({
             where: { id: task.commentId },
             select: { activeDecisionId: true },
@@ -399,7 +605,10 @@ export const createReviewRepository = (
               commandKey: requiredText(input.commandKey, "commandKey", 256),
             },
           });
-          if (input.outcome === "APPROVED") {
+          if (
+            input.outcome === "APPROVED" &&
+            task.kind === "CONTENT_DECISION"
+          ) {
             const approvalInvariant = await transaction.reviewTask.count({
               where: {
                 id: task.id,
@@ -442,6 +651,425 @@ export const createReviewRepository = (
       }
       if (hasPrismaErrorCode(error, "P2034")) {
         return resolutionAfterSerializationConflict(client, input);
+      }
+      throw error;
+    }
+  },
+
+  async reopenTask(input) {
+    assertCommandInput(input);
+    const replay = await replayReopen(client, input);
+    if (replay !== null) {
+      return replay;
+    }
+    try {
+      return await client.$transaction(
+        async (transaction): Promise<ReopenReviewTaskResult> => {
+          const repeated = await replayReopen(transaction, input);
+          if (repeated !== null) {
+            return repeated;
+          }
+          const previous = await transaction.reviewTask.findUnique({
+            where: { id: input.taskId },
+          });
+          if (previous === null) {
+            return { kind: "NOT_FOUND" };
+          }
+          if (previous.state === "OPEN") {
+            return { kind: "INVALID_STATE", state: previous.state };
+          }
+          if (previous.version !== input.expectedVersion) {
+            return {
+              kind: "VERSION_CONFLICT",
+              currentVersion: previous.version,
+            };
+          }
+          const latest = await transaction.reviewTask.findFirstOrThrow({
+            where: {
+              contentDecisionId: previous.contentDecisionId,
+              kind: previous.kind,
+            },
+            orderBy: { revision: "desc" },
+          });
+          if (latest.id !== previous.id) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const selected = await transaction.selectedComment.findUniqueOrThrow({
+            where: { id: previous.commentId },
+            select: { activeDecisionId: true },
+          });
+          const reopened = await transaction.reviewTask.create({
+            data: {
+              commentId: previous.commentId,
+              contentDecisionId: previous.contentDecisionId,
+              kind: previous.kind,
+              priority: previous.priority,
+              reasonCodes: previous.reasonCodes,
+              revision: previous.revision + 1,
+              supersedesTaskId: previous.id,
+            },
+          });
+          const event = await transaction.manualOverrideEvent.create({
+            data: {
+              reviewTaskId: reopened.id,
+              commentId: reopened.commentId,
+              action: "REOPENED",
+              previousDecisionId: selected.activeDecisionId,
+              newDecisionId: selected.activeDecisionId,
+              actorId: requiredText(input.actorId, "actorId", 128),
+              requestHash: requiredText(input.requestHash, "requestHash", 256),
+              previousValueHash: taskValueHash(previous),
+              newValueHash: taskValueHash(reopened),
+              reason: requiredText(input.reason, "reason", 1_000),
+              commandKey: requiredText(input.commandKey, "commandKey", 256),
+            },
+          });
+          return {
+            kind: "REOPENED",
+            task: toTask(reopened),
+            event: toEvent(event),
+            replayed: false,
+          };
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+      );
+    } catch (error) {
+      if (hasPrismaErrorCode(error, "P2002")) {
+        return (
+          (await replayReopen(client, input)) ?? {
+            kind: "IDEMPOTENCY_CONFLICT",
+          }
+        );
+      }
+      if (hasPrismaErrorCode(error, "P2034")) {
+        const repeated = await replayReopen(client, input);
+        return repeated ?? reopenState(client, input.taskId);
+      }
+      throw error;
+    }
+  },
+
+  async mergeSubjects(input) {
+    assertCommandInput(input);
+    if (input.sourceSubjectId === input.targetSubjectId) {
+      return { kind: "POLICY_INVALID" };
+    }
+    const replay = await replayEntityMutation(client, input);
+    if (replay !== null) {
+      return replay;
+    }
+    try {
+      return await client.$transaction(
+        async (transaction): Promise<EntityReviewMutationResult> => {
+          const repeated = await replayEntityMutation(transaction, input);
+          if (repeated !== null) {
+            return repeated;
+          }
+          const task = await transaction.reviewTask.findUnique({
+            where: { id: input.taskId },
+          });
+          if (task === null) {
+            return { kind: "NOT_FOUND" };
+          }
+          if (task.state !== "OPEN") {
+            return { kind: "INVALID_STATE", state: task.state };
+          }
+          if (task.version !== input.expectedVersion) {
+            return {
+              kind: "VERSION_CONFLICT",
+              currentVersion: task.version,
+            };
+          }
+          if (
+            task.kind !== "SUBJECT_MERGE" ||
+            !task.reasonCodes.includes("NAME_ONLY_MERGE_SUGGESTION")
+          ) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const source = await transaction.subject.findUnique({
+            where: { id: input.sourceSubjectId },
+            include: { aliases: true },
+          });
+          const target = await transaction.subject.findUnique({
+            where: { id: input.targetSubjectId },
+            include: { aliases: true },
+          });
+          if (
+            source === null ||
+            target === null ||
+            source.lifecycleState !== "ACTIVE" ||
+            target.lifecycleState !== "ACTIVE" ||
+            source.type !== target.type
+          ) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const sourceNames = new Set([
+            source.normalizedName,
+            ...source.aliases.map((alias) => alias.normalizedAlias),
+          ]);
+          const targetNames = [
+            target.normalizedName,
+            ...target.aliases.map((alias) => alias.normalizedAlias),
+          ];
+          if (!targetNames.some((name) => sourceNames.has(name))) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const sourceBelongsToDecision =
+            source.createdFromDecisionId === task.contentDecisionId ||
+            (await transaction.subjectMention.count({
+              where: {
+                subjectId: source.id,
+                contentDecisionId: task.contentDecisionId,
+              },
+            })) > 0;
+          if (!sourceBelongsToDecision) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const previousHash = sha256(
+            JSON.stringify({
+              id: source.id,
+              lifecycleState: source.lifecycleState,
+              mergedIntoSubjectId: source.mergedIntoSubjectId,
+            }),
+          );
+          const updated = await transaction.subject.updateMany({
+            where: { id: source.id, lifecycleState: "ACTIVE" },
+            data: {
+              lifecycleState: "MERGED",
+              mergedIntoSubjectId: target.id,
+            },
+          });
+          if (updated.count !== 1) {
+            return { kind: "POLICY_INVALID" };
+          }
+          await transaction.subjectAlias.createMany({
+            data: [
+              {
+                subjectId: target.id,
+                alias: source.name,
+                normalizedAlias: source.normalizedName,
+                contentDecisionId: task.contentDecisionId,
+              },
+              ...source.aliases.map((alias) => ({
+                subjectId: target.id,
+                alias: alias.alias,
+                normalizedAlias: alias.normalizedAlias,
+                contentDecisionId: task.contentDecisionId,
+              })),
+            ],
+            skipDuplicates: true,
+          });
+          const nextHash = sha256(
+            JSON.stringify({
+              id: source.id,
+              lifecycleState: "MERGED",
+              mergedIntoSubjectId: target.id,
+            }),
+          );
+          return completeEntityReview(
+            transaction,
+            task,
+            input,
+            previousHash,
+            nextHash,
+            {
+              affectedSubjectId: source.id,
+              relatedSubjectId: target.id,
+              previousUrlCandidateId: null,
+              newUrlCandidateId: null,
+            },
+          );
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+      );
+    } catch (error) {
+      if (hasPrismaErrorCode(error, "P2002")) {
+        return (
+          (await replayEntityMutation(client, input)) ?? {
+            kind: "IDEMPOTENCY_CONFLICT",
+          }
+        );
+      }
+      if (hasPrismaErrorCode(error, "P2034")) {
+        return (
+          (await replayEntityMutation(client, input)) ??
+          taskMutationState(client, input.taskId)
+        );
+      }
+      throw error;
+    }
+  },
+
+  async resolveSubjectUrl(input) {
+    assertCommandInput(input);
+    const replay = await replayEntityMutation(client, input);
+    if (replay !== null) {
+      return replay;
+    }
+    try {
+      return await client.$transaction(
+        async (transaction): Promise<EntityReviewMutationResult> => {
+          const repeated = await replayEntityMutation(transaction, input);
+          if (repeated !== null) {
+            return repeated;
+          }
+          const task = await transaction.reviewTask.findUnique({
+            where: { id: input.taskId },
+          });
+          if (task === null) {
+            return { kind: "NOT_FOUND" };
+          }
+          if (task.state !== "OPEN") {
+            return { kind: "INVALID_STATE", state: task.state };
+          }
+          if (task.version !== input.expectedVersion) {
+            return {
+              kind: "VERSION_CONFLICT",
+              currentVersion: task.version,
+            };
+          }
+          if (
+            task.kind !== "URL_RESOLUTION" ||
+            !task.reasonCodes.some(
+              (reason) =>
+                reason === "MISSING_CANONICAL_URL" ||
+                reason === "AMBIGUOUS_CANONICAL_URL",
+            )
+          ) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const subject = await transaction.subject.findUnique({
+            where: { id: input.subjectId },
+            include: { aliases: true },
+          });
+          const candidate = await transaction.urlCandidate.findUnique({
+            where: { id: input.urlCandidateId },
+          });
+          const selected = await transaction.selectedComment.findUnique({
+            where: { id: task.commentId },
+            select: {
+              rootId: true,
+              resolutionPath: { select: { resolvedRootId: true } },
+            },
+          });
+          if (
+            subject === null ||
+            candidate === null ||
+            selected === null ||
+            subject.lifecycleState !== "ACTIVE" ||
+            candidate.validationState === "REJECTED" ||
+            candidate.canonicalUrl === null ||
+            (candidate.scheme !== "http" && candidate.scheme !== "https") ||
+            candidate.hnItemId === null ||
+            candidate.sourceDocument !== `hn:item:${candidate.hnItemId}` ||
+            subject.canonicalUrlCandidateId === candidate.id
+          ) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const resolvedRootId =
+            selected.resolutionPath?.resolvedRootId ?? selected.rootId;
+          if (
+            candidate.hnItemId !== task.commentId &&
+            candidate.hnItemId !== resolvedRootId
+          ) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const subjectBelongsToDecision =
+            subject.createdFromDecisionId === task.contentDecisionId ||
+            (await transaction.subjectMention.count({
+              where: {
+                subjectId: subject.id,
+                contentDecisionId: task.contentDecisionId,
+              },
+            })) > 0;
+          if (!subjectBelongsToDecision) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const identity = createSubjectIdentity(
+            {
+              name: subject.name,
+              aliases: subject.aliases.map((alias) => alias.alias),
+              subjectType: subject.type,
+              canonicalUrl: candidate.canonicalUrl,
+              verifiedOfficialDomain: null,
+              disambiguatingRootId: hnItemId(Number(resolvedRootId)),
+              provenanceKey: `review-task:${task.id}`,
+            },
+            { sha256 },
+          );
+          if (identity.canonicalUrl !== candidate.canonicalUrl) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const collision = await transaction.subject.findUnique({
+            where: { dedupKey: identity.dedupKey },
+            select: { id: true },
+          });
+          if (collision !== null && collision.id !== subject.id) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const previousHash = sha256(
+            JSON.stringify({
+              id: subject.id,
+              dedupKey: subject.dedupKey,
+              identityBasis: subject.identityBasis,
+              ecosystemCoordinate: subject.ecosystemCoordinate,
+              canonicalUrlCandidateId: subject.canonicalUrlCandidateId,
+              contextKey: subject.contextKey,
+            }),
+          );
+          const updated = await transaction.subject.updateMany({
+            where: { id: subject.id, lifecycleState: "ACTIVE" },
+            data: {
+              dedupKey: identity.dedupKey,
+              identityBasis: identity.basis,
+              ecosystemCoordinate: identity.ecosystemCoordinate,
+              canonicalUrlCandidateId: candidate.id,
+              officialDomain: identity.officialDomain,
+              contextKey: identity.contextKey,
+            },
+          });
+          if (updated.count !== 1) {
+            return { kind: "POLICY_INVALID" };
+          }
+          const nextHash = sha256(
+            JSON.stringify({
+              id: subject.id,
+              dedupKey: identity.dedupKey,
+              identityBasis: identity.basis,
+              ecosystemCoordinate: identity.ecosystemCoordinate,
+              canonicalUrlCandidateId: candidate.id,
+              contextKey: identity.contextKey,
+            }),
+          );
+          return completeEntityReview(
+            transaction,
+            task,
+            input,
+            previousHash,
+            nextHash,
+            {
+              affectedSubjectId: subject.id,
+              relatedSubjectId: null,
+              previousUrlCandidateId: subject.canonicalUrlCandidateId,
+              newUrlCandidateId: candidate.id,
+            },
+          );
+        },
+        { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+      );
+    } catch (error) {
+      if (hasPrismaErrorCode(error, "P2002")) {
+        return (
+          (await replayEntityMutation(client, input)) ?? {
+            kind: "IDEMPOTENCY_CONFLICT",
+          }
+        );
+      }
+      if (hasPrismaErrorCode(error, "P2034")) {
+        return (
+          (await replayEntityMutation(client, input)) ??
+          taskMutationState(client, input.taskId)
+        );
       }
       throw error;
     }

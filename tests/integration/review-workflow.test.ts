@@ -295,6 +295,62 @@ describe("review workflow repository", () => {
     ).resolves.toBeNull();
   });
 
+  it("supersedes an open task and reopens it as an append-only revision", async () => {
+    const decision = await prepareDecision();
+    const opened = await service.openPolicyReview({
+      commentId,
+      contentDecisionId: decision.id,
+      policy: UNPROMOTED_MODEL_REVIEW_DECISION,
+    });
+    const supersedeCommand = {
+      taskId: opened.task.id,
+      expectedVersion: 1,
+      actorId: "owner",
+      commandKey: "supersede-review-9101",
+      reason: "A revised review is required",
+    };
+
+    const superseded = await service.supersede(supersedeCommand);
+    await expect(service.supersede(supersedeCommand)).resolves.toEqual(
+      superseded,
+    );
+    expect(superseded).toMatchObject({
+      id: opened.task.id,
+      state: "SUPERSEDED",
+      version: 2,
+      revision: 1,
+    });
+
+    const reopenCommand = {
+      taskId: superseded.id,
+      expectedVersion: 2,
+      actorId: "owner",
+      commandKey: "reopen-review-9101",
+      reason: "Review against the corrected context",
+    };
+    const reopened = await service.reopen(reopenCommand);
+    await expect(service.reopen(reopenCommand)).resolves.toEqual(reopened);
+
+    expect(reopened).toMatchObject({
+      state: "OPEN",
+      version: 1,
+      revision: 2,
+      supersedesTaskId: superseded.id,
+      kind: "CONTENT_DECISION",
+    });
+    await expect(database.client.reviewTask.count()).resolves.toBe(2);
+    await expect(database.client.manualOverrideEvent.count()).resolves.toBe(3);
+    const actions = await database.client.manualOverrideEvent.findMany({
+      orderBy: { createdAt: "asc" },
+      select: { action: true },
+    });
+    expect(actions.map((event) => event.action)).toEqual([
+      "OPENED",
+      "SUPERSEDED",
+      "REOPENED",
+    ]);
+  });
+
   it("reviews through the authenticated API and records the configured actor", async () => {
     const decision = await prepareDecision();
     const opened = await service.openPolicyReview({

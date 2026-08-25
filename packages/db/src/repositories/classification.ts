@@ -192,7 +192,14 @@ export const createClassificationRepository = (
     const selected = await client.selectedComment.findUnique({
       where: { id: BigInt(commentId) },
       include: {
-        item: { include: { urlCandidates: true } },
+        item: {
+          include: {
+            urlCandidates: {
+              where: { classifierEligible: true },
+              orderBy: [{ sourceOrdinal: "asc" }, { id: "asc" }],
+            },
+          },
+        },
       },
     });
     if (selected === null) {

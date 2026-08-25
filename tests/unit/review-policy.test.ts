@@ -107,9 +107,11 @@ describe("mandatory review policy", () => {
 
   it.each(cases)("requires review for $reason", ({ reason, input }) => {
     const decision = evaluateReviewPolicy({ ...safeInput, ...input });
+    const negative = evaluateReviewPolicy(safeInput);
 
     expect(decision.required).toBe(true);
     expect(decision.reasons).toContain(reason);
+    expect(negative.reasons).not.toContain(reason);
   });
 
   it("covers every stable reason code", () => {

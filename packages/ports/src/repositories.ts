@@ -15,16 +15,23 @@ import type {
   OccurrenceStatus,
   PipelineJob,
   ManualOverrideEvent,
+  ExpertNoteType,
+  MaterializedEvidenceOrigin,
   ReviewPriority,
   ReviewReasonCode,
   ReviewTask,
   ReviewTaskId,
+  ReviewTaskKind,
   ResolutionPath,
   SelectedComment,
   SelectionOccurrence,
   SelectionOccurrenceInput,
   SelectedOccurrenceContext,
+  SubjectId,
+  SubjectIdentity,
+  SubjectType,
   UrlCandidate,
+  UrlCandidateId,
 } from "@hn-knowledge/domain";
 
 import type { StoredClassifierSource } from "./classifier.js";
@@ -87,6 +94,7 @@ export interface ClassificationRepository {
 export interface OpenReviewTaskInput {
   readonly commentId: HnItemId;
   readonly contentDecisionId: ContentDecisionId;
+  readonly kind: ReviewTaskKind;
   readonly priority: Exclude<ReviewPriority, "NONE">;
   readonly reasonCodes: readonly ReviewReasonCode[];
   readonly actorId: string;
@@ -104,7 +112,7 @@ export interface OpenReviewTaskResult {
 export interface ResolveReviewTaskInput {
   readonly taskId: ReviewTaskId;
   readonly expectedVersion: number;
-  readonly outcome: "APPROVED" | "REJECTED";
+  readonly outcome: "APPROVED" | "REJECTED" | "SUPERSEDED";
   readonly actorId: string;
   readonly commandKey: string;
   readonly requestHash: string;
@@ -127,6 +135,64 @@ export type ResolveReviewTaskResult =
       readonly kind: "INVALID_STATE";
       readonly state: ReviewTask["state"];
     }
+  | { readonly kind: "POLICY_INVALID" }
+  | { readonly kind: "IDEMPOTENCY_CONFLICT" };
+
+export interface ReopenReviewTaskInput {
+  readonly taskId: ReviewTaskId;
+  readonly expectedVersion: number;
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}
+
+export type ReopenReviewTaskResult =
+  | {
+      readonly kind: "REOPENED";
+      readonly task: ReviewTask;
+      readonly event: ManualOverrideEvent;
+      readonly replayed: boolean;
+    }
+  | { readonly kind: "NOT_FOUND" }
+  | { readonly kind: "VERSION_CONFLICT"; readonly currentVersion: number }
+  | { readonly kind: "INVALID_STATE"; readonly state: ReviewTask["state"] }
+  | { readonly kind: "POLICY_INVALID" }
+  | { readonly kind: "IDEMPOTENCY_CONFLICT" };
+
+export interface MergeSubjectsReviewInput {
+  readonly taskId: ReviewTaskId;
+  readonly expectedVersion: number;
+  readonly sourceSubjectId: SubjectId;
+  readonly targetSubjectId: SubjectId;
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}
+
+export interface ResolveSubjectUrlReviewInput {
+  readonly taskId: ReviewTaskId;
+  readonly expectedVersion: number;
+  readonly subjectId: SubjectId;
+  readonly urlCandidateId: UrlCandidateId;
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}
+
+export type EntityReviewMutationResult =
+  | {
+      readonly kind: "RESOLVED";
+      readonly task: ReviewTask;
+      readonly event: ManualOverrideEvent;
+      readonly replayed: boolean;
+    }
+  | { readonly kind: "NOT_FOUND" }
+  | { readonly kind: "VERSION_CONFLICT"; readonly currentVersion: number }
+  | { readonly kind: "INVALID_STATE"; readonly state: ReviewTask["state"] }
+  | { readonly kind: "POLICY_INVALID" }
   | { readonly kind: "IDEMPOTENCY_CONFLICT" };
 
 export interface ReviewTaskPage {
@@ -142,6 +208,116 @@ export interface ReviewRepository {
     afterId: ReviewTaskId | null,
   ): Promise<ReviewTaskPage>;
   resolveTask(input: ResolveReviewTaskInput): Promise<ResolveReviewTaskResult>;
+  reopenTask(input: ReopenReviewTaskInput): Promise<ReopenReviewTaskResult>;
+  mergeSubjects(
+    input: MergeSubjectsReviewInput,
+  ): Promise<EntityReviewMutationResult>;
+  resolveSubjectUrl(
+    input: ResolveSubjectUrlReviewInput,
+  ): Promise<EntityReviewMutationResult>;
+}
+
+export interface SubjectMaterializationSource {
+  readonly decision: ContentDecision;
+  readonly resolvedRootId: HnItemId;
+}
+
+export interface MaterializationUrlCandidate {
+  readonly classifierId: string;
+  readonly rawUrl: string;
+  readonly canonicalUrl: string;
+  readonly sourceDocument: string;
+  readonly originField: string;
+  readonly scheme: "http" | "https";
+  readonly host: string;
+  readonly contentHash: string;
+  readonly sourceOrdinal: number;
+}
+
+export interface MaterializedSubjectInput {
+  readonly localKey: string;
+  readonly identity: SubjectIdentity;
+  readonly name: string;
+  readonly aliases: readonly {
+    readonly value: string;
+    readonly normalized: string;
+  }[];
+  readonly canonicalUrlCandidate: MaterializationUrlCandidate | null;
+}
+
+export interface MaterializedSubjectMentionInput {
+  readonly subjectLocalKey: string | null;
+  readonly existingSubjectId: SubjectId | null;
+  readonly sourceKind: "DISCOVERY" | "EXPERT_NOTE";
+  readonly sourceOrdinal: number;
+  readonly evidenceOrigin: MaterializedEvidenceOrigin;
+  readonly confidence: number;
+  readonly evidenceSpanIds: readonly string[];
+}
+
+export interface MaterializedDiscoveryInput {
+  readonly subjectLocalKey: string;
+  readonly sourceOrdinal: number;
+  readonly identityKey: string;
+  readonly rootStoryOnly: boolean;
+  readonly descriptionClaim: string;
+  readonly evidenceOrigin: MaterializedEvidenceOrigin;
+  readonly confidence: number;
+  readonly evidenceSpanIds: readonly string[];
+}
+
+export interface MaterializedExpertNoteInput {
+  readonly noteType: ExpertNoteType;
+  readonly title: string;
+  readonly summary: string;
+  readonly relatedSubjectNames: readonly string[];
+  readonly evidenceOrigin: MaterializedEvidenceOrigin;
+  readonly confidence: number;
+  readonly evidenceSpanIds: readonly string[];
+  readonly subjectLocalKeys: readonly string[];
+  readonly subjectIds: readonly SubjectId[];
+}
+
+export interface MaterializeClassificationInput {
+  readonly decisionId: ContentDecisionId;
+  readonly commentId: HnItemId;
+  readonly resolvedRootId: HnItemId;
+  readonly extractionVersion: string;
+  readonly urlCandidates: readonly MaterializationUrlCandidate[];
+  readonly subjects: readonly MaterializedSubjectInput[];
+  readonly mentions: readonly MaterializedSubjectMentionInput[];
+  readonly discoveries: readonly MaterializedDiscoveryInput[];
+  readonly expertNote: MaterializedExpertNoteInput | null;
+}
+
+export interface MaterializeClassificationResult {
+  readonly subjects: number;
+  readonly mentions: number;
+  readonly discoveries: number;
+  readonly discoverySources: number;
+  readonly expertNotes: number;
+}
+
+export interface SubjectNameMatch {
+  readonly id: SubjectId;
+  readonly type: SubjectType;
+  readonly normalizedName: string;
+  readonly normalizedAliases: readonly string[];
+  readonly contextKey: string;
+  readonly dedupKey: string;
+}
+
+export interface SubjectMaterializationRepository {
+  loadSource(
+    decisionId: ContentDecisionId,
+  ): Promise<SubjectMaterializationSource | null>;
+  findNameMatches(
+    normalizedNames: readonly string[],
+    contextKey: string | null,
+  ): Promise<readonly SubjectNameMatch[]>;
+  materialize(
+    input: MaterializeClassificationInput,
+  ): Promise<MaterializeClassificationResult>;
 }
 
 export interface StartIngestionResult {

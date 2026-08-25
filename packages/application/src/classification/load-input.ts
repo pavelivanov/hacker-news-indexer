@@ -52,13 +52,13 @@ export const loadClassifierInput = async (
     rootBlocks: root.blocks,
     urlCandidates: [
       ...source.commentUrlCandidates,
+      ...rootUrlCandidate,
       ...root.urlCandidates.map((candidate) => ({
         canonicalUrl: candidate.canonicalUrl ?? candidate.rawUrl,
         sourceDocument: candidate.sourceDocument,
         originField: candidate.originField,
         validationState: candidate.validationState,
       })),
-      ...rootUrlCandidate,
     ],
   });
 };

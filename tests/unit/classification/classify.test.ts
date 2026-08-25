@@ -228,6 +228,39 @@ describe("classify comment", () => {
     expect(repository.runs).toHaveLength(1);
   });
 
+  it("preserves validated model review reasons alongside the provider gate", async () => {
+    const output = {
+      ...validOutput,
+      review: {
+        required: true,
+        reasons: ["LEGAL_RECOMMENDATION"],
+      },
+    } as const;
+    const classifier = new FixtureClassifier({
+      outputs: new Map([[Number(commentId), output]]),
+    });
+    const repository = new MemoryClassificationRepository();
+    const openedReviews: unknown[] = [];
+
+    await createClassifyComment(classifier, repository, hasher, {
+      openPolicyReview: (input) => {
+        openedReviews.push(input);
+        return Promise.resolve();
+      },
+    })({ commentId, boundedInput });
+
+    expect(openedReviews).toMatchObject([
+      {
+        policy: {
+          required: true,
+          reasons: ["LEGAL_RECOMMENDATION", "UNPROMOTED_MODEL_DECISION"],
+          priority: "HIGH",
+          priorityScore: 75,
+        },
+      },
+    ]);
+  });
+
   it("fails closed to review after a second invalid response", async () => {
     const classifier = new SequenceClassifier(["{", "still invalid"]);
     const repository = new MemoryClassificationRepository();
