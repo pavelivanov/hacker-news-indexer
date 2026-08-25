@@ -6,16 +6,13 @@
 
 ## Status
 
-- **Execution status**: READY FOR SEALED HOLDOUT — deterministic fixture/shadow
-  v3 gates pass and `gpt-5.6-sol` low passes every development acceptance gate
-  with `classification-prompt.v3`. The 65-row stable-gold slice has 1.00 macro
-  F1, Discovery precision, Expert-note precision, and URL-grounding precision.
-  A cost-instrumented Terra-low v3 challenge was rejected because stable
-  Discovery precision was 0.8571, below the 0.93 gate; its measured $0.31432
-  cost includes all 69 main and four adversarial calls. Sol remains selected.
-  Five improper development consensus overrides were removed; four genuine
-  annotator disagreements remain diagnostic. The 29-row holdout is byte-for-byte
-  unchanged and has not been evaluated.
+- **Execution status**: BLOCKED — `gpt-5.6-sol` low passed every development
+  gate but failed its single sealed prompt-v3 holdout. On the 23 stable holdout
+  rows, macro F1 was 0.6190 and Expert-note precision was 0.4000, below the
+  required 0.85 and 0.88. Discovery precision, URL grounding, validation,
+  safety, coverage, and latency passed. Thresholds were not weakened,
+  classification remains disabled, and the opened holdout must not be used for
+  tuning or rerun as a fresh promotion gate.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH

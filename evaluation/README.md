@@ -12,9 +12,9 @@ is computed from the two pre-adjudication primary-class sequences.
 Development consensus is authoritative: adjudication may choose between the
 two proposed classes when annotators disagree, but may not override a unanimous
 development label to reproduce historical aggregate totals. Counts are
-descriptive validation output, not an input or invariant. Two pre-existing
-holdout overrides remain sealed and unchanged until the holdout is formally
-opened.
+descriptive validation output, not an input or invariant. The two pre-existing
+holdout overrides remained unchanged through the single formal holdout opening
+and may not be used for subsequent prompt or provider tuning.
 
 Evidence uses JavaScript UTF-16 offsets into the normalized documents generated
 by `npm run evaluation:build-source`. Every span stores its exact text and
@@ -36,8 +36,9 @@ The checked-in `benchmark-fixture-v3.json` and `shadow-fixture-v3.json` reports
 are deterministic gold replays through the production validation path. They
 prove pipeline behavior, not model quality. Historical v1/v2 reports remain
 for audit. A report for a live provider must use only the 69-row development
-split until a configuration is selected; the 29-row holdout is not a
-prompt-tuning set.
+split until a configuration is selected. The selected Sol-low/prompt-v3
+configuration failed its single 29-row holdout; that opened split is never a
+prompt-tuning set and cannot be reused as a fresh promotion gate.
 
 Report v3 separates classified quality from `REVIEW`/invalid abstention and
 reports classification and automatic coverage. Discovery evidence is matched
@@ -87,4 +88,5 @@ details. The report records the resulting price estimate, an all-input-uncached
 comparison, and a conservative bound that prices every input token at the
 highest published input/cache-write rate. Use `--mode holdout` only after a
 development report passes every acceptance gate. Never use the holdout for
-prompt, model, or reasoning-effort tuning.
+prompt, model, or reasoning-effort tuning. The authorized Sol-low/prompt-v3
+holdout has already run and failed; do not rerun it.
