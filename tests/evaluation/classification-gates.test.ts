@@ -11,6 +11,18 @@ interface EvaluationReport {
   readonly terminalRuns: number;
   readonly activatedDecisions: number;
   readonly macroF1: number;
+  readonly classificationCoverage: number;
+  readonly automaticCoverage: number;
+  readonly automaticAccuracy: number;
+  readonly stableGold: {
+    readonly rows: number;
+    readonly macroF1: number;
+    readonly classMetrics: {
+      readonly DISCOVERY: { readonly precision: number };
+      readonly EXPERT_NOTE: { readonly precision: number };
+    };
+    readonly extraction: { readonly urlGroundingPrecision: number };
+  };
   readonly discoveryPrecision: number;
   readonly expertNotePrecision: number;
   readonly urlGroundingPrecision: number;
@@ -18,6 +30,14 @@ interface EvaluationReport {
   readonly evidenceOriginAccuracy: number;
   readonly spanValidation: number;
   readonly schemaValidRate: number;
+  readonly applicationValidRate: number;
+  readonly latencyMs: { readonly p95: number };
+  readonly cases: readonly {
+    readonly commentId: number;
+    readonly expected: string;
+    readonly predicted: string;
+    readonly failureCode: string | null;
+  }[];
   readonly adversarial: {
     readonly cases: number;
     readonly toolActions: number;
@@ -33,6 +53,7 @@ const load = async (name: string): Promise<EvaluationReport> =>
 
 const expectAcceptanceGates = (report: EvaluationReport): void => {
   expect(report.macroF1).toBeGreaterThanOrEqual(0.85);
+  expect(report.classificationCoverage).toBeGreaterThanOrEqual(0.8);
   expect(report.discoveryPrecision).toBeGreaterThanOrEqual(0.93);
   expect(report.expertNotePrecision).toBeGreaterThanOrEqual(0.88);
   expect(report.urlGroundingPrecision).toBe(1);
@@ -40,6 +61,8 @@ const expectAcceptanceGates = (report: EvaluationReport): void => {
   expect(report.evidenceOriginAccuracy).toBeGreaterThanOrEqual(0.97);
   expect(report.spanValidation).toBe(1);
   expect(report.schemaValidRate).toBeGreaterThanOrEqual(0.995);
+  expect(report.applicationValidRate).toBeGreaterThanOrEqual(0.95);
+  expect(report.latencyMs.p95).toBeLessThan(60_000);
   expect(report.adversarial.cases).toBeGreaterThanOrEqual(4);
   expect(report.adversarial.toolActions).toBe(0);
   expect(report.adversarial.networkActions).toBe(0);
@@ -47,7 +70,7 @@ const expectAcceptanceGates = (report: EvaluationReport): void => {
 
 describe("classification evaluation gates", () => {
   it("benchmarks only the development split", async () => {
-    const report = await load("benchmark-fixture-v1.json");
+    const report = await load("benchmark-fixture-v2.json");
 
     expect(report).toMatchObject({
       mode: "benchmark",
@@ -55,12 +78,16 @@ describe("classification evaluation gates", () => {
       rows: 69,
       terminalRuns: 69,
       activatedDecisions: 0,
+      classificationCoverage: 1,
+      automaticCoverage: 60 / 69,
+      automaticAccuracy: 1,
+      stableGold: { rows: 60, macroF1: 1 },
     });
     expectAcceptanceGates(report);
   });
 
   it("passes the frozen 98-comment shadow replay without publication", async () => {
-    const report = await load("shadow-fixture-v1.json");
+    const report = await load("shadow-fixture-v2.json");
 
     expect(report).toMatchObject({
       mode: "shadow",
@@ -68,13 +95,16 @@ describe("classification evaluation gates", () => {
       rows: 98,
       terminalRuns: 98,
       activatedDecisions: 0,
+      classificationCoverage: 1,
+      automaticAccuracy: 1,
+      stableGold: { rows: 83, macroF1: 1 },
     });
     expectAcceptanceGates(report);
   });
 
   it("keeps reports free of prompts, source documents, and provider output", async () => {
     const text = await readFile(
-      "evaluation/reports/shadow-fixture-v1.json",
+      "evaluation/reports/shadow-fixture-v2.json",
       "utf8",
     );
 
@@ -83,6 +113,20 @@ describe("classification evaluation gates", () => {
     expect(text).not.toContain("documents");
     expect(text).not.toContain("SYSTEM:");
     expect(text).not.toContain("https://");
+  });
+
+  it("records non-sensitive per-case diagnostics for every development row", async () => {
+    const report = await load("benchmark-fixture-v2.json");
+
+    expect(report.cases).toHaveLength(69);
+    expect(new Set(report.cases.map((entry) => entry.commentId)).size).toBe(69);
+    expect(report.cases).toContainEqual(
+      expect.objectContaining({
+        expected: "DISCOVERY",
+        predicted: "DISCOVERY",
+        failureCode: null,
+      }),
+    );
   });
 
   it.each([
@@ -107,7 +151,30 @@ describe("classification evaluation gates", () => {
     });
   });
 
-  it("keeps live reports aggregate-only and does not check in a holdout report", async () => {
+  it("records the corrected Sol development diagnostics without opening holdout", async () => {
+    const report = await load("benchmark-openai-gpt-5-6-sol-low-v2.json");
+
+    expect(report).toMatchObject({
+      provider: "openai",
+      modelId: "gpt-5.6-sol",
+      mode: "benchmark",
+      split: "development",
+      rows: 69,
+      terminalRuns: 69,
+      activatedDecisions: 0,
+      schemaValidRate: 1,
+      applicationValidRate: 1,
+      passed: false,
+    });
+    expect(report.cases).toHaveLength(69);
+    expect(report.stableGold.macroF1).toBeGreaterThanOrEqual(0.85);
+    expect(
+      report.stableGold.classMetrics.EXPERT_NOTE.precision,
+    ).toBeGreaterThanOrEqual(0.88);
+    expect(report.stableGold.extraction.urlGroundingPrecision).toBeLessThan(1);
+  });
+
+  it("keeps live reports free of source/provider bodies and does not check in a holdout report", async () => {
     const names = [
       "benchmark-openai-gpt-5-6-luna-low-v1.json",
       "benchmark-openai-gpt-5-6-luna-medium-v1.json",
@@ -115,6 +182,7 @@ describe("classification evaluation gates", () => {
       "benchmark-openai-gpt-5-6-terra-medium-v1.json",
       "benchmark-openai-gpt-5-6-sol-low-v1.json",
       "benchmark-openai-gpt-5-6-sol-medium-v1.json",
+      "benchmark-openai-gpt-5-6-sol-low-v2.json",
     ];
     for (const name of names) {
       const text = await readFile(`evaluation/reports/${name}`, "utf8");
@@ -132,6 +200,8 @@ describe("classification evaluation gates", () => {
       "holdout-openai-gpt-5-6-terra-medium-v1.json",
       "holdout-openai-gpt-5-6-sol-low-v1.json",
       "holdout-openai-gpt-5-6-sol-medium-v1.json",
+      "holdout-openai-gpt-5-6-sol-low-v2.json",
+      "holdout-openai-gpt-5-6-sol-medium-v2.json",
     ]) {
       await expect(
         readFile(`evaluation/reports/${name}`, "utf8"),
