@@ -43,7 +43,6 @@ export class ClassificationExecutionError extends Error {
 export interface ClassifyCommentInput {
   readonly commentId: HnItemId;
   readonly boundedInput: BoundedClassifierInput;
-  readonly activateDecision?: boolean;
   readonly persistRetryableFailure?: boolean;
 }
 
@@ -208,10 +207,6 @@ export const createClassifyComment =
       }
 
       const output = validated.output;
-      const runStatus =
-        output.primary_decision === "REVIEW" || output.review.required
-          ? "REVIEW"
-          : "SUCCEEDED";
       const recorded = await repository.recordRun({
         commentId: input.commentId,
         inputHash,
@@ -231,7 +226,9 @@ export const createClassifyComment =
         cachedInputTokens: sumUsage(responses, "cachedInputTokens"),
         cacheWriteInputTokens: sumUsage(responses, "cacheWriteInputTokens"),
         outputTokens: sumUsage(responses, "outputTokens"),
-        status: runStatus,
+        // Model output is diagnostic/shadow data until an authenticated human
+        // review use case explicitly activates a decision.
+        status: "REVIEW",
         errorCode: null,
       });
       const decision = await repository.saveDecision({
@@ -241,7 +238,7 @@ export const createClassifyComment =
         primaryDecision: output.primary_decision,
         decisionConfidence: output.decision_confidence,
         materiallyTechnical: output.comment_relevance.is_materially_technical,
-        reviewRequired: output.review.required,
+        reviewRequired: true,
         validatedOutput: output,
         manualOverrideOfId: null,
         evidenceSpans: validated.evidenceSpans.map((span) => ({
@@ -253,9 +250,6 @@ export const createClassifyComment =
           textHash: span.textHash,
         })),
       });
-      if (input.activateDecision === true) {
-        await repository.activateDecision(input.commentId, decision.id);
-      }
       return { kind: "DECISION", run: recorded.run, decision, output };
     }
 

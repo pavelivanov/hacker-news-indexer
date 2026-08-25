@@ -1,15 +1,24 @@
 # Plan 004: Implement subjects, discoveries, notes, and human review
 
-> **Executor instructions**: Complete Plan 003 with passing evaluation gates. Keep all new content non-public until review policy makes it eligible. Update Plan 004 in `plans/README.md` only after audit/idempotency tests pass.
+> **Executor instructions**: Plan 003 implementation must be present, but its v1
+> provider gate may remain blocked while Plan 003R rebuilds evaluation on fresh
+> data. In that state, every model-derived decision is inactive and requires
+> human review; materialization tests use fixtures or explicit manual decisions,
+> and nothing becomes feed/export eligible automatically. Update Plan 004 in
+> `plans/README.md` only after audit/idempotency tests pass.
 >
-> **Drift check (run first)**: verify Plans 001–003 are `DONE`; run `npm run test:evaluation -- --mode replay`; confirm the active classification schema is `classification.v1` and the seed metrics still pass.
+> **Drift check (run first)**: verify Plans 001–002 are `DONE`; accept Plan 003
+> only as `DONE` or `BLOCKED` by a recorded terminal holdout failure; run
+> `npm run test:evaluation`; confirm cycle validation passes, the active schema
+> is `classification.v1`, and model execution cannot activate a decision.
 
 ## Status
 
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH
-- **Depends on**: `plans/003-implement-grounded-classification.md`
+- **Depends on**: Plan 003 implementation; provider promotion may recover in
+  parallel under `plans/003r-recover-classifier-generalization.md`
 - **Category**: feature / data integrity / review
 - **Planned at**: unborn repository with no `HEAD`, 2026-08-24
 
@@ -160,7 +169,9 @@ Required gates: subject-dedup precision ≥ 0.97 and recall ≥ 0.90. Do not low
 
 ## STOP conditions
 
-- Plan 003 metrics no longer pass.
+- Deterministic classification validation or evaluation-cycle integrity
+  regresses. A recorded provider-quality failure alone is not a stop condition
+  for review-only work.
 - Subject identity requires external-page fetching to work acceptably.
 - A proposed merge cannot preserve all evidence/provenance/audit history.
 - Review authentication requires exposing the private token to logs or checked-in files.

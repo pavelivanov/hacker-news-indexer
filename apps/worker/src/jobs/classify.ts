@@ -48,7 +48,6 @@ export const createClassifyJobHandler = (
       await classify({
         commentId: selectedId,
         boundedInput: input,
-        activateDecision: false,
         persistRetryableFailure: job.attempts >= maximumAttempts,
       });
     } catch (error) {
