@@ -2,6 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 
 import {
   createReviewService,
+  createKnowledgeReader,
+  type KnowledgeReader,
   createStartIngestion,
   type ReviewService,
   type StartIngestion,
@@ -11,6 +13,7 @@ import {
   checkDatabaseReadiness,
   createIngestionRunRepository,
   createReviewRepository,
+  createKnowledgeReaderRepository,
   getDatabase,
 } from "@hn-knowledge/db";
 import { Hono } from "hono";
@@ -19,6 +22,7 @@ import { createBearerAuth } from "./middleware/bearer-auth.js";
 import { registerHealthRoutes, type HealthBindings } from "./routes/health.js";
 import { registerIngestionRoutes } from "./routes/ingestion.js";
 import { registerReviewRoutes } from "./routes/review.js";
+import { registerReaderRoutes } from "./routes/reader.js";
 
 const SAFE_REQUEST_ID = /^[A-Za-z0-9._-]{1,128}$/u;
 
@@ -37,6 +41,7 @@ export interface AppOptions {
   readonly startIngestion?: StartIngestion;
   readonly reviewService?: ReviewService;
   readonly reviewActorId?: string;
+  readonly knowledgeReader?: KnowledgeReader;
 }
 
 export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
@@ -57,6 +62,15 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
     createReviewService(createReviewRepository(getDatabase().client), {
       sha256: (value) => createHash("sha256").update(value).digest("hex"),
     });
+  const apiToken = options.apiToken ?? config.APP_API_TOKEN;
+  const knowledgeReader =
+    options.knowledgeReader ??
+    createKnowledgeReader(
+      createKnowledgeReaderRepository(getDatabase().client),
+      {
+        cursorSecret: apiToken ?? "reader-cursor-disabled",
+      },
+    );
 
   app.use("*", async (context, next) => {
     const suppliedRequestId = context.req.header("x-request-id");
@@ -71,7 +85,7 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
   });
 
   registerHealthRoutes(app, checkReadiness);
-  app.use("/v1/*", createBearerAuth(options.apiToken ?? config.APP_API_TOKEN));
+  app.use("/v1/*", createBearerAuth(apiToken));
   registerIngestionRoutes(app, {
     maxRange: options.maxIngestionRange ?? config.INGESTION_MAX_RANGE,
     startIngestion,
@@ -80,6 +94,7 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
     service: reviewService,
     actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
   });
+  registerReaderRoutes(app, { reader: knowledgeReader });
 
   app.notFound((context) =>
     context.json(
