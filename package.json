@@ -32,6 +32,7 @@
     "evaluation:build-source": "tsx scripts/build-evaluation-source.mts",
     "evaluation:adjudicate": "npm run evaluation:build-source && tsx scripts/adjudicate-evaluation-corpus.mts",
     "evaluation:validate-corpus": "npm run evaluation:build-source && tsx scripts/validate-evaluation-corpus.mts",
+    "evaluation:rescore-report": "tsx scripts/rescore-evaluation-report.mts",
     "eval": "npm run evaluation:build-source && tsx scripts/evaluate-classifier.mts --mode benchmark",
     "classify:shadow": "npm run evaluation:build-source && tsx scripts/evaluate-classifier.mts --mode shadow --provider fixture",
     "seed:capture": "node scripts/capture-seed.mjs",

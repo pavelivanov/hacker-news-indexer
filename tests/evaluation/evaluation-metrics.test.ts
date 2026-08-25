@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   calculateClassificationMetrics,
   calculateExtractionMetrics,
+  matchEvaluationDiscoveries,
   type EvaluationConfusionMatrix,
 } from "@hn-knowledge/application";
 
@@ -116,5 +117,89 @@ describe("evaluation metrics", () => {
 
     expect(metrics.goldEvidenceOriginAgreement).toBe(0);
     expect(metrics.goldEvidenceOriginCoverage).toBe(0);
+  });
+
+  it("scores URL grounding independently from subject-name matching", () => {
+    const metrics = calculateExtractionMetrics([
+      {
+        expectedDiscoveries: [
+          {
+            subjectType: "RESOURCE",
+            name: "Flight Simulator map",
+            aliases: [],
+            evidenceOrigin: "COMMENT",
+            urlCandidateIds: ["url:0"],
+          },
+        ],
+        predictedDiscoveries: [
+          {
+            subjectType: "RESOURCE",
+            name: "Raymond Chen's articles",
+            aliases: [],
+            evidenceOrigin: "COMMENT",
+            urlCandidateIds: ["url:0"],
+          },
+        ],
+        expectedExpertNoteOrigin: null,
+        predictedExpertNoteOrigin: null,
+      },
+    ]);
+
+    expect(metrics).toMatchObject({
+      matchedDiscoveries: 0,
+      discoveryExtractionPrecision: 0,
+      discoveryExtractionRecall: 0,
+      urlGroundingPrecision: 1,
+      urlGroundingRecall: 1,
+    });
+  });
+
+  it("returns bounded discovery matches for safe case diagnostics", () => {
+    const comparison = matchEvaluationDiscoveries(
+      [
+        {
+          subjectType: "PROJECT",
+          name: "Alpha",
+          aliases: ["Alpha Project"],
+          evidenceOrigin: "COMMENT",
+          urlCandidateIds: ["url:0"],
+        },
+        {
+          subjectType: "LIBRARY",
+          name: "Beta",
+          aliases: [],
+          evidenceOrigin: "COMMENT",
+          urlCandidateIds: ["url:1"],
+        },
+      ],
+      [
+        {
+          subjectType: "PROJECT",
+          name: "Alpha Project",
+          aliases: [],
+          evidenceOrigin: "COMMENT",
+          urlCandidateIds: ["url:0", "url:2"],
+        },
+        {
+          subjectType: "TOOL",
+          name: "Gamma",
+          aliases: [],
+          evidenceOrigin: "COMMENT",
+          urlCandidateIds: [],
+        },
+      ],
+    );
+
+    expect(comparison.matches).toHaveLength(1);
+    expect(comparison.matches[0]).toMatchObject({
+      expected: { name: "Alpha" },
+      predicted: { name: "Alpha Project" },
+    });
+    expect(comparison.unmatchedExpected).toEqual([
+      expect.objectContaining({ name: "Beta" }),
+    ]);
+    expect(comparison.unmatchedPredicted).toEqual([
+      expect.objectContaining({ name: "Gamma" }),
+    ]);
   });
 });
