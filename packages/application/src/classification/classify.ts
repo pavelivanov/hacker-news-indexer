@@ -4,6 +4,8 @@ import {
 } from "@hn-knowledge/contracts";
 import {
   UNPROMOTED_MODEL_REVIEW_DECISION,
+  reviewPolicyFromReasons,
+  type ReviewReasonCode,
   type ClassificationRun,
   type ContentDecision,
   type HnItemId,
@@ -99,6 +101,21 @@ const assertMetadata = (
 const retryableValidation = (
   code: ClassifierOutputValidationErrorCode,
 ): boolean => code === "JSON_INVALID" || code === "SCHEMA_INVALID";
+
+const outputReviewReason = (
+  reason: ClassificationV1["review"]["reasons"][number],
+): ReviewReasonCode => {
+  switch (reason) {
+    case "UNAVAILABLE_CONTENT":
+      return "DELETED_OR_FLAGGED_CONTENT";
+    case "INVALID_EVIDENCE_SPAN":
+      return "CONFLICTING_EVIDENCE_ORIGIN";
+    case "UNSUPPORTED_URL":
+      return "MISSING_CANONICAL_URL";
+    default:
+      return reason;
+  }
+};
 
 export const createClassifyComment =
   (
@@ -214,6 +231,10 @@ export const createClassifyComment =
       }
 
       const output = validated.output;
+      const reviewPolicy = reviewPolicyFromReasons([
+        ...UNPROMOTED_MODEL_REVIEW_DECISION.reasons,
+        ...output.review.reasons.map(outputReviewReason),
+      ]);
       const recorded = await repository.recordRun({
         commentId: input.commentId,
         inputHash,
@@ -233,9 +254,7 @@ export const createClassifyComment =
         cachedInputTokens: sumUsage(responses, "cachedInputTokens"),
         cacheWriteInputTokens: sumUsage(responses, "cacheWriteInputTokens"),
         outputTokens: sumUsage(responses, "outputTokens"),
-        status: UNPROMOTED_MODEL_REVIEW_DECISION.required
-          ? "REVIEW"
-          : "SUCCEEDED",
+        status: reviewPolicy.required ? "REVIEW" : "SUCCEEDED",
         errorCode: null,
       });
       const decision = await repository.saveDecision({
@@ -245,7 +264,7 @@ export const createClassifyComment =
         primaryDecision: output.primary_decision,
         decisionConfidence: output.decision_confidence,
         materiallyTechnical: output.comment_relevance.is_materially_technical,
-        reviewRequired: UNPROMOTED_MODEL_REVIEW_DECISION.required,
+        reviewRequired: reviewPolicy.required,
         validatedOutput: output,
         manualOverrideOfId: null,
         evidenceSpans: validated.evidenceSpans.map((span) => ({
@@ -261,7 +280,7 @@ export const createClassifyComment =
         await reviewQueue.openPolicyReview({
           commentId: input.commentId,
           contentDecisionId: decision.id,
-          policy: UNPROMOTED_MODEL_REVIEW_DECISION,
+          policy: reviewPolicy,
         });
       }
       return { kind: "DECISION", run: recorded.run, decision, output };

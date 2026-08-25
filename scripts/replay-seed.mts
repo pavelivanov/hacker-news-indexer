@@ -131,6 +131,7 @@ try {
     resolutions,
     { now: () => new Date(hn.capturedAt) },
     hasher,
+    queue,
   );
 
   for (;;) {
@@ -152,12 +153,14 @@ try {
           maxId: telegramMessageId(telegram.maxId),
         },
       });
-    } else {
+    } else if (job.type === "RESOLVE_HN_COMMENT") {
       const selectedCommentId = job.payload["selectedCommentId"];
       if (typeof selectedCommentId !== "number") {
         throw new TypeError("Resolve job is missing selectedCommentId");
       }
       await resolve({ runId, selectedCommentId: hnItemId(selectedCommentId) });
+    } else if (job.type !== "CLASSIFY_COMMENT") {
+      throw new TypeError(`Unexpected seed replay job type: ${job.type}`);
     }
     await queue.complete(job.id, "seed-replay");
     await runs.reconcile(runId);
@@ -230,7 +233,7 @@ try {
   }
   if (
     multipartGroups.some((group) => group.state !== "COMPLETE_MATCH") ||
-    jobCount !== 99 ||
+    jobCount !== 197 ||
     retainedTelegramBodies !== 0 ||
     finalRun.status !== "COMPLETED"
   ) {

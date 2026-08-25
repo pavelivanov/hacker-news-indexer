@@ -114,12 +114,73 @@ enum ReviewPriority {
   CRITICAL
 }
 
+enum ReviewTaskKind {
+  CONTENT_DECISION
+  SUBJECT_MERGE
+  URL_RESOLUTION
+}
+
 enum ReviewAuditAction {
   OPENED
   APPROVED
   REJECTED
   REOPENED
   SUPERSEDED
+}
+
+enum SubjectType {
+  PROJECT
+  TOOL
+  LIBRARY
+  SERVICE
+  PRODUCT
+  FEATURE
+  PLUGIN
+  AGENT_SKILL
+  GUIDE
+  RESOURCE
+}
+
+enum SubjectIdentityBasis {
+  ECOSYSTEM_COORDINATE
+  CANONICAL_URL
+  OFFICIAL_DOMAIN
+  NAME_CONTEXT
+}
+
+enum SubjectLifecycleState {
+  ACTIVE
+  MERGED
+  TOMBSTONED
+}
+
+enum MaterializedEvidenceOrigin {
+  COMMENT
+  ROOT_STORY
+  BOTH
+}
+
+enum MaterializedContentStatus {
+  REVIEW_PENDING
+  APPROVED
+  REJECTED
+  SUPERSEDED
+}
+
+enum SubjectMentionSource {
+  DISCOVERY
+  EXPERT_NOTE
+}
+
+enum ExpertNoteType {
+  TECHNICAL_EXPLANATION
+  CORRECTION
+  PRODUCT_EXPERIENCE
+  IMPLEMENTATION_CAVEAT
+  SECURITY
+  OPERATIONS
+  COMPARISON
+  GUIDE
 }
 
 model IngestionRun {
@@ -243,6 +304,7 @@ model HnItem {
   responseHash    String              @map("response_hash")
   selectedComment SelectedComment?
   urlCandidates   UrlCandidate[]
+  rootDiscoveries Discovery[]         @relation("DiscoveryResolvedRoot")
 
   @@index([parentId])
   @@index([type, availability])
@@ -267,6 +329,9 @@ model SelectedComment {
   activeDecision       ContentDecision?      @relation("ActiveContentDecision", fields: [activeDecisionId], references: [id], onDelete: SetNull)
   reviewTasks          ReviewTask[]
   manualOverrideEvents ManualOverrideEvent[]
+  subjectMentions      SubjectMention[]
+  discoverySources     DiscoverySource[]
+  expertNotes          ExpertNote[]
 
   @@index([rootId])
   @@map("selected_comments")
@@ -322,6 +387,11 @@ model ContentDecision {
   reviewTasks          ReviewTask[]
   previousReviewEvents ManualOverrideEvent[] @relation("PreviousReviewDecision")
   newReviewEvents      ManualOverrideEvent[] @relation("NewReviewDecision")
+  createdSubjects      Subject[]             @relation("SubjectCreationDecision")
+  subjectAliases       SubjectAlias[]        @relation("SubjectAliasDecision")
+  subjectMentions      SubjectMention[]      @relation("SubjectMentionDecision")
+  discoverySources     DiscoverySource[]     @relation("DiscoverySourceDecision")
+  expertNotes          ExpertNote[]          @relation("ExpertNoteDecision")
 
   @@index([commentId, createdAt])
   @@index([manualOverrideOfId])
@@ -332,6 +402,7 @@ model ReviewTask {
   id                String                @id @default(uuid()) @db.Uuid
   commentId         BigInt                @map("comment_id")
   contentDecisionId String                @map("content_decision_id") @db.Uuid
+  kind              ReviewTaskKind        @default(CONTENT_DECISION)
   state             ReviewTaskState       @default(OPEN)
   priority          ReviewPriority
   reasonCodes       String[]              @map("reason_codes")
@@ -349,7 +420,7 @@ model ReviewTask {
   supersededByTasks ReviewTask[]          @relation("ReviewTaskRevisions")
   auditEvents       ManualOverrideEvent[]
 
-  @@unique([contentDecisionId, revision])
+  @@unique([contentDecisionId, kind, revision])
   @@index([state, priority, createdAt, id])
   @@index([commentId, createdAt])
   @@index([supersedesTaskId])
@@ -363,6 +434,10 @@ model ManualOverrideEvent {
   action             ReviewAuditAction
   previousDecisionId String?           @map("previous_decision_id") @db.Uuid
   newDecisionId      String?           @map("new_decision_id") @db.Uuid
+  affectedSubjectId  String?           @map("affected_subject_id") @db.Uuid
+  relatedSubjectId   String?           @map("related_subject_id") @db.Uuid
+  previousUrlCandidateId String?        @map("previous_url_candidate_id") @db.Uuid
+  newUrlCandidateId  String?           @map("new_url_candidate_id") @db.Uuid
   actorId            String            @map("actor_id")
   requestHash        String            @map("request_hash")
   previousValueHash  String            @map("previous_value_hash")
@@ -374,9 +449,15 @@ model ManualOverrideEvent {
   comment            SelectedComment   @relation(fields: [commentId], references: [id], onDelete: Restrict)
   previousDecision   ContentDecision?  @relation("PreviousReviewDecision", fields: [previousDecisionId], references: [id], onDelete: Restrict)
   newDecision        ContentDecision?  @relation("NewReviewDecision", fields: [newDecisionId], references: [id], onDelete: Restrict)
+  affectedSubject    Subject?          @relation("AffectedSubjectReview", fields: [affectedSubjectId], references: [id], onDelete: Restrict)
+  relatedSubject     Subject?          @relation("RelatedSubjectReview", fields: [relatedSubjectId], references: [id], onDelete: Restrict)
+  previousUrlCandidate UrlCandidate?   @relation("PreviousUrlCandidateReview", fields: [previousUrlCandidateId], references: [id], onDelete: Restrict)
+  newUrlCandidate    UrlCandidate?     @relation("NewUrlCandidateReview", fields: [newUrlCandidateId], references: [id], onDelete: Restrict)
 
   @@index([reviewTaskId, createdAt])
   @@index([commentId, createdAt])
+  @@index([affectedSubjectId, createdAt])
+  @@index([relatedSubjectId, createdAt])
   @@map("manual_override_events")
 }
 
@@ -391,6 +472,9 @@ model EvidenceSpan {
   textHash          String          @map("text_hash")
   createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
   contentDecision   ContentDecision @relation(fields: [contentDecisionId], references: [id], onDelete: Restrict)
+  subjectMentions   SubjectMentionEvidence[]
+  discoverySources DiscoverySourceEvidence[]
+  expertNotes      ExpertNoteEvidence[]
 
   @@unique([contentDecisionId, spanId])
   @@index([sourceDocument])
@@ -450,9 +534,196 @@ model UrlCandidate {
   host            String?
   validationState UrlValidationState @default(CANDIDATE) @map("validation_state")
   contentHash     String             @map("content_hash")
+  sourceOrdinal   Int                @default(0) @map("source_ordinal")
+  classifierEligible Boolean         @default(true) @map("classifier_eligible")
   hnItem          HnItem?            @relation(fields: [hnItemId], references: [id], onDelete: Cascade)
+  canonicalFor    Subject[]
+  previousReviewEvents ManualOverrideEvent[] @relation("PreviousUrlCandidateReview")
+  newReviewEvents      ManualOverrideEvent[] @relation("NewUrlCandidateReview")
 
-  @@unique([contentHash, sourceDocument, originField])
+  @@unique([contentHash, sourceDocument, originField, sourceOrdinal])
   @@index([hnItemId])
+  @@index([classifierEligible, sourceDocument, sourceOrdinal])
   @@map("url_candidates")
+}
+
+model Subject {
+  id                      String                @id @default(uuid()) @db.Uuid
+  type                    SubjectType
+  name                    String
+  normalizedName          String                @map("normalized_name")
+  dedupKey                String                @unique @map("dedup_key")
+  identityBasis           SubjectIdentityBasis  @map("identity_basis")
+  ecosystemCoordinate     String?               @map("ecosystem_coordinate")
+  canonicalUrlCandidateId String?               @map("canonical_url_candidate_id") @db.Uuid
+  officialDomain          String?               @map("official_domain")
+  contextKey              String                @map("context_key")
+  lifecycleState          SubjectLifecycleState @default(ACTIVE) @map("lifecycle_state")
+  mergedIntoSubjectId     String?               @map("merged_into_subject_id") @db.Uuid
+  createdFromDecisionId   String                @map("created_from_decision_id") @db.Uuid
+  createdAt               DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt               DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  canonicalUrlCandidate   UrlCandidate?         @relation(fields: [canonicalUrlCandidateId], references: [id], onDelete: Restrict)
+  createdFromDecision     ContentDecision       @relation("SubjectCreationDecision", fields: [createdFromDecisionId], references: [id], onDelete: Restrict)
+  mergedIntoSubject       Subject?              @relation("SubjectMerges", fields: [mergedIntoSubjectId], references: [id], onDelete: Restrict)
+  mergedSubjects          Subject[]             @relation("SubjectMerges")
+  aliases                 SubjectAlias[]
+  mentions                SubjectMention[]
+  discoveries             Discovery[]
+  expertNotes             ExpertNoteSubject[]
+  affectedReviewEvents    ManualOverrideEvent[] @relation("AffectedSubjectReview")
+  relatedReviewEvents     ManualOverrideEvent[] @relation("RelatedSubjectReview")
+
+  @@index([normalizedName, type])
+  @@index([ecosystemCoordinate])
+  @@index([officialDomain])
+  @@index([canonicalUrlCandidateId])
+  @@index([mergedIntoSubjectId])
+  @@index([createdFromDecisionId])
+  @@map("subjects")
+}
+
+model SubjectAlias {
+  id                String          @id @default(uuid()) @db.Uuid
+  subjectId         String          @map("subject_id") @db.Uuid
+  alias             String
+  normalizedAlias   String          @map("normalized_alias")
+  contentDecisionId String          @map("content_decision_id") @db.Uuid
+  createdAt         DateTime        @default(now()) @map("created_at") @db.Timestamptz(3)
+  subject           Subject         @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  contentDecision   ContentDecision @relation("SubjectAliasDecision", fields: [contentDecisionId], references: [id], onDelete: Restrict)
+
+  @@unique([subjectId, normalizedAlias])
+  @@index([contentDecisionId])
+  @@map("subject_aliases")
+}
+
+model SubjectMention {
+  id                String                     @id @default(uuid()) @db.Uuid
+  subjectId         String                     @map("subject_id") @db.Uuid
+  selectedCommentId BigInt                     @map("selected_comment_id")
+  contentDecisionId String                     @map("content_decision_id") @db.Uuid
+  sourceKind        SubjectMentionSource       @map("source_kind")
+  sourceOrdinal     Int                        @map("source_ordinal")
+  evidenceOrigin    MaterializedEvidenceOrigin @map("evidence_origin")
+  confidence        Float
+  extractionVersion String                     @map("extraction_version")
+  createdAt         DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  subject           Subject                    @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  selectedComment   SelectedComment            @relation(fields: [selectedCommentId], references: [id], onDelete: Restrict)
+  contentDecision   ContentDecision            @relation("SubjectMentionDecision", fields: [contentDecisionId], references: [id], onDelete: Restrict)
+  evidenceSpans     SubjectMentionEvidence[]
+
+  @@unique([contentDecisionId, sourceKind, sourceOrdinal, subjectId])
+  @@index([subjectId, createdAt])
+  @@index([selectedCommentId])
+  @@map("subject_mentions")
+}
+
+model SubjectMentionEvidence {
+  subjectMentionId String         @map("subject_mention_id") @db.Uuid
+  evidenceSpanId   String         @map("evidence_span_id") @db.Uuid
+  subjectMention   SubjectMention @relation(fields: [subjectMentionId], references: [id], onDelete: Restrict)
+  evidenceSpan     EvidenceSpan   @relation(fields: [evidenceSpanId], references: [id], onDelete: Restrict)
+
+  @@id([subjectMentionId, evidenceSpanId])
+  @@index([evidenceSpanId])
+  @@map("subject_mention_evidence_spans")
+}
+
+model Discovery {
+  id                String                    @id @default(uuid()) @db.Uuid
+  subjectId         String                    @map("subject_id") @db.Uuid
+  resolvedRootId    BigInt?                   @map("resolved_root_id")
+  identityKey       String                    @unique @map("identity_key")
+  rootStoryOnly     Boolean                   @map("root_story_only")
+  extractionVersion String                    @map("extraction_version")
+  status            MaterializedContentStatus @default(REVIEW_PENDING)
+  createdAt         DateTime                  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  subject           Subject                   @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  resolvedRoot      HnItem?                   @relation("DiscoveryResolvedRoot", fields: [resolvedRootId], references: [id], onDelete: Restrict)
+  sources           DiscoverySource[]
+
+  @@index([subjectId, status])
+  @@index([resolvedRootId])
+  @@map("discoveries")
+}
+
+model DiscoverySource {
+  id                String                     @id @default(uuid()) @db.Uuid
+  discoveryId       String                     @map("discovery_id") @db.Uuid
+  selectedCommentId BigInt                     @map("selected_comment_id")
+  contentDecisionId String                     @map("content_decision_id") @db.Uuid
+  sourceOrdinal     Int                        @map("source_ordinal")
+  descriptionClaim  String                     @map("description_claim")
+  evidenceOrigin    MaterializedEvidenceOrigin @map("evidence_origin")
+  confidence        Float
+  createdAt         DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  discovery         Discovery                  @relation(fields: [discoveryId], references: [id], onDelete: Restrict)
+  selectedComment   SelectedComment            @relation(fields: [selectedCommentId], references: [id], onDelete: Restrict)
+  contentDecision   ContentDecision            @relation("DiscoverySourceDecision", fields: [contentDecisionId], references: [id], onDelete: Restrict)
+  evidenceSpans     DiscoverySourceEvidence[]
+
+  @@unique([contentDecisionId, sourceOrdinal])
+  @@index([discoveryId, createdAt])
+  @@index([selectedCommentId])
+  @@map("discovery_sources")
+}
+
+model DiscoverySourceEvidence {
+  discoverySourceId String          @map("discovery_source_id") @db.Uuid
+  evidenceSpanId    String          @map("evidence_span_id") @db.Uuid
+  discoverySource   DiscoverySource @relation(fields: [discoverySourceId], references: [id], onDelete: Restrict)
+  evidenceSpan      EvidenceSpan    @relation(fields: [evidenceSpanId], references: [id], onDelete: Restrict)
+
+  @@id([discoverySourceId, evidenceSpanId])
+  @@index([evidenceSpanId])
+  @@map("discovery_source_evidence_spans")
+}
+
+model ExpertNote {
+  id                String                     @id @default(uuid()) @db.Uuid
+  selectedCommentId BigInt                     @map("selected_comment_id")
+  contentDecisionId String                     @map("content_decision_id") @db.Uuid
+  noteType          ExpertNoteType             @map("note_type")
+  title             String
+  summary           String
+  relatedSubjectNames String[]                 @map("related_subject_names")
+  evidenceOrigin    MaterializedEvidenceOrigin @map("evidence_origin")
+  confidence        Float
+  status            MaterializedContentStatus  @default(REVIEW_PENDING)
+  extractionVersion String                     @map("extraction_version")
+  createdAt         DateTime                   @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt         DateTime                   @updatedAt @map("updated_at") @db.Timestamptz(3)
+  selectedComment   SelectedComment            @relation(fields: [selectedCommentId], references: [id], onDelete: Restrict)
+  contentDecision   ContentDecision            @relation("ExpertNoteDecision", fields: [contentDecisionId], references: [id], onDelete: Restrict)
+  subjects          ExpertNoteSubject[]
+  evidenceSpans     ExpertNoteEvidence[]
+
+  @@unique([contentDecisionId, extractionVersion])
+  @@index([selectedCommentId, status])
+  @@map("expert_notes")
+}
+
+model ExpertNoteSubject {
+  expertNoteId String     @map("expert_note_id") @db.Uuid
+  subjectId    String     @map("subject_id") @db.Uuid
+  expertNote   ExpertNote @relation(fields: [expertNoteId], references: [id], onDelete: Restrict)
+  subject      Subject    @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+
+  @@id([expertNoteId, subjectId])
+  @@index([subjectId])
+  @@map("expert_note_subjects")
+}
+
+model ExpertNoteEvidence {
+  expertNoteId   String       @map("expert_note_id") @db.Uuid
+  evidenceSpanId String       @map("evidence_span_id") @db.Uuid
+  expertNote     ExpertNote   @relation(fields: [expertNoteId], references: [id], onDelete: Restrict)
+  evidenceSpan   EvidenceSpan @relation(fields: [evidenceSpanId], references: [id], onDelete: Restrict)
+
+  @@id([expertNoteId, evidenceSpanId])
+  @@index([evidenceSpanId])
+  @@map("expert_note_evidence_spans")
 }

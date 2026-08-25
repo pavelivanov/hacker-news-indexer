@@ -1,6 +1,12 @@
 import { URL } from "node:url";
 
-import type { HnItemId } from "./identities.js";
+import type {
+  ContentDecisionId,
+  DiscoveryId,
+  ExpertNoteId,
+  HnItemId,
+  SubjectId,
+} from "./identities.js";
 
 export const SUBJECT_TYPES = [
   "PROJECT",
@@ -30,6 +36,42 @@ export const SUBJECT_MATCH_KINDS = [
   "DISTINCT",
 ] as const;
 export type SubjectMatchKind = (typeof SUBJECT_MATCH_KINDS)[number];
+
+export const SUBJECT_LIFECYCLE_STATES = [
+  "ACTIVE",
+  "MERGED",
+  "TOMBSTONED",
+] as const;
+export type SubjectLifecycleState = (typeof SUBJECT_LIFECYCLE_STATES)[number];
+
+export const MATERIALIZED_CONTENT_STATUSES = [
+  "REVIEW_PENDING",
+  "APPROVED",
+  "REJECTED",
+  "SUPERSEDED",
+] as const;
+export type MaterializedContentStatus =
+  (typeof MATERIALIZED_CONTENT_STATUSES)[number];
+
+export const MATERIALIZED_EVIDENCE_ORIGINS = [
+  "COMMENT",
+  "ROOT_STORY",
+  "BOTH",
+] as const;
+export type MaterializedEvidenceOrigin =
+  (typeof MATERIALIZED_EVIDENCE_ORIGINS)[number];
+
+export const EXPERT_NOTE_TYPES = [
+  "TECHNICAL_EXPLANATION",
+  "CORRECTION",
+  "PRODUCT_EXPERIENCE",
+  "IMPLEMENTATION_CAVEAT",
+  "SECURITY",
+  "OPERATIONS",
+  "COMPARISON",
+  "GUIDE",
+] as const;
+export type ExpertNoteType = (typeof EXPERT_NOTE_TYPES)[number];
 
 export const URL_NORMALIZATION_ERROR_CODES = [
   "EMPTY",
@@ -82,6 +124,53 @@ export interface SubjectIdentity {
 export interface SubjectMatchDecision {
   readonly kind: SubjectMatchKind;
   readonly basis: SubjectIdentityBasis | "NAME_ONLY" | null;
+}
+
+export interface Subject {
+  readonly id: SubjectId;
+  readonly type: SubjectType;
+  readonly name: string;
+  readonly normalizedName: string;
+  readonly dedupKey: string;
+  readonly identityBasis: SubjectIdentityBasis;
+  readonly ecosystemCoordinate: string | null;
+  readonly canonicalUrl: string | null;
+  readonly officialDomain: string | null;
+  readonly contextKey: string;
+  readonly lifecycleState: SubjectLifecycleState;
+  readonly mergedIntoSubjectId: SubjectId | null;
+  readonly createdFromDecisionId: ContentDecisionId;
+  readonly aliases: readonly string[];
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+}
+
+export interface Discovery {
+  readonly id: DiscoveryId;
+  readonly subjectId: SubjectId;
+  readonly resolvedRootId: HnItemId | null;
+  readonly identityKey: string;
+  readonly rootStoryOnly: boolean;
+  readonly extractionVersion: string;
+  readonly status: MaterializedContentStatus;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
+}
+
+export interface ExpertNote {
+  readonly id: ExpertNoteId;
+  readonly selectedCommentId: HnItemId;
+  readonly contentDecisionId: ContentDecisionId;
+  readonly noteType: ExpertNoteType;
+  readonly title: string;
+  readonly summary: string;
+  readonly relatedSubjectNames: readonly string[];
+  readonly evidenceOrigin: MaterializedEvidenceOrigin;
+  readonly confidence: number;
+  readonly status: MaterializedContentStatus;
+  readonly extractionVersion: string;
+  readonly createdAt: Date;
+  readonly updatedAt: Date;
 }
 
 const TRACKING_PARAMETERS = new Set([
