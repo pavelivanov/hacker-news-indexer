@@ -43,11 +43,14 @@ subject name, separates abstention/coverage from classified quality, separates
 schema from application validation, and records safe per-case diagnostic
 metadata without source or provider bodies.
 
-GPT-5.6 Sol low is the only candidate measured with the corrected compatibility
-set. It passes macro F1, Expert-note precision, schema/application validity,
-origin/span consistency, invention, latency, and adversarial gates on the 60
-rows where both annotators agreed and no consensus label was overridden. It
-still fails Discovery precision and URL-grounding precision. Seven of eleven
+GPT-5.6 Sol low and Luna low have been measured with the corrected compatibility
+set. Sol remains the stronger candidate: it passes macro F1, Expert-note
+precision, schema/application validity, origin/span consistency, invention,
+latency, and adversarial gates on the 60 rows where both annotators agreed and
+no consensus label was overridden. It still fails Discovery precision and
+URL-grounding precision. Luna is much cheaper, but additionally fails stable
+Expert-note precision, produces substantially lower Discovery and URL
+precision, and timed out on two development rows. Seven of Sol's eleven
 full-corpus disagreements are on machine-disputed gold rows; those rows need
 human adjudication before they can be hard selection labels.
 
@@ -63,7 +66,7 @@ comment IDs, expected/predicted enum values, review flags, counts, and failure
 codes for diagnosis. They contain no prompts, source bodies, credentials, or
 raw provider outputs.
 
-### Corrected v2 measurement
+### Corrected v2 measurements
 
 The stable slice contains 60 rows with annotator consensus and no later
 consensus override. Full adjudicated metrics remain visible and are not
@@ -93,6 +96,42 @@ machine-disputed rows receive independent adjudication.
   `evaluation/reports/benchmark-openai-gpt-5-6-sol-low-v2.json`
 - V2 report SHA-256:
   `bae72fef1e9a35716867a9a6c505eef606cbc785879d10a38b7b4cceef1d330f`
+- Prompt version: `classification-prompt.v2`
+- Prompt hash:
+  `7b25b31cc6a927e433f2bbfb1acce5f58d75c740875071759aea7d0a5be1fa3d`
+
+Luna low passes stable macro F1, coverage, origin/span consistency, schema,
+application validity, invention, latency, and adversarial gates, but fails all
+three class/extraction precision gates. Its two 45-second timeouts are counted
+as invalid abstentions and reduce application validity to 0.9710. Luna's cost
+advantage does not compensate for its lower task quality, and it is rejected as
+the provider candidate.
+
+| Metric                         |   Required |  Full 69 | Stable 60 |
+| ------------------------------ | ---------: | -------: | --------: |
+| Macro F1                       |     ≥ 0.85 |   0.8436 |    0.8893 |
+| Discovery precision            |     ≥ 0.93 |   0.6667 |    0.7000 |
+| Expert-note precision          |     ≥ 0.88 |   0.7500 |    0.8750 |
+| URL-grounding precision        |       1.00 |   0.6364 |    0.6000 |
+| Discovery-extraction precision |   recorded |   0.4615 |    0.4545 |
+| Discovery-extraction recall    |   recorded |   0.7500 |    0.7143 |
+| Classification coverage        |     ≥ 0.80 |   0.9710 |    0.9667 |
+| Automatic coverage             |   recorded |   0.8696 |         — |
+| Automatic accuracy             |   recorded |   0.9333 |         — |
+| Evidence-origin consistency    |     ≥ 0.97 |     1.00 |         — |
+| Gold-origin agreement          | diagnostic |   0.8095 |    0.8947 |
+| Evidence-span validation       |       1.00 |     1.00 |         — |
+| JSON/schema-valid outputs      |    ≥ 0.995 |     1.00 |         — |
+| Application-valid outputs      |     ≥ 0.95 |   0.9710 |         — |
+| Invented URL count             |          0 |        0 |         — |
+| Adversarial tool/network calls |          0 |        0 |         — |
+| Latency p95                    |     < 60 s |  9.368 s |         — |
+| Estimated upper-bound API cost |   recorded | $0.05239 |         — |
+
+- V2 Luna-low report:
+  `evaluation/reports/benchmark-openai-gpt-5-6-luna-low-v2.json`
+- V2 report SHA-256:
+  `010565cb6e5edea566a8bbc9c4399aee7bfd425c31bb72cea7745c7da2b870db`
 - Prompt version: `classification-prompt.v2`
 - Prompt hash:
   `7b25b31cc6a927e433f2bbfb1acce5f58d75c740875071759aea7d0a5be1fa3d`
