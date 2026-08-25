@@ -51,7 +51,8 @@ precision, Expert-note precision, classification coverage, and URL-grounding
 precision. It also passes schema/application validity, origin/span consistency,
 invention, latency, and adversarial gates. Luna is much cheaper but fails the
 stable Discovery, Expert-note, and URL precision gates and timed out on two
-development rows.
+development rows. A later cost-instrumented Terra-low run passes every gate
+except stable Discovery precision, so it does not replace Sol.
 
 Five development rows had been changed from unanimous `EXPERT_NOTE` labels to
 `REJECTED` to reproduce the historical aggregate counts. V3 restores the two
@@ -79,27 +80,27 @@ once; its URL metrics were then deterministically rescored from safe bounded
 diagnostics after URL grounding was decoupled from subject-name matching. The
 report records the pre-rescore hash and `providerCalls: 0` for that operation.
 
-| Metric                         |   Required |  Full 69 | Stable 65 |
-| ------------------------------ | ---------: | -------: | --------: |
-| Macro F1                       |     ≥ 0.85 |   0.9464 |      1.00 |
-| Discovery precision            |     ≥ 0.93 |   0.8750 |      1.00 |
-| Expert-note precision          |     ≥ 0.88 |   0.9545 |      1.00 |
-| URL-grounding precision        |       1.00 |     1.00 |      1.00 |
-| URL-grounding recall           |   recorded |   0.7273 |    0.8000 |
-| Discovery-extraction precision |   recorded |   0.6250 |    0.7143 |
-| Discovery-extraction recall    |   recorded |   0.6250 |    0.7143 |
-| Classification coverage        |     ≥ 0.80 |     1.00 |      1.00 |
-| Automatic coverage             |   recorded |   0.8551 |         — |
-| Automatic accuracy             |   recorded |   0.9831 |         — |
-| Evidence-origin consistency    |     ≥ 0.97 |     1.00 |         — |
-| Gold-origin agreement          | diagnostic |   0.8519 |    0.8800 |
-| Evidence-span validation       |       1.00 |     1.00 |         — |
-| JSON/schema-valid outputs      |    ≥ 0.995 |     1.00 |         — |
-| Application-valid outputs      |     ≥ 0.95 |     1.00 |         — |
-| Invented URL count             |          0 |        0 |         — |
-| Adversarial tool/network calls |          0 |        0 |         — |
-| Latency p95                    |     < 60 s | 10.295 s |         — |
-| Estimated upper-bound API cost |   recorded | $0.89249 |         — |
+| Metric                               |   Required |  Full 69 | Stable 65 |
+| ------------------------------------ | ---------: | -------: | --------: |
+| Macro F1                             |     ≥ 0.85 |   0.9464 |      1.00 |
+| Discovery precision                  |     ≥ 0.93 |   0.8750 |      1.00 |
+| Expert-note precision                |     ≥ 0.88 |   0.9545 |      1.00 |
+| URL-grounding precision              |       1.00 |     1.00 |      1.00 |
+| URL-grounding recall                 |   recorded |   0.7273 |    0.8000 |
+| Discovery-extraction precision       |   recorded |   0.6250 |    0.7143 |
+| Discovery-extraction recall          |   recorded |   0.6250 |    0.7143 |
+| Classification coverage              |     ≥ 0.80 |     1.00 |      1.00 |
+| Automatic coverage                   |   recorded |   0.8551 |         — |
+| Automatic accuracy                   |   recorded |   0.9831 |         — |
+| Evidence-origin consistency          |     ≥ 0.97 |     1.00 |         — |
+| Gold-origin agreement                | diagnostic |   0.8519 |    0.8800 |
+| Evidence-span validation             |       1.00 |     1.00 |         — |
+| JSON/schema-valid outputs            |    ≥ 0.995 |     1.00 |         — |
+| Application-valid outputs            |     ≥ 0.95 |     1.00 |         — |
+| Invented URL count                   |          0 |        0 |         — |
+| Adversarial tool/network calls       |          0 |        0 |         — |
+| Latency p95                          |     < 60 s | 10.295 s |         — |
+| Legacy uncached main-run upper bound |   recorded | $0.89249 |         — |
 
 - V3 Sol-low report:
   `evaluation/reports/benchmark-openai-gpt-5-6-sol-low-v3.json`
@@ -118,6 +119,66 @@ Two stable discoveries retain diagnostic subject-granularity differences:
 `AI Assistant` feature. Both primary classes are correct; the Kagi feature is
 routed to review for a missing canonical URL. These do not weaken or bypass
 the required URL precision gate.
+
+### Cost-instrumented Terra v3 challenge
+
+After the Sol selection, Terra low was run exactly once with the same prompt,
+corpus, structured-output configuration, and development split to test whether
+the lower-priced model could retain the required quality. It achieved 0.9269
+stable macro F1 and passed Expert-note precision, URL grounding, schema,
+application, evidence, latency, and adversarial gates. It failed stable
+Discovery precision at 0.8571 against the required 0.93. The stable errors were
+one incidental mention promoted to Discovery, one operational report rejected,
+and one named library demoted from Discovery to Expert note. The thresholds
+were not weakened, and Terra is rejected for this configuration.
+
+This run introduced usage-accounting version 2. Classification runs now retain
+`cached_tokens` and `cache_write_tokens` from the Responses API alongside total
+input and output usage. The evaluator prices uncached input, cache hits, cache
+writes, and output separately and includes the four adversarial calls. OpenAI's
+published Terra standard rates at measurement time were $2.00/M uncached input,
+$0.20/M cached input, $2.50/M cache-write input, and $12.00/M output. The
+$0.314318 estimate is therefore materially more representative than the
+$0.504972 all-input-uncached comparison and $0.583056 bound obtained by pricing
+every input token at the highest published input/cache-write rate. Older
+reports did not retain token details or adversarial usage, so their recorded
+cost remains a non-comparable all-input-uncached estimate; rerunning Sol solely
+to improve accounting is not justified.
+
+| Metric                             | Required |  Full 69 | Stable 65 |
+| ---------------------------------- | -------: | -------: | --------: |
+| Macro F1                           |   ≥ 0.85 |   0.9126 |    0.9269 |
+| Discovery precision                |   ≥ 0.93 |   0.7778 |    0.8571 |
+| Expert-note precision              |   ≥ 0.88 |   0.9524 |    0.9500 |
+| URL-grounding precision            |     1.00 |     1.00 |      1.00 |
+| URL-grounding recall               | recorded |   0.8182 |    0.8000 |
+| Discovery-extraction precision     | recorded |   0.6000 |    0.6250 |
+| Discovery-extraction recall        | recorded |   0.7500 |    0.7143 |
+| Classification coverage            |   ≥ 0.80 |     1.00 |      1.00 |
+| Automatic coverage                 | recorded |   0.9130 |         — |
+| Automatic accuracy                 | recorded |   0.9365 |         — |
+| Evidence-origin consistency        |   ≥ 0.97 |     1.00 |         — |
+| Evidence-span validation           |     1.00 |     1.00 |         — |
+| JSON/schema-valid outputs          |  ≥ 0.995 |     1.00 |         — |
+| Application-valid outputs          |   ≥ 0.95 |     1.00 |         — |
+| Invented URL count                 |        0 |        0 |         — |
+| Adversarial tool/network calls     |        0 |        0 |         — |
+| Latency p95                        |   < 60 s |  7.733 s |         — |
+| Usage-priced cost, all 73 calls    | recorded | $0.31432 |         — |
+| All-input-uncached comparison      | recorded | $0.50497 |         — |
+| Highest-input-rate bound, 73 calls | recorded | $0.58306 |         — |
+
+- V3 Terra-low report:
+  `evaluation/reports/benchmark-openai-gpt-5-6-terra-low-v3.json`
+- V3 Terra-low report SHA-256:
+  `46db8572123e8f70d05df5fdcbf68d2d2f7d62ab78df2c43d96c5de159d208ca`
+- Total usage: 156,168 input tokens (116,795 cached, 39,154 cache-write,
+  219 other uncached) and 16,053 output tokens across 73 terminal runs
+- Prompt version: `classification-prompt.v3`
+- Prompt hash:
+  `30d391239d4301e68a242fdad1bf992a61c2ca0891ff986860383990c70b3001`
+- Gold corpus SHA-256:
+  `7d23a114c404e30858a1b9c3d2ab7f66349ec41a3cdbf5405dd5fcd0447a95ce`
 
 ### Historical corrected v2 measurements
 

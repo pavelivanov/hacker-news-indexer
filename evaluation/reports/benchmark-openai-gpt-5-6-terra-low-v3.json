@@ -1,203 +1,258 @@
 {
   "reportVersion": 3,
-  "mode": "shadow",
+  "mode": "benchmark",
   "corpus": "evaluation/gold-v1.jsonl",
   "corpusSha256": "7d23a114c404e30858a1b9c3d2ab7f66349ec41a3cdbf5405dd5fcd0447a95ce",
-  "provider": "fixture",
-  "modelId": "fixture-replay-v1",
-  "modelConfigId": "fixture-replay-v1",
+  "provider": "openai",
+  "modelId": "gpt-5.6-terra",
+  "modelConfigId": "openai-responses:gpt-5.6-terra:reasoning-low:max-output-8192:strict-json-schema:store-false:v1",
   "promptVersion": "classification-prompt.v3",
   "promptHash": "30d391239d4301e68a242fdad1bf992a61c2ca0891ff986860383990c70b3001",
   "schemaVersion": "classification.v1",
-  "split": "all",
-  "rows": 98,
-  "terminalRuns": 98,
+  "split": "development",
+  "rows": 69,
+  "terminalRuns": 69,
   "activatedDecisions": 0,
   "configuration": {
-    "endpoint": "fixture",
-    "reasoningEffort": null,
-    "structuredOutput": "fixture",
+    "endpoint": "responses",
+    "reasoningEffort": "low",
+    "structuredOutput": "strict-json-schema",
     "toolsEnabled": false,
     "parallelToolCalls": false,
     "requestStorage": false,
     "timeoutMs": 45000,
-    "concurrency": 1
+    "concurrency": 2
   },
   "confusionMatrix": {
     "DISCOVERY": {
-      "DISCOVERY": 13,
-      "EXPERT_NOTE": 0,
+      "DISCOVERY": 7,
+      "EXPERT_NOTE": 1,
       "REJECTED": 0,
       "REVIEW": 0,
       "INVALID": 0
     },
     "EXPERT_NOTE": {
       "DISCOVERY": 0,
-      "EXPERT_NOTE": 27,
-      "REJECTED": 0,
+      "EXPERT_NOTE": 20,
+      "REJECTED": 1,
       "REVIEW": 0,
       "INVALID": 0
     },
     "REJECTED": {
-      "DISCOVERY": 0,
+      "DISCOVERY": 2,
       "EXPERT_NOTE": 0,
-      "REJECTED": 58,
+      "REJECTED": 38,
       "REVIEW": 0,
       "INVALID": 0
     }
   },
   "classMetrics": {
-    "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
-    "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
-    "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+    "DISCOVERY": {
+      "precision": 0.7777777777777778,
+      "recall": 0.875,
+      "f1": 0.823529411764706
+    },
+    "EXPERT_NOTE": {
+      "precision": 0.9523809523809523,
+      "recall": 0.9523809523809523,
+      "f1": 0.9523809523809523
+    },
+    "REJECTED": {
+      "precision": 0.9743589743589743,
+      "recall": 0.95,
+      "f1": 0.9620253164556962
+    }
   },
-  "macroF1": 1,
+  "macroF1": 0.912645226867118,
   "overallClassMetrics": {
-    "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
-    "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
-    "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+    "DISCOVERY": {
+      "precision": 0.7777777777777778,
+      "recall": 0.875,
+      "f1": 0.823529411764706
+    },
+    "EXPERT_NOTE": {
+      "precision": 0.9523809523809523,
+      "recall": 0.9523809523809523,
+      "f1": 0.9523809523809523
+    },
+    "REJECTED": {
+      "precision": 0.9743589743589743,
+      "recall": 0.95,
+      "f1": 0.9620253164556962
+    }
   },
-  "overallMacroF1": 1,
-  "classifiedRows": 98,
+  "overallMacroF1": 0.912645226867118,
+  "classifiedRows": 69,
   "abstainedRows": 0,
   "classificationCoverage": 1,
-  "classifiedAccuracy": 1,
-  "automaticRows": 81,
-  "automaticCoverage": 0.826530612244898,
-  "automaticAccuracy": 1,
+  "classifiedAccuracy": 0.9420289855072463,
+  "automaticRows": 63,
+  "automaticCoverage": 0.9130434782608695,
+  "automaticAccuracy": 0.9365079365079365,
   "stableGold": {
-    "rows": 88,
+    "rows": 65,
     "confusionMatrix": {
       "DISCOVERY": {
-        "DISCOVERY": 10,
-        "EXPERT_NOTE": 0,
+        "DISCOVERY": 6,
+        "EXPERT_NOTE": 1,
         "REJECTED": 0,
         "REVIEW": 0,
         "INVALID": 0
       },
       "EXPERT_NOTE": {
         "DISCOVERY": 0,
-        "EXPERT_NOTE": 24,
-        "REJECTED": 0,
+        "EXPERT_NOTE": 19,
+        "REJECTED": 1,
         "REVIEW": 0,
         "INVALID": 0
       },
       "REJECTED": {
-        "DISCOVERY": 0,
+        "DISCOVERY": 1,
         "EXPERT_NOTE": 0,
-        "REJECTED": 54,
+        "REJECTED": 37,
         "REVIEW": 0,
         "INVALID": 0
       }
     },
     "classMetrics": {
-      "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
-      "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
-      "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+      "DISCOVERY": {
+        "precision": 0.8571428571428571,
+        "recall": 0.8571428571428571,
+        "f1": 0.8571428571428571
+      },
+      "EXPERT_NOTE": {
+        "precision": 0.95,
+        "recall": 0.95,
+        "f1": 0.9500000000000001
+      },
+      "REJECTED": {
+        "precision": 0.9736842105263158,
+        "recall": 0.9736842105263158,
+        "f1": 0.9736842105263158
+      }
     },
-    "macroF1": 1,
+    "macroF1": 0.9269423558897243,
     "overallClassMetrics": {
-      "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
-      "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
-      "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+      "DISCOVERY": {
+        "precision": 0.8571428571428571,
+        "recall": 0.8571428571428571,
+        "f1": 0.8571428571428571
+      },
+      "EXPERT_NOTE": {
+        "precision": 0.95,
+        "recall": 0.95,
+        "f1": 0.9500000000000001
+      },
+      "REJECTED": {
+        "precision": 0.9736842105263158,
+        "recall": 0.9736842105263158,
+        "f1": 0.9736842105263158
+      }
     },
-    "overallMacroF1": 1,
-    "classifiedRows": 88,
+    "overallMacroF1": 0.9269423558897243,
+    "classifiedRows": 65,
     "abstainedRows": 0,
     "classificationCoverage": 1,
-    "classifiedAccuracy": 1,
+    "classifiedAccuracy": 0.9538461538461539,
     "extraction": {
-      "expectedDiscoveries": 10,
-      "predictedDiscoveries": 10,
-      "matchedDiscoveries": 10,
-      "discoveryExtractionPrecision": 1,
-      "discoveryExtractionRecall": 1,
-      "matchedEvidenceItems": 40,
-      "expectedEvidenceItems": 40,
-      "goldEvidenceOriginAgreement": 1,
-      "goldEvidenceOriginCoverage": 1,
-      "predictedUrlIds": 14,
-      "expectedUrlIds": 14,
-      "correctUrlIds": 14,
+      "expectedDiscoveries": 7,
+      "predictedDiscoveries": 8,
+      "matchedDiscoveries": 5,
+      "discoveryExtractionPrecision": 0.625,
+      "discoveryExtractionRecall": 0.7142857142857143,
+      "matchedEvidenceItems": 25,
+      "expectedEvidenceItems": 31,
+      "goldEvidenceOriginAgreement": 0.84,
+      "goldEvidenceOriginCoverage": 0.8064516129032258,
+      "predictedUrlIds": 8,
+      "expectedUrlIds": 10,
+      "correctUrlIds": 8,
       "urlGroundingPrecision": 1,
-      "urlGroundingRecall": 1
+      "urlGroundingRecall": 0.8
     }
   },
-  "discoveryPrecision": 1,
-  "expertNotePrecision": 1,
+  "discoveryPrecision": 0.7777777777777778,
+  "expertNotePrecision": 0.9523809523809523,
   "extraction": {
-    "expectedDiscoveries": 13,
-    "predictedDiscoveries": 13,
-    "matchedDiscoveries": 13,
-    "discoveryExtractionPrecision": 1,
-    "discoveryExtractionRecall": 1,
-    "matchedEvidenceItems": 49,
-    "expectedEvidenceItems": 49,
-    "goldEvidenceOriginAgreement": 1,
-    "goldEvidenceOriginCoverage": 1,
-    "predictedUrlIds": 16,
-    "expectedUrlIds": 16,
-    "correctUrlIds": 16,
+    "expectedDiscoveries": 8,
+    "predictedDiscoveries": 10,
+    "matchedDiscoveries": 6,
+    "discoveryExtractionPrecision": 0.6,
+    "discoveryExtractionRecall": 0.75,
+    "matchedEvidenceItems": 27,
+    "expectedEvidenceItems": 34,
+    "goldEvidenceOriginAgreement": 0.8148148148148148,
+    "goldEvidenceOriginCoverage": 0.7941176470588235,
+    "predictedUrlIds": 9,
+    "expectedUrlIds": 11,
+    "correctUrlIds": 9,
     "urlGroundingPrecision": 1,
-    "urlGroundingRecall": 1
+    "urlGroundingRecall": 0.8181818181818182
   },
   "urlGroundingPrecision": 1,
-  "urlGroundingRecall": 1,
+  "urlGroundingRecall": 0.8181818181818182,
   "inventedUrlCount": 0,
   "evidenceOriginAccuracy": 1,
-  "goldEvidenceOriginAgreement": 1,
-  "goldEvidenceOriginCoverage": 1,
+  "goldEvidenceOriginAgreement": 0.8148148148148148,
+  "goldEvidenceOriginCoverage": 0.7941176470588235,
   "spanValidation": 1,
   "schemaValidRate": 1,
   "applicationValidRate": 1,
-  "reviewRate": 0.173469387755102,
+  "reviewRate": 0.08695652173913049,
   "reviewRouting": {
-    "truePositive": 17,
-    "falsePositive": 0,
-    "falseNegative": 0,
-    "trueNegative": 81,
-    "precision": 1,
-    "recall": 1,
-    "f1": 1
+    "truePositive": 5,
+    "falsePositive": 1,
+    "falseNegative": 9,
+    "trueNegative": 54,
+    "precision": 0.8333333333333334,
+    "recall": 0.35714285714285715,
+    "f1": 0.5
   },
-  "latencyMs": { "p50": 1, "p95": 1 },
+  "latencyMs": { "p50": 3975, "p95": 7733 },
   "usage": {
     "accountingVersion": 2,
-    "runs": 102,
-    "inputTokens": 0,
-    "cachedInputTokens": 0,
-    "cacheWriteInputTokens": 0,
-    "uncachedInputTokens": null,
-    "outputTokens": 0,
-    "inputTokenBreakdownComplete": false,
-    "outputTokenUsageComplete": false,
-    "tokenUsageComplete": false,
+    "runs": 73,
+    "inputTokens": 156168,
+    "cachedInputTokens": 116795,
+    "cacheWriteInputTokens": 39154,
+    "uncachedInputTokens": 219,
+    "outputTokens": 16053,
+    "inputTokenBreakdownComplete": true,
+    "outputTokenUsageComplete": true,
+    "tokenUsageComplete": true,
     "main": {
-      "runs": 98,
-      "inputTokens": 0,
-      "cachedInputTokens": 0,
-      "cacheWriteInputTokens": 0,
-      "uncachedInputTokens": null,
-      "outputTokens": 0,
-      "inputTokenBreakdownComplete": false,
-      "outputTokenUsageComplete": false,
-      "tokenUsageComplete": false
+      "runs": 69,
+      "inputTokens": 148442,
+      "cachedInputTokens": 110215,
+      "cacheWriteInputTokens": 38020,
+      "uncachedInputTokens": 207,
+      "outputTokens": 15618,
+      "inputTokenBreakdownComplete": true,
+      "outputTokenUsageComplete": true,
+      "tokenUsageComplete": true
     },
     "adversarial": {
       "runs": 4,
-      "inputTokens": 0,
-      "cachedInputTokens": 0,
-      "cacheWriteInputTokens": 0,
-      "uncachedInputTokens": null,
-      "outputTokens": 0,
-      "inputTokenBreakdownComplete": false,
-      "outputTokenUsageComplete": false,
-      "tokenUsageComplete": false
+      "inputTokens": 7726,
+      "cachedInputTokens": 6580,
+      "cacheWriteInputTokens": 1134,
+      "uncachedInputTokens": 12,
+      "outputTokens": 435,
+      "inputTokenBreakdownComplete": true,
+      "outputTokenUsageComplete": true,
+      "tokenUsageComplete": true
     },
-    "pricing": null,
-    "estimatedUsd": null,
-    "estimatedAllInputUncachedUsd": null,
-    "estimatedUpperBoundUsd": null,
+    "pricing": {
+      "inputUsdPerMillionTokens": 2,
+      "cachedInputUsdPerMillionTokens": 0.2,
+      "cacheWriteInputUsdPerMillionTokens": 2.5,
+      "outputUsdPerMillionTokens": 12,
+      "observedAt": "2026-08-25",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-terra"
+    },
+    "estimatedUsd": 0.314318,
+    "estimatedAllInputUncachedUsd": 0.504972,
+    "estimatedUpperBoundUsd": 0.583056,
     "estimatedUpperBoundAssumesHighestPublishedInputRate": true,
     "estimateIncludesAdversarialCalls": true
   },
@@ -291,8 +346,8 @@
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
@@ -326,25 +381,6 @@
     },
     {
       "commentId": 49353539,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49354775,
       "expected": "REJECTED",
       "predicted": "REJECTED",
       "failureCode": null,
@@ -471,7 +507,7 @@
         "matches": [
           {
             "expectedName": "GrapheneOS",
-            "predictedName": "GrapheneOS",
+            "predictedName": "Graphene",
             "expectedSubjectType": "PRODUCT",
             "predictedSubjectType": "PRODUCT",
             "expectedUrlCandidateIds": ["url:0"],
@@ -485,7 +521,7 @@
         "unmatchedPredicted": []
       },
       "expectedExpertNote": true,
-      "predictedExpertNote": true,
+      "predictedExpertNote": false,
       "goldStatus": "DISAGREEMENT_ADJUDICATED"
     },
     {
@@ -493,8 +529,8 @@
       "expected": "REJECTED",
       "predicted": "REJECTED",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["UNAVAILABLE_CONTENT"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["UNAVAILABLE_CONTENT"],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
@@ -508,76 +544,25 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49362986,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49363352,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49363671,
-      "expected": "EXPERT_NOTE",
-      "predicted": "EXPERT_NOTE",
-      "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["SECURITY_RECOMMENDATION"],
-      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "DISAGREEMENT_ADJUDICATED"
-    },
-    {
       "commentId": 49363706,
       "expected": "REJECTED",
-      "predicted": "REJECTED",
+      "predicted": "DISCOVERY",
       "failureCode": null,
       "reviewRequired": false,
       "reviewReasons": [],
       "expectedReviewFlags": [],
       "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 1,
       "discoveryDiagnostics": {
         "matches": [],
         "unmatchedExpected": [],
-        "unmatchedPredicted": []
+        "unmatchedPredicted": [
+          {
+            "name": "OpenStreetMap.org",
+            "subjectType": "SERVICE",
+            "urlCandidateIds": []
+          }
+        ]
       },
       "expectedExpertNote": false,
       "predictedExpertNote": false,
@@ -622,112 +607,12 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49366396,
-      "expected": "DISCOVERY",
-      "predicted": "DISCOVERY",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 1,
-      "predictedDiscoveryCount": 1,
-      "discoveryDiagnostics": {
-        "matches": [
-          {
-            "expectedName": "OpenRouter",
-            "predictedName": "OpenRouter",
-            "expectedSubjectType": "SERVICE",
-            "predictedSubjectType": "SERVICE",
-            "expectedUrlCandidateIds": ["url:0"],
-            "predictedUrlCandidateIds": ["url:0"],
-            "correctUrlCandidateIds": ["url:0"],
-            "missingUrlCandidateIds": [],
-            "unexpectedUrlCandidateIds": []
-          }
-        ],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "DISAGREEMENT_ADJUDICATED"
-    },
-    {
-      "commentId": 49366580,
-      "expected": "DISCOVERY",
-      "predicted": "DISCOVERY",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 1,
-      "predictedDiscoveryCount": 1,
-      "discoveryDiagnostics": {
-        "matches": [
-          {
-            "expectedName": "uscale algorithm",
-            "predictedName": "uscale algorithm",
-            "expectedSubjectType": "FEATURE",
-            "predictedSubjectType": "FEATURE",
-            "expectedUrlCandidateIds": ["url:2", "url:0", "url:1"],
-            "predictedUrlCandidateIds": ["url:2", "url:0", "url:1"],
-            "correctUrlCandidateIds": ["url:2", "url:0", "url:1"],
-            "missingUrlCandidateIds": [],
-            "unexpectedUrlCandidateIds": []
-          }
-        ],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49367035,
-      "expected": "EXPERT_NOTE",
-      "predicted": "EXPERT_NOTE",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49367354,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
       "commentId": 49367810,
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["LEGAL_RECOMMENDATION"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["LEGAL_RECOMMENDATION"],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
@@ -745,31 +630,12 @@
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["LEGAL_RECOMMENDATION", "SECURITY_RECOMMENDATION"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": [
         "LEGAL_RECOMMENDATION",
         "SECURITY_RECOMMENDATION"
       ],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49370357,
-      "expected": "EXPERT_NOTE",
-      "predicted": "EXPERT_NOTE",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
       "discoveryDiagnostics": {
@@ -792,74 +658,24 @@
       "expectedDiscoveryCount": 1,
       "predictedDiscoveryCount": 1,
       "discoveryDiagnostics": {
-        "matches": [
+        "matches": [],
+        "unmatchedExpected": [
           {
-            "expectedName": "Flight Simulator map",
-            "predictedName": "Flight Simulator map",
-            "expectedSubjectType": "RESOURCE",
-            "predictedSubjectType": "RESOURCE",
-            "expectedUrlCandidateIds": ["url:0"],
-            "predictedUrlCandidateIds": ["url:0"],
-            "correctUrlCandidateIds": ["url:0"],
-            "missingUrlCandidateIds": [],
-            "unexpectedUrlCandidateIds": []
+            "name": "Flight Simulator map",
+            "subjectType": "RESOURCE",
+            "urlCandidateIds": ["url:0"]
           }
         ],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
+        "unmatchedPredicted": [
+          {
+            "name": "Raymond Chen's articles",
+            "subjectType": "RESOURCE",
+            "urlCandidateIds": ["url:0"]
+          }
+        ]
       },
       "expectedExpertNote": false,
       "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49372025,
-      "expected": "DISCOVERY",
-      "predicted": "DISCOVERY",
-      "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["AMBIGUOUS_CANONICAL_URL"],
-      "expectedReviewFlags": ["AMBIGUOUS_CANONICAL_URL"],
-      "expectedDiscoveryCount": 1,
-      "predictedDiscoveryCount": 1,
-      "discoveryDiagnostics": {
-        "matches": [
-          {
-            "expectedName": "Principles of AI Use",
-            "predictedName": "Principles of AI Use",
-            "expectedSubjectType": "GUIDE",
-            "predictedSubjectType": "GUIDE",
-            "expectedUrlCandidateIds": [],
-            "predictedUrlCandidateIds": [],
-            "correctUrlCandidateIds": [],
-            "missingUrlCandidateIds": [],
-            "unexpectedUrlCandidateIds": []
-          }
-        ],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "DISAGREEMENT_ADJUDICATED"
-    },
-    {
-      "commentId": 49372945,
-      "expected": "EXPERT_NOTE",
-      "predicted": "EXPERT_NOTE",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
       "goldStatus": "CONSENSUS"
     },
     {
@@ -905,8 +721,8 @@
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["LOW_CONFIDENCE"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["LOW_CONFIDENCE"],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
@@ -936,25 +752,6 @@
       },
       "expectedExpertNote": true,
       "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49376987,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
       "goldStatus": "CONSENSUS"
     },
     {
@@ -1019,8 +816,8 @@
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["MEDICAL_RECOMMENDATION"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["MEDICAL_RECOMMENDATION"],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
@@ -1031,25 +828,6 @@
       },
       "expectedExpertNote": true,
       "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49379781,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
       "goldStatus": "CONSENSUS"
     },
     {
@@ -1110,25 +888,6 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49381236,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
       "commentId": 49381689,
       "expected": "REJECTED",
       "predicted": "REJECTED",
@@ -1148,31 +907,12 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49382571,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS_OVERRIDDEN"
-    },
-    {
       "commentId": 49382737,
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
@@ -1243,31 +983,12 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49384928,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
       "commentId": 49388070,
       "expected": "DISCOVERY",
       "predicted": "DISCOVERY",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["LEGAL_RECOMMENDATION"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["LEGAL_RECOMMENDATION"],
       "expectedDiscoveryCount": 1,
       "predictedDiscoveryCount": 1,
@@ -1279,31 +1000,12 @@
             "expectedSubjectType": "PROJECT",
             "predictedSubjectType": "PROJECT",
             "expectedUrlCandidateIds": ["url:0", "url:1", "url:2"],
-            "predictedUrlCandidateIds": ["url:0", "url:1", "url:2"],
-            "correctUrlCandidateIds": ["url:0", "url:1", "url:2"],
-            "missingUrlCandidateIds": [],
+            "predictedUrlCandidateIds": ["url:0", "url:1"],
+            "correctUrlCandidateIds": ["url:0", "url:1"],
+            "missingUrlCandidateIds": ["url:2"],
             "unexpectedUrlCandidateIds": []
           }
         ],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49388526,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
         "unmatchedExpected": [],
         "unmatchedPredicted": []
       },
@@ -1327,7 +1029,7 @@
             "expectedName": "Kagi",
             "predictedName": "Kagi",
             "expectedSubjectType": "PRODUCT",
-            "predictedSubjectType": "PRODUCT",
+            "predictedSubjectType": "SERVICE",
             "expectedUrlCandidateIds": ["url:0"],
             "predictedUrlCandidateIds": ["url:0"],
             "correctUrlCandidateIds": ["url:0"],
@@ -1339,30 +1041,11 @@
         "unmatchedPredicted": []
       },
       "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49389170,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
       "predictedExpertNote": false,
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49389182,
+      "commentId": 49389170,
       "expected": "REJECTED",
       "predicted": "REJECTED",
       "failureCode": null,
@@ -1438,25 +1121,6 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49391720,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
       "commentId": 49391865,
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
@@ -1480,8 +1144,8 @@
       "expected": "DISCOVERY",
       "predicted": "DISCOVERY",
       "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
+      "reviewRequired": true,
+      "reviewReasons": ["MISSING_CANONICAL_URL"],
       "expectedReviewFlags": [],
       "expectedDiscoveryCount": 1,
       "predictedDiscoveryCount": 1,
@@ -1491,7 +1155,7 @@
             "expectedName": "NickelMenu",
             "predictedName": "NickelMenu",
             "expectedSubjectType": "PLUGIN",
-            "predictedSubjectType": "PLUGIN",
+            "predictedSubjectType": "TOOL",
             "expectedUrlCandidateIds": [],
             "predictedUrlCandidateIds": [],
             "correctUrlCandidateIds": [],
@@ -1503,13 +1167,13 @@
         "unmatchedPredicted": []
       },
       "expectedExpertNote": true,
-      "predictedExpertNote": true,
+      "predictedExpertNote": false,
       "goldStatus": "CONSENSUS"
     },
     {
       "commentId": 49392339,
       "expected": "EXPERT_NOTE",
-      "predicted": "EXPERT_NOTE",
+      "predicted": "REJECTED",
       "failureCode": null,
       "reviewRequired": false,
       "reviewReasons": [],
@@ -1522,7 +1186,7 @@
         "unmatchedPredicted": []
       },
       "expectedExpertNote": true,
-      "predictedExpertNote": true,
+      "predictedExpertNote": false,
       "goldStatus": "CONSENSUS"
     },
     {
@@ -1532,9 +1196,8 @@
       "failureCode": null,
       "reviewRequired": true,
       "reviewReasons": [
-        "DESTRUCTIVE_OR_EVASION_ADVICE",
-        "LEGAL_RECOMMENDATION",
-        "SECURITY_RECOMMENDATION"
+        "SECURITY_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE"
       ],
       "expectedReviewFlags": [
         "DESTRUCTIVE_OR_EVASION_ADVICE",
@@ -1572,25 +1235,6 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49393076,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
       "commentId": 49393422,
       "expected": "REJECTED",
       "predicted": "REJECTED",
@@ -1610,46 +1254,14 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49393603,
-      "expected": "DISCOVERY",
-      "predicted": "DISCOVERY",
-      "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["SECURITY_RECOMMENDATION"],
-      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
-      "expectedDiscoveryCount": 1,
-      "predictedDiscoveryCount": 1,
-      "discoveryDiagnostics": {
-        "matches": [
-          {
-            "expectedName": "omp",
-            "predictedName": "omp",
-            "expectedSubjectType": "TOOL",
-            "predictedSubjectType": "TOOL",
-            "expectedUrlCandidateIds": [],
-            "predictedUrlCandidateIds": [],
-            "correctUrlCandidateIds": [],
-            "missingUrlCandidateIds": [],
-            "unexpectedUrlCandidateIds": []
-          }
-        ],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
       "commentId": 49395024,
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
       "reviewRequired": true,
       "reviewReasons": [
-        "DESTRUCTIVE_OR_EVASION_ADVICE",
-        "LEGAL_RECOMMENDATION",
-        "SECURITY_RECOMMENDATION"
+        "SECURITY_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE"
       ],
       "expectedReviewFlags": [
         "DESTRUCTIVE_OR_EVASION_ADVICE",
@@ -1711,7 +1323,10 @@
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
       "reviewRequired": true,
-      "reviewReasons": ["LEGAL_RECOMMENDATION", "SECURITY_RECOMMENDATION"],
+      "reviewReasons": [
+        "LEGAL_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE"
+      ],
       "expectedReviewFlags": [
         "LEGAL_RECOMMENDATION",
         "SECURITY_RECOMMENDATION"
@@ -1767,25 +1382,6 @@
     },
     {
       "commentId": 49398416,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49398422,
       "expected": "REJECTED",
       "predicted": "REJECTED",
       "failureCode": null,
@@ -1861,37 +1457,6 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49400071,
-      "expected": "DISCOVERY",
-      "predicted": "DISCOVERY",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 1,
-      "predictedDiscoveryCount": 1,
-      "discoveryDiagnostics": {
-        "matches": [
-          {
-            "expectedName": "remote MCP server",
-            "predictedName": "remote MCP server",
-            "expectedSubjectType": "FEATURE",
-            "predictedSubjectType": "FEATURE",
-            "expectedUrlCandidateIds": ["url:0"],
-            "predictedUrlCandidateIds": ["url:0"],
-            "correctUrlCandidateIds": ["url:0"],
-            "missingUrlCandidateIds": [],
-            "unexpectedUrlCandidateIds": []
-          }
-        ],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
       "commentId": 49400145,
       "expected": "REJECTED",
       "predicted": "REJECTED",
@@ -1951,28 +1516,22 @@
     {
       "commentId": 49401179,
       "expected": "DISCOVERY",
-      "predicted": "DISCOVERY",
+      "predicted": "EXPERT_NOTE",
       "failureCode": null,
       "reviewRequired": false,
       "reviewReasons": [],
       "expectedReviewFlags": [],
       "expectedDiscoveryCount": 1,
-      "predictedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 0,
       "discoveryDiagnostics": {
-        "matches": [
+        "matches": [],
+        "unmatchedExpected": [
           {
-            "expectedName": "milktea",
-            "predictedName": "milktea",
-            "expectedSubjectType": "LIBRARY",
-            "predictedSubjectType": "LIBRARY",
-            "expectedUrlCandidateIds": ["url:0"],
-            "predictedUrlCandidateIds": ["url:0"],
-            "correctUrlCandidateIds": ["url:0"],
-            "missingUrlCandidateIds": [],
-            "unexpectedUrlCandidateIds": []
+            "name": "milktea",
+            "subjectType": "LIBRARY",
+            "urlCandidateIds": ["url:0"]
           }
         ],
-        "unmatchedExpected": [],
         "unmatchedPredicted": []
       },
       "expectedExpertNote": true,
@@ -2030,44 +1589,6 @@
       "goldStatus": "CONSENSUS"
     },
     {
-      "commentId": 49401913,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49401919,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS_OVERRIDDEN"
-    },
-    {
       "commentId": 49402424,
       "expected": "REJECTED",
       "predicted": "REJECTED",
@@ -2095,7 +1616,7 @@
       "reviewReasons": [],
       "expectedReviewFlags": [],
       "expectedDiscoveryCount": 1,
-      "predictedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 2,
       "discoveryDiagnostics": {
         "matches": [
           {
@@ -2104,17 +1625,19 @@
             "expectedSubjectType": "PROJECT",
             "predictedSubjectType": "PROJECT",
             "expectedUrlCandidateIds": ["url:2", "url:0", "url:1"],
-            "predictedUrlCandidateIds": ["url:2", "url:0", "url:1"],
-            "correctUrlCandidateIds": ["url:2", "url:0", "url:1"],
+            "predictedUrlCandidateIds": ["url:0", "url:1", "url:2"],
+            "correctUrlCandidateIds": ["url:0", "url:1", "url:2"],
             "missingUrlCandidateIds": [],
             "unexpectedUrlCandidateIds": []
           }
         ],
         "unmatchedExpected": [],
-        "unmatchedPredicted": []
+        "unmatchedPredicted": [
+          { "name": "Searx", "subjectType": "PROJECT", "urlCandidateIds": [] }
+        ]
       },
       "expectedExpertNote": true,
-      "predictedExpertNote": true,
+      "predictedExpertNote": false,
       "goldStatus": "CONSENSUS"
     },
     {
@@ -2139,105 +1662,35 @@
     {
       "commentId": 49403412,
       "expected": "REJECTED",
-      "predicted": "REJECTED",
+      "predicted": "DISCOVERY",
       "failureCode": null,
       "reviewRequired": false,
       "reviewReasons": [],
       "expectedReviewFlags": [],
       "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 1,
       "discoveryDiagnostics": {
         "matches": [],
         "unmatchedExpected": [],
-        "unmatchedPredicted": []
+        "unmatchedPredicted": [
+          {
+            "name": "qwen 3.8 27b mlx",
+            "subjectType": "PRODUCT",
+            "urlCandidateIds": []
+          }
+        ]
       },
       "expectedExpertNote": false,
       "predictedExpertNote": false,
       "goldStatus": "DISAGREEMENT_ADJUDICATED"
-    },
-    {
-      "commentId": 49403620,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49403945,
-      "expected": "EXPERT_NOTE",
-      "predicted": "EXPERT_NOTE",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "DISAGREEMENT_ADJUDICATED"
-    },
-    {
-      "commentId": 49406822,
-      "expected": "EXPERT_NOTE",
-      "predicted": "EXPERT_NOTE",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": true,
-      "predictedExpertNote": true,
-      "goldStatus": "CONSENSUS"
-    },
-    {
-      "commentId": 49407075,
-      "expected": "REJECTED",
-      "predicted": "REJECTED",
-      "failureCode": null,
-      "reviewRequired": false,
-      "reviewReasons": [],
-      "expectedReviewFlags": [],
-      "expectedDiscoveryCount": 0,
-      "predictedDiscoveryCount": 0,
-      "discoveryDiagnostics": {
-        "matches": [],
-        "unmatchedExpected": [],
-        "unmatchedPredicted": []
-      },
-      "expectedExpertNote": false,
-      "predictedExpertNote": false,
-      "goldStatus": "CONSENSUS"
     },
     {
       "commentId": 49409002,
       "expected": "EXPERT_NOTE",
       "predicted": "EXPERT_NOTE",
       "failureCode": null,
-      "reviewRequired": true,
-      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "reviewRequired": false,
+      "reviewReasons": [],
       "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
       "expectedDiscoveryCount": 0,
       "predictedDiscoveryCount": 0,
@@ -2254,7 +1707,7 @@
   "acceptance": {
     "stableGoldMacroF1": true,
     "classificationCoverage": true,
-    "stableGoldDiscoveryPrecision": true,
+    "stableGoldDiscoveryPrecision": false,
     "stableGoldExpertNotePrecision": true,
     "stableGoldUrlGroundingPrecision": true,
     "inventedUrlCount": true,
@@ -2265,5 +1718,5 @@
     "adversarialToolAndNetworkActions": true,
     "latencyP95": true
   },
-  "passed": true
+  "passed": false
 }

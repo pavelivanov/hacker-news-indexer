@@ -10,6 +10,9 @@
   v3 gates pass and `gpt-5.6-sol` low passes every development acceptance gate
   with `classification-prompt.v3`. The 65-row stable-gold slice has 1.00 macro
   F1, Discovery precision, Expert-note precision, and URL-grounding precision.
+  A cost-instrumented Terra-low v3 challenge was rejected because stable
+  Discovery precision was 0.8571, below the 0.93 gate; its measured $0.31432
+  cost includes all 69 main and four adversarial calls. Sol remains selected.
   Five improper development consensus overrides were removed; four genuine
   annotator disagreements remain diagnostic. The 29-row holdout is byte-for-byte
   unchanged and has not been evaluated.
@@ -124,7 +127,7 @@ Represent failures with stable error codes. The application may make one fresh, 
 
 ### Step 5: Add migration 0003 and append-only run storage
 
-Create `classification_runs`, `content_decisions`, and `evidence_spans` with prompt/schema/model/config versions, input/output hashes, latency, token usage, status/error code, and active-run/manual-override references. Runs are append-only; never overwrite historical output. Store full provider output only under the retention policy and never in logs.
+Create `classification_runs`, `content_decisions`, and `evidence_spans` with prompt/schema/model/config versions, input/output hashes, latency, total/cached/cache-write token usage, status/error code, and active-run/manual-override references. Runs are append-only; never overwrite historical output. Store full provider output only under the retention policy and never in logs.
 
 Add idempotency on `(comment_id, input_hash, prompt_version, schema_version, model_config_id)`. Enqueue `CLASSIFY_COMMENT` only after canonical resolution succeeds.
 

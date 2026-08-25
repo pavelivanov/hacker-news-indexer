@@ -62,14 +62,17 @@ export type ClassifyCommentResult =
 
 const sumUsage = (
   responses: readonly ClassifierResponse[],
-  field: "inputTokens" | "outputTokens",
+  field:
+    | "inputTokens"
+    | "cachedInputTokens"
+    | "cacheWriteInputTokens"
+    | "outputTokens",
 ): number | null => {
-  const values = responses
-    .map((response) => response[field])
-    .filter((value): value is number => value !== null);
-  return values.length === 0
-    ? null
-    : values.reduce((total, value) => total + value, 0);
+  const values = responses.map((response) => response[field]);
+  if (values.length === 0 || values.some((value) => value === null)) {
+    return null;
+  }
+  return (values as number[]).reduce((total, value) => total + value, 0);
 };
 
 const assertMetadata = (
@@ -149,6 +152,8 @@ export const createClassifyComment =
             providerOutput: null,
             latencyMs: null,
             inputTokens: null,
+            cachedInputTokens: null,
+            cacheWriteInputTokens: null,
             outputTokens: null,
             status: "FAILED",
             errorCode: providerError.code,
@@ -189,6 +194,8 @@ export const createClassifyComment =
             0,
           ),
           inputTokens: sumUsage(responses, "inputTokens"),
+          cachedInputTokens: sumUsage(responses, "cachedInputTokens"),
+          cacheWriteInputTokens: sumUsage(responses, "cacheWriteInputTokens"),
           outputTokens: sumUsage(responses, "outputTokens"),
           status: "REVIEW",
           errorCode: validated.code,
@@ -221,6 +228,8 @@ export const createClassifyComment =
           0,
         ),
         inputTokens: sumUsage(responses, "inputTokens"),
+        cachedInputTokens: sumUsage(responses, "cachedInputTokens"),
+        cacheWriteInputTokens: sumUsage(responses, "cacheWriteInputTokens"),
         outputTokens: sumUsage(responses, "outputTokens"),
         status: runStatus,
         errorCode: null,

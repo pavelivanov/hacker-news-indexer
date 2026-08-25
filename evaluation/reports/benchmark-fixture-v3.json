@@ -162,11 +162,44 @@
   },
   "latencyMs": { "p50": 1, "p95": 1 },
   "usage": {
+    "accountingVersion": 2,
+    "runs": 73,
     "inputTokens": 0,
+    "cachedInputTokens": 0,
+    "cacheWriteInputTokens": 0,
+    "uncachedInputTokens": null,
     "outputTokens": 0,
+    "inputTokenBreakdownComplete": false,
+    "outputTokenUsageComplete": false,
+    "tokenUsageComplete": false,
+    "main": {
+      "runs": 69,
+      "inputTokens": 0,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 0,
+      "uncachedInputTokens": null,
+      "outputTokens": 0,
+      "inputTokenBreakdownComplete": false,
+      "outputTokenUsageComplete": false,
+      "tokenUsageComplete": false
+    },
+    "adversarial": {
+      "runs": 4,
+      "inputTokens": 0,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 0,
+      "uncachedInputTokens": null,
+      "outputTokens": 0,
+      "inputTokenBreakdownComplete": false,
+      "outputTokenUsageComplete": false,
+      "tokenUsageComplete": false
+    },
     "pricing": null,
+    "estimatedUsd": null,
+    "estimatedAllInputUncachedUsd": null,
     "estimatedUpperBoundUsd": null,
-    "estimateAssumesAllInputTokensUncached": true
+    "estimatedUpperBoundAssumesHighestPublishedInputRate": true,
+    "estimateIncludesAdversarialCalls": true
   },
   "failures": {},
   "adversarial": {

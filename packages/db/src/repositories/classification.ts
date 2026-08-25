@@ -78,6 +78,8 @@ const toRun = (run: DatabaseClassificationRun): ClassificationRun => ({
   providerOutput: run.providerOutput,
   latencyMs: run.latencyMs,
   inputTokens: run.inputTokens,
+  cachedInputTokens: run.cachedInputTokens,
+  cacheWriteInputTokens: run.cacheWriteInputTokens,
   outputTokens: run.outputTokens,
   status: run.status,
   errorCode: run.errorCode,
@@ -241,6 +243,14 @@ export const createClassificationRepository = (
           : jsonValue(input.providerOutput, "providerOutput"),
       latencyMs: optionalCount(input.latencyMs, "latencyMs"),
       inputTokens: optionalCount(input.inputTokens, "inputTokens"),
+      cachedInputTokens: optionalCount(
+        input.cachedInputTokens,
+        "cachedInputTokens",
+      ),
+      cacheWriteInputTokens: optionalCount(
+        input.cacheWriteInputTokens,
+        "cacheWriteInputTokens",
+      ),
       outputTokens: optionalCount(input.outputTokens, "outputTokens"),
       status: input.status,
       errorCode:

@@ -146,6 +146,27 @@ const usageValue = (
     : null;
 };
 
+const inputTokenDetailValue = (
+  response: Record<string, unknown>,
+  field: "cached_tokens" | "cache_write_tokens",
+): number | null => {
+  const usage = response["usage"];
+  if (!isRecord(usage)) {
+    return null;
+  }
+  const details = usage["input_tokens_details"];
+  if (!isRecord(details)) {
+    return null;
+  }
+  const value = details[field];
+  if (value === undefined) {
+    return 0;
+  }
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0
+    ? value
+    : null;
+};
+
 const httpError = (response: Response): ClassifierProviderError => {
   const retryAfterMs = parseRetryAfterMs(response.headers.get("retry-after"));
   if (response.status === 401 || response.status === 403) {
@@ -269,13 +290,29 @@ export class OpenAiClassifier implements ClassifierPort {
     if (!isRecord(payload) || payload["status"] !== "completed") {
       throw new ClassifierProviderError("CLASSIFIER_INVALID_RESPONSE", false);
     }
+    const inputTokens = usageValue(payload, "input_tokens");
+    const cachedInputTokens = inputTokenDetailValue(payload, "cached_tokens");
+    const cacheWriteInputTokens = inputTokenDetailValue(
+      payload,
+      "cache_write_tokens",
+    );
+    if (
+      inputTokens !== null &&
+      cachedInputTokens !== null &&
+      cacheWriteInputTokens !== null &&
+      cachedInputTokens + cacheWriteInputTokens > inputTokens
+    ) {
+      throw new ClassifierProviderError("CLASSIFIER_INVALID_RESPONSE", false);
+    }
     return {
       rawOutput: responseOutputText(payload),
       provider: this.provider,
       modelId: this.modelId,
       modelConfigId: this.modelConfigId,
       latencyMs: Math.round(performance.now() - startedAt),
-      inputTokens: usageValue(payload, "input_tokens"),
+      inputTokens,
+      cachedInputTokens,
+      cacheWriteInputTokens,
       outputTokens: usageValue(payload, "output_tokens"),
     };
   }

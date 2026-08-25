@@ -34,6 +34,8 @@ export interface ClassificationRun {
   readonly providerOutput: unknown;
   readonly latencyMs: number | null;
   readonly inputTokens: number | null;
+  readonly cachedInputTokens: number | null;
+  readonly cacheWriteInputTokens: number | null;
   readonly outputTokens: number | null;
   readonly status: ClassificationRunStatus;
   readonly errorCode: string | null;

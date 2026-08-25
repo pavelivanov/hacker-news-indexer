@@ -262,6 +262,8 @@ model ClassificationRun {
   providerOutput    Json?                   @map("provider_output")
   latencyMs         Int?                    @map("latency_ms")
   inputTokens       Int?                    @map("input_tokens")
+  cachedInputTokens Int?                    @map("cached_input_tokens")
+  cacheWriteInputTokens Int?                 @map("cache_write_input_tokens")
   outputTokens      Int?                    @map("output_tokens")
   status            ClassificationRunStatus
   errorCode         String?                 @map("error_code")
