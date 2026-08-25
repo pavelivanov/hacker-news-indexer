@@ -1,0 +1,451 @@
+{
+  "schemaVersion": "subject-pairs.v1",
+  "corpus": "seed-v1-policy-fixtures",
+  "adjudication": {
+    "adjudicator": "codex-root",
+    "policyVersion": "subject-identity.v1",
+    "scope": "All exact-identity, name-only, and homonym merge proposals in the Plan 004 policy fixture"
+  },
+  "pairs": [
+    {
+      "id": "ratatui-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Repository and issue URLs identify the same GitHub project.",
+      "left": {
+        "name": "Ratatui",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://github.com/ratatui/ratatui",
+        "officialDomain": null,
+        "rootId": 101
+      },
+      "right": {
+        "name": "ratatui",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://github.com/ratatui/ratatui/issues/1?utm_source=hn",
+        "officialDomain": null,
+        "rootId": 202
+      }
+    },
+    {
+      "id": "nickelmenu-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Two GitHub paths identify NickelMenu's verified repository.",
+      "left": {
+        "name": "NickelMenu",
+        "aliases": [],
+        "subjectType": "PLUGIN",
+        "canonicalUrl": "https://github.com/pgaskin/NickelMenu",
+        "officialDomain": null,
+        "rootId": 303
+      },
+      "right": {
+        "name": "Nickel Menu",
+        "aliases": ["NickelMenu"],
+        "subjectType": "PLUGIN",
+        "canonicalUrl": "https://github.com/pgaskin/NickelMenu/releases",
+        "officialDomain": null,
+        "rootId": 404
+      }
+    },
+    {
+      "id": "plato-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Repository subpaths retain the same ecosystem coordinate.",
+      "left": {
+        "name": "Plato",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": "https://github.com/baskerville/plato",
+        "officialDomain": null,
+        "rootId": 505
+      },
+      "right": {
+        "name": "Plato reader",
+        "aliases": ["Plato"],
+        "subjectType": "PROJECT",
+        "canonicalUrl": "https://github.com/baskerville/plato/wiki",
+        "officialDomain": null,
+        "rootId": 606
+      }
+    },
+    {
+      "id": "15ai-canonical-url",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Tracking and fragment differences do not change the historical product URL.",
+      "left": {
+        "name": "15.ai",
+        "aliases": [],
+        "subjectType": "SERVICE",
+        "canonicalUrl": "https://15.ai/",
+        "officialDomain": null,
+        "rootId": 707
+      },
+      "right": {
+        "name": "15.ai",
+        "aliases": [],
+        "subjectType": "SERVICE",
+        "canonicalUrl": "https://15.ai/?utm_source=hn#voices",
+        "officialDomain": null,
+        "rootId": 808
+      }
+    },
+    {
+      "id": "npm-scoped-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Package pages and version paths share a scoped npm coordinate.",
+      "left": {
+        "name": "TypeBox",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://www.npmjs.com/package/@sinclair/typebox",
+        "officialDomain": null,
+        "rootId": 901
+      },
+      "right": {
+        "name": "@sinclair/typebox",
+        "aliases": ["TypeBox"],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://npmjs.com/package/@sinclair/typebox/v/0.34.0",
+        "officialDomain": null,
+        "rootId": 902
+      }
+    },
+    {
+      "id": "pypi-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "PyPI project paths identify one package coordinate.",
+      "left": {
+        "name": "httpx",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://pypi.org/project/httpx/",
+        "officialDomain": null,
+        "rootId": 903
+      },
+      "right": {
+        "name": "HTTPX",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://pypi.org/project/httpx/0.28.0/",
+        "officialDomain": null,
+        "rootId": 904
+      }
+    },
+    {
+      "id": "crates-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Crates.io version paths preserve the crate coordinate.",
+      "left": {
+        "name": "serde",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://crates.io/crates/serde",
+        "officialDomain": null,
+        "rootId": 905
+      },
+      "right": {
+        "name": "Serde",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": "https://crates.io/crates/serde/1.0.0",
+        "officialDomain": null,
+        "rootId": 906
+      }
+    },
+    {
+      "id": "openrouter-official-domain",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "A verified official domain is stable across mentions without a supplied URL.",
+      "left": {
+        "name": "OpenRouter",
+        "aliases": [],
+        "subjectType": "SERVICE",
+        "canonicalUrl": null,
+        "officialDomain": "openrouter.ai",
+        "rootId": 907
+      },
+      "right": {
+        "name": "Open Router",
+        "aliases": ["OpenRouter"],
+        "subjectType": "SERVICE",
+        "canonicalUrl": null,
+        "officialDomain": "OPENROUTER.AI.",
+        "rootId": 908
+      }
+    },
+    {
+      "id": "nickelmenu-root-repeat",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Exact name, type, and resolved-root context collapse a root-local repeat.",
+      "left": {
+        "name": "NickelMenu",
+        "aliases": [],
+        "subjectType": "PLUGIN",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 909
+      },
+      "right": {
+        "name": "NickelMenu",
+        "aliases": [],
+        "subjectType": "PLUGIN",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 909
+      }
+    },
+    {
+      "id": "graphene-canonical-url",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "Allowlisted tracking parameters and fragments do not change a canonical product URL.",
+      "left": {
+        "name": "GrapheneOS",
+        "aliases": ["Graphene"],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": "https://grapheneos.org/",
+        "officialDomain": null,
+        "rootId": 910
+      },
+      "right": {
+        "name": "Graphene",
+        "aliases": ["GrapheneOS"],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": "https://grapheneos.org/?utm_campaign=launch#devices",
+        "officialDomain": null,
+        "rootId": 911
+      }
+    },
+    {
+      "id": "kagi-canonical-url",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "The canonical Kagi URL remains exact after safe normalization.",
+      "left": {
+        "name": "Kagi",
+        "aliases": [],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": "https://kagi.com/",
+        "officialDomain": null,
+        "rootId": 912
+      },
+      "right": {
+        "name": "Kagi Search",
+        "aliases": ["Kagi"],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": "https://KAGI.com/?utm_medium=referral#assistant",
+        "officialDomain": null,
+        "rootId": 913
+      }
+    },
+    {
+      "id": "hister-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "rationale": "GitHub repository and pull-request URLs identify one Hister project.",
+      "left": {
+        "name": "Hister",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": "https://github.com/Canop/Hister",
+        "officialDomain": null,
+        "rootId": 914
+      },
+      "right": {
+        "name": "hister",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": "https://github.com/canop/hister/pulls",
+        "officialDomain": null,
+        "rootId": 915
+      }
+    },
+    {
+      "id": "ratatui-name-only",
+      "expectedSameSubject": true,
+      "expectedOutcome": "REVIEW",
+      "rationale": "Adjudicators identify the same library, but name-only evidence across roots must not auto-merge.",
+      "left": {
+        "name": "Ratatui",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 916
+      },
+      "right": {
+        "name": "Ratatui",
+        "aliases": [],
+        "subjectType": "LIBRARY",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 917
+      }
+    },
+    {
+      "id": "plato-homonym",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "rationale": "The e-reader project and philosophy resource have different verified domains.",
+      "left": {
+        "name": "Plato",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": "https://github.com/baskerville/plato",
+        "officialDomain": null,
+        "rootId": 918
+      },
+      "right": {
+        "name": "Plato",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": null,
+        "officialDomain": "plato.stanford.edu",
+        "rootId": 919
+      }
+    },
+    {
+      "id": "apollo-homonym",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "rationale": "Same-name services on distinct verified domains are different subjects.",
+      "left": {
+        "name": "Apollo",
+        "aliases": [],
+        "subjectType": "SERVICE",
+        "canonicalUrl": "https://www.apollographql.com/",
+        "officialDomain": null,
+        "rootId": 920
+      },
+      "right": {
+        "name": "Apollo",
+        "aliases": [],
+        "subjectType": "SERVICE",
+        "canonicalUrl": "https://www.apollo.io/",
+        "officialDomain": null,
+        "rootId": 921
+      }
+    },
+    {
+      "id": "mercury-domain-homonym",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "rationale": "Distinct official domains disambiguate same-name products.",
+      "left": {
+        "name": "Mercury",
+        "aliases": [],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": null,
+        "officialDomain": "mercury.com",
+        "rootId": 922
+      },
+      "right": {
+        "name": "Mercury",
+        "aliases": [],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": null,
+        "officialDomain": "mercury.coop",
+        "rootId": 923
+      }
+    },
+    {
+      "id": "plato-type-mismatch",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "rationale": "A project and a guide are not merged solely because their names match.",
+      "left": {
+        "name": "Plato",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 924
+      },
+      "right": {
+        "name": "Plato",
+        "aliases": [],
+        "subjectType": "GUIDE",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 924
+      }
+    },
+    {
+      "id": "distinct-names",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "rationale": "Unrelated names with no verified identity do not produce a merge proposal.",
+      "left": {
+        "name": "NickelMenu",
+        "aliases": [],
+        "subjectType": "PLUGIN",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 925
+      },
+      "right": {
+        "name": "Plato",
+        "aliases": [],
+        "subjectType": "PLUGIN",
+        "canonicalUrl": null,
+        "officialDomain": null,
+        "rootId": 925
+      }
+    },
+    {
+      "id": "atlas-coordinate-ambiguity",
+      "expectedSameSubject": false,
+      "expectedOutcome": "REVIEW",
+      "rationale": "Two same-name repositories on GitHub require review because a move or fork cannot be inferred locally.",
+      "left": {
+        "name": "Atlas",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": "https://github.com/org-one/atlas",
+        "officialDomain": null,
+        "rootId": 926
+      },
+      "right": {
+        "name": "Atlas",
+        "aliases": [],
+        "subjectType": "PROJECT",
+        "canonicalUrl": "https://github.com/org-two/atlas",
+        "officialDomain": null,
+        "rootId": 927
+      }
+    },
+    {
+      "id": "mercury-path-ambiguity",
+      "expectedSameSubject": false,
+      "expectedOutcome": "REVIEW",
+      "rationale": "Different same-host paths with the same product name remain a manual-review case.",
+      "left": {
+        "name": "Mercury",
+        "aliases": [],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": "https://example.com/products/mercury",
+        "officialDomain": null,
+        "rootId": 928
+      },
+      "right": {
+        "name": "Mercury",
+        "aliases": [],
+        "subjectType": "PRODUCT",
+        "canonicalUrl": "https://example.com/archive/mercury",
+        "officialDomain": null,
+        "rootId": 929
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "reportVersion": "review-stats.v1",
+  "corpus": "seed-v1",
+  "corpusCommentCount": 98,
+  "taskCount": 104,
+  "byPriority": {
+    "LOW": 82,
+    "MEDIUM": 7,
+    "HIGH": 12,
+    "CRITICAL": 3
+  },
+  "byState": {
+    "OPEN": 104,
+    "APPROVED": 0,
+    "REJECTED": 0,
+    "SUPERSEDED": 0
+  },
+  "byKind": {
+    "CONTENT_DECISION": 98,
+    "SUBJECT_MERGE": 0,
+    "URL_RESOLUTION": 6
+  },
+  "byReason": {
+    "PROMPT_INJECTION": 0,
+    "DESTRUCTIVE_OR_EVASION_ADVICE": 2,
+    "DELETED_OR_FLAGGED_CONTENT": 1,
+    "SECURITY_RECOMMENDATION": 10,
+    "MEDICAL_RECOMMENDATION": 1,
+    "LEGAL_RECOMMENDATION": 7,
+    "TELEGRAM_HN_DIVERGENCE": 0,
+    "CONFLICTING_EVIDENCE_ORIGIN": 0,
+    "FINDTHATPROJECT_INITIAL_ROLLOUT": 0,
+    "NAME_ONLY_MERGE_SUGGESTION": 0,
+    "AMBIGUOUS_CANONICAL_URL": 4,
+    "MISSING_CANONICAL_URL": 3,
+    "ROOT_ONLY_DISCOVERY": 0,
+    "LOW_CONFIDENCE": 1,
+    "AMBIGUOUS_CLASSIFICATION": 0,
+    "UNPROMOTED_MODEL_DECISION": 98
+  }
+}

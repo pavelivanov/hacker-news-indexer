@@ -14,10 +14,9 @@
 
 ## Status
 
-- **Execution status**: IN PROGRESS — mandatory-review policy, append-only
-  decision-review storage, authenticated approve/reject API, and model-decision
-  activation guard are implemented. Subject identity, materialization,
-  merge/URL review actions, dedup evaluation, and review-load reporting remain.
+- **Execution status**: DONE — conservative subject identity, transactional
+  materialization, append-only authenticated review actions, seed workload
+  reporting, and every required verification gate pass.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH
@@ -41,8 +40,8 @@ Classifier output becomes useful only after it is converted into durable, dedupl
 
 | Purpose | Command | Expected on success |
 |---|---|---|
-| Migrations | `npm run db:test:reset && npm run db:migrate:deploy` | includes 0004 and 0005, exit 0 |
-| Domain tests | `npm test -- --run tests/unit/subjects tests/unit/review` | all pass |
+| Migrations | `npm run db:test:reset && npm run db:migrate:deploy` | includes `0005_review` and `0005_subjects_and_notes`, exit 0 |
+| Domain tests | `npm test -- --run tests/unit/subjects tests/unit/review-policy.test.ts` | all pass |
 | Review integration | `npm run test:integration -- --run tests/integration/review-workflow.test.ts` | all pass |
 | Dedup evaluation | `npm run evaluation:subjects` | precision ≥ 0.97, recall ≥ 0.90 |
 
@@ -150,6 +149,26 @@ Required gates: subject-dedup precision ≥ 0.97 and recall ≥ 0.90. Do not low
 
 **Verify**: `npm run evaluation:subjects` meets both gates and writes a versioned report; `npm run review:stats -- --corpus seed-v1` returns counts without source bodies.
 
+### Implementation evidence
+
+- A clean migration and seed replay materialize all 98 frozen decisions in
+  mandatory-review shadow mode. Corpus-wide replay is idempotent and reports 0
+  active decisions, 104 open review tasks, 13 discoveries, and 36 expert notes.
+- `evaluation/reports/subject-dedup-v1.json` records 20 adjudicated pairs,
+  precision 1.0000, recall 0.9231, exact policy-outcome accuracy 1.0000, and a
+  passing result.
+- `evaluation/reports/review-load-seed-v1.json` records the body-free seed
+  workload: 98 content-decision tasks and 6 URL-resolution tasks, grouped by
+  priority, state, kind, and stable reason code.
+- URL candidate IDs preserve the adjudicated comment → root story URL → root
+  body ordering, including repeated supplied occurrences. Re-resolution keeps
+  historical candidates for audit while excluding stale candidates from new
+  classifier inputs.
+- Final verification passed: clean dependency install, formatting, lint,
+  typecheck, build, 143 unit tests, 26 evaluation tests, 33 PostgreSQL
+  integration tests, clean migration deployment, repeated seed shadow
+  materialization, Node 24 container build, and API/worker smoke tests.
+
 ## Test plan
 
 - URL normalization and allowed tracking-parameter removal.
@@ -162,14 +181,14 @@ Required gates: subject-dedup precision ≥ 0.97 and recall ≥ 0.90. Do not low
 
 ## Done criteria
 
-- [ ] Migrations 0004 and 0005 apply cleanly from an empty DB.
-- [ ] Every discovery/note/mention traces to a classification run and evidence spans.
-- [ ] Name-only matches never auto-merge.
-- [ ] Root-only duplicate discoveries collapse correctly.
+- [x] Migrations 0004 and 0005 apply cleanly from an empty DB.
+- [x] Every discovery/note/mention traces to a classification run and evidence spans.
+- [x] Name-only matches never auto-merge.
+- [x] Root-only duplicate discoveries collapse correctly.
 - [x] Review policy covers every mandatory reason from the research plan.
-- [ ] Review mutations are authenticated, optimistic, idempotent, and audited.
-- [ ] Dedup precision ≥ 0.97 and recall ≥ 0.90.
-- [ ] Global verification/evaluation gates pass and Plan 004 is `DONE`.
+- [x] Review mutations are authenticated, optimistic, idempotent, and audited.
+- [x] Dedup precision ≥ 0.97 and recall ≥ 0.90.
+- [x] Global verification/evaluation gates pass and Plan 004 is `DONE`.
 
 ## STOP conditions
 

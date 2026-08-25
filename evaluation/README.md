@@ -141,6 +141,37 @@ npm run evaluation:rescore-report -- --input evaluation/reports/<report>.json
 Evaluation reports belong in `evaluation/reports/`. Provider responses, prompts,
 and source bodies must not be written to logs.
 
+## Subject identity and review-load evaluation
+
+Plan 004 evaluates conservative subject identity independently from classifier
+quality. The adjudicated pair corpus includes exact ecosystem coordinates,
+canonical URLs, verified domains, root-scoped repeats, name-only suggestions,
+and homonyms. The command rewrites a body-free versioned report and fails unless
+precision is at least 0.97, recall is at least 0.90, and every policy outcome is
+exact:
+
+```bash
+npm run evaluation:subjects
+```
+
+To replay the frozen seed classifications in mandatory-review shadow mode, use
+a clean migrated database and run:
+
+```bash
+npm run seed:replay
+npm run seed:materialize-shadow
+npm run review:stats -- \
+  --corpus seed-v1 \
+  --output evaluation/reports/review-load-seed-v1.json
+```
+
+The shadow command validates all 98 bounded inputs before writing, refuses URL
+candidate ordering drift, asserts that every decision requires review, and
+asserts that no decision is active. Repeating it against the same database is
+an idempotency check. The review-load report contains only corpus metadata and
+aggregate task counts by priority, state, kind, and stable reason code; it does
+not query or write source bodies.
+
 ## Live provider benchmark
 
 The OpenAI benchmark adapter loads the ignored local `.env` file and requires

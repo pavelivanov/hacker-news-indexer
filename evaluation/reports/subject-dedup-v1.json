@@ -1,0 +1,164 @@
+{
+  "reportVersion": "subject-dedup-report.v1",
+  "corpus": "seed-v1-policy-fixtures",
+  "corpusPath": "evaluation/subjects/subject-pairs-v1.json",
+  "corpusSha256": "16eaae745310b6c00bf26bd2a85c786c4a4e0d445cf139f324d83f49061c21d3",
+  "policyVersion": "subject-identity.v1",
+  "rows": 20,
+  "confusion": {
+    "truePositives": 12,
+    "falsePositives": 0,
+    "falseNegatives": 1
+  },
+  "precision": 1,
+  "recall": 0.9230769230769231,
+  "outcomeAccuracy": 1,
+  "acceptance": {
+    "minimumPrecision": 0.97,
+    "minimumRecall": 0.9,
+    "exactPolicyOutcomeRequired": true
+  },
+  "passed": true,
+  "cases": [
+    {
+      "id": "ratatui-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "nickelmenu-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "plato-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "15ai-canonical-url",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "npm-scoped-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "pypi-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "crates-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "openrouter-official-domain",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "nickelmenu-root-repeat",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "graphene-canonical-url",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "kagi-canonical-url",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "hister-coordinate",
+      "expectedSameSubject": true,
+      "expectedOutcome": "AUTO_MERGE",
+      "predictedOutcome": "AUTO_MERGE",
+      "passed": true
+    },
+    {
+      "id": "ratatui-name-only",
+      "expectedSameSubject": true,
+      "expectedOutcome": "REVIEW",
+      "predictedOutcome": "REVIEW",
+      "passed": true
+    },
+    {
+      "id": "plato-homonym",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "predictedOutcome": "DISTINCT",
+      "passed": true
+    },
+    {
+      "id": "apollo-homonym",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "predictedOutcome": "DISTINCT",
+      "passed": true
+    },
+    {
+      "id": "mercury-domain-homonym",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "predictedOutcome": "DISTINCT",
+      "passed": true
+    },
+    {
+      "id": "plato-type-mismatch",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "predictedOutcome": "DISTINCT",
+      "passed": true
+    },
+    {
+      "id": "distinct-names",
+      "expectedSameSubject": false,
+      "expectedOutcome": "DISTINCT",
+      "predictedOutcome": "DISTINCT",
+      "passed": true
+    },
+    {
+      "id": "atlas-coordinate-ambiguity",
+      "expectedSameSubject": false,
+      "expectedOutcome": "REVIEW",
+      "predictedOutcome": "REVIEW",
+      "passed": true
+    },
+    {
+      "id": "mercury-path-ambiguity",
+      "expectedSameSubject": false,
+      "expectedOutcome": "REVIEW",
+      "predictedOutcome": "REVIEW",
+      "passed": true
+    }
+  ]
+}
