@@ -2,10 +2,11 @@ import {
   ClassificationV1Schema,
   type ClassificationV1,
 } from "@hn-knowledge/contracts";
-import type {
-  ClassificationRun,
-  ContentDecision,
-  HnItemId,
+import {
+  UNPROMOTED_MODEL_REVIEW_DECISION,
+  type ClassificationRun,
+  type ContentDecision,
+  type HnItemId,
 } from "@hn-knowledge/domain";
 import {
   ClassifierProviderError,
@@ -226,9 +227,9 @@ export const createClassifyComment =
         cachedInputTokens: sumUsage(responses, "cachedInputTokens"),
         cacheWriteInputTokens: sumUsage(responses, "cacheWriteInputTokens"),
         outputTokens: sumUsage(responses, "outputTokens"),
-        // Model output is diagnostic/shadow data until an authenticated human
-        // review use case explicitly activates a decision.
-        status: "REVIEW",
+        status: UNPROMOTED_MODEL_REVIEW_DECISION.required
+          ? "REVIEW"
+          : "SUCCEEDED",
         errorCode: null,
       });
       const decision = await repository.saveDecision({
@@ -238,7 +239,7 @@ export const createClassifyComment =
         primaryDecision: output.primary_decision,
         decisionConfidence: output.decision_confidence,
         materiallyTechnical: output.comment_relevance.is_materially_technical,
-        reviewRequired: true,
+        reviewRequired: UNPROMOTED_MODEL_REVIEW_DECISION.required,
         validatedOutput: output,
         manualOverrideOfId: null,
         evidenceSpans: validated.evidenceSpans.map((span) => ({
