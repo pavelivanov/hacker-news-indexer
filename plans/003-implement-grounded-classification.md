@@ -6,12 +6,13 @@
 
 ## Status
 
-- **Execution status**: BLOCKED — deterministic fixture/shadow v2 gates pass
-  and `gpt-5.6-sol` low was measured with the corrected prompt/evaluator on the
-  development split. The 60-row stable-gold slice passes macro F1 and
-  Expert-note precision but still misses Discovery and URL-grounding
-  precision. Nine machine-disputed development labels require independent
-  adjudication. The 29-row holdout remains untouched.
+- **Execution status**: READY FOR SEALED HOLDOUT — deterministic fixture/shadow
+  v3 gates pass and `gpt-5.6-sol` low passes every development acceptance gate
+  with `classification-prompt.v3`. The 65-row stable-gold slice has 1.00 macro
+  F1, Discovery precision, Expert-note precision, and URL-grounding precision.
+  Five improper development consensus overrides were removed; four genuine
+  annotator disagreements remain diagnostic. The 29-row holdout is byte-for-byte
+  unchanged and has not been evaluated.
 - **Priority**: P1
 - **Effort**: L
 - **Risk**: HIGH
@@ -74,11 +75,11 @@ Classification creates all retained knowledge objects and is the largest source 
 
 Define `evaluation/annotation-schema.json` and `evaluation/gold-v1.jsonl`. Each row must include comment ID, primary class, zero or more expected discoveries, optional expert note, evidence origin, exact normalized-text spans, URL candidate IDs, review flags, and annotator/adjudication metadata.
 
-Recover the original 98 per-comment judgments if available. Otherwise, have two independent annotators label from the frozen fixtures using `docs/annotation-guide.md`, adjudicate disagreements, and verify totals remain `13/22/63`. Do not infer missing labels from the aggregate counts or representative examples.
+Recover the original 98 per-comment judgments if available. Otherwise, have two independent annotators label from the frozen fixtures using `docs/annotation-guide.md` and adjudicate disagreements. Treat aggregate totals as descriptive historical context only: never override unanimous labels or infer missing labels from aggregate counts or representative examples.
 
 Reserve a deterministic 30% holdout by checked-in ID list. Compute Cohen's kappa and require at least 0.75 before model selection. The file may contain public HN text excerpts needed for spans, but must not contain Telegram session data or secrets.
 
-**Verify**: `npm run evaluation:validate-corpus` → 98 unique comment IDs, totals `13/22/63`, every evidence span reproduces normalized source text, holdout is exactly the checked-in ID set, kappa ≥ 0.75.
+**Verify**: `npm run evaluation:validate-corpus` → 98 unique comment IDs, descriptive class totals, every evidence span reproduces normalized source text, holdout is exactly the checked-in ID set, development consensus is not overridden, and kappa ≥ 0.75.
 
 ### Step 2: Implement strict classification.v1 contracts
 

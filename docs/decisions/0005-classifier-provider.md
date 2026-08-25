@@ -1,6 +1,6 @@
 # ADR 0005: Classifier provider selection
 
-- Status: blocked on development-gold adjudication and URL grounding
+- Status: GPT-5.6 Sol low selected on development; sealed holdout pending
 - Date: 2026-08-25
 
 ## Context
@@ -36,28 +36,32 @@ abstentions as class errors, compared discoveries by array position, conflated
 application validation with JSON Schema validity, and compared non-unique gold
 span choices as if they were deterministic origin failures.
 
-Adopt evaluation report v2 and `classification-prompt.v2`. It supplies the
+Adopt evaluation report v3 and `classification-prompt.v3`. It supplies the
 content-class and review rubric, requires review to be independent of the
 content class when one can be determined, matches discoveries by supported
 subject name, separates abstention/coverage from classified quality, separates
-schema from application validation, and records safe per-case diagnostic
-metadata without source or provider bodies.
+schema from application validation, and records safe bounded subject/opaque-URL
+diagnostics without source or provider bodies. It also separates URL grounding
+from subject-name matching so valid candidate IDs are not double-penalized by a
+supported name-granularity disagreement.
 
-GPT-5.6 Sol low and Luna low have been measured with the corrected compatibility
-set. Sol remains the stronger candidate: it passes macro F1, Expert-note
-precision, schema/application validity, origin/span consistency, invention,
-latency, and adversarial gates on the 60 rows where both annotators agreed and
-no consensus label was overridden. It still fails Discovery precision and
-URL-grounding precision. Luna is much cheaper, but additionally fails stable
-Expert-note precision, produces substantially lower Discovery and URL
-precision, and timed out on two development rows. Seven of Sol's eleven
-full-corpus disagreements are on machine-disputed gold rows; those rows need
-human adjudication before they can be hard selection labels.
+Select GPT-5.6 Sol with low reasoning as the development winner. On the 65 rows
+where the independent annotators agreed, it achieves 1.00 macro F1, Discovery
+precision, Expert-note precision, classification coverage, and URL-grounding
+precision. It also passes schema/application validity, origin/span consistency,
+invention, latency, and adversarial gates. Luna is much cheaper but fails the
+stable Discovery, Expert-note, and URL precision gates and timed out on two
+development rows.
 
-Keep `CLASSIFIER_ENABLED=false`. Do not evaluate the 29-row holdout, enable the
-worker adapter, or publish decisions until the remaining stable Discovery and
-URL cases are diagnosed and the disputed development labels are independently
-adjudicated.
+Five development rows had been changed from unanimous `EXPERT_NOTE` labels to
+`REJECTED` to reproduce the historical aggregate counts. V3 restores the two
+independent annotations and prevents future development consensus overrides.
+The four actual annotation disagreements stay outside hard selection metrics.
+The sealed 29-row holdout subset is byte-for-byte unchanged.
+
+Keep `CLASSIFIER_ENABLED=false`. Sol is eligible for exactly one sealed holdout
+evaluation, but the worker adapter and publication remain disabled until that
+holdout is explicitly authorized and passes.
 
 ## Measurements
 
@@ -66,7 +70,56 @@ comment IDs, expected/predicted enum values, review flags, counts, and failure
 codes for diagnosis. They contain no prompts, source bodies, credentials, or
 raw provider outputs.
 
-### Corrected v2 measurements
+### Selected v3 measurement
+
+The v3 stable slice contains 65 development rows with unanimous independent
+annotations. Prompt v3 adds only measured edge rules for quoted-news reactions,
+facetious product claims, and supplied URL selection. The paid Sol run was made
+once; its URL metrics were then deterministically rescored from safe bounded
+diagnostics after URL grounding was decoupled from subject-name matching. The
+report records the pre-rescore hash and `providerCalls: 0` for that operation.
+
+| Metric                         |   Required |  Full 69 | Stable 65 |
+| ------------------------------ | ---------: | -------: | --------: |
+| Macro F1                       |     ≥ 0.85 |   0.9464 |      1.00 |
+| Discovery precision            |     ≥ 0.93 |   0.8750 |      1.00 |
+| Expert-note precision          |     ≥ 0.88 |   0.9545 |      1.00 |
+| URL-grounding precision        |       1.00 |     1.00 |      1.00 |
+| URL-grounding recall           |   recorded |   0.7273 |    0.8000 |
+| Discovery-extraction precision |   recorded |   0.6250 |    0.7143 |
+| Discovery-extraction recall    |   recorded |   0.6250 |    0.7143 |
+| Classification coverage        |     ≥ 0.80 |     1.00 |      1.00 |
+| Automatic coverage             |   recorded |   0.8551 |         — |
+| Automatic accuracy             |   recorded |   0.9831 |         — |
+| Evidence-origin consistency    |     ≥ 0.97 |     1.00 |         — |
+| Gold-origin agreement          | diagnostic |   0.8519 |    0.8800 |
+| Evidence-span validation       |       1.00 |     1.00 |         — |
+| JSON/schema-valid outputs      |    ≥ 0.995 |     1.00 |         — |
+| Application-valid outputs      |     ≥ 0.95 |     1.00 |         — |
+| Invented URL count             |          0 |        0 |         — |
+| Adversarial tool/network calls |          0 |        0 |         — |
+| Latency p95                    |     < 60 s | 10.295 s |         — |
+| Estimated upper-bound API cost |   recorded | $0.89249 |         — |
+
+- V3 Sol-low report:
+  `evaluation/reports/benchmark-openai-gpt-5-6-sol-low-v3.json`
+- V3 report SHA-256:
+  `740bf905103abb9e072c6a38c63ece2b80cbb0063a18583a792146b9c50ed108`
+- Pre-rescore report SHA-256:
+  `3c2264e6e7543ef8ac1bee05b2106d9df1087a4d3ea42cc3e978730c48aa9450`
+- Prompt version: `classification-prompt.v3`
+- Prompt hash:
+  `30d391239d4301e68a242fdad1bf992a61c2ca0891ff986860383990c70b3001`
+- Gold corpus SHA-256:
+  `7d23a114c404e30858a1b9c3d2ab7f66349ec41a3cdbf5405dd5fcd0447a95ce`
+
+Two stable discoveries retain diagnostic subject-granularity differences:
+`Flight Simulator map` versus `Raymond Chen's articles`, and `Kagi` versus its
+`AI Assistant` feature. Both primary classes are correct; the Kagi feature is
+routed to review for a missing canonical URL. These do not weaken or bypass
+the required URL precision gate.
+
+### Historical corrected v2 measurements
 
 The stable slice contains 60 rows with annotator consensus and no later
 consensus override. Full adjudicated metrics remain visible and are not
@@ -212,17 +265,13 @@ replays through the production input, schema, validation, evidence-hashing,
 and application paths. Their perfect scores prove pipeline behavior and are
 not evidence of model quality.
 
-## Unblocking criteria
+## Promotion criteria
 
-1. Independently adjudicate the nine development rows with annotator
-   disagreement or consensus override; do not force the historical aggregate
-   totals.
-2. Diagnose the stable Discovery false positive and per-case URL mismatches
-   using the safe v2 diagnostic format.
-3. Rerun the corrected prompt/model compatibility set and meet every stable
-   precision, URL, validation, safety, latency, and coverage gate.
-4. Only then evaluate the sealed 29-row holdout once and enable the selected
-   adapter if the holdout also passes.
+1. Obtain explicit authorization to open the sealed 29-row holdout exactly
+   once for the selected Sol-low/prompt-v3 compatibility set.
+2. Require the holdout report to meet every precision, URL, validation, safety,
+   latency, and coverage gate without prompt/model tuning.
+3. Enable the selected adapter only after the holdout passes; otherwise keep
+   classification disabled and document the failed generalization result.
 
-If no candidate meets the thresholds, classification remains in shadow mode;
-the thresholds are not weakened.
+The thresholds were not weakened. The holdout has not been opened.

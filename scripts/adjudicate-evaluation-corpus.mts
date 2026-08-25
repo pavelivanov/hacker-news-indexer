@@ -137,17 +137,10 @@ const disagreementAdjudications = new Map<number, Adjudication>([
   ],
 ]);
 
-const consensusOverrides = new Map<number, Adjudication>([
-  [
-    49376272,
-    {
-      primaryClass: "REJECTED",
-      preferred: "OVERRIDE",
-      rejectionReason: "LOW_INFORMATION",
-      rationale:
-        "The proposed browser explanation is explicitly speculative and supplies no reproducible mechanism, so it fails the conservative materiality gate.",
-    },
-  ],
+// These two pre-existing overrides belong to the sealed holdout. Preserve them
+// until the holdout is formally opened; development tuning must not change its
+// labels or use their outcomes.
+const sealedHoldoutOverrides = new Map<number, Adjudication>([
   [
     49382571,
     {
@@ -156,46 +149,6 @@ const consensusOverrides = new Map<number, Adjudication>([
       rejectionReason: "GENERIC_OPINION",
       rationale:
         "The architecture concern remains a generalized opinion about agent scale without a concrete reusable implementation detail.",
-    },
-  ],
-  [
-    49392339,
-    {
-      primaryClass: "REJECTED",
-      preferred: "OVERRIDE",
-      rejectionReason: "NEWS_WITHOUT_REUSABLE_DETAIL",
-      rationale:
-        "The observation that Archive pages are blocked in Italy provides no mechanism, mitigation, or durable technical instruction.",
-    },
-  ],
-  [
-    49392826,
-    {
-      primaryClass: "REJECTED",
-      preferred: "OVERRIDE",
-      rejectionReason: "LOW_INFORMATION",
-      rationale:
-        "The phone-imaging scenario is a hypothetical wish rather than a demonstrated technique and is unsafe to retain as procedural guidance.",
-    },
-  ],
-  [
-    49395024,
-    {
-      primaryClass: "REJECTED",
-      preferred: "OVERRIDE",
-      rejectionReason: "LOW_INFORMATION",
-      rationale:
-        "The destructive decoy-passcode behavior is speculative and unsupported by implementation evidence, so it is not retained as a technical note.",
-    },
-  ],
-  [
-    49396801,
-    {
-      primaryClass: "REJECTED",
-      preferred: "OVERRIDE",
-      rejectionReason: "GENERIC_OPINION",
-      rationale:
-        "The comment offers general legal caution and political framing, not a reusable technical mechanism or grounded procedure.",
     },
   ],
   [
@@ -271,7 +224,7 @@ const gold = a.map((aRow) => {
     throw new Error(`Missing comparison input for ${aRow.commentId}`);
   }
   const disagreed = aRow.primaryClass !== bRow.primaryClass;
-  const decision = consensusOverrides.get(aRow.commentId) ??
+  const decision = sealedHoldoutOverrides.get(aRow.commentId) ??
     disagreementAdjudications.get(aRow.commentId) ?? {
       primaryClass: aRow.primaryClass,
       preferred: "A" as const,
@@ -328,6 +281,11 @@ const gold = a.map((aRow) => {
     }
     return candidate.id;
   };
+  if (decision.preferred === "OVERRIDE" && !holdoutIds.has(aRow.commentId)) {
+    throw new Error(
+      `Development consensus override is forbidden for ${aRow.commentId}`,
+    );
+  }
   const normalizedFlags = [
     ...new Set(
       selected.reviewFlags.map((flag) => {
@@ -380,7 +338,7 @@ const gold = a.map((aRow) => {
             relatedSubjectNames: selected.expertNote.relatedSubjectNames,
             qualifiers: selected.expertNote.qualifiers,
           },
-    reviewFlags: decision.primaryClass === "REJECTED" ? [] : normalizedFlags,
+    reviewFlags: rejectedByOverride ? [] : normalizedFlags,
     rejectionReason,
     holdout: holdoutIds.has(aRow.commentId),
     annotation: {

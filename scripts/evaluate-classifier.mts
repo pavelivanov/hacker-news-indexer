@@ -21,6 +21,7 @@ import {
   createClassifyComment,
   EVALUATION_PREDICTIONS,
   EVALUATION_PRIMARY_CLASSES,
+  matchEvaluationDiscoveries,
   type EvaluationConfusionMatrix,
   type EvaluationPrediction,
   type EvaluationPrimaryClass,
@@ -46,6 +47,7 @@ import type {
 type PrimaryClass = EvaluationPrimaryClass;
 type PrimaryPrediction = EvaluationPrediction;
 type EvidenceOrigin = "COMMENT" | "ROOT_STORY" | "BOTH";
+const REPORT_VERSION = 3;
 
 interface GoldSpan {
   readonly id: string;
@@ -445,7 +447,7 @@ const liveReportName = (reportMode: string): string => {
     .toLowerCase()
     .replaceAll(/[^a-z0-9]+/gu, "-")
     .replaceAll(/^-|-$/gu, "");
-  return `${reportMode}-${slug}-v2.json`;
+  return `${reportMode}-${slug}-v${REPORT_VERSION}.json`;
 };
 if (provider !== "fixture" && mode !== "benchmark") {
   if (mode !== "holdout") {
@@ -696,6 +698,9 @@ const extractionRows = evaluatedRows.map((row) => {
     },
   };
 });
+const extractionByCommentId = new Map(
+  extractionRows.map((entry) => [entry.row.commentId, entry.extraction]),
+);
 const extractionMetrics = calculateExtractionMetrics(
   extractionRows.map((entry) => entry.extraction),
 );
@@ -842,6 +847,14 @@ const reviewRouting = {
 };
 const cases = evaluatedRows.map((row) => {
   const output = outputs.get(row.commentId);
+  const extraction = extractionByCommentId.get(row.commentId);
+  if (extraction === undefined) {
+    throw new Error(`Missing extraction diagnostics for ${row.commentId}`);
+  }
+  const discoveryComparison = matchEvaluationDiscoveries(
+    extraction.expectedDiscoveries,
+    extraction.predictedDiscoveries,
+  );
   return {
     commentId: row.commentId,
     expected: row.primaryClass,
@@ -852,6 +865,43 @@ const cases = evaluatedRows.map((row) => {
     expectedReviewFlags: row.reviewFlags,
     expectedDiscoveryCount: row.discoveries.length,
     predictedDiscoveryCount: output?.discoveries.length ?? 0,
+    discoveryDiagnostics: {
+      matches: discoveryComparison.matches.map(({ expected, predicted }) => {
+        const expectedIds = new Set(expected.urlCandidateIds);
+        const predictedIds = new Set(predicted.urlCandidateIds);
+        return {
+          expectedName: expected.name,
+          predictedName: predicted.name,
+          expectedSubjectType: expected.subjectType,
+          predictedSubjectType: predicted.subjectType,
+          expectedUrlCandidateIds: expected.urlCandidateIds,
+          predictedUrlCandidateIds: predicted.urlCandidateIds,
+          correctUrlCandidateIds: predicted.urlCandidateIds.filter((id) =>
+            expectedIds.has(id),
+          ),
+          missingUrlCandidateIds: expected.urlCandidateIds.filter(
+            (id) => !predictedIds.has(id),
+          ),
+          unexpectedUrlCandidateIds: predicted.urlCandidateIds.filter(
+            (id) => !expectedIds.has(id),
+          ),
+        };
+      }),
+      unmatchedExpected: discoveryComparison.unmatchedExpected.map(
+        (discovery) => ({
+          name: discovery.name,
+          subjectType: discovery.subjectType,
+          urlCandidateIds: discovery.urlCandidateIds,
+        }),
+      ),
+      unmatchedPredicted: discoveryComparison.unmatchedPredicted.map(
+        (discovery) => ({
+          name: discovery.name,
+          subjectType: discovery.subjectType,
+          urlCandidateIds: discovery.urlCandidateIds,
+        }),
+      ),
+    },
     expectedExpertNote: row.expertNote !== null,
     predictedExpertNote: output?.expert_note !== null && output !== undefined,
     goldStatus: goldStatusFor(row),
@@ -877,7 +927,7 @@ const acceptance = {
   latencyP95: latencyP95 < 60_000,
 };
 const report = {
-  reportVersion: 2,
+  reportVersion: REPORT_VERSION,
   mode,
   corpus: path.relative(root, corpusPath),
   corpusSha256: sha256(goldText),
@@ -966,10 +1016,10 @@ const report = {
 const reportName = (() => {
   if (provider === "fixture") {
     return mode === "shadow"
-      ? "shadow-fixture-v2.json"
+      ? `shadow-fixture-v${REPORT_VERSION}.json`
       : mode === "holdout"
-        ? "holdout-fixture-v2.json"
-        : "benchmark-fixture-v2.json";
+        ? `holdout-fixture-v${REPORT_VERSION}.json`
+        : `benchmark-fixture-v${REPORT_VERSION}.json`;
   }
   return liveReportName(mode);
 })();

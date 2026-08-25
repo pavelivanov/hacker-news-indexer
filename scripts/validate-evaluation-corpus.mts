@@ -688,6 +688,16 @@ for (const [index, row] of rows.entries()) {
   if (row.annotation.adjudication.disagreement !== disagreement) {
     fail(`${location} disagreement metadata is inconsistent`);
   }
+  const proposedClasses = new Set([
+    row.annotation.annotatorA.primaryClass,
+    row.annotation.annotatorB.primaryClass,
+  ]);
+  if (disagreement && !proposedClasses.has(row.primaryClass)) {
+    fail(`${location} adjudication invented a third primary class`);
+  }
+  if (!row.holdout && !disagreement && !proposedClasses.has(row.primaryClass)) {
+    fail(`${location} development consensus was overridden`);
+  }
 }
 
 const counts = Object.fromEntries(
@@ -696,15 +706,6 @@ const counts = Object.fromEntries(
     rows.filter((row) => row.primaryClass === primaryClass).length,
   ]),
 ) as Record<PrimaryClass, number>;
-if (
-  counts.DISCOVERY !== 13 ||
-  counts.EXPERT_NOTE !== 22 ||
-  counts.REJECTED !== 63
-) {
-  fail(
-    `Gold totals differ from the frozen research totals: ${JSON.stringify(counts)}`,
-  );
-}
 const measuredKappa = kappa(rows);
 if (!Number.isFinite(measuredKappa) || measuredKappa < 0.75) {
   fail(`Cohen's kappa ${measuredKappa.toFixed(4)} is below 0.75`);

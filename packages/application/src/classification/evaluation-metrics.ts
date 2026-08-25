@@ -165,20 +165,24 @@ const sharesName = (
   return [...namesFor(predicted)].some((name) => expectedNames.has(name));
 };
 
-interface DiscoveryMatch {
+export interface EvaluationDiscoveryMatch {
   readonly expected: ExpectedEvaluationDiscovery;
   readonly predicted: PredictedEvaluationDiscovery;
 }
 
-const matchDiscoveries = (
+export interface EvaluationDiscoveryMatches {
+  readonly matches: readonly EvaluationDiscoveryMatch[];
+  readonly unmatchedExpected: readonly ExpectedEvaluationDiscovery[];
+  readonly unmatchedPredicted: readonly PredictedEvaluationDiscovery[];
+}
+
+export const matchEvaluationDiscoveries = (
   expected: readonly ExpectedEvaluationDiscovery[],
   predicted: readonly PredictedEvaluationDiscovery[],
-): {
-  readonly matches: readonly DiscoveryMatch[];
-  readonly unmatchedPredicted: readonly PredictedEvaluationDiscovery[];
-} => {
+): EvaluationDiscoveryMatches => {
   const available = new Set(predicted.map((_value, index) => index));
-  const matches: DiscoveryMatch[] = [];
+  const matches: EvaluationDiscoveryMatch[] = [];
+  const unmatchedExpected: ExpectedEvaluationDiscovery[] = [];
   for (const expectedDiscovery of expected) {
     const candidates = [...available].filter((index) => {
       const predictedDiscovery = predicted[index];
@@ -198,6 +202,7 @@ const matchDiscoveries = (
     const predictedDiscovery =
       index === undefined ? undefined : predicted[index];
     if (index === undefined || predictedDiscovery === undefined) {
+      unmatchedExpected.push(expectedDiscovery);
       continue;
     }
     available.delete(index);
@@ -208,6 +213,7 @@ const matchDiscoveries = (
   }
   return {
     matches,
+    unmatchedExpected,
     unmatchedPredicted: [...available].flatMap((index) => {
       const value = predicted[index];
       return value === undefined ? [] : [value];
@@ -238,8 +244,28 @@ export const calculateExtractionMetrics = (
       (total, discovery) => total + discovery.urlCandidateIds.length,
       0,
     );
+    const predictedRowUrlIds = row.predictedDiscoveries.flatMap(
+      (discovery) => discovery.urlCandidateIds,
+    );
+    predictedUrlIds += predictedRowUrlIds.length;
+    const remainingExpectedUrlIds = new Map<string, number>();
+    for (const id of row.expectedDiscoveries.flatMap(
+      (discovery) => discovery.urlCandidateIds,
+    )) {
+      remainingExpectedUrlIds.set(
+        id,
+        (remainingExpectedUrlIds.get(id) ?? 0) + 1,
+      );
+    }
+    for (const id of predictedRowUrlIds) {
+      const remaining = remainingExpectedUrlIds.get(id) ?? 0;
+      if (remaining > 0) {
+        correctUrlIds += 1;
+        remainingExpectedUrlIds.set(id, remaining - 1);
+      }
+    }
 
-    const { matches, unmatchedPredicted } = matchDiscoveries(
+    const { matches } = matchEvaluationDiscoveries(
       row.expectedDiscoveries,
       row.predictedDiscoveries,
     );
@@ -249,16 +275,7 @@ export const calculateExtractionMetrics = (
       if (match.expected.evidenceOrigin === match.predicted.evidenceOrigin) {
         correctOrigins += 1;
       }
-      const expectedIds = new Set(match.expected.urlCandidateIds);
-      predictedUrlIds += match.predicted.urlCandidateIds.length;
-      correctUrlIds += match.predicted.urlCandidateIds.filter((id) =>
-        expectedIds.has(id),
-      ).length;
     }
-    predictedUrlIds += unmatchedPredicted.reduce(
-      (total, discovery) => total + discovery.urlCandidateIds.length,
-      0,
-    );
 
     if (
       row.expectedExpertNoteOrigin !== null &&

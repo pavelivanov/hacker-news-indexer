@@ -3,8 +3,10 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 interface EvaluationReport {
+  readonly reportVersion: number;
   readonly provider: string;
   readonly modelId: string;
+  readonly promptVersion: string;
   readonly mode: string;
   readonly split: string;
   readonly rows: number;
@@ -34,11 +36,26 @@ interface EvaluationReport {
   readonly latencyMs: { readonly p95: number };
   readonly configuration: { readonly reasoningEffort: string | null };
   readonly failures: Readonly<Record<string, number>>;
+  readonly acceptance: Readonly<Record<string, boolean>>;
+  readonly rescoring?: {
+    readonly providerCalls: number;
+    readonly rule: string;
+  };
   readonly cases: readonly {
     readonly commentId: number;
     readonly expected: string;
     readonly predicted: string;
     readonly failureCode: string | null;
+    readonly discoveryDiagnostics: {
+      readonly matches: readonly {
+        readonly expectedName: string;
+        readonly predictedName: string;
+        readonly expectedUrlCandidateIds: readonly string[];
+        readonly predictedUrlCandidateIds: readonly string[];
+      }[];
+      readonly unmatchedExpected: readonly { readonly name: string }[];
+      readonly unmatchedPredicted: readonly { readonly name: string }[];
+    };
   }[];
   readonly adversarial: {
     readonly cases: number;
@@ -72,41 +89,44 @@ const expectAcceptanceGates = (report: EvaluationReport): void => {
 
 describe("classification evaluation gates", () => {
   it("benchmarks only the development split", async () => {
-    const report = await load("benchmark-fixture-v2.json");
+    const report = await load("benchmark-fixture-v3.json");
 
     expect(report).toMatchObject({
       mode: "benchmark",
+      reportVersion: 3,
       split: "development",
       rows: 69,
       terminalRuns: 69,
       activatedDecisions: 0,
       classificationCoverage: 1,
-      automaticCoverage: 60 / 69,
+      automaticCoverage: 55 / 69,
       automaticAccuracy: 1,
-      stableGold: { rows: 60, macroF1: 1 },
+      stableGold: { rows: 65, macroF1: 1 },
     });
     expectAcceptanceGates(report);
   });
 
   it("passes the frozen 98-comment shadow replay without publication", async () => {
-    const report = await load("shadow-fixture-v2.json");
+    const report = await load("shadow-fixture-v3.json");
 
     expect(report).toMatchObject({
       mode: "shadow",
+      reportVersion: 3,
       split: "all",
       rows: 98,
       terminalRuns: 98,
       activatedDecisions: 0,
       classificationCoverage: 1,
       automaticAccuracy: 1,
-      stableGold: { rows: 83, macroF1: 1 },
+      automaticCoverage: 81 / 98,
+      stableGold: { rows: 88, macroF1: 1 },
     });
     expectAcceptanceGates(report);
   });
 
   it("keeps reports free of prompts, source documents, and provider output", async () => {
     const text = await readFile(
-      "evaluation/reports/shadow-fixture-v2.json",
+      "evaluation/reports/shadow-fixture-v3.json",
       "utf8",
     );
 
@@ -118,7 +138,7 @@ describe("classification evaluation gates", () => {
   });
 
   it("records non-sensitive per-case diagnostics for every development row", async () => {
-    const report = await load("benchmark-fixture-v2.json");
+    const report = await load("benchmark-fixture-v3.json");
 
     expect(report.cases).toHaveLength(69);
     expect(new Set(report.cases.map((entry) => entry.commentId)).size).toBe(69);
@@ -129,6 +149,18 @@ describe("classification evaluation gates", () => {
         failureCode: null,
       }),
     );
+    const discoveryCase = report.cases.find(
+      (entry) => entry.expected === "DISCOVERY",
+    );
+    expect(discoveryCase?.discoveryDiagnostics.matches.length).toBeGreaterThan(
+      0,
+    );
+    expect(
+      typeof discoveryCase?.discoveryDiagnostics.matches[0]?.expectedName,
+    ).toBe("string");
+    expect(
+      typeof discoveryCase?.discoveryDiagnostics.matches[0]?.predictedName,
+    ).toBe("string");
   });
 
   it.each([
@@ -203,6 +235,37 @@ describe("classification evaluation gates", () => {
     expect(report.stableGold.extraction.urlGroundingPrecision).toBeLessThan(1);
   });
 
+  it("selects Sol on corrected development metrics without opening holdout", async () => {
+    const report = await load("benchmark-openai-gpt-5-6-sol-low-v3.json");
+
+    expect(report).toMatchObject({
+      reportVersion: 3,
+      provider: "openai",
+      modelId: "gpt-5.6-sol",
+      promptVersion: "classification-prompt.v3",
+      mode: "benchmark",
+      split: "development",
+      rows: 69,
+      terminalRuns: 69,
+      activatedDecisions: 0,
+      classificationCoverage: 1,
+      schemaValidRate: 1,
+      applicationValidRate: 1,
+      failures: {},
+      stableGold: { rows: 65, macroF1: 1 },
+      rescoring: {
+        providerCalls: 0,
+        rule: "row-level-gold-url-candidate-membership.v1",
+      },
+      passed: true,
+    });
+    expect(report.cases).toHaveLength(69);
+    expect(report.stableGold.classMetrics.DISCOVERY.precision).toBe(1);
+    expect(report.stableGold.classMetrics.EXPERT_NOTE.precision).toBe(1);
+    expect(report.stableGold.extraction.urlGroundingPrecision).toBe(1);
+    expect(Object.values(report.acceptance).every(Boolean)).toBe(true);
+  });
+
   it("keeps live reports free of source/provider bodies and does not check in a holdout report", async () => {
     const names = [
       "benchmark-openai-gpt-5-6-luna-low-v1.json",
@@ -213,6 +276,7 @@ describe("classification evaluation gates", () => {
       "benchmark-openai-gpt-5-6-sol-medium-v1.json",
       "benchmark-openai-gpt-5-6-luna-low-v2.json",
       "benchmark-openai-gpt-5-6-sol-low-v2.json",
+      "benchmark-openai-gpt-5-6-sol-low-v3.json",
     ];
     for (const name of names) {
       const text = await readFile(`evaluation/reports/${name}`, "utf8");
@@ -234,6 +298,10 @@ describe("classification evaluation gates", () => {
       "holdout-openai-gpt-5-6-sol-medium-v2.json",
       "holdout-openai-gpt-5-6-luna-low-v2.json",
       "holdout-openai-gpt-5-6-luna-medium-v2.json",
+      "holdout-openai-gpt-5-6-sol-low-v3.json",
+      "holdout-openai-gpt-5-6-sol-medium-v3.json",
+      "holdout-openai-gpt-5-6-luna-low-v3.json",
+      "holdout-openai-gpt-5-6-luna-medium-v3.json",
     ]) {
       await expect(
         readFile(`evaluation/reports/${name}`, "utf8"),
