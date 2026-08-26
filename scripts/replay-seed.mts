@@ -87,6 +87,10 @@ if (
 }
 
 const hasher = { sha256 };
+const wait = async (milliseconds: number): Promise<void> =>
+  new Promise((resolveWait) => {
+    setTimeout(resolveWait, milliseconds);
+  });
 const selectionSource = new FixtureSelectionSource(
   {
     sourceKey: telegram.sourceKey,
@@ -134,6 +138,7 @@ try {
     queue,
   );
 
+  let idleAttempts = 0;
   for (;;) {
     const job = await queue.claim({
       leaseOwner: "seed-replay",
@@ -141,8 +146,18 @@ try {
       ingestionRunId: runId,
     });
     if (job === null) {
-      break;
+      const run = await runs.reconcile(runId);
+      if (run.status !== "RUNNING") {
+        break;
+      }
+      idleAttempts += 1;
+      if (idleAttempts > 100) {
+        throw new Error("Seed replay jobs remained unavailable");
+      }
+      await wait(10);
+      continue;
     }
+    idleAttempts = 0;
     if (job.type === "INGEST_SELECTION_RANGE") {
       await ingest({
         runId,
