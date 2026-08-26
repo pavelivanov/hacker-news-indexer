@@ -28,6 +28,7 @@ export {
 } from "./reconstruct/multipart.js";
 export * from "./classification/build-input.js";
 export * from "./classification/classify.js";
+export * from "./export/eligibility.js";
 export * from "./classification/evaluation-metrics.js";
 export * from "./classification/evaluation-cycle.js";
 export * from "./classification/load-input.js";

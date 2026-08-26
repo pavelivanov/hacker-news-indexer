@@ -39,7 +39,7 @@ Generated on 2026-08-24 from `docs/telegram-hn-technical-knowledge-project-resea
 | 003R | Recover classifier generalization on a fresh evaluation cycle | P1 | M | 003 implementation | IN PROGRESS (cycle locks and shadow-only safety complete; fresh v2 data pending) |
 | 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 implementation | DONE |
 | 005 | Implement the private knowledge-feed APIs and reconciliation | P1 | L | 004 | DONE |
-| 006 | Implement the FindThatProject export outbox | P2 | M | 004 | TODO |
+| 006 | Implement the FindThatProject export outbox | P2 | M | 004 | IN PROGRESS (v1 pull contract approved; downstream mutation disabled) |
 | 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | TODO |
 | 008 | Add the optional Vite/React reader and review UI | P3 | L | 005 | TODO |
 
