@@ -1,7 +1,7 @@
 {
   "reportVersion": 1,
   "corpus": "holdout-v1",
-  "generatedAt": "2026-08-26T14:46:26.668Z",
+  "generatedAt": "2026-08-26T00:00:00.000Z",
   "sourceReport": "evaluation/reports/holdout-openai-gpt-5-6-sol-low-v3.json",
   "sourceSha256": "e6044a42c1a594d525fc03d79e925c1b6351f08947359d1df094d0affd21f145",
   "contractApproval": "APPROVED",

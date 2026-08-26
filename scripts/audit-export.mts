@@ -33,6 +33,7 @@ const source = JSON.parse(sourceText) as {
 };
 const approval = JSON.parse(await readFile(approvalPath, "utf8")) as {
   readonly status: string;
+  readonly approvedAt: string;
   readonly mutatingDownstreamAuthorized: boolean;
 };
 if (
@@ -52,7 +53,7 @@ const precision = source.extraction.discoveryExtractionPrecision;
 const report = {
   reportVersion: 1,
   corpus,
-  generatedAt: new Date().toISOString(),
+  generatedAt: `${approval.approvedAt}T00:00:00.000Z`,
   sourceReport: path.relative(process.cwd(), sourcePath),
   sourceSha256: createHash("sha256").update(sourceText).digest("hex"),
   contractApproval: approval.status,
