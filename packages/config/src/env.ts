@@ -57,6 +57,7 @@ const environmentSchema = z
       z.url().startsWith("postgresql://").default(DEFAULT_DATABASE_URL),
     ),
     APP_API_TOKEN: optionalString,
+    EXPORT_CONSUMER_TOKEN: optionalString,
     APP_REVIEW_ACTOR_ID: z.preprocess(
       emptyToUndefined,
       z.string().trim().min(1).max(128).default("owner"),
@@ -94,6 +95,17 @@ const environmentSchema = z
     CLASSIFIER_REQUEST_TIMEOUT_MS: integer(45_000, 100, 180_000),
   })
   .superRefine((value, context) => {
+    if (
+      value.APP_API_TOKEN !== undefined &&
+      value.EXPORT_CONSUMER_TOKEN !== undefined &&
+      value.APP_API_TOKEN === value.EXPORT_CONSUMER_TOKEN
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "EXPORT_CONSUMER_TOKEN must differ from APP_API_TOKEN",
+        path: ["EXPORT_CONSUMER_TOKEN"],
+      });
+    }
     if (value.TELEGRAM_ENABLED) {
       for (const key of ["TELEGRAM_API_ID", "TELEGRAM_API_HASH"] as const) {
         if (value[key] === undefined) {

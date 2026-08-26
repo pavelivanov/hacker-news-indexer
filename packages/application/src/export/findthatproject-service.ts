@@ -134,6 +134,7 @@ const decodeCursor = (
   const expected = signature(body, secret);
   const supplied = Buffer.from(rawSignature, "base64url");
   if (
+    supplied.toString("base64url") !== rawSignature ||
     supplied.length !== expected.length ||
     !timingSafeEqual(supplied, expected)
   ) {

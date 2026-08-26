@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "findthatproject.discovery.v1",
+  "status": "APPROVED",
+  "approvedBy": "downstream-owner",
+  "approvedAt": "2026-08-26",
+  "decision": "docs/decisions/0006-findthatproject-export-contract.md",
+  "pullOnly": true,
+  "mutatingDownstreamAuthorized": false
+}

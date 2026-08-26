@@ -345,7 +345,10 @@ describe("knowledge reader repository", () => {
     const seeded = await seedPublishedContent();
     const reader = createKnowledgeReader(
       createKnowledgeReaderRepository(database.client),
-      { cursorSecret: "reader-integration-secret", now: () => publishedAt },
+      {
+        cursorSecret: "reader-integration-secret",
+        now: () => new Date("2099-01-01T00:00:00.000Z"),
+      },
     );
 
     const beforeApproval = await reader.getFeed({
@@ -358,6 +361,23 @@ describe("knowledge reader repository", () => {
       where: { id: BigInt(discoveryCommentId) },
       data: { activeDecisionId: seeded.discoveryDecisionId },
     });
+    await expect(
+      database.client.discovery.findFirstOrThrow({
+        where: {
+          sources: { some: { contentDecisionId: seeded.discoveryDecisionId } },
+        },
+        select: { status: true },
+      }),
+    ).resolves.toEqual({ status: "APPROVED" });
+    await expect(
+      database.client.reviewTask.count({
+        where: {
+          contentDecisionId: seeded.discoveryDecisionId,
+          kind: "CONTENT_DECISION",
+          state: "APPROVED",
+        },
+      }),
+    ).resolves.toBe(1);
     const feed = await reader.getFeed({ kind: "discovery", cursor: null });
     const comment = await reader.getComment(discoveryCommentId);
     const story = await reader.getStory(rootId);

@@ -12,6 +12,8 @@
 - **Depends on**: `plans/004-implement-subjects-and-review.md`
 - **Category**: integration / data integrity
 - **Planned at**: unborn repository with no `HEAD`, 2026-08-24
+- **Completed**: 2026-08-26. Migration `0007_findthatproject_export` is used
+  because Plan 005 had already assigned `0006_knowledge_feed`.
 
 ## Why this matters
 
@@ -27,7 +29,7 @@ FindThatProject should receive only high-confidence, URL-grounded Discoveries an
 
 | Purpose | Command | Expected on success |
 |---|---|---|
-| Migration | `npm run db:test:reset && npm run db:migrate:deploy` | includes `0006_export`, exit 0 |
+| Migration | `npm run db:test:reset && npm run db:migrate:deploy` | includes `0007_findthatproject_export`, exit 0 |
 | Export tests | `npm test -- --run tests/unit/export` | all pass |
 | Outbox integration | `npm run test:integration -- --run tests/integration/export-outbox.test.ts` | all pass |
 | Holdout audit | `npm run export:audit -- --corpus holdout-v1` | precision ≥ 0.98 and zero false-positive exports during rollout |
@@ -38,7 +40,7 @@ FindThatProject should receive only high-confidence, URL-grounded Discoveries an
 **In scope**:
 
 - Versioned FindThatProject export contracts.
-- Migration `0006_export`, outbox repository, eligibility policy, revision/retraction logic.
+- Migration `0007_findthatproject_export`, outbox repository, eligibility policy, revision/retraction logic.
 - Authenticated pull/ack API.
 - Export-purpose review tasks and explicit approval-to-outbox use case.
 - Fixture consumer and non-mutating downstream contract test.
@@ -78,7 +80,7 @@ Define `findthatproject.discovery.v1` with immutable export ID, revision, discov
 
 **Verify**: strict contract tests accept the research example shape and reject unknown fields, non-HTTP schemes, missing provenance/evidence, and expert-note payloads.
 
-### Step 2: Add migration 0006 and transactional outbox insertion
+### Step 2: Add migration 0007 and transactional outbox insertion
 
 Create `export_outbox` and consumer acknowledgement state with destination, discovery ID, revision, payload, payload hash, immutable idempotency key, delivery state, timestamps, and error/ack metadata. Unique key: `(destination, discovery_id, revision)` plus immutable `export_id`.
 
@@ -125,14 +127,14 @@ During initial rollout, manually inspect every candidate and run the held-out co
 
 ## Done criteria
 
-- [ ] Migration 0006 applies cleanly from an empty DB.
-- [ ] Ineligible/review-pending discoveries cannot enter the outbox.
-- [ ] Expert notes are structurally and behaviorally excluded.
-- [ ] Insert, pull, ack, replay, correction, and retraction are idempotent/auditable.
-- [ ] Consumer credentials are separate and never logged.
-- [ ] Export precision ≥ 0.98 and reviewed holdout false positives = 0.
-- [ ] Contract test is non-mutating and downstream schema approval is recorded.
-- [ ] Global gates pass and Plan 006 is `DONE`.
+- [x] Migration 0007 applies cleanly from an empty DB.
+- [x] Ineligible/review-pending discoveries cannot enter the outbox.
+- [x] Expert notes are structurally and behaviorally excluded.
+- [x] Insert, pull, ack, replay, correction, and retraction are idempotent/auditable.
+- [x] Consumer credentials are separate and never logged.
+- [x] Export precision ≥ 0.98 and reviewed holdout false positives = 0.
+- [x] Contract test is non-mutating and downstream schema approval is recorded.
+- [x] Global gates pass and Plan 006 is `DONE`.
 
 ## STOP conditions
 

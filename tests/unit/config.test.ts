@@ -20,6 +20,7 @@ describe("application configuration", () => {
     });
     expect(config.TELEGRAM_API_HASH).toBeUndefined();
     expect(config.CLASSIFIER_API_TOKEN).toBeUndefined();
+    expect(config.EXPORT_CONSUMER_TOKEN).toBeUndefined();
   });
 
   it.each([
@@ -42,9 +43,19 @@ describe("application configuration", () => {
     );
   });
 
+  it("requires the export consumer credential to differ from the reviewer token", () => {
+    expect(() =>
+      parseConfig({
+        APP_API_TOKEN: "shared-token",
+        EXPORT_CONSUMER_TOKEN: "shared-token",
+      }),
+    ).toThrow(/must differ/u);
+  });
+
   it("redacts every configured secret and database URL", () => {
     const secrets = {
       APP_API_TOKEN: "app-token-value",
+      EXPORT_CONSUMER_TOKEN: "export-consumer-token-value",
       DATABASE_URL: "postgresql://user:db-password@db.internal:5432/app",
       TELEGRAM_API_ID: "12345",
       TELEGRAM_API_HASH: "telegram-hash-value",

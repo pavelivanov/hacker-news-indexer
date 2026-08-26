@@ -1,5 +1,9 @@
 export const ADAPTER_LAYER = "adapters" as const;
 export {
+  FindThatProjectContractError,
+  FixtureFindThatProjectConsumer,
+} from "./findthatproject/fixture-consumer.js";
+export {
   FixtureClassifier,
   type FixtureClassifierOptions,
 } from "./classifier/fixture.js";

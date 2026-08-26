@@ -39,6 +39,11 @@ Both commands emit one machine-readable JSON object and exit nonzero on a failed
 
 ## Metrics and logs
 
-Scrape `GET /metrics` with the private token. The endpoint refreshes review-queue depth/age and exposes the required metric families. Worker-local pipeline metrics are wired at their event sources; deployment-level collection is completed in Plan 007. `export_total` is reserved for the FindThatProject workflow in Plan 006 and therefore remains zero until that workflow exists. Do not expose the endpoint publicly without bearer authentication or private-network enforcement.
+Scrape `GET /metrics` with the private token. The endpoint refreshes review-queue depth/age and exposes the required metric families. Worker-local pipeline metrics are wired at their event sources; deployment-level collection is completed in Plan 007. Do not expose the endpoint publicly without bearer authentication or private-network enforcement.
+
+Plan 006 activates `export_total` after a successful FindThatProject outbox
+acknowledgement. See `docs/findthatproject-export-operations.md` for the
+separate reviewer/consumer credentials, non-mutating validation, and manual
+approval flow.
 
 Logs are JSON and intentionally limited to correlation/run/job/entity IDs, stage, state, durations, retry counts, and stable error codes. Never add comment/root bodies, HTML, prompts, provider output, credentials, sessions, database URLs, or raw URLs to log fields.

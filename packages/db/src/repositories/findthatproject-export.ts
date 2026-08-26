@@ -651,7 +651,7 @@ export const createFindThatProjectExportRepository = (
               discoveryId: candidate.discoveryId,
               revision,
               action: "UPSERT",
-              payload: payload as unknown as Prisma.InputJsonObject,
+              payload,
               payloadHash,
               sourceHash: candidate.sourceHash,
               reviewTaskId: task.id,
@@ -745,7 +745,7 @@ export const createFindThatProjectExportRepository = (
               },
             },
           });
-          if (row === null || row.destination !== "FINDTHATPROJECT") {
+          if (row === null) {
             return { kind: "NOT_FOUND" } as const;
           }
           if (row.payloadHash !== input.payloadHash) {
@@ -836,7 +836,7 @@ export const createFindThatProjectExportRepository = (
             discoveryId: previous.discoveryId,
             revision,
             action: "RETRACT",
-            payload: payload as unknown as Prisma.InputJsonObject,
+            payload,
             payloadHash: sha256(JSON.stringify(payload)),
             sourceHash: sha256(`${previous.sourceHash}:${reason}`),
           },
@@ -849,5 +849,29 @@ export const createFindThatProjectExportRepository = (
       },
       { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
     );
+  },
+
+  async retractForComment(commentId, reason) {
+    const discoveries = await client.discoverySource.findMany({
+      where: {
+        selectedCommentId: BigInt(commentId),
+        discovery: {
+          exportRevisions: { some: { destination: "FINDTHATPROJECT" } },
+        },
+      },
+      distinct: ["discoveryId"],
+      select: { discoveryId: true },
+      orderBy: { discoveryId: "asc" },
+    });
+    let appended = 0;
+    for (const discovery of discoveries) {
+      const result = await createFindThatProjectExportRepository(
+        client,
+      ).retract(discoveryId(discovery.discoveryId), reason);
+      if (result.kind === "RETRACTED" && !result.replayed) {
+        appended += 1;
+      }
+    }
+    return appended;
   },
 });
