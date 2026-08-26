@@ -17,6 +17,7 @@ import {
 import {
   createDatabase,
   createClassificationRepository,
+  createFindThatProjectExportRepository,
   createHnResolutionRepository,
   createHnReconciliationRepository,
   createIngestionRunRepository,
@@ -51,6 +52,7 @@ const reviews = createReviewService(
   hasher,
 );
 const queue = createJobQueue(database.client);
+const exportOutbox = createFindThatProjectExportRepository(database.client);
 const hnItems = new HackerNewsApiItems({
   clock,
   hasher,
@@ -128,6 +130,7 @@ const reconcileHn = createReconcileHnJobHandler(
   hnItems,
   reconciliations,
   hasher,
+  exportOutbox,
 );
 
 const workerId = `worker-${randomUUID()}`;

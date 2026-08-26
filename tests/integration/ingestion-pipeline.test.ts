@@ -16,6 +16,7 @@ import {
   createIngestionRunRepository,
   createJobQueue,
   createOccurrenceRepository,
+  type ClaimJobOptions,
   type Database,
 } from "@hn-knowledge/db";
 import {
@@ -43,6 +44,17 @@ const occurrences = createOccurrenceRepository(database.client);
 const resolutions = createHnResolutionRepository(database.client);
 const classifications = createClassificationRepository(database.client);
 const queue = createJobQueue(database.client);
+
+const claimEventually = async (options: ClaimJobOptions) => {
+  for (let attempt = 0; attempt < 25; attempt += 1) {
+    const job = await queue.claim(options);
+    if (job !== null) {
+      return job;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 4));
+  }
+  return null;
+};
 
 const cleanDatabase = async (): Promise<void> => {
   await database.client.multipartPart.deleteMany();
@@ -154,7 +166,7 @@ const startRun = async () =>
 
 const prepareResolveJob = async () => {
   const started = await startRun();
-  const ingestJob = await queue.claim({
+  const ingestJob = await claimEventually({
     leaseOwner: "ingest-worker",
     leaseDurationMs: 30_000,
     ingestionRunId: started.run.id,
@@ -185,7 +197,7 @@ const prepareResolveJob = async () => {
   ).resolves.toBeNull();
   await queue.complete(ingestJob.id, "ingest-worker");
   await runs.reconcile(started.run.id);
-  const resolveJob = await queue.claim({
+  const resolveJob = await claimEventually({
     leaseOwner: "resolve-worker",
     leaseDurationMs: 30_000,
     ingestionRunId: started.run.id,
@@ -229,7 +241,7 @@ describe("ingestion pipeline", () => {
       }),
     ).resolves.toBeNull();
     await queue.complete(resolveJob.id, "resolve-worker");
-    const classifyJob = await queue.claim({
+    const classifyJob = await claimEventually({
       leaseOwner: "classify-worker",
       leaseDurationMs: 30_000,
       ingestionRunId: started.run.id,
@@ -276,7 +288,7 @@ describe("ingestion pipeline", () => {
 
   it("recovers the same job after a process dies with an expired lease", async () => {
     const started = await startRun();
-    const abandoned = await queue.claim({
+    const abandoned = await claimEventually({
       leaseOwner: "dead-worker",
       leaseDurationMs: 30_000,
       ingestionRunId: started.run.id,
@@ -305,7 +317,7 @@ describe("ingestion pipeline", () => {
 
   it("marks a run failed when its source is terminally unavailable", async () => {
     const started = await startRun();
-    const job = await queue.claim({
+    const job = await claimEventually({
       leaseOwner: "worker",
       leaseDurationMs: 30_000,
       ingestionRunId: started.run.id,

@@ -1,0 +1,23 @@
+{
+  "schema_version": "findthatproject.discovery.v1",
+  "export_id": "00000000-0000-4000-8000-000000000001",
+  "revision": 1,
+  "action": "UPSERT",
+  "discovery_id": "00000000-0000-4000-8000-000000000002",
+  "kind": "DISCOVERY",
+  "subject": {
+    "name": "Hister",
+    "type": "PROJECT",
+    "canonical_url": "https://github.com/asciimoo/hister",
+    "evidence_based_summary": "Personal full-text and semantic search index"
+  },
+  "provenance": {
+    "hn_comment_id": 49402473,
+    "hn_root_story_id": 49351802,
+    "telegram_message_ids": [32944],
+    "evidence_origin": "COMMENT",
+    "evidence_quote": "A bounded excerpt grounded in the selected HN comment."
+  },
+  "confidence": 0.98,
+  "reviewed_at": "2026-08-26T12:00:00.000Z"
+}

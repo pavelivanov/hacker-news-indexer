@@ -7,6 +7,8 @@ import {
   createReviewService,
   FindThatProjectExportError,
 } from "@hn-knowledge/application";
+import { createApp, type SafeLogger } from "@hn-knowledge/api";
+import { createPipelineMetrics } from "@hn-knowledge/config";
 import { isFindThatProjectOutboxV1 } from "@hn-knowledge/contracts";
 import {
   createDatabase,
@@ -33,6 +35,7 @@ const reviews = createReviewService(
   hasher,
 );
 const observedAt = new Date("2026-08-26T12:00:00.000Z");
+const logger: SafeLogger = { error: () => undefined };
 const rootId = 88_000;
 const commentId = 88_001;
 
@@ -396,6 +399,23 @@ describe("FindThatProject export outbox", () => {
     });
     expect(replayedRetraction).toMatchObject({ replayed: true });
     await expect(database.client.exportOutbox.count()).resolves.toBe(3);
+    const firstPage = await service.getOutbox({ cursor: null, limit: 1 });
+    expect(firstPage.items).toHaveLength(1);
+    expect(firstPage.next_cursor).not.toBeNull();
+    const secondPage = await service.getOutbox({
+      cursor: firstPage.next_cursor,
+      limit: 1,
+    });
+    expect(secondPage.items).toHaveLength(1);
+    expect(secondPage.items[0]?.revision).not.toBe(
+      firstPage.items[0]?.revision,
+    );
+    await expect(
+      service.getOutbox({
+        cursor: `${firstPage.next_cursor?.slice(0, -1)}x`,
+        limit: 1,
+      }),
+    ).rejects.toMatchObject({ code: "INVALID_CURSOR" });
     await expect(
       database.client.exportOutbox.delete({
         where: { id: first.revision.id },
@@ -409,14 +429,17 @@ describe("FindThatProject export outbox", () => {
       where: { id: seeded.discoveryId },
       data: { status: "REJECTED" },
     });
-    await expect(requestExportReview(seeded.discoveryId)).rejects.toMatchObject(
-      {
-        code: "INELIGIBLE",
-        details: {
-          reasons: expect.arrayContaining(["DISCOVERY_NOT_APPROVED"]),
-        },
-      },
-    );
+    try {
+      await requestExportReview(seeded.discoveryId);
+      throw new Error("Expected an ineligible export review");
+    } catch (error) {
+      expect(error).toBeInstanceOf(FindThatProjectExportError);
+      if (!(error instanceof FindThatProjectExportError)) {
+        throw error;
+      }
+      expect(error.code).toBe("INELIGIBLE");
+      expect(error.details.reasons).toContain("DISCOVERY_NOT_APPROVED");
+    }
 
     await database.client.discovery.update({
       where: { id: seeded.discoveryId },
@@ -434,6 +457,147 @@ describe("FindThatProject export outbox", () => {
     ).rejects.toBeInstanceOf(FindThatProjectExportError);
     await expect(database.client.exportAcknowledgement.count()).resolves.toBe(
       0,
+    );
+  });
+
+  it("separates reviewer and consumer authentication across the HTTP API", async () => {
+    const seeded = await seedEligibleDiscovery();
+    const metrics = createPipelineMetrics();
+    const app = createApp({
+      apiToken: "reviewer-api-token",
+      exportConsumerToken: "dedicated-export-token",
+      reviewActorId: "http-reviewer",
+      findThatProjectExportService: service,
+      reviewService: reviews,
+      metrics,
+      logger,
+      checkReadiness: () => Promise.resolve(),
+      startIngestion: () => Promise.reject(new Error("not used")),
+    });
+    const reviewPath = `/v1/exports/findthatproject/candidates/${seeded.discoveryId}/review`;
+    const reviewBody = JSON.stringify({
+      command_key: "http-request-export",
+      reason: "Inspect the candidate through the private reviewer API",
+    });
+    expect(
+      (
+        await app.request(reviewPath, {
+          method: "POST",
+          headers: {
+            authorization: "Bearer reviewer-api-token",
+            "content-type": "application/json",
+          },
+          body: "{",
+        })
+      ).status,
+    ).toBe(400);
+    expect(
+      (
+        await app.request(reviewPath, {
+          method: "POST",
+          headers: {
+            authorization: "Bearer dedicated-export-token",
+            "content-type": "application/json",
+          },
+          body: reviewBody,
+        })
+      ).status,
+    ).toBe(401);
+    const opened = await app.request(reviewPath, {
+      method: "POST",
+      headers: {
+        authorization: "Bearer reviewer-api-token",
+        "content-type": "application/json",
+      },
+      body: reviewBody,
+    });
+    expect(opened.status).toBe(200);
+    const openedBody = (await opened.json()) as {
+      readonly task_id: string;
+      readonly version: number;
+    };
+    const approved = await app.request(
+      `/v1/exports/findthatproject/reviews/${openedBody.task_id}/approve`,
+      {
+        method: "POST",
+        headers: {
+          authorization: "Bearer reviewer-api-token",
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          expected_version: openedBody.version,
+          command_key: "http-approve-export",
+          reason: "Manually checked the complete export contract",
+        }),
+      },
+    );
+    expect(approved.status).toBe(200);
+
+    const outboxPath = "/v1/exports/findthatproject/outbox?limit=1";
+    expect((await app.request(outboxPath)).status).toBe(401);
+    expect(
+      (
+        await app.request(outboxPath, {
+          headers: { authorization: "Bearer reviewer-api-token" },
+        })
+      ).status,
+    ).toBe(401);
+    expect(
+      (
+        await app.request(
+          "/v1/exports/findthatproject/outbox?limit=1&limit=2",
+          {
+            headers: { authorization: "Bearer dedicated-export-token" },
+          },
+        )
+      ).status,
+    ).toBe(400);
+    const pulled = await app.request(outboxPath, {
+      headers: { authorization: "Bearer dedicated-export-token" },
+    });
+    expect(pulled.status).toBe(200);
+    const pulledBody = (await pulled.json()) as {
+      readonly items: readonly {
+        readonly export_id: string;
+        readonly revision: number;
+        readonly payload_hash: string;
+      }[];
+    };
+    const item = pulledBody.items[0];
+    if (item === undefined) {
+      throw new Error("Expected an outbox item");
+    }
+    const ackPath = `/v1/exports/findthatproject/outbox/${item.export_id}/revisions/${item.revision}/ack`;
+    expect(
+      (
+        await app.request(ackPath, {
+          method: "POST",
+          headers: {
+            authorization: "Bearer reviewer-api-token",
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            payload_hash: item.payload_hash,
+            idempotency_key: "http-ack-export",
+          }),
+        })
+      ).status,
+    ).toBe(401);
+    const acknowledged = await app.request(ackPath, {
+      method: "POST",
+      headers: {
+        authorization: "Bearer dedicated-export-token",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        payload_hash: item.payload_hash,
+        idempotency_key: "http-ack-export",
+      }),
+    });
+    expect(acknowledged.status).toBe(200);
+    expect(metrics.value("export_total")).toBe(1);
+    expect(JSON.stringify(await acknowledged.json())).not.toMatch(
+      /token|authorization|canonical_url|evidence_quote/iu,
     );
   });
 });

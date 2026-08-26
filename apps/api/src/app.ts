@@ -1,9 +1,11 @@
 import { createHash, randomUUID } from "node:crypto";
 
 import {
+  createFindThatProjectExportService,
   createReviewService,
   createKnowledgeReader,
   type KnowledgeReader,
+  type FindThatProjectExportService,
   createStartIngestion,
   type ReviewService,
   type StartIngestion,
@@ -17,6 +19,7 @@ import {
 import {
   checkDatabaseReadiness,
   createIngestionRunRepository,
+  createFindThatProjectExportRepository,
   createReviewRepository,
   createKnowledgeReaderRepository,
   getDatabase,
@@ -32,6 +35,10 @@ import {
   registerMetricsRoute,
   type ReviewQueueMeasurement,
 } from "./routes/metrics.js";
+import {
+  registerFindThatProjectConsumerRoutes,
+  registerFindThatProjectReviewRoutes,
+} from "./routes/findthatproject-export.js";
 
 const SAFE_REQUEST_ID = /^[A-Za-z0-9._-]{1,128}$/u;
 
@@ -51,6 +58,8 @@ export interface AppOptions {
   readonly reviewService?: ReviewService;
   readonly reviewActorId?: string;
   readonly knowledgeReader?: KnowledgeReader;
+  readonly findThatProjectExportService?: FindThatProjectExportService;
+  readonly exportConsumerToken?: string;
   readonly metrics?: PipelineMetrics;
   readonly measureReviewQueue?: () => Promise<ReviewQueueMeasurement>;
 }
@@ -81,6 +90,17 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
       createKnowledgeReaderRepository(getDatabase().client),
       {
         cursorSecret: apiToken ?? "reader-cursor-disabled",
+      },
+    );
+  const exportConsumerToken =
+    options.exportConsumerToken ?? config.EXPORT_CONSUMER_TOKEN;
+  const findThatProjectExportService =
+    options.findThatProjectExportService ??
+    createFindThatProjectExportService(
+      createFindThatProjectExportRepository(getDatabase().client),
+      { sha256: (value) => createHash("sha256").update(value).digest("hex") },
+      {
+        cursorSecret: exportConsumerToken ?? "export-consumer-disabled",
       },
     );
 
@@ -120,6 +140,11 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
         };
       }),
   });
+  registerFindThatProjectConsumerRoutes(app, {
+    service: findThatProjectExportService,
+    consumerToken: exportConsumerToken,
+    metrics,
+  });
   app.use("/v1/*", createBearerAuth(apiToken));
   registerIngestionRoutes(app, {
     maxRange: options.maxIngestionRange ?? config.INGESTION_MAX_RANGE,
@@ -130,6 +155,10 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
     actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
   });
   registerReaderRoutes(app, { reader: knowledgeReader, metrics });
+  registerFindThatProjectReviewRoutes(app, {
+    service: findThatProjectExportService,
+    actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
+  });
 
   app.notFound((context) =>
     context.json(

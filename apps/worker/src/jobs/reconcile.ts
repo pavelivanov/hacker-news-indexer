@@ -3,6 +3,7 @@ import { hnItemId, type PipelineJob } from "@hn-knowledge/domain";
 import type {
   Hasher,
   HnItems,
+  FindThatProjectExportRepository,
   HnReconciliationRepository,
 } from "@hn-knowledge/ports";
 
@@ -14,6 +15,10 @@ export const createReconcileHnJobHandler = (
   items: HnItems,
   repository: HnReconciliationRepository,
   hasher: Hasher,
+  exports: Pick<
+    FindThatProjectExportRepository,
+    "retractForComment"
+  > | null = null,
 ): ReconcileHnJobHandler => {
   const reconcile = createReconcileHnItem(items, repository, hasher);
   return async (job): Promise<void> => {
@@ -22,7 +27,15 @@ export const createReconcileHnJobHandler = (
       throw new WorkerJobError("INVALID_RECONCILE_PAYLOAD", false);
     }
     try {
-      await reconcile(hnItemId(selectedCommentId));
+      const result = await reconcile(hnItemId(selectedCommentId));
+      if (result.changed && exports !== null) {
+        await exports.retractForComment(
+          hnItemId(selectedCommentId),
+          result.outcome === "TOMBSTONED"
+            ? "CONTENT_UNAVAILABLE"
+            : "CONTENT_CHANGED",
+        );
+      }
     } catch (error) {
       if (error instanceof TypeError) {
         throw new WorkerJobError("INVALID_RECONCILE_PAYLOAD", false, null, {

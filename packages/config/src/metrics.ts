@@ -83,7 +83,7 @@ const DEFINITIONS: Readonly<Record<PipelineMetricName, MetricDefinition>> = {
   },
   export_total: {
     kind: "counter",
-    help: "FindThatProject export attempts by terminal status.",
+    help: "Successful FindThatProject export acknowledgements.",
   },
   pipeline_failure_total: {
     kind: "counter",

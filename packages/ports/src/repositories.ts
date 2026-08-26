@@ -606,4 +606,8 @@ export interface FindThatProjectExportRepository {
     discoveryId: DiscoveryId,
     reason: FindThatProjectRetractionReason,
   ): Promise<RetractFindThatProjectResult>;
+  retractForComment(
+    commentId: HnItemId,
+    reason: FindThatProjectRetractionReason,
+  ): Promise<number>;
 }

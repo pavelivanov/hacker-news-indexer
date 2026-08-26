@@ -1,0 +1,26 @@
+{
+  "reportVersion": 1,
+  "corpus": "holdout-v1",
+  "generatedAt": "2026-08-26T14:46:26.668Z",
+  "sourceReport": "evaluation/reports/holdout-openai-gpt-5-6-sol-low-v3.json",
+  "sourceSha256": "e6044a42c1a594d525fc03d79e925c1b6351f08947359d1df094d0affd21f145",
+  "contractApproval": "APPROVED",
+  "downstreamMutationAuthorized": false,
+  "reviewedCandidates": 2,
+  "matchedDiscoveries": 2,
+  "falsePositiveExports": 0,
+  "precision": 1,
+  "urlGroundingPrecision": 1,
+  "activatedDecisions": 0,
+  "automaticOutboxInsertionEnabled": false,
+  "gates": {
+    "candidatesReviewed": true,
+    "precision": true,
+    "zeroFalsePositives": true,
+    "urlGrounding": true,
+    "contractApproved": true,
+    "noDownstreamMutation": true,
+    "noAutomaticActivation": true
+  },
+  "passed": true
+}
