@@ -5,6 +5,12 @@ import type {
   ContentDecision,
   ContentDecisionClass,
   ContentDecisionId,
+  DiscoveryId,
+  ExportId,
+  ExportOutboxPage,
+  ExportOutboxRevision,
+  FindThatProjectIneligibilityCode,
+  FindThatProjectRetractionReason,
   HnItem,
   HnItemId,
   IngestionRange,
@@ -95,6 +101,8 @@ export interface OpenReviewTaskInput {
   readonly commentId: HnItemId;
   readonly contentDecisionId: ContentDecisionId;
   readonly kind: ReviewTaskKind;
+  readonly targetKey: string;
+  readonly targetSnapshotHash: string | null;
   readonly priority: Exclude<ReviewPriority, "NONE">;
   readonly reasonCodes: readonly ReviewReasonCode[];
   readonly actorId: string;
@@ -512,4 +520,90 @@ export interface HnReconciliationRepository {
     availableAt: Date,
     limit: number,
   ): Promise<ReconciliationScheduleResult>;
+}
+
+export interface RequestFindThatProjectReviewInput {
+  readonly discoveryId: DiscoveryId;
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}
+
+export type RequestFindThatProjectReviewResult =
+  | {
+      readonly kind: "OPENED";
+      readonly task: ReviewTask;
+      readonly created: boolean;
+    }
+  | {
+      readonly kind: "INELIGIBLE";
+      readonly reasons: readonly FindThatProjectIneligibilityCode[];
+    }
+  | { readonly kind: "ALREADY_CURRENT" }
+  | { readonly kind: "NOT_FOUND" }
+  | { readonly kind: "IDEMPOTENCY_CONFLICT" };
+
+export interface ApproveFindThatProjectReviewInput {
+  readonly taskId: ReviewTaskId;
+  readonly expectedVersion: number;
+  readonly actorId: string;
+  readonly commandKey: string;
+  readonly requestHash: string;
+  readonly reason: string;
+}
+
+export type ApproveFindThatProjectReviewResult =
+  | {
+      readonly kind: "APPROVED";
+      readonly task: ReviewTask;
+      readonly revision: ExportOutboxRevision;
+      readonly replayed: boolean;
+    }
+  | { readonly kind: "NOT_FOUND" }
+  | { readonly kind: "VERSION_CONFLICT"; readonly currentVersion: number }
+  | { readonly kind: "INVALID_STATE"; readonly state: ReviewTask["state"] }
+  | {
+      readonly kind: "INELIGIBLE";
+      readonly reasons: readonly FindThatProjectIneligibilityCode[];
+    }
+  | { readonly kind: "SNAPSHOT_CHANGED" }
+  | { readonly kind: "IDEMPOTENCY_CONFLICT" };
+
+export type AcknowledgeExportResult =
+  | { readonly kind: "ACKNOWLEDGED"; readonly replayed: boolean }
+  | { readonly kind: "NOT_FOUND" }
+  | { readonly kind: "PAYLOAD_HASH_MISMATCH" }
+  | { readonly kind: "IDEMPOTENCY_CONFLICT" };
+
+export type RetractFindThatProjectResult =
+  | {
+      readonly kind: "RETRACTED";
+      readonly revision: ExportOutboxRevision;
+      readonly replayed: boolean;
+    }
+  | { readonly kind: "NOT_EXPORTED" };
+
+export interface FindThatProjectExportRepository {
+  requestReview(
+    input: RequestFindThatProjectReviewInput,
+  ): Promise<RequestFindThatProjectReviewResult>;
+  approveReview(
+    input: ApproveFindThatProjectReviewInput,
+  ): Promise<ApproveFindThatProjectReviewResult>;
+  listPending(
+    limit: number,
+    after: { readonly createdAt: Date; readonly id: string } | null,
+  ): Promise<ExportOutboxPage>;
+  acknowledge(input: {
+    readonly exportId: ExportId;
+    readonly revision: number;
+    readonly payloadHash: string;
+    readonly idempotencyKey: string;
+    readonly consumerId: string;
+  }): Promise<AcknowledgeExportResult>;
+  retract(
+    discoveryId: DiscoveryId,
+    reason: FindThatProjectRetractionReason,
+  ): Promise<RetractFindThatProjectResult>;
 }

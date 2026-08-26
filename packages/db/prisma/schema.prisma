@@ -119,6 +119,21 @@ enum ReviewTaskKind {
   CONTENT_DECISION
   SUBJECT_MERGE
   URL_RESOLUTION
+  FINDTHATPROJECT_EXPORT
+}
+
+enum ExportDestination {
+  FINDTHATPROJECT
+}
+
+enum ExportAction {
+  UPSERT
+  RETRACT
+}
+
+enum ExportDeliveryState {
+  PENDING
+  ACKNOWLEDGED
 }
 
 enum ReviewAuditAction {
@@ -411,28 +426,31 @@ model ContentDecision {
 }
 
 model ReviewTask {
-  id                String                @id @default(uuid()) @db.Uuid
-  commentId         BigInt                @map("comment_id")
-  contentDecisionId String                @map("content_decision_id") @db.Uuid
-  kind              ReviewTaskKind        @default(CONTENT_DECISION)
-  state             ReviewTaskState       @default(OPEN)
-  priority          ReviewPriority
-  reasonCodes       String[]              @map("reason_codes")
-  version           Int                   @default(1)
-  revision          Int                   @default(1)
-  supersedesTaskId  String?               @map("supersedes_task_id") @db.Uuid
-  resolutionReason  String?               @map("resolution_reason")
-  resolvedBy        String?               @map("resolved_by")
-  resolvedAt        DateTime?             @map("resolved_at") @db.Timestamptz(3)
-  createdAt         DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt         DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
-  comment           SelectedComment       @relation(fields: [commentId], references: [id], onDelete: Restrict)
-  contentDecision   ContentDecision       @relation(fields: [contentDecisionId], references: [id], onDelete: Restrict)
-  supersedesTask    ReviewTask?           @relation("ReviewTaskRevisions", fields: [supersedesTaskId], references: [id], onDelete: Restrict)
-  supersededByTasks ReviewTask[]          @relation("ReviewTaskRevisions")
-  auditEvents       ManualOverrideEvent[]
+  id                 String                @id @default(uuid()) @db.Uuid
+  commentId          BigInt                @map("comment_id")
+  contentDecisionId  String                @map("content_decision_id") @db.Uuid
+  kind               ReviewTaskKind        @default(CONTENT_DECISION)
+  targetKey          String                @default("content") @map("target_key")
+  targetSnapshotHash String?               @map("target_snapshot_hash")
+  state              ReviewTaskState       @default(OPEN)
+  priority           ReviewPriority
+  reasonCodes        String[]              @map("reason_codes")
+  version            Int                   @default(1)
+  revision           Int                   @default(1)
+  supersedesTaskId   String?               @map("supersedes_task_id") @db.Uuid
+  resolutionReason   String?               @map("resolution_reason")
+  resolvedBy         String?               @map("resolved_by")
+  resolvedAt         DateTime?             @map("resolved_at") @db.Timestamptz(3)
+  createdAt          DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt          DateTime              @updatedAt @map("updated_at") @db.Timestamptz(3)
+  comment            SelectedComment       @relation(fields: [commentId], references: [id], onDelete: Restrict)
+  contentDecision    ContentDecision       @relation(fields: [contentDecisionId], references: [id], onDelete: Restrict)
+  supersedesTask     ReviewTask?           @relation("ReviewTaskRevisions", fields: [supersedesTaskId], references: [id], onDelete: Restrict)
+  supersededByTasks  ReviewTask[]          @relation("ReviewTaskRevisions")
+  auditEvents        ManualOverrideEvent[]
+  exportRevisions    ExportOutbox[]
 
-  @@unique([contentDecisionId, kind, revision])
+  @@unique([contentDecisionId, kind, targetKey, revision])
   @@index([state, priority, createdAt, id])
   @@index([commentId, createdAt])
   @@index([supersedesTaskId])
@@ -657,10 +675,56 @@ model Discovery {
   subject             Subject                   @relation(fields: [subjectId], references: [id], onDelete: Restrict)
   resolvedRoot        HnItem?                   @relation("DiscoveryResolvedRoot", fields: [resolvedRootId], references: [id], onDelete: Restrict)
   sources             DiscoverySource[]
+  exportRevisions     ExportOutbox[]
 
   @@index([subjectId, status])
   @@index([resolvedRootId])
   @@map("discoveries")
+}
+
+model ExportOutbox {
+  id              String                 @id @default(uuid()) @db.Uuid
+  exportId        String                 @map("export_id") @db.Uuid
+  destination     ExportDestination
+  discoveryId     String                 @map("discovery_id") @db.Uuid
+  revision        Int
+  action          ExportAction
+  payload         Json
+  payloadHash     String                 @map("payload_hash")
+  sourceHash      String                 @map("source_hash")
+  deliveryState   ExportDeliveryState    @default(PENDING) @map("delivery_state")
+  reviewTaskId    String?                @unique @map("review_task_id") @db.Uuid
+  acknowledgedAt  DateTime?              @map("acknowledged_at") @db.Timestamptz(3)
+  lastErrorCode   String?                @map("last_error_code")
+  lastErrorAt     DateTime?              @map("last_error_at") @db.Timestamptz(3)
+  createdAt       DateTime               @default(now()) @map("created_at") @db.Timestamptz(3)
+  discovery       Discovery              @relation(fields: [discoveryId], references: [id], onDelete: Restrict)
+  reviewTask      ReviewTask?            @relation(fields: [reviewTaskId], references: [id], onDelete: Restrict)
+  acknowledgement ExportAcknowledgement?
+
+  @@unique([exportId, revision])
+  @@unique([destination, discoveryId, revision])
+  @@index([destination, deliveryState, createdAt, id])
+  @@index([discoveryId, createdAt])
+  @@map("export_outbox")
+}
+
+model ExportAcknowledgement {
+  id             String            @id @default(uuid()) @db.Uuid
+  outboxId       String            @unique @map("outbox_id") @db.Uuid
+  destination    ExportDestination
+  exportId       String            @map("export_id") @db.Uuid
+  revision       Int
+  consumerId     String            @map("consumer_id")
+  idempotencyKey String            @map("idempotency_key")
+  payloadHash    String            @map("payload_hash")
+  createdAt      DateTime          @default(now()) @map("created_at") @db.Timestamptz(3)
+  outbox         ExportOutbox      @relation(fields: [outboxId], references: [id], onDelete: Restrict)
+
+  @@unique([destination, idempotencyKey])
+  @@unique([exportId, revision])
+  @@index([consumerId, createdAt])
+  @@map("export_acknowledgements")
 }
 
 model DiscoverySource {

@@ -39,6 +39,8 @@ export interface OpenPolicyReviewInput {
 
 export interface OpenActionReviewInput extends OpenPolicyReviewInput {
   readonly kind: Exclude<ReviewTaskKind, "CONTENT_DECISION">;
+  readonly targetKey?: string;
+  readonly targetSnapshotHash?: string | null;
 }
 
 export interface ResolveReviewCommand {
@@ -203,6 +205,8 @@ export const createReviewService = (
       commentId: input.commentId,
       contentDecisionId: input.contentDecisionId,
       kind: "CONTENT_DECISION",
+      targetKey: "content",
+      targetSnapshotHash: null,
       priority: input.policy.priority,
       reasonCodes: input.policy.reasons,
       actorId: "system",
@@ -220,12 +224,15 @@ export const createReviewService = (
     ) {
       throw new TypeError("Review policy must require at least one reason");
     }
-    const commandKey = `review-open:${input.contentDecisionId}:${input.kind}:1`;
+    const targetKey = input.targetKey ?? input.kind.toLowerCase();
+    const commandKey = `review-open:${input.contentDecisionId}:${input.kind}:${targetKey}:1`;
     const requestHash = hasher.sha256(
       JSON.stringify({
         commentId: input.commentId,
         contentDecisionId: input.contentDecisionId,
         kind: input.kind,
+        targetKey,
+        targetSnapshotHash: input.targetSnapshotHash ?? null,
         priority: input.policy.priority,
         reasonCodes: input.policy.reasons,
       }),
@@ -234,6 +241,8 @@ export const createReviewService = (
       commentId: input.commentId,
       contentDecisionId: input.contentDecisionId,
       kind: input.kind,
+      targetKey,
+      targetSnapshotHash: input.targetSnapshotHash ?? null,
       priority: input.policy.priority,
       reasonCodes: input.policy.reasons,
       actorId: "system",
