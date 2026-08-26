@@ -22,6 +22,7 @@
     "start:api": "npm run start -w @hn-knowledge/api",
     "start:worker": "npm run start -w @hn-knowledge/worker",
     "schedule:once": "npm run schedule:once -w @hn-knowledge/worker",
+    "telegram:session:init": "node --env-file-if-exists=.env --enable-source-maps apps/worker/dist/telegram-session.js",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
     "lint": "eslint . --max-warnings 0",

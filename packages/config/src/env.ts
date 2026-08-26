@@ -81,6 +81,7 @@ const environmentSchema = z
     HN_REQUEST_TIMEOUT_MS: integer(10_000, 100, 120_000),
     WORKER_CONCURRENCY: integer(4, 1, 32),
     WORKER_POLL_INTERVAL_MS: integer(500, 10, 60_000),
+    WORKER_HEARTBEAT_INTERVAL_MS: integer(60_000, 10, 3_600_000),
     WORKER_LEASE_DURATION_MS: integer(60_000, 1_000, 3_600_000),
     WORKER_MAX_ATTEMPTS: integer(4, 1, 20),
     WORKER_RETRY_BASE_MS: integer(1_000, 10, 3_600_000),

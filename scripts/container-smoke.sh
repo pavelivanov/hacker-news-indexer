@@ -134,6 +134,7 @@ docker run --detach \
   --env NODE_ENV=production \
   --env "DATABASE_URL=${database_url}" \
   --env WORKER_CONCURRENCY=1 \
+  --env WORKER_HEARTBEAT_INTERVAL_MS=50 \
   --env WORKER_POLL_INTERVAL_MS=50 \
   --env WORKER_LEASE_DURATION_MS=3000 \
   --env WORKER_MAX_ATTEMPTS=1 \
@@ -182,6 +183,11 @@ fi
 if ! grep --quiet 'worker_stopped' "${smoke_directory}/worker.log"; then
   tail -n 50 "${smoke_directory}/worker.log"
   echo "Worker did not emit its graceful shutdown marker." >&2
+  exit 1
+fi
+if ! grep --quiet 'worker_heartbeat' "${smoke_directory}/worker.log"; then
+  tail -n 50 "${smoke_directory}/worker.log"
+  echo "Worker did not emit its heartbeat marker." >&2
   exit 1
 fi
 

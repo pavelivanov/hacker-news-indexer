@@ -254,6 +254,17 @@ logger.info(
 );
 
 const active = new Set<Promise<void>>();
+const workerHeartbeat = setInterval(() => {
+  logger.info(
+    {
+      activeJobs: active.size,
+      event: "worker_heartbeat",
+      workerId,
+    },
+    "Worker heartbeat",
+  );
+}, config.WORKER_HEARTBEAT_INTERVAL_MS);
+workerHeartbeat.unref();
 const shouldStop = (): boolean => stopping;
 while (!shouldStop()) {
   let claimed = false;
@@ -301,6 +312,7 @@ while (!shouldStop()) {
   }
 }
 
+clearInterval(workerHeartbeat);
 await Promise.allSettled(active);
 await telegram?.close();
 await database.close();
