@@ -17,6 +17,7 @@ describe("application configuration", () => {
       DATABASE_READY_TIMEOUT_MS: 2_000,
       INGESTION_MAX_RANGE: 1_000,
       WORKER_CONCURRENCY: 4,
+      WORKER_HEARTBEAT_INTERVAL_MS: 60_000,
     });
     expect(config.TELEGRAM_API_HASH).toBeUndefined();
     expect(config.CLASSIFIER_API_TOKEN).toBeUndefined();
@@ -28,6 +29,7 @@ describe("application configuration", () => {
     ["PORT", "65536"],
     ["PORT", "not-a-number"],
     ["DATABASE_READY_TIMEOUT_MS", "99"],
+    ["WORKER_HEARTBEAT_INTERVAL_MS", "9"],
     ["TELEGRAM_REQUEST_TIMEOUT_MS", "nope"],
     ["CLASSIFIER_REASONING_EFFORT", "extreme"],
   ])("rejects invalid value for %s", (key, value) => {

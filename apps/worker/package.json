@@ -7,7 +7,8 @@
     "build": "tsc -b --pretty false",
     "dev": "tsx watch src/index.ts",
     "schedule:once": "node --enable-source-maps dist/schedule-once.js",
-    "start": "node --enable-source-maps dist/index.js"
+    "start": "node --enable-source-maps dist/index.js",
+    "telegram:session:init": "node --env-file-if-exists=../../.env --enable-source-maps dist/telegram-session.js"
   },
   "dependencies": {
     "@hn-knowledge/adapters": "0.1.0",

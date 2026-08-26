@@ -40,7 +40,7 @@ Generated on 2026-08-24 from `docs/telegram-hn-technical-knowledge-project-resea
 | 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 implementation | DONE |
 | 005 | Implement the private knowledge-feed APIs and reconciliation | P1 | L | 004 | DONE |
 | 006 | Implement the FindThatProject export outbox | P2 | M | 004 | DONE |
-| 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | TODO |
+| 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | IN PROGRESS (local release gates green; Railway project authorization pending) |
 | 008 | Add the optional Vite/React reader and review UI | P3 | L | 005 | TODO |
 
 Status values: `TODO`, `IN PROGRESS`, `DONE`, `BLOCKED (<one-line reason>)`, or `REJECTED (<one-line rationale>)`.
