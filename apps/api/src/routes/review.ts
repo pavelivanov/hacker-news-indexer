@@ -146,6 +146,7 @@ const responseTask = (task: ReviewTask) => ({
   comment_id: task.commentId,
   content_decision_id: task.contentDecisionId,
   kind: task.kind,
+  target_key: task.targetKey,
   state: task.state,
   priority: task.priority,
   reason_codes: task.reasonCodes,

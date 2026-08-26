@@ -1,4 +1,5 @@
 export * from "./classification.js";
+export * from "./export.js";
 export * from "./hn.js";
 export * from "./identities.js";
 export * from "./ingestion.js";

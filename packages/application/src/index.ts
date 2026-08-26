@@ -29,6 +29,7 @@ export {
 export * from "./classification/build-input.js";
 export * from "./classification/classify.js";
 export * from "./export/eligibility.js";
+export * from "./export/findthatproject-service.js";
 export * from "./classification/evaluation-metrics.js";
 export * from "./classification/evaluation-cycle.js";
 export * from "./classification/load-input.js";

@@ -80,6 +80,8 @@ const toTask = (task: DatabaseTask): ReviewTask => ({
   commentId: hnItemId(Number(task.commentId)),
   contentDecisionId: contentDecisionId(task.contentDecisionId),
   kind: task.kind,
+  targetKey: task.targetKey,
+  targetSnapshotHash: task.targetSnapshotHash,
   state: task.state,
   priority: task.priority,
   reasonCodes: reasonCodes(task.reasonCodes),
@@ -135,6 +137,8 @@ const taskValueHash = (task: DatabaseTask): string =>
     JSON.stringify({
       id: task.id,
       kind: task.kind,
+      targetKey: task.targetKey,
+      targetSnapshotHash: task.targetSnapshotHash,
       state: task.state,
       priority: task.priority,
       reasonCodes: task.reasonCodes,
@@ -151,6 +155,10 @@ const assertOpenInput = (input: OpenReviewTaskInput): void => {
   requiredText(input.commandKey, "commandKey", 256);
   requiredText(input.requestHash, "requestHash", 256);
   requiredText(input.reason, "reason", 1_000);
+  requiredText(input.targetKey, "targetKey", 256);
+  if (input.targetSnapshotHash !== null) {
+    requiredText(input.targetSnapshotHash, "targetSnapshotHash", 256);
+  }
   reasonCodes(input.reasonCodes);
 };
 
@@ -185,9 +193,10 @@ const findOpenResult = async (
 ): Promise<OpenReviewTaskResult | null> => {
   const task = await client.reviewTask.findUnique({
     where: {
-      contentDecisionId_kind_revision: {
+      contentDecisionId_kind_targetKey_revision: {
         contentDecisionId: input.contentDecisionId,
         kind: input.kind,
+        targetKey: input.targetKey,
         revision: 1,
       },
     },
@@ -198,6 +207,8 @@ const findOpenResult = async (
   if (
     task.commentId !== BigInt(input.commentId) ||
     task.kind !== input.kind ||
+    task.targetKey !== input.targetKey ||
+    task.targetSnapshotHash !== input.targetSnapshotHash ||
     task.priority !== input.priority ||
     !sameReasons(task.reasonCodes, input.reasonCodes)
   ) {
@@ -462,6 +473,8 @@ export const createReviewRepository = (
               commentId: BigInt(input.commentId),
               contentDecisionId: input.contentDecisionId,
               kind: input.kind,
+              targetKey: input.targetKey,
+              targetSnapshotHash: input.targetSnapshotHash,
               priority: input.priority,
               reasonCodes: [...input.reasonCodes],
             },
@@ -628,6 +641,32 @@ export const createReviewRepository = (
               where: { id: task.commentId },
               data: { activeDecisionId: task.contentDecisionId },
             });
+            await transaction.expertNote.updateMany({
+              where: {
+                contentDecisionId: task.contentDecisionId,
+                status: "REVIEW_PENDING",
+              },
+              data: { status: "APPROVED" },
+            });
+            const discoverySources = await transaction.discoverySource.findMany(
+              {
+                where: { contentDecisionId: task.contentDecisionId },
+                select: { discoveryId: true },
+              },
+            );
+            await transaction.discovery.updateMany({
+              where: {
+                id: {
+                  in: [
+                    ...new Set(
+                      discoverySources.map((source) => source.discoveryId),
+                    ),
+                  ],
+                },
+                status: "REVIEW_PENDING",
+              },
+              data: { status: "APPROVED" },
+            });
           }
           const resolvedTask = await transaction.reviewTask.findUniqueOrThrow({
             where: { id: task.id },
@@ -688,6 +727,8 @@ export const createReviewRepository = (
             where: {
               contentDecisionId: previous.contentDecisionId,
               kind: previous.kind,
+              targetKey: previous.targetKey,
+              targetSnapshotHash: previous.targetSnapshotHash,
             },
             orderBy: { revision: "desc" },
           });
@@ -703,6 +744,8 @@ export const createReviewRepository = (
               commentId: previous.commentId,
               contentDecisionId: previous.contentDecisionId,
               kind: previous.kind,
+              targetKey: previous.targetKey,
+              targetSnapshotHash: previous.targetSnapshotHash,
               priority: previous.priority,
               reasonCodes: previous.reasonCodes,
               revision: previous.revision + 1,

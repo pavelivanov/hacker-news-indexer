@@ -41,6 +41,7 @@ export const REVIEW_TASK_KINDS = [
   "CONTENT_DECISION",
   "SUBJECT_MERGE",
   "URL_RESOLUTION",
+  "FINDTHATPROJECT_EXPORT",
 ] as const;
 export type ReviewTaskKind = (typeof REVIEW_TASK_KINDS)[number];
 
@@ -66,6 +67,8 @@ export interface ReviewTask {
   readonly commentId: HnItemId;
   readonly contentDecisionId: ContentDecisionId;
   readonly kind: ReviewTaskKind;
+  readonly targetKey: string;
+  readonly targetSnapshotHash: string | null;
   readonly state: ReviewTaskState;
   readonly priority: Exclude<ReviewPriority, "NONE">;
   readonly reasonCodes: readonly ReviewReasonCode[];

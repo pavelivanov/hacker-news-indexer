@@ -103,8 +103,45 @@ export type FindThatProjectDiscoveryV1 = Type.Static<
   typeof FindThatProjectDiscoveryV1Schema
 >;
 
+export const FindThatProjectOutboxItemV1Schema = exactObject({
+  export_id: Uuid,
+  revision: Type.Integer({ minimum: 1 }),
+  payload: FindThatProjectDiscoveryV1Schema,
+  payload_hash: Type.String({ pattern: "^[0-9a-f]{64}$" }),
+  created_at: Timestamp,
+});
+
+export const FindThatProjectOutboxV1Schema = exactObject({
+  schema_version: Type.Literal("findthatproject.outbox.v1"),
+  items: Type.Array(FindThatProjectOutboxItemV1Schema, { maxItems: 100 }),
+  next_cursor: Type.Union([
+    Type.String({ minLength: 16, maxLength: 8192 }),
+    Type.Null(),
+  ]),
+});
+
+export const FindThatProjectAckV1Schema = exactObject({
+  schema_version: Type.Literal("findthatproject.ack.v1"),
+  export_id: Uuid,
+  revision: Type.Integer({ minimum: 1 }),
+  acknowledged: Type.Literal(true),
+  replayed: Type.Boolean(),
+});
+
+export type FindThatProjectOutboxV1 = Type.Static<
+  typeof FindThatProjectOutboxV1Schema
+>;
+export type FindThatProjectAckV1 = Type.Static<
+  typeof FindThatProjectAckV1Schema
+>;
+
 const validator = Schema.Compile(FindThatProjectDiscoveryV1Schema);
+const outboxValidator = Schema.Compile(FindThatProjectOutboxV1Schema);
 
 export const isFindThatProjectDiscoveryV1 = (
   value: unknown,
 ): value is FindThatProjectDiscoveryV1 => validator.Check(value);
+
+export const isFindThatProjectOutboxV1 = (
+  value: unknown,
+): value is FindThatProjectOutboxV1 => outboxValidator.Check(value);

@@ -17,6 +17,8 @@ export type DiscoveryId = Brand<string, "DiscoveryId">;
 export type DiscoverySourceId = Brand<string, "DiscoverySourceId">;
 export type ExpertNoteId = Brand<string, "ExpertNoteId">;
 export type UrlCandidateId = Brand<string, "UrlCandidateId">;
+export type ExportId = Brand<string, "ExportId">;
+export type ExportOutboxId = Brand<string, "ExportOutboxId">;
 
 const positiveSafeInteger = (value: number, name: string): number => {
   if (!Number.isSafeInteger(value) || value <= 0) {
@@ -80,3 +82,9 @@ export const expertNoteId = (value: string): ExpertNoteId =>
 
 export const urlCandidateId = (value: string): UrlCandidateId =>
   nonEmptyIdentifier(value, "URL candidate ID") as UrlCandidateId;
+
+export const exportId = (value: string): ExportId =>
+  nonEmptyIdentifier(value, "Export ID") as ExportId;
+
+export const exportOutboxId = (value: string): ExportOutboxId =>
+  nonEmptyIdentifier(value, "Export outbox ID") as ExportOutboxId;
