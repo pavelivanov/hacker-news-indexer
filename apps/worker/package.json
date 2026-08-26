@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc -b --pretty false",
     "dev": "tsx watch src/index.ts",
+    "schedule:once": "node --enable-source-maps dist/schedule-once.js",
     "start": "node --enable-source-maps dist/index.js"
   },
   "dependencies": {

@@ -21,6 +21,7 @@
     "dev:worker": "npm run dev -w @hn-knowledge/worker",
     "start:api": "npm run start -w @hn-knowledge/api",
     "start:worker": "npm run start -w @hn-knowledge/worker",
+    "schedule:once": "npm run schedule:once -w @hn-knowledge/worker",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
     "lint": "eslint . --max-warnings 0",
@@ -53,14 +54,18 @@
     "db:validate": "prisma validate --config packages/db/prisma.config.ts",
     "db:test:wait": "node scripts/wait-for-db.mjs",
     "db:test:reset": "node scripts/reset-test-db.mjs",
-    "container:smoke": "bash scripts/container-smoke.sh"
+    "container:inspect": "bash scripts/verify-container-image.sh",
+    "container:smoke": "bash scripts/container-smoke.sh",
+    "release:verify": "bash scripts/release-verify.sh"
+  },
+  "dependencies": {
+    "prisma": "7.9.1"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/node": "26.2.0",
     "eslint": "10.9.0",
     "prettier": "3.9.6",
-    "prisma": "7.9.1",
     "tsx": "4.23.12",
     "typescript": "6.0.3",
     "typescript-eslint": "8.67.0",

@@ -42,11 +42,6 @@ COPY packages/application/package.json packages/application/package.json
 COPY packages/adapters/package.json packages/adapters/package.json
 COPY packages/db/package.json packages/db/package.json
 RUN npm ci --omit=dev --omit=peer --ignore-scripts \
-  && rm -rf \
-    node_modules/.bin/prisma \
-    node_modules/@prisma/config \
-    node_modules/deepmerge-ts \
-    node_modules/prisma \
   && npm cache clean --force
 
 FROM base AS runtime
