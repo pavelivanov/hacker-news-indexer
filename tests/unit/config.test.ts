@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { parseConfig, redactConfig } from "@hn-knowledge/config";
+import {
+  parseConfig,
+  railwayLogBindings,
+  redactConfig,
+} from "@hn-knowledge/config";
 
 describe("application configuration", () => {
   it("applies safe defaults without requiring external credentials", () => {
@@ -74,5 +78,32 @@ describe("application configuration", () => {
     }
     expect(redactedJson).toContain("[REDACTED]");
     expect(redactedJson).toContain("12345");
+  });
+
+  it("maps optional Railway runtime identity into safe structured-log bindings", () => {
+    const config = parseConfig({
+      RAILWAY_PROJECT_ID: "project-id",
+      RAILWAY_ENVIRONMENT_ID: "environment-id",
+      RAILWAY_ENVIRONMENT_NAME: "staging",
+      RAILWAY_SERVICE_ID: "service-id",
+      RAILWAY_SERVICE_NAME: "worker",
+      RAILWAY_DEPLOYMENT_ID: "deployment-id",
+      RAILWAY_REPLICA_ID: "replica-id",
+      RAILWAY_REPLICA_REGION: "us-west2",
+      RAILWAY_GIT_COMMIT_SHA: "commit-sha",
+    });
+
+    expect(railwayLogBindings(config)).toEqual({
+      railwayProjectId: "project-id",
+      railwayEnvironmentId: "environment-id",
+      railwayEnvironmentName: "staging",
+      railwayServiceId: "service-id",
+      railwayServiceName: "worker",
+      railwayDeploymentId: "deployment-id",
+      railwayReplicaId: "replica-id",
+      railwayReplicaRegion: "us-west2",
+      railwayGitCommitSha: "commit-sha",
+    });
+    expect(railwayLogBindings(parseConfig({}))).toEqual({});
   });
 });

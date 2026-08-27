@@ -58,6 +58,7 @@
     "container:inspect": "bash scripts/verify-container-image.sh",
     "container:smoke": "bash scripts/container-smoke.sh",
     "staging:smoke": "node --env-file-if-exists=.env scripts/staging-smoke.mjs",
+    "observability:check": "node --env-file-if-exists=.env --import tsx scripts/observability-check.mts",
     "release:verify": "bash scripts/release-verify.sh"
   },
   "dependencies": {

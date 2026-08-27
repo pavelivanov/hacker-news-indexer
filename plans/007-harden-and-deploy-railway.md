@@ -219,6 +219,24 @@ Alert thresholds should reflect personal scale and avoid noise: sustained failur
 
 **Verify**: trigger synthetic staging failures for API readiness, a retryable job, classifier invalid schema, and aged review queue; confirm expected signal/alert and no sensitive payload.
 
+**Repository-controlled observability (2026-08-27):** Runtime configuration now
+maps Railway project, environment, service, deployment, replica/region, and Git
+commit identity into every structured log base when Railway supplies those
+variables. A bounded `observability:check` command combines service status,
+API health/readiness/protected metrics, worker/scheduler events, and
+aggregate-only queue/lease/classifier/export SQL into the initial alert policy.
+It suppresses an isolated retry, fails closed, emits no payloads or secrets, and
+has deterministic synthetic tests for readiness, queue/lease, sustained retry,
+classifier schema/latency, aged review, export, and output-safety signals. The
+first read-only staging baseline passed with no alerts at 15:11 UTC.
+
+Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
+to the Pro Observability dashboard with email/in-app/webhook routing; it does
+not document CLI or IaC creation. Initial thresholds are recorded in the
+incident runbook, but native monitor mutations, a destination choice, and live
+synthetic staging failures remain approval-gated. Step 6 is therefore in
+progress, not complete.
+
 ### Step 7: Promote to production with explicit gates
 
 Before production apply/deploy, require:

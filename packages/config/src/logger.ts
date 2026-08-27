@@ -2,6 +2,22 @@ import pino, { type Logger } from "pino";
 
 import type { AppConfig } from "./env.js";
 
+const RAILWAY_LOG_BINDINGS = [
+  ["RAILWAY_PROJECT_ID", "railwayProjectId"],
+  ["RAILWAY_ENVIRONMENT_ID", "railwayEnvironmentId"],
+  ["RAILWAY_ENVIRONMENT_NAME", "railwayEnvironmentName"],
+  ["RAILWAY_SERVICE_ID", "railwayServiceId"],
+  ["RAILWAY_SERVICE_NAME", "railwayServiceName"],
+  ["RAILWAY_DEPLOYMENT_ID", "railwayDeploymentId"],
+  ["RAILWAY_REPLICA_ID", "railwayReplicaId"],
+  ["RAILWAY_REPLICA_REGION", "railwayReplicaRegion"],
+  ["RAILWAY_GIT_COMMIT_SHA", "railwayGitCommitSha"],
+] as const;
+
+type RailwayConfigKey = (typeof RAILWAY_LOG_BINDINGS)[number][0];
+type LoggerConfig = Pick<AppConfig, "LOG_LEVEL"> &
+  Partial<Pick<AppConfig, RailwayConfigKey>>;
+
 const SENSITIVE_LOG_KEY =
   /authorization|body|content|database|html|password|prompt|raw|secret|session|text|token|url/iu;
 const SENSITIVE_LOG_VALUE = /postgres(?:ql)?:\/\/|bearer\s+|api[_-]?key/iu;
@@ -43,14 +59,28 @@ export const redactLogFields = (
     }),
   );
 
+export const railwayLogBindings = (
+  config: Partial<Pick<AppConfig, RailwayConfigKey>>,
+): Readonly<Record<string, string>> => {
+  const bindings: Record<string, string> = {};
+  for (const [configKey, logKey] of RAILWAY_LOG_BINDINGS) {
+    const value = config[configKey];
+    if (value !== undefined) {
+      bindings[logKey] = value;
+    }
+  }
+  return bindings;
+};
+
 export const createLogger = (
-  config: Pick<AppConfig, "LOG_LEVEL">,
+  config: LoggerConfig,
   bindings: Readonly<Record<string, string>>,
 ): Logger =>
   pino({
     level: config.LOG_LEVEL,
     base: {
       service: "hn-knowledge",
+      ...railwayLogBindings(config),
       ...bindings,
     },
     redact: {
