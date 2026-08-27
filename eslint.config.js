@@ -19,6 +19,7 @@ export default tseslint.config(
       parserOptions: {
         projectService: {
           allowDefaultProject: [
+            ".railway/railway.ts",
             "packages/db/prisma.config.ts",
             "scripts/*.mts",
           ],
