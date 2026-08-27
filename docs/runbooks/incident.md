@@ -73,14 +73,25 @@ explicit `OBSERVABILITY_ENVIRONMENT` (default `staging`), and collects:
 - API liveness, readiness, protected review/feed metrics, and expected service
   deployment states;
 - bounded worker/scheduler structured logs without returning their raw fields;
+- Railway's bounded 15-minute raw CPU/memory metrics for the long-running API,
+  worker, and PostgreSQL services plus aggregate volume usage/capacity;
 - aggregate-only queue, lease, terminal-job, recent classifier, and recent
   export-failure counts through the private PostgreSQL service.
 
 It never selects pipeline payloads, classifier output, source content, review
 content, export payloads, environment values, or Telegram session data. Output
-contains only project ID suffix, service states, numeric aggregates, safe alert
-codes, and thresholds. Exit `0` means no policy alert, exit `2` means alerts
-fired, and exit `1` means collection/configuration failed closed.
+contains only project ID suffix, service states, bounded utilization
+percentages, numeric aggregates, safe alert codes, and thresholds. Exit `0`
+means no policy alert, exit `2` means alerts fired, and exit `1` means
+collection/configuration failed closed.
+
+CPU and memory alert only when at least ten paired usage/limit samples cover at
+least nine minutes, the newest sample is no older than two minutes, and the
+covered interval remains above 85%. Short, stale, or unpaired samples produce
+no sustained-utilization claim. Volume usage is capacity-based rather than
+burst-based and alerts above 80%. The daily scheduler is intentionally excluded
+from sustained resource checks because it is ephemeral; service state and
+completion freshness cover that role.
 
 The command treats a last-served-page `feed_root_concentration` above `0.5` as
 an advisory P3 signal. The exact “more than two same-root items in the first
@@ -113,6 +124,12 @@ was indexed just after the bounded log query, producing a false
 window while still reporting three starts in ten minutes as a restart loop. A
 read-only recheck at 15:23 UTC passed with seven bounded worker events and no
 alerts.
+
+The first repository-controlled resource baseline at 22:41 UTC passed. The
+ten-minute utilization floors were at most 0.7% across API, worker, and
+PostgreSQL. The Telegram-session volume was 1.7% full and PostgreSQL was 3.1%
+full. Raw metric points, service IDs, mount paths, and capacity values were not
+copied into the report.
 
 ### Railway native monitors and routing
 

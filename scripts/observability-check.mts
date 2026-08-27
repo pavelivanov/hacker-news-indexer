@@ -2,8 +2,12 @@ import { spawn } from "node:child_process";
 
 import {
   evaluateOperationalAlerts,
+  resourceUtilizationPercent,
+  sustainedUtilizationFloorPercent,
   type OperationalLogEvent,
+  type OperationalResourceSignal,
   type OperationalSnapshot,
+  type ResourceMetricPoint,
 } from "@hn-knowledge/config";
 
 const MAX_RESPONSE_BYTES = 128 * 1024;
@@ -11,6 +15,9 @@ const MAX_COMMAND_BYTES = 2 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
 const COMMAND_TIMEOUT_MS = 30_000;
 const SAFE_ENVIRONMENT = /^[A-Za-z0-9._-]{1,64}$/u;
+const RESOURCE_SERVICE_NAMES = ["api", "worker", "postgres"] as const;
+
+type ResourceServiceName = (typeof RESOURCE_SERVICE_NAMES)[number];
 
 const DATABASE_SNAPSHOT_QUERY = `
 WITH pipeline AS (
@@ -292,6 +299,162 @@ const parseLogEvents = (text: string): readonly OperationalLogEvent[] =>
       };
     });
 
+const metricPoints = (
+  measurements: Record<string, unknown>,
+  name: string,
+): readonly ResourceMetricPoint[] => {
+  const rawPoints = measurements[name];
+  if (!Array.isArray(rawPoints)) {
+    throw new SafeFailure("RAILWAY_METRICS_INVALID");
+  }
+  return rawPoints.map((rawPoint) => {
+    const point = record(rawPoint, "RAILWAY_METRICS_INVALID");
+    const timestamp = point["ts"];
+    if (typeof timestamp !== "string") {
+      throw new SafeFailure("RAILWAY_METRICS_INVALID");
+    }
+    return {
+      timestamp,
+      value: nonNegativeNumber(point["value"], "RAILWAY_METRICS_INVALID"),
+    };
+  });
+};
+
+const parseVolumeUtilization = (
+  text: string,
+): Readonly<Record<ResourceServiceName, number | null>> => {
+  const summary = record(
+    safeJson(text, "RAILWAY_METRICS_INVALID"),
+    "RAILWAY_METRICS_INVALID",
+  );
+  const rawServices = summary["services"];
+  if (!Array.isArray(rawServices)) {
+    throw new SafeFailure("RAILWAY_METRICS_INVALID");
+  }
+  const services = rawServices.map((service) =>
+    record(service, "RAILWAY_METRICS_INVALID"),
+  );
+  const result = {} as Record<ResourceServiceName, number | null>;
+  for (const serviceName of RESOURCE_SERVICE_NAMES) {
+    const service = services.find(
+      (candidate) => candidate["name"] === serviceName,
+    );
+    if (service === undefined) {
+      throw new SafeFailure("RAILWAY_METRICS_INVALID");
+    }
+    const rawVolumes = service["volumes"];
+    if (rawVolumes === undefined) {
+      result[serviceName] = null;
+      continue;
+    }
+    if (!Array.isArray(rawVolumes)) {
+      throw new SafeFailure("RAILWAY_METRICS_INVALID");
+    }
+    const utilization = rawVolumes.map((rawVolume) => {
+      const volume = record(rawVolume, "RAILWAY_METRICS_INVALID");
+      try {
+        return resourceUtilizationPercent(
+          nonNegativeNumber(volume["current_mb"], "RAILWAY_METRICS_INVALID"),
+          nonNegativeNumber(volume["limit_mb"], "RAILWAY_METRICS_INVALID"),
+        );
+      } catch {
+        throw new SafeFailure("RAILWAY_METRICS_INVALID");
+      }
+    });
+    result[serviceName] =
+      utilization.length === 0 ? null : Math.max(...utilization);
+  }
+  return result;
+};
+
+const parseResourceSignal = (
+  text: string,
+  serviceName: ResourceServiceName,
+  checkedAt: string,
+  volumeMaxUtilizationPercent: number | null,
+): OperationalResourceSignal => {
+  const raw = record(
+    safeJson(text, "RAILWAY_METRICS_INVALID"),
+    "RAILWAY_METRICS_INVALID",
+  );
+  if (raw["service"] !== serviceName) {
+    throw new SafeFailure("RAILWAY_METRICS_INVALID");
+  }
+  const measurements = record(raw["measurements"], "RAILWAY_METRICS_INVALID");
+  try {
+    return {
+      cpuTenMinuteFloorPercent: sustainedUtilizationFloorPercent(
+        metricPoints(measurements, "CPU_USAGE"),
+        metricPoints(measurements, "CPU_LIMIT"),
+        checkedAt,
+      ),
+      memoryTenMinuteFloorPercent: sustainedUtilizationFloorPercent(
+        metricPoints(measurements, "MEMORY_USAGE_GB"),
+        metricPoints(measurements, "MEMORY_LIMIT_GB"),
+        checkedAt,
+      ),
+      volumeMaxUtilizationPercent,
+    };
+  } catch (error) {
+    if (error instanceof SafeFailure) {
+      throw error;
+    }
+    throw new SafeFailure("RAILWAY_METRICS_INVALID");
+  }
+};
+
+const collectResources = async (
+  environment: string,
+): Promise<OperationalSnapshot["resources"]> => {
+  const summaryPromise = runRailway([
+    "metrics",
+    "--all",
+    "--environment",
+    environment,
+    "--since",
+    "15m",
+    "--json",
+    "--cpu",
+    "--memory",
+    "--volume",
+  ]);
+  const rawPromises = RESOURCE_SERVICE_NAMES.map((serviceName) =>
+    runRailway([
+      "metrics",
+      "--service",
+      serviceName,
+      "--environment",
+      environment,
+      "--since",
+      "15m",
+      "--raw",
+      "--json",
+      "--cpu",
+      "--memory",
+    ]),
+  );
+  const [summaryText, rawTexts] = await Promise.all([
+    summaryPromise,
+    Promise.all(rawPromises),
+  ]);
+  const volumeUtilization = parseVolumeUtilization(summaryText);
+  const checkedAt = new Date().toISOString();
+  const resources: Record<string, OperationalResourceSignal> = {};
+  for (const [index, serviceName] of RESOURCE_SERVICE_NAMES.entries()) {
+    const rawText = rawTexts[index];
+    if (rawText === undefined) {
+      throw new SafeFailure("RAILWAY_METRICS_INVALID");
+    }
+    resources[serviceName] = parseResourceSignal(
+      rawText,
+      serviceName,
+      checkedAt,
+      volumeUtilization[serviceName],
+    );
+  }
+  return resources;
+};
+
 const collectApi = async (
   origin: URL,
   token: string,
@@ -505,7 +668,7 @@ const main = async (): Promise<void> => {
     0,
   );
   const context = await collectContext(environment);
-  const [services, api, workerLogs, schedulerLogs, database] =
+  const [services, api, workerLogs, schedulerLogs, resources, database] =
     await Promise.all([
       collectServices(environment),
       collectApi(origin, token),
@@ -533,6 +696,7 @@ const main = async (): Promise<void> => {
         "500",
         "--json",
       ]),
+      collectResources(environment),
       collectDatabase(context, environment),
     ]);
   const snapshot: OperationalSnapshot = {
@@ -541,6 +705,7 @@ const main = async (): Promise<void> => {
     api,
     workerEvents: parseLogEvents(workerLogs),
     schedulerEvents: parseLogEvents(schedulerLogs),
+    resources,
     database,
   };
   const alerts = evaluateOperationalAlerts(snapshot, {
@@ -559,6 +724,7 @@ const main = async (): Promise<void> => {
     signals: {
       services,
       api,
+      resources,
       database,
       workerEventCount: snapshot.workerEvents.length,
       schedulerEventCount: snapshot.schedulerEvents.length,
