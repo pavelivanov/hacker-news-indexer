@@ -8,16 +8,18 @@ read-only planning, staging changes, and production changes.
 
 As of 2026-08-27:
 
-- Railway CLI `5.44.1` is installed and authenticated to the owner's workspace.
-- No existing Railway project matches this repository and the checkout is not
-  linked to a project.
-- Release-hardening commit `32a316d` passed `npm run release:verify` twice from
-  a clean worktree. Both runs included a clean nine-migration replay, 174 unit
+- Railway CLI `5.45.0` is installed and authenticated to the owner's workspace.
+- The checkout is linked to the newly created, empty `hacker-news-indexer`
+  project (project ID suffix `5328`). Its only remote environment is the empty
+  `production` environment (environment ID suffix `1bf3`).
+- The branch through commit `8de3522` passed `npm run release:verify` twice from
+  a clean worktree. Both runs included a clean nine-migration replay, 175 unit
   tests, 45 integration tests, evaluation/export gates, image inspection, and
   API/worker/scheduler container smokes.
-- Project creation, `railway config apply`, staging deploys, and production
-  deploys have not been authorized for this execution. No remote resource has
-  been created or changed.
+- The operator authorized empty-project creation and read-only IaC planning.
+  No service, database, volume, staging environment, secret, domain, or
+  deployment has been created. `railway config apply`, staging changes, and
+  production changes remain unauthorized.
 - Plan 003R is still in progress. Live classifier promotion and production
   promotion remain blocked even if the infrastructure is otherwise healthy.
 
@@ -120,20 +122,29 @@ Run these steps only after the project-creation authorization gate:
 
 ### Redacted IaC plan summary
 
-Status: **NOT GENERATED — project authorization pending**
+Status: **REVIEWED READ-ONLY — NOT APPLIED**
 
-When a plan is available, record:
+- Plan time: 2026-08-27 09:59 UTC with Railway CLI `5.45.0`.
+- Project: `hacker-news-indexer`, project ID suffix `5328`.
+- Target: `production`, environment ID suffix `1bf3`.
+- Diff: five additions (`postgres`, `telegram-session`, `api`, `worker`, and
+  `scheduler`), zero updates, and zero destroys. Diagnostics were empty.
+- Database/volume deletion or replacement count: zero.
+- Public-domain count: one, assigned only to `api` on container port `3000`.
+- Pre-deploy migration count: one, `npm run db:migrate:deploy` on `api` only.
+- Start commands match the intended resource graph above. The scheduler cron is
+  `17 3 * * *` and both Telegram and classification remain disabled.
+- Secret values were neither defined nor configured. Protected API routes
+  therefore remain fail-closed until a separately approved staging secret step.
+- Expected monthly cost was not shown by the CLI plan and remains pending an
+  operator review before apply.
+- Operator decision: project creation and this read-only plan were authorized
+  on 2026-08-27. No apply approval was given.
 
-- Date/time and CLI version.
-- Project name and redacted ID suffix.
-- Environment and redacted ID suffix.
-- Services/resources created or updated.
-- Database/volume deletion or replacement count; it must be zero.
-- Public-domain count; it must be one and belong to `api`.
-- Pre-deploy migration count; it must be one and belong to `api`.
-- API, worker, and scheduler start commands.
-- Expected monthly cost shown to the operator.
-- Operator decision and approval timestamp.
+The current Railway IaC beta plans resources only against the linked
+environment; declaring `staging` in the graph did not create or plan a staging
+environment. Create and link `staging` only after a separate remote-change
+approval, then run and review a fresh staging-targeted plan before any apply.
 
 Do not paste raw runner JSON, variable values, domains containing credentials,
 or complete project/service IDs into this repository.
@@ -174,7 +185,7 @@ Telegram bounded contract/session persistence, classifier shadow after Plan
 Production remains blocked until all boxes are evidenced:
 
 - [x] Release verification passed twice from a clean commit.
-- [ ] IaC plan reviewed with no destructive resource change.
+- [x] IaC plan reviewed with no destructive resource change.
 - [ ] Staging soak covered at least one scheduled reconciliation cycle.
 - [ ] Bounded HN and Telegram staging checks passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
