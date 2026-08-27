@@ -93,6 +93,14 @@ Define staging and production with:
 
 Only the API service has pre-deploy command `npm run db:migrate:deploy`. Worker/scheduler must not run migrations, preventing races.
 
+**Execution note (2026-08-27):** Railway CLI `5.45.0` correctly targets the
+linked environment for the plan but invokes the TypeScript program with an
+empty `ctx` object. An environment-derived domain therefore rendered the
+production name in a staging plan. Keep the IaC graph environment-independent
+and generate the single API Railway domain with `railway domain` after each
+approved environment apply until the documented context behavior is fixed and
+re-verified.
+
 **Verify**: `railway config plan` shows only the intended creates/updates, no deletion/replacement of an existing database/volume, one migration path, and correct start commands. Save a redacted plan summary in the deploy runbook.
 
 ### Step 3: Configure variables and secret boundaries
@@ -171,8 +179,9 @@ Deploy with a release summary, watch bounded logs/status, run authenticated smok
 
 ## Done criteria
 
-- [ ] `.railway/railway.ts` uses current supported IaC and plans the intended graph without destructive changes.
-- [ ] Only API pre-deploy runs Prisma migrations.
+- [x] `.railway/railway.ts` uses current supported IaC and plans the environment-independent base graph without destructive changes.
+- [x] Only API pre-deploy runs Prisma migrations.
+- [ ] Exactly one Railway domain is generated for API and no other staging service is public.
 - [ ] API, worker, scheduler, PostgreSQL, and Telegram session storage have minimum required access.
 - [ ] Staging external dependencies were enabled incrementally and all gates passed.
 - [ ] Backup restore and rollback were actually tested.
