@@ -198,6 +198,17 @@ defines an exact-ID rollback, authenticated smoke, exact-ID roll-forward, and
 separate worker-volume marker restart drill. No rollback or restart mutation
 was executed without fresh operator authorization.
 
+**Rollback execution (2026-08-27):** After explicit approval, the staging API
+rolled back to commit `12d169e` in about 20 seconds and rolled forward to commit
+`98b9507` in about 24 seconds. Pre-rollback, post-rollback, post-forward, and
+final authenticated smoke checks passed; both deployment starts found the same
+nine migrations with none pending. A separate worker restart preserved a
+mode-`0600` marker and its SHA-256 on `/data/telegram`; the restarted process
+emitted a heartbeat with zero active jobs, and the marker was then removed and
+confirmed absent. A read-only queue query found zero jobs and expired leases.
+The dated report records deployment suffixes, evidence, cleanup, deviations,
+and the remaining scheduler-soak/non-empty-data/Telegram-session follow-ups.
+
 **Verify**: a dated staging restore report records RPO/RTO observations and passes integrity queries; rollback drill restores the prior API deployment without schema corruption.
 
 ### Step 6: Add release observability and alerts
