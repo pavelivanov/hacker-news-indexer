@@ -103,7 +103,7 @@ Do not call rollback tested until a staging drill records all of these fields:
 - Health, queue, scheduler, and session-persistence results.
 - Observed RTO and follow-up actions.
 
-## Staging drill preflight — 2026-08-27
+## Staging drill — 2026-08-27
 
 The live API deployment history and Git compatibility check selected this
 bounded API-only rollback pair:
@@ -127,16 +127,20 @@ bounded API-only rollback pair:
   rebuild. A read-only eligibility query confirmed both exact deployment IDs can
   be rollback targets.
 
-The approved drill sequence must capture the current and target full IDs
-outside Git, run pre-smoke, roll back only `api`, wait for `SUCCESS`, run smoke
-and bounded logs, roll forward to the captured current deployment, and repeat
-the checks. Worker/scheduler/database configuration must not change.
+The approved drill captured the current and target full IDs outside Git, ran a
+pre-smoke, rolled back only `api`, waited for `SUCCESS`, ran smoke and bounded
+logs, rolled forward to the captured current deployment, and repeated the
+checks. Worker/scheduler/database configuration did not change.
 
-The worker-volume persistence drill is separate: write one non-secret marker to
-`/data/telegram`, restart only the worker, verify the marker hash after the new
-instance is healthy, then delete the marker. Do not create or inspect a Telegram
-session while Telegram is disabled.
+The separate worker-volume persistence drill wrote one non-secret marker to
+`/data/telegram`, restarted only the worker, verified the marker hash after the
+new process started and emitted a heartbeat, then deleted the marker. It did not
+create or inspect a Telegram session while Telegram was disabled.
 
-Current status: **PREFLIGHT COMPLETE, NOT TESTED — exact candidates and the
-roll-forward path are verified, but API rollback and worker restart/marker
-mutations require fresh operator authorization**.
+The dated
+[staging rollback report](reports/2026-08-27-staging-rollback.md) records exact
+suffixes, timings, smoke and migration evidence, queue state, volume persistence,
+cleanup, deviations, and follow-ups.
+
+Current status: **TESTED IN STAGING — API ROLLBACK, ROLL-FORWARD, AND WORKER
+VOLUME PERSISTENCE PASSED**.
