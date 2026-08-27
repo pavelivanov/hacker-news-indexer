@@ -57,6 +57,7 @@
     "db:test:reset": "node scripts/reset-test-db.mjs",
     "container:inspect": "bash scripts/verify-container-image.sh",
     "container:smoke": "bash scripts/container-smoke.sh",
+    "staging:smoke": "node --env-file-if-exists=.env scripts/staging-smoke.mjs",
     "release:verify": "bash scripts/release-verify.sh"
   },
   "dependencies": {
