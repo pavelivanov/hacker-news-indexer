@@ -51,6 +51,15 @@ const environmentSchema = z
     LOG_LEVEL: z
       .enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"])
       .default("info"),
+    RAILWAY_PROJECT_ID: optionalString,
+    RAILWAY_ENVIRONMENT_ID: optionalString,
+    RAILWAY_ENVIRONMENT_NAME: optionalString,
+    RAILWAY_SERVICE_ID: optionalString,
+    RAILWAY_SERVICE_NAME: optionalString,
+    RAILWAY_DEPLOYMENT_ID: optionalString,
+    RAILWAY_REPLICA_ID: optionalString,
+    RAILWAY_REPLICA_REGION: optionalString,
+    RAILWAY_GIT_COMMIT_SHA: optionalString,
     PORT: integer(3000, 1, 65_535),
     DATABASE_URL: z.preprocess(
       emptyToUndefined,

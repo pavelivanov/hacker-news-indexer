@@ -42,6 +42,14 @@ As of 2026-08-27:
   seconds end to end. Scratch services were removed; the unattached scratch
   volume is pending Railway platform deletion. Offline recovery-key retention
   and a representative non-empty-data repeat remain follow-ups.
+- The staging API rollback/roll-forward and worker-volume persistence drill
+  passed. Both application images passed authenticated smoke with the same nine
+  migrations, and a mode-`0600` marker survived the worker restart before being
+  removed.
+- The repository-controlled observability baseline passed at 2026-08-27 15:11
+  UTC with all four services healthy and zero application alerts. Railway
+  native resource monitors, notification routing, and live synthetic failures
+  remain unconfigured and require fresh approval.
 - Plan 003R is still in progress. Live classifier promotion and production
   promotion remain blocked even if the infrastructure is otherwise healthy.
 
@@ -60,7 +68,9 @@ Fresh operator approval is required before each unchecked boundary:
        a recovery or rollback drill.
 6. [x] Roll back and roll forward the staging API, then restart the worker for
        a volume-persistence drill.
-7. [ ] Apply an IaC plan to production or deploy production code.
+7. [ ] Configure native Railway monitors/notification routing and run live
+       synthetic staging alert drills.
+8. [ ] Apply an IaC plan to production or deploy production code.
 
 Planning and applying are separate approvals. Stop if a plan deletes or
 replaces a database or volume, adds a second migration command, exposes a
@@ -274,7 +284,7 @@ Production remains blocked until all boxes are evidenced:
 - [ ] Bounded HN and Telegram staging checks passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
 - [x] Backup restore drill passed with recorded RPO/RTO.
-- [ ] API rollback and worker-volume persistence drills passed.
+- [x] API rollback and worker-volume persistence drills passed.
 - [ ] Synthetic readiness, retryable-job, invalid-schema, and aged-review alerts fired.
 - [ ] No unresolved P1 review/export issue exists.
 - [ ] Operator approved cost, service graph, production source/session use, and production deployment.

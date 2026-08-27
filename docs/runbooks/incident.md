@@ -59,6 +59,71 @@ with the API process; use structured worker logs and database queue checks until
 a deployment-level collector is proven. Do not claim a dashboard covers worker
 metrics merely because their metric names appear in API output.
 
+### Repository-controlled signal check
+
+Run the bounded, read-only application check from a trusted operator checkout:
+
+```sh
+npm run observability:check -- https://<api-domain>
+```
+
+The command reads `APP_API_TOKEN` from the gitignored `.env`, resolves the
+explicit `OBSERVABILITY_ENVIRONMENT` (default `staging`), and collects:
+
+- API liveness, readiness, protected review/feed metrics, and expected service
+  deployment states;
+- bounded worker/scheduler structured logs without returning their raw fields;
+- aggregate-only queue, lease, terminal-job, recent classifier, and recent
+  export-failure counts through the private PostgreSQL service.
+
+It never selects pipeline payloads, classifier output, source content, review
+content, export payloads, environment values, or Telegram session data. Output
+contains only project ID suffix, service states, numeric aggregates, safe alert
+codes, and thresholds. Exit `0` means no policy alert, exit `2` means alerts
+fired, and exit `1` means collection/configuration failed closed.
+
+The command treats a last-served-page `feed_root_concentration` above `0.5` as
+an advisory P3 signal. The exact “more than two same-root items in the first
+20” release gate still belongs to `npm run feed:audit`; a small or empty page is
+not enough evidence for that release decision.
+
+Set `OBSERVABILITY_TERMINAL_BASELINE` to the acknowledged terminal-job count.
+After the first scheduler completion is observed, set
+`OBSERVABILITY_REQUIRE_SCHEDULER=true`; completion older than 26 hours then
+alerts. Do not enable that gate before the first scheduled run and mistake a
+not-yet-due cron for an outage.
+
+Railway automatically injects project, environment, service, deployment,
+replica, region, and Git commit variables. The logger maps present values to
+safe base bindings on every API, worker, and scheduler event. A deployment of
+the implementing commit is required before those additional bindings appear in
+live logs.
+
+The first read-only staging baseline at 2026-08-27 15:11 UTC passed: API,
+worker, scheduler, and PostgreSQL were `SUCCESS`; health/readiness/metrics were
+available; queue, lease, terminal, classification, export, review, and feed
+alert values were zero; and no alert fired. Scheduler enforcement was correctly
+disabled pending its first due run.
+
+### Railway native monitors and routing
+
+Current Railway documentation exposes Pro-plan CPU, RAM, disk, and network
+egress monitors through the Observability dashboard, with email/in-app
+notifications and optional webhooks. It does not document monitor creation in
+CLI or Infrastructure as Code. Configure these only after a fresh operator
+approval and a destination decision:
+
+- API, worker, and scheduler CPU/memory: 85% sustained for 10 minutes.
+- PostgreSQL CPU/memory: 85% sustained for 10 minutes.
+- PostgreSQL and Telegram volume usage: 80%.
+- Deployment failed/crashed and volume/monitor events: owner email/in-app;
+  optionally a separately approved webhook that filters environment and event
+  type.
+
+Status: **NOT CONFIGURED — thresholds are defined, but dashboard monitors,
+notification routing, and webhooks require a live Railway mutation and owner
+destination choice**.
+
 ## API or database readiness failure
 
 1. Confirm `/healthz` versus `/readyz`; liveness success with readiness failure
@@ -137,9 +202,11 @@ Before production, deliberately and reversibly test:
 - An aged fixture review task, confirming backlog alerting.
 
 Record which alert fired, timestamps, routing, recovery, and confirmation that
-no sensitive payload appeared. Current status: **NOT TESTED — the staging base
-is deployed, but synthetic failures and alert destinations have not been
-authorized or configured**.
+no sensitive payload appeared. The repository policy tests now cover readiness
+loss, queue age/depth, expired leases, sustained retryable failures, classifier
+schema/latency, aged review, export failure, and secret-safe output. Current
+status: **POLICY TESTED LOCALLY; LIVE SYNTHETIC FAILURES AND ALERT DESTINATIONS
+NOT TESTED OR CONFIGURED**.
 
 ## Closeout
 
