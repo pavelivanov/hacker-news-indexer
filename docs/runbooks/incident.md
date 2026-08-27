@@ -137,8 +137,9 @@ Before production, deliberately and reversibly test:
 - An aged fixture review task, confirming backlog alerting.
 
 Record which alert fired, timestamps, routing, recovery, and confirmation that
-no sensitive payload appeared. Current status: **NOT TESTED — staging
-authorization and alert destinations pending**.
+no sensitive payload appeared. Current status: **NOT TESTED — the staging base
+is deployed, but synthetic failures and alert destinations have not been
+authorized or configured**.
 
 ## Closeout
 

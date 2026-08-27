@@ -88,4 +88,5 @@ Do not call rollback tested until a staging drill records all of these fields:
 - Health, queue, scheduler, and session-persistence results.
 - Observed RTO and follow-up actions.
 
-Current status: **NOT TESTED — staging project authorization pending**.
+Current status: **NOT TESTED — the staging services are deployed, but no
+rollback or persistence drill has been authorized or run**.

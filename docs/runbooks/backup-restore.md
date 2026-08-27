@@ -10,7 +10,9 @@ Record actual observations after the first drill. Initial targets for this
 personal service are RPO no greater than 24 hours and RTO no greater than four
 hours. Tighten them only after measured restores and cost review.
 
-Current status: **NOT TESTED — no Railway database exists for this project**.
+Current status: **NOT TESTED — staging PostgreSQL exists and is healthy, but
+backup/PITR availability and a disposable restore drill have not been
+authorized or verified**.
 
 ## Railway backup/PITR checklist
 
