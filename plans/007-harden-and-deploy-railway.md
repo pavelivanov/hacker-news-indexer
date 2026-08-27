@@ -228,7 +228,12 @@ aggregate-only queue/lease/classifier/export SQL into the initial alert policy.
 It suppresses an isolated retry, fails closed, emits no payloads or secrets, and
 has deterministic synthetic tests for readiness, queue/lease, sustained retry,
 classifier schema/latency, aged review, export, and output-safety signals. The
-first read-only staging baseline passed with no alerts at 15:11 UTC.
+first read-only staging baseline passed with no alerts at 15:11 UTC. A later
+check overlapped an automatic worker deployment before its first heartbeat was
+indexed, exposing and correcting a startup-race false positive: a recent
+`worker_started` event now satisfies the three-minute liveness grace without
+disabling restart-loop detection. The post-grace staging recheck passed with no
+alerts at 15:23 UTC.
 
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does
