@@ -10,10 +10,14 @@ Record actual observations after the first drill. Initial targets for this
 personal service are RPO no greater than 24 hours and RTO no greater than four
 hours. Tighten them only after measured restores and cost review.
 
-Current status: **PREFLIGHTED, NOT TESTED — staging PostgreSQL exists and is
-healthy, but PITR is disabled, no backup bucket is wired, and both the backup
-schedule and on-demand backup lists are empty. No backup or disposable restore
-drill has been authorized or created**.
+Current status: **LOGICAL RESTORE DRILL PASSED — the 2026-08-27 encrypted
+logical backup restored into an isolated PostgreSQL 18 service, matched source
+counts/migrations/foreign-key state, and passed private API readiness and read
+checks. PITR and Railway backup schedules remain disabled; offline recovery-key
+retention and a representative non-empty-data drill remain follow-ups**.
+
+The dated evidence is in
+[`reports/2026-08-27-staging-restore.md`](reports/2026-08-27-staging-restore.md).
 
 ## Read-only recovery preflight
 
@@ -32,6 +36,12 @@ The 2026-08-27 staging preflight returned `enabled=false`,
 commands were read-only. Enabling PITR, setting a schedule, creating or locking
 a backup, and restoring into a sibling service are remote mutations that each
 require the recovery-drill authorization gate in `deploy.md`.
+
+The operator then authorized the lower-cost logical path without PITR. The
+completed drill streamed `pg_dump` directly through `age`, restored it into a
+private scratch database, verified it through SQL and a private API, and
+removed the scratch services. Railway retained the unattached scratch volume
+as pending deletion until its platform deletion timestamp.
 
 ## Railway backup/PITR checklist
 

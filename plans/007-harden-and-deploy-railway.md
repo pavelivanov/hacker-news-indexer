@@ -177,6 +177,16 @@ list and on-demand backup list are empty. This was a read-only inspection; no
 backup, schedule, sibling restore service, or database mutation was created.
 The next recovery action requires explicit operator approval.
 
+The operator then approved the lower-cost logical path without PITR. A
+PostgreSQL 18 dump was streamed directly through `age`, its 303-entry archive
+catalog was verified, and it restored in six seconds into a private scratch
+PostgreSQL 18 service. Source/restored counts, nine migrations, and foreign-key
+state matched; private API liveness/readiness/fail-closed auth/authenticated read
+checks passed; bounded logs were clean; and end-to-end verification took 13
+minutes 6 seconds. The scratch services were removed and their unattached
+volume entered Railway's pending-deletion window. The dated report records the
+CLI deviations and the remaining offline-key/non-empty-data follow-ups.
+
 **Verify**: a dated staging restore report records RPO/RTO observations and passes integrity queries; rollback drill restores the prior API deployment without schema corruption.
 
 ### Step 6: Add release observability and alerts

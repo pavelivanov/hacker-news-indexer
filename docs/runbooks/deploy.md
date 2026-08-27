@@ -8,7 +8,7 @@ read-only planning, staging changes, and production changes.
 
 As of 2026-08-27:
 
-- Railway CLI `5.45.1` is installed and authenticated to the owner's workspace.
+- Railway CLI `5.45.2` is installed and authenticated to the owner's workspace.
 - The checkout is linked to `staging` (environment ID suffix `62dc`) in
   `hacker-news-indexer` (project ID suffix `5328`). The environment contains
   the private `postgres`, `api`, `worker`, and `scheduler` services plus ready
@@ -35,8 +35,13 @@ As of 2026-08-27:
   the new API deployment. The scheduler had not yet reached its first 03:17 UTC
   cron run, so scheduler completion and idempotency remain unverified.
 - The read-only PostgreSQL recovery preflight found PITR disabled, no backup
-  bucket, no configured backup schedules, and no on-demand backups. Recovery
-  remains untested and no recovery resource was created.
+  bucket, no configured backup schedules, and no on-demand backups. The owner
+  then authorized a lower-cost logical restore drill: an `age`-encrypted dump
+  restored into isolated PostgreSQL 18, matched all bounded integrity checks,
+  and passed private API readiness/auth/read verification in 13 minutes 6
+  seconds end to end. Scratch services were removed; the unattached scratch
+  volume is pending Railway platform deletion. Offline recovery-key retention
+  and a representative non-empty-data repeat remain follow-ups.
 - Plan 003R is still in progress. Live classifier promotion and production
   promotion remain blocked even if the infrastructure is otherwise healthy.
 
@@ -51,7 +56,7 @@ Fresh operator approval is required before each unchecked boundary:
 2. [x] Apply the reviewed IaC graph to staging.
 3. [x] Configure the staging API token and generate its single domain.
 4. [ ] Enable Telegram or another live external dependency in staging.
-5. [ ] Create a staging backup/schedule or disposable restore resource and run
+5. [x] Create a staging backup/schedule or disposable restore resource and run
        a recovery or rollback drill.
 6. [ ] Apply an IaC plan to production or deploy production code.
 
@@ -266,7 +271,7 @@ Production remains blocked until all boxes are evidenced:
 - [ ] Staging soak covered at least one scheduled reconciliation cycle.
 - [ ] Bounded HN and Telegram staging checks passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
-- [ ] Backup restore drill passed with recorded RPO/RTO.
+- [x] Backup restore drill passed with recorded RPO/RTO.
 - [ ] API rollback and worker-volume persistence drills passed.
 - [ ] Synthetic readiness, retryable-job, invalid-schema, and aged-review alerts fired.
 - [ ] No unresolved P1 review/export issue exists.
