@@ -233,7 +233,11 @@ check overlapped an automatic worker deployment before its first heartbeat was
 indexed, exposing and correcting a startup-race false positive: a recent
 `worker_started` event now satisfies the three-minute liveness grace without
 disabling restart-loop detection. The post-grace staging recheck passed with no
-alerts at 15:23 UTC.
+alerts at 15:23 UTC. The checker also consumes Railway's bounded raw resource
+metrics: CPU/memory alert only after a sufficiently covered ten-minute window
+has remained above 85%, while PostgreSQL and Telegram volume capacity alert
+above 80%. The first read-only resource baseline passed at 22:41 UTC with all
+reported utilization below 4% and no alerts.
 
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does

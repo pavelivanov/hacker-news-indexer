@@ -15,6 +15,9 @@ const KNOWN_DEPLOYMENT_STATUSES = new Set([
   "WAITING",
 ]);
 const WORKER_LIVENESS_GRACE_SECONDS = 180;
+const RESOURCE_SERVICE_NAMES = ["api", "worker", "postgres"] as const;
+const RESOURCE_UTILIZATION_ALERT_PERCENT = 85;
+const VOLUME_UTILIZATION_ALERT_PERCENT = 80;
 
 export type OperationalAlertSeverity = "P2" | "P3";
 
@@ -25,6 +28,12 @@ export interface OperationalLogEvent {
   readonly jobType: string | null;
   readonly errorCode: string | null;
   readonly durationMs: number | null;
+}
+
+export interface OperationalResourceSignal {
+  readonly cpuTenMinuteFloorPercent: number | null;
+  readonly memoryTenMinuteFloorPercent: number | null;
+  readonly volumeMaxUtilizationPercent: number | null;
 }
 
 export interface OperationalSnapshot {
@@ -40,6 +49,7 @@ export interface OperationalSnapshot {
   };
   readonly workerEvents: readonly OperationalLogEvent[];
   readonly schedulerEvents: readonly OperationalLogEvent[];
+  readonly resources: Readonly<Record<string, OperationalResourceSignal>>;
   readonly database: {
     readonly runnableDepth: number;
     readonly oldestRunnableAgeSeconds: number;
@@ -270,6 +280,43 @@ export const evaluateOperationalAlerts = (
     add("feed_root_concentration_high", "P3", "feed_diversity", {
       concentration: snapshot.api.feedRootConcentration,
     });
+  }
+
+  for (const serviceName of RESOURCE_SERVICE_NAMES) {
+    const resources = snapshot.resources[serviceName];
+    if (resources === undefined) {
+      continue;
+    }
+    if (
+      resources.cpuTenMinuteFloorPercent !== null &&
+      finiteNonNegative(resources.cpuTenMinuteFloorPercent) >
+        RESOURCE_UTILIZATION_ALERT_PERCENT
+    ) {
+      add("service_cpu_sustained_high", "P3", "service_cpu", {
+        serviceName,
+        utilizationPercent: resources.cpuTenMinuteFloorPercent,
+      });
+    }
+    if (
+      resources.memoryTenMinuteFloorPercent !== null &&
+      finiteNonNegative(resources.memoryTenMinuteFloorPercent) >
+        RESOURCE_UTILIZATION_ALERT_PERCENT
+    ) {
+      add("service_memory_sustained_high", "P3", "service_memory", {
+        serviceName,
+        utilizationPercent: resources.memoryTenMinuteFloorPercent,
+      });
+    }
+    if (
+      resources.volumeMaxUtilizationPercent !== null &&
+      finiteNonNegative(resources.volumeMaxUtilizationPercent) >
+        VOLUME_UTILIZATION_ALERT_PERCENT
+    ) {
+      add("service_volume_high", "P3", "service_volume", {
+        serviceName,
+        utilizationPercent: resources.volumeMaxUtilizationPercent,
+      });
+    }
   }
 
   if (options.requireScheduler) {

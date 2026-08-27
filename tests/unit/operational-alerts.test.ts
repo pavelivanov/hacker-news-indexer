@@ -8,6 +8,13 @@ import {
 
 const NOW = "2026-08-27T15:00:00.000Z";
 
+const required = <T>(value: T | undefined): T => {
+  if (value === undefined) {
+    throw new TypeError("Expected fixture value");
+  }
+  return value;
+};
+
 const event = (
   name: string,
   overrides: Partial<OperationalLogEvent> = {},
@@ -39,6 +46,23 @@ const healthySnapshot = (): OperationalSnapshot => ({
   },
   workerEvents: [event("worker_heartbeat")],
   schedulerEvents: [event("reconciliation_schedule_completed")],
+  resources: {
+    api: {
+      cpuTenMinuteFloorPercent: 0.1,
+      memoryTenMinuteFloorPercent: 0.5,
+      volumeMaxUtilizationPercent: null,
+    },
+    worker: {
+      cpuTenMinuteFloorPercent: 0.1,
+      memoryTenMinuteFloorPercent: 0.7,
+      volumeMaxUtilizationPercent: 1.7,
+    },
+    postgres: {
+      cpuTenMinuteFloorPercent: 0.1,
+      memoryTenMinuteFloorPercent: 0.3,
+      volumeMaxUtilizationPercent: 3.1,
+    },
+  },
   database: {
     runnableDepth: 0,
     oldestRunnableAgeSeconds: 0,
@@ -206,6 +230,45 @@ describe("operational alert policy", () => {
         "classification_latency_high",
         "review_backlog_aged",
         "export_delivery_failed",
+      ]),
+    );
+  });
+
+  it("detects sustained resource pressure and volume capacity risk", () => {
+    const snapshot = healthySnapshot();
+    const alerts = evaluate({
+      ...snapshot,
+      resources: {
+        ...snapshot.resources,
+        api: {
+          ...required(snapshot.resources["api"]),
+          cpuTenMinuteFloorPercent: 85.1,
+        },
+        worker: {
+          ...required(snapshot.resources["worker"]),
+          memoryTenMinuteFloorPercent: 90,
+        },
+        postgres: {
+          ...required(snapshot.resources["postgres"]),
+          volumeMaxUtilizationPercent: 80.1,
+        },
+      },
+    });
+
+    expect(alerts).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: "service_cpu_sustained_high",
+          context: { serviceName: "api", utilizationPercent: 85.1 },
+        }),
+        expect.objectContaining({
+          code: "service_memory_sustained_high",
+          context: { serviceName: "worker", utilizationPercent: 90 },
+        }),
+        expect.objectContaining({
+          code: "service_volume_high",
+          context: { serviceName: "postgres", utilizationPercent: 80.1 },
+        }),
       ]),
     );
   });

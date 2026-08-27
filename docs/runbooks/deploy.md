@@ -6,9 +6,13 @@ read-only planning, staging changes, and production changes.
 
 ## Current execution state
 
-As of 2026-08-27:
+As of 2026-08-28:
 
-- Railway CLI `5.45.2` is installed and authenticated to the owner's workspace.
+- The unqualified `railway` command currently resolves to an incomplete asdf
+  npm installation of CLI `5.45.2`. The independent Homebrew CLI `5.28.0`
+  remains authenticated and passed read-only status and metrics checks. Repair
+  or upgrade the `5.45.2+` installation before any further IaC or remote
+  mutation; do not use the older fallback for configuration changes.
 - The checkout is linked to `staging` (environment ID suffix `62dc`) in
   `hacker-news-indexer` (project ID suffix `5328`). The environment contains
   the private `postgres`, `api`, `worker`, and `scheduler` services plus ready
@@ -47,9 +51,11 @@ As of 2026-08-27:
   migrations, and a mode-`0600` marker survived the worker restart before being
   removed.
 - The repository-controlled observability baseline passed at 2026-08-27 15:11
-  UTC with all four services healthy and zero application alerts. Railway
-  native resource monitors, notification routing, and live synthetic failures
-  remain unconfigured and require fresh approval.
+  UTC with all four services healthy and zero application alerts. A later
+  read-only resource baseline added sustained CPU/memory and volume-capacity
+  signals; it passed at 22:41 UTC with service utilization below 1% and volume
+  utilization below 4%. Railway native monitors, notification routing, and
+  live synthetic failures remain unconfigured and require fresh approval.
 - Plan 003R is still in progress. Live classifier promotion and production
   promotion remain blocked even if the infrastructure is otherwise healthy.
 
