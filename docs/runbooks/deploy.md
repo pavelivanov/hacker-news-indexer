@@ -58,7 +58,9 @@ Fresh operator approval is required before each unchecked boundary:
 4. [ ] Enable Telegram or another live external dependency in staging.
 5. [x] Create a staging backup/schedule or disposable restore resource and run
        a recovery or rollback drill.
-6. [ ] Apply an IaC plan to production or deploy production code.
+6. [ ] Roll back and roll forward the staging API, then restart the worker for
+       a volume-persistence drill.
+7. [ ] Apply an IaC plan to production or deploy production code.
 
 Planning and applying are separate approvals. Stop if a plan deletes or
 replaces a database or volume, adds a second migration command, exposes a

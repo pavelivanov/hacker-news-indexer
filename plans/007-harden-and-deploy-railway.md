@@ -187,6 +187,17 @@ minutes 6 seconds. The scratch services were removed and their unattached
 volume entered Railway's pending-deletion window. The dated report records the
 CLI deviations and the remaining offline-key/non-empty-data follow-ups.
 
+**Rollback preflight (2026-08-27):** Current deployment suffix `83b7` at commit
+`98b9507` and retained known-good suffix `fd3d` at commit `12d169e` have no
+application, migration, Dockerfile, lockfile, or IaC differences. Railway CLI
+`5.45.2` live schema exposes `deploymentRollback(id: String!): Boolean!`, and
+current documentation states that it restores the retained image and custom
+variables without rebuilding. A read-only query confirmed both the current and
+inactive known-good deployments have `canRollback=true`. The runbook now
+defines an exact-ID rollback, authenticated smoke, exact-ID roll-forward, and
+separate worker-volume marker restart drill. No rollback or restart mutation
+was executed without fresh operator authorization.
+
 **Verify**: a dated staging restore report records RPO/RTO observations and passes integrity queries; rollback drill restores the prior API deployment without schema corruption.
 
 ### Step 6: Add release observability and alerts

@@ -37,12 +37,27 @@ post-deploy check. For database corruption or credential compromise, follow
 
 4. Verify the chosen known-good deployment predates the fault and is compatible
    with every migration already applied.
-5. In Railway deployment history, redeploy that exact known-good deployment for
-   `api`. The current CLI can redeploy only the latest deployment and cannot
-   select an older deployment ID, so do not use `railway redeploy` as an older
-   version rollback.
+5. Roll back to the exact known-good deployment for `api`. The CLI's
+   `redeploy` command still targets only the latest deployment, but Railway's
+   public GraphQL API exposes `deploymentRollback(id: String!): Boolean!`.
+   Verify the live schema first, then use the retained deployment ID:
+
+   ```sh
+   railway api describe deploymentRollback
+   railway api \
+     'mutation Rollback($id: String!) { deploymentRollback(id: $id) }' \
+     --raw-var id=<known-good-deployment-id> \
+     --compact
+   ```
+
+   A successful rollback restores the retained Docker image and its custom
+   variables without a rebuild. Keep the pre-drill current deployment ID: after
+   verification, invoke the same mutation with that ID to roll forward.
+
 6. Verify `/healthz`, `/readyz`, authentication, and the expected commit/deploy
-   metadata before rolling worker and scheduler to the same version.
+   metadata. A rollback is not complete merely because the mutation returned
+   `true`; wait for the new deployment to reach `SUCCESS` and run the
+   authenticated staging smoke.
 7. Resume one worker, verify lease recovery and a bounded safe job, then resume
    the scheduler.
 
@@ -88,5 +103,40 @@ Do not call rollback tested until a staging drill records all of these fields:
 - Health, queue, scheduler, and session-persistence results.
 - Observed RTO and follow-up actions.
 
-Current status: **NOT TESTED — the staging services are deployed, but no
-rollback or persistence drill has been authorized or run**.
+## Staging drill preflight — 2026-08-27
+
+The live API deployment history and Git compatibility check selected this
+bounded API-only rollback pair:
+
+- Current deployment: ID suffix `83b7`, commit `98b9507`, `SUCCESS`, live
+  `canRollback=true`.
+- Known-good target: ID suffix `fd3d`, commit `12d169e`, retained in deployment
+  history with inactive status `REMOVED` and live `canRollback=true`. This was
+  the API-token redeployment that passed the original authenticated smoke before
+  sealing.
+- `12d169e..98b9507` changes only documentation, plans, the staging-smoke
+  script/test, and the root `staging:smoke` package script. There are no changes
+  under `apps/`, `packages/`, migrations, the Dockerfile, package lock, or
+  Railway IaC, so both images are compatible with the same nine-migration
+  database.
+- The 2026-08-27 logical restore drill passed and its encrypted artifact remains
+  available. Production is empty.
+- Railway CLI `5.45.2` live schema confirms
+  `deploymentRollback(id: String!): Boolean!`; current public documentation
+  confirms rollback restores a retained image and custom variables without a
+  rebuild. A read-only eligibility query confirmed both exact deployment IDs can
+  be rollback targets.
+
+The approved drill sequence must capture the current and target full IDs
+outside Git, run pre-smoke, roll back only `api`, wait for `SUCCESS`, run smoke
+and bounded logs, roll forward to the captured current deployment, and repeat
+the checks. Worker/scheduler/database configuration must not change.
+
+The worker-volume persistence drill is separate: write one non-secret marker to
+`/data/telegram`, restart only the worker, verify the marker hash after the new
+instance is healthy, then delete the marker. Do not create or inspect a Telegram
+session while Telegram is disabled.
+
+Current status: **PREFLIGHT COMPLETE, NOT TESTED — exact candidates and the
+roll-forward path are verified, but API rollback and worker restart/marker
+mutations require fresh operator authorization**.
