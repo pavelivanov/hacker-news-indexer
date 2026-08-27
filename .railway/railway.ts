@@ -31,8 +31,7 @@ const baseEnvironment = {
   LOG_LEVEL: "info",
 };
 
-export default defineRailway((context) => {
-  const environment = context.environment ?? "production";
+export default defineRailway(() => {
   const database = postgres("postgres");
   const telegramSession = volume("telegram-session");
 
@@ -48,13 +47,6 @@ export default defineRailway((context) => {
       restartPolicyType: "ON_FAILURE",
       restartPolicyMaxRetries: 10,
       drainingSeconds: 15,
-    },
-    networking: {
-      serviceDomains: {
-        [`hacker-news-indexer-api-${environment}-0bd3afd7.up.railway.app`]: {
-          port: 3000,
-        },
-      },
     },
     env: {
       ...baseEnvironment,

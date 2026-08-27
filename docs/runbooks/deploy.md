@@ -9,17 +9,18 @@ read-only planning, staging changes, and production changes.
 As of 2026-08-27:
 
 - Railway CLI `5.45.0` is installed and authenticated to the owner's workspace.
-- The checkout is linked to the newly created, empty `hacker-news-indexer`
-  project (project ID suffix `5328`). Its only remote environment is the empty
-  `production` environment (environment ID suffix `1bf3`).
+- The checkout is linked to the empty `staging` environment (environment ID
+  suffix `62dc`) in `hacker-news-indexer` (project ID suffix `5328`). The
+  separate `production` environment (environment ID suffix `1bf3`) is also
+  empty.
 - The branch through commit `8de3522` passed `npm run release:verify` twice from
   a clean worktree. Both runs included a clean nine-migration replay, 175 unit
   tests, 45 integration tests, evaluation/export gates, image inspection, and
   API/worker/scheduler container smokes.
-- The operator authorized empty-project creation and read-only IaC planning.
-  No service, database, volume, staging environment, secret, domain, or
-  deployment has been created. `railway config apply`, staging changes, and
-  production changes remain unauthorized.
+- The operator authorized empty-project and empty-staging-environment creation
+  plus read-only IaC planning. No service, database, volume, secret, domain, or
+  deployment has been created. `railway config apply`, all other staging
+  changes, and all production changes remain unauthorized.
 - Plan 003R is still in progress. Live classifier promotion and production
   promotion remain blocked even if the infrastructure is otherwise healthy.
 
@@ -41,18 +42,19 @@ non-API service, or widens secret scope.
 
 ## Intended resource graph
 
-| Resource    | Public | Start command                                                 | Pre-deploy                  | Persistent state                |
-| ----------- | ------ | ------------------------------------------------------------- | --------------------------- | ------------------------------- |
-| `postgres`  | No     | Railway managed                                               | None                        | Railway database volume/backups |
-| `api`       | Yes    | `node --enable-source-maps apps/api/dist/server.js`           | `npm run db:migrate:deploy` | None                            |
-| `worker`    | No     | `node --enable-source-maps apps/worker/dist/index.js`         | None                        | `/data/telegram` volume         |
-| `scheduler` | No     | `node --enable-source-maps apps/worker/dist/schedule-once.js` | None                        | None                            |
+| Resource    | Public     | Start command                                                 | Pre-deploy                  | Persistent state                |
+| ----------- | ---------- | ------------------------------------------------------------- | --------------------------- | ------------------------------- |
+| `postgres`  | No         | Railway managed                                               | None                        | Railway database volume/backups |
+| `api`       | Post-apply | `node --enable-source-maps apps/api/dist/server.js`           | `npm run db:migrate:deploy` | None                            |
+| `worker`    | No         | `node --enable-source-maps apps/worker/dist/index.js`         | None                        | `/data/telegram` volume         |
+| `scheduler` | No         | `node --enable-source-maps apps/worker/dist/schedule-once.js` | None                        | None                            |
 
 All three application services build the repository root Dockerfile with the
 full npm-workspace context. Keep one replica of each initially. Only `api` gets
-a Railway domain and `/healthz` deployment healthcheck. Use a conservative
-daily scheduler cron; the command derives a UTC-date idempotency key when no
-explicit `--key` is supplied.
+the `/healthz` deployment healthcheck. Generate its single Railway domain after
+the approved IaC apply; worker, scheduler, and PostgreSQL remain private. Use a
+conservative daily scheduler cron; the command derives a UTC-date idempotency
+key when no explicit `--key` is supplied.
 
 Use direct Node start commands for long-running roles. The release smoke proved
 that an npm wrapper as container PID 1 does not reliably forward Railway's
@@ -115,22 +117,31 @@ Run these steps only after the project-creation authorization gate:
 3. Confirm `railway status --json` before any configuration command.
 4. Run `railway config init`; edit only the generated
    `.railway/railway.ts`. Do not introduce `railway.json` or `railway.toml`.
-5. Define both `staging` and `production`, but do not apply either environment.
+5. Define the environment-independent resource graph, but do not apply it.
 6. Run `railway config plan --verbose`. Do not use `--show-values`.
 7. Compare the plan to the resource graph and secret matrix above.
 8. Save only the redacted summary below, then request separate apply approval.
 
 ### Redacted IaC plan summary
 
-Status: **REVIEWED READ-ONLY — NOT APPLIED**
+Status: **STAGING REVIEWED READ-ONLY — NOT APPLIED**
 
-- Plan time: 2026-08-27 09:59 UTC with Railway CLI `5.45.0`.
+The 2026-08-27 09:59 UTC production plan is superseded. It contained an
+environment-derived API domain, but a staging context probe showed Railway CLI
+`5.45.0` invokes the TypeScript program with an empty context object. That made
+the same file render the production domain while targeting staging. The domain
+was removed from IaC instead of relying on a mismatched name or a manually
+duplicated environment selector.
+
+- Plan time: 2026-08-27 10:35 UTC with Railway CLI `5.45.0`.
 - Project: `hacker-news-indexer`, project ID suffix `5328`.
-- Target: `production`, environment ID suffix `1bf3`.
+- Target: `staging`, environment ID suffix `62dc`.
 - Diff: five additions (`postgres`, `telegram-session`, `api`, `worker`, and
   `scheduler`), zero updates, and zero destroys. Diagnostics were empty.
 - Database/volume deletion or replacement count: zero.
-- Public-domain count: one, assigned only to `api` on container port `3000`.
+- Public-domain count: zero in IaC. After an approved apply creates `api`,
+  generate exactly one environment-scoped Railway domain on port `3000` with
+  `railway domain --service api --environment staging --port 3000 --json`.
 - Pre-deploy migration count: one, `npm run db:migrate:deploy` on `api` only.
 - Start commands match the intended resource graph above. The scheduler cron is
   `17 3 * * *` and both Telegram and classification remain disabled.
@@ -138,13 +149,13 @@ Status: **REVIEWED READ-ONLY — NOT APPLIED**
   therefore remain fail-closed until a separately approved staging secret step.
 - Expected monthly cost was not shown by the CLI plan and remains pending an
   operator review before apply.
-- Operator decision: project creation and this read-only plan were authorized
-  on 2026-08-27. No apply approval was given.
+- Operator decision: staging environment creation and this read-only plan were
+  authorized on 2026-08-27. No apply or domain approval was given.
 
 The current Railway IaC beta plans resources only against the linked
-environment; declaring `staging` in the graph did not create or plan a staging
-environment. Create and link `staging` only after a separate remote-change
-approval, then run and review a fresh staging-targeted plan before any apply.
+environment. The environment must be created and linked separately, and the
+current CLI's missing evaluator context means environment-derived configuration
+must not be committed until the upstream behavior is fixed and re-verified.
 
 Do not paste raw runner JSON, variable values, domains containing credentials,
 or complete project/service IDs into this repository.
@@ -156,17 +167,19 @@ After staging apply approval:
 1. Apply exactly the reviewed plan without `--confirm-destructive`.
 2. Inspect `railway environment config --json` and `railway status --json`;
    resolve names and IDs again.
-3. Deploy the exact release commit to staging.
-4. Read at most 200 build/deploy log lines per role. Search for errors and
+3. Generate one Railway domain for `api` on port `3000`; verify that no other
+   service has public networking.
+4. Deploy the exact release commit to staging.
+5. Read at most 200 build/deploy log lines per role. Search for errors and
    expected role markers, never source bodies or secrets.
-5. Confirm `GET /healthz` returns `200` and `GET /readyz` returns `200`.
-6. Confirm an unauthenticated `/metrics` and `/v1/*` request is rejected.
-7. Confirm authenticated `/metrics` works and contains no labels or payloads
+6. Confirm `GET /healthz` returns `200` and `GET /readyz` returns `200`.
+7. Confirm an unauthenticated `/metrics` and `/v1/*` request is rejected.
+8. Confirm authenticated `/metrics` works and contains no labels or payloads
    with private content.
-8. Confirm worker `worker_started` and `worker_heartbeat` events, one scheduler
+9. Confirm worker `worker_started` and `worker_heartbeat` events, one scheduler
    `reconciliation_schedule_completed` event, and idempotent repeated scheduling.
-9. Keep Telegram and live classification disabled. A live ingestion request is
-   not part of this initial smoke.
+10. Keep Telegram and live classification disabled. A live ingestion request is
+    not part of this initial smoke.
 
 Bounded log examples:
 
@@ -185,7 +198,7 @@ Telegram bounded contract/session persistence, classifier shadow after Plan
 Production remains blocked until all boxes are evidenced:
 
 - [x] Release verification passed twice from a clean commit.
-- [x] IaC plan reviewed with no destructive resource change.
+- [x] Staging IaC plan reviewed with no destructive resource change.
 - [ ] Staging soak covered at least one scheduled reconciliation cycle.
 - [ ] Bounded HN and Telegram staging checks passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
