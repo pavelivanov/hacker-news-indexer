@@ -34,7 +34,7 @@ This plan creates a repeatable staging-to-production release with isolated servi
 | Preview IaC | `railway config plan` | expected services/variables/volume only; no deletes |
 | Apply IaC | `railway config apply` | only after operator approval; exit 0 |
 | Deploy service | `railway up --service <name> --environment <env> --detach -m "<summary>"` | deployment created |
-| Verify | `railway service status --all --json` and bounded `railway logs` | all expected services healthy |
+| Verify | `railway service list --environment <env> --json` and bounded `railway logs` | all expected services healthy |
 
 ## Suggested executor toolkit
 
@@ -144,6 +144,13 @@ requires the variable's dashboard three-dot menu. The operator completed that
 irreversible seal: API configuration retained the key, CLI variable readback
 omitted its value, and the post-seal authenticated smoke still passed.
 
+After PR 11 merged as commit `98b9507`, Railway automatically deployed that
+commit to the staging API, worker, and scheduler. All four services remained
+`SUCCESS`, the worker emitted its first `worker_heartbeat` at 13:42 UTC, and
+the authenticated staging smoke passed against the new API deployment. The
+first scheduler cron remained due at 03:17 UTC on 2026-08-28, so no scheduler
+completion or idempotency claim was recorded early.
+
 Then enable one external dependency at a time: HN live contract, Telegram bounded read, classifier shadow, and finally reviewed local publication. Never enable automatic export during staging rollout.
 
 **Verify**: service status healthy; bounded build/runtime logs show expected version/role and no secrets/source bodies; one bounded seed ingestion completes with exact counts and evaluation gates.
@@ -163,6 +170,12 @@ Document and test:
 - content deletion/tombstone incident response.
 
 Do not claim recovery works without a restore drill.
+
+**Recovery preflight (2026-08-27):** Railway CLI `5.45.1` reports PITR disabled
+and no backup bucket wired for staging PostgreSQL. Both the configured schedule
+list and on-demand backup list are empty. This was a read-only inspection; no
+backup, schedule, sibling restore service, or database mutation was created.
+The next recovery action requires explicit operator approval.
 
 **Verify**: a dated staging restore report records RPO/RTO observations and passes integrity queries; rollback drill restores the prior API deployment without schema corruption.
 

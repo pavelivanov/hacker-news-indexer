@@ -29,6 +29,14 @@ As of 2026-08-27:
   sealed/write-only: it remains in API configuration, is absent from CLI value
   readback, and a post-seal authenticated smoke passed. Telegram and
   classification remain disabled, and production remains untouched.
+- PR 11 merged as commit `98b9507` and auto-deployed to staging at 13:40 UTC.
+  API, worker, scheduler, and PostgreSQL remained `SUCCESS`; the worker emitted
+  `worker_heartbeat` at 13:42 UTC; and the authenticated smoke passed against
+  the new API deployment. The scheduler had not yet reached its first 03:17 UTC
+  cron run, so scheduler completion and idempotency remain unverified.
+- The read-only PostgreSQL recovery preflight found PITR disabled, no backup
+  bucket, no configured backup schedules, and no on-demand backups. Recovery
+  remains untested and no recovery resource was created.
 - Plan 003R is still in progress. Live classifier promotion and production
   promotion remain blocked even if the infrastructure is otherwise healthy.
 
@@ -43,7 +51,9 @@ Fresh operator approval is required before each unchecked boundary:
 2. [x] Apply the reviewed IaC graph to staging.
 3. [x] Configure the staging API token and generate its single domain.
 4. [ ] Enable Telegram or another live external dependency in staging.
-5. [ ] Apply an IaC plan to production or deploy production code.
+5. [ ] Create a staging backup/schedule or disposable restore resource and run
+       a recovery or rollback drill.
+6. [ ] Apply an IaC plan to production or deploy production code.
 
 Planning and applying are separate approvals. Stop if a plan deletes or
 replaces a database or volume, adds a second migration command, exposes a
@@ -206,6 +216,10 @@ events for the then-missing schema. Its deployment remained healthy, the last
 deferral preceded successful migration completion, and no later deferral
 appeared in the bounded log tail. The first scheduled run is due at
 2026-08-28 03:17 UTC; it was not triggered manually.
+
+After commit `98b9507` auto-deployed, the worker emitted a safe heartbeat at
+2026-08-27 13:42 UTC. The combined checklist item remains open until the first
+cron completion is observed and repeated scheduling is proven idempotent.
 
 Bounded log examples:
 

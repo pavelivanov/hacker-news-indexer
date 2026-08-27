@@ -10,9 +10,28 @@ Record actual observations after the first drill. Initial targets for this
 personal service are RPO no greater than 24 hours and RTO no greater than four
 hours. Tighten them only after measured restores and cost review.
 
-Current status: **NOT TESTED — staging PostgreSQL exists and is healthy, but
-backup/PITR availability and a disposable restore drill have not been
-authorized or verified**.
+Current status: **PREFLIGHTED, NOT TESTED — staging PostgreSQL exists and is
+healthy, but PITR is disabled, no backup bucket is wired, and both the backup
+schedule and on-demand backup lists are empty. No backup or disposable restore
+drill has been authorized or created**.
+
+## Read-only recovery preflight
+
+Railway CLI `5.45.1` exposes PostgreSQL recovery status without printing the
+database URL. Resolve the project/environment first, then run:
+
+```sh
+railway status --json
+railway postgres pitr status --service postgres --environment staging --json
+railway postgres pitr schedule list --service postgres --environment staging --json
+railway postgres pitr backup list --service postgres --environment staging --json
+```
+
+The 2026-08-27 staging preflight returned `enabled=false`,
+`bucketWired=false`, an empty schedule list, and an empty backup list. These
+commands were read-only. Enabling PITR, setting a schedule, creating or locking
+a backup, and restoring into a sibling service are remote mutations that each
+require the recovery-drill authorization gate in `deploy.md`.
 
 ## Railway backup/PITR checklist
 
