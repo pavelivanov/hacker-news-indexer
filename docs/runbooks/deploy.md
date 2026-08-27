@@ -9,18 +9,22 @@ read-only planning, staging changes, and production changes.
 As of 2026-08-27:
 
 - Railway CLI `5.45.0` is installed and authenticated to the owner's workspace.
-- The checkout is linked to the empty `staging` environment (environment ID
-  suffix `62dc`) in `hacker-news-indexer` (project ID suffix `5328`). The
-  separate `production` environment (environment ID suffix `1bf3`) is also
-  empty.
+- The checkout is linked to `staging` (environment ID suffix `62dc`) in
+  `hacker-news-indexer` (project ID suffix `5328`). The environment contains
+  the private `postgres`, `api`, `worker`, and `scheduler` services plus ready
+  PostgreSQL and Telegram-session volumes. The separate `production`
+  environment (environment ID suffix `1bf3`) remains empty.
 - The branch through commit `8de3522` passed `npm run release:verify` twice from
   a clean worktree. Both runs included a clean nine-migration replay, 175 unit
   tests, 45 integration tests, evaluation/export gates, image inspection, and
   API/worker/scheduler container smokes.
-- The operator authorized empty-project and empty-staging-environment creation
-  plus read-only IaC planning. No service, database, volume, secret, domain, or
-  deployment has been created. `railway config apply`, all other staging
-  changes, and all production changes remain unauthorized.
+- The operator authorized and applied the reviewed five-create, zero-destroy
+  staging graph on 2026-08-27. Commit `0d669f4` deployed successfully to all
+  four services, the API pre-deploy applied all nine migrations, and Railway's
+  `/healthz` deployment gate passed on its injected port `8080`.
+- No public domain or application secret has been configured. Telegram and
+  classification remain disabled, protected API routes remain fail-closed,
+  and production remains untouched.
 - Plan 003R is still in progress. Live classifier promotion and production
   promotion remain blocked even if the infrastructure is otherwise healthy.
 
@@ -29,12 +33,13 @@ corresponding command and manual check have actually passed.
 
 ## Authorization gates
 
-Fresh operator approval is required before each of these boundaries:
+Fresh operator approval is required before each unchecked boundary:
 
-1. Create a Railway project or any service, environment, database, or volume.
-2. Apply an IaC plan to staging.
-3. Enable Telegram or another live external dependency in staging.
-4. Apply an IaC plan to production or deploy production code.
+1. [x] Create the Railway project and staging environment.
+2. [x] Apply the reviewed IaC graph to staging.
+3. [ ] Configure staging application secrets or generate the API domain.
+4. [ ] Enable Telegram or another live external dependency in staging.
+5. [ ] Apply an IaC plan to production or deploy production code.
 
 Planning and applying are separate approvals. Stop if a plan deletes or
 replaces a database or volume, adds a second migration command, exposes a
@@ -124,7 +129,7 @@ Run these steps only after the project-creation authorization gate:
 
 ### Redacted IaC plan summary
 
-Status: **STAGING REVIEWED READ-ONLY — NOT APPLIED**
+Status: **STAGING APPLIED — BASE SERVICES HEALTHY, DOMAIN/SECRETS DEFERRED**
 
 The 2026-08-27 09:59 UTC production plan is superseded. It contained an
 environment-derived API domain, but a staging context probe showed Railway CLI
@@ -139,18 +144,23 @@ duplicated environment selector.
 - Diff: five additions (`postgres`, `telegram-session`, `api`, `worker`, and
   `scheduler`), zero updates, and zero destroys. Diagnostics were empty.
 - Database/volume deletion or replacement count: zero.
-- Public-domain count: zero in IaC. After an approved apply creates `api`,
-  generate exactly one environment-scoped Railway domain on port `3000` with
-  `railway domain --service api --environment staging --port 3000 --json`.
+- Public-domain count: zero. Runtime evidence shows Railway injects `PORT=8080`;
+  after separate approval, generate exactly one environment-scoped API domain
+  with `railway domain --service api --environment staging --port 8080 --json`.
 - Pre-deploy migration count: one, `npm run db:migrate:deploy` on `api` only.
 - Start commands match the intended resource graph above. The scheduler cron is
   `17 3 * * *` and both Telegram and classification remain disabled.
 - Secret values were neither defined nor configured. Protected API routes
   therefore remain fail-closed until a separately approved staging secret step.
-- Expected monthly cost was not shown by the CLI plan and remains pending an
-  operator review before apply.
-- Operator decision: staging environment creation and this read-only plan were
-  authorized on 2026-08-27. No apply or domain approval was given.
+- Expected monthly cost was not shown by the CLI plan. The operator accepted
+  that uncertainty before apply; actual usage still needs monitoring.
+- Apply evidence: change-set suffix `0ae6` applied at 10:53 UTC. PostgreSQL,
+  API, worker, and scheduler deployments all reached `SUCCESS`; the two volumes
+  reached `READY`. Production still had zero service and volume instances in
+  the post-apply readback.
+- Operator decision: project/environment creation, read-only planning, and the
+  reviewed staging apply were authorized on 2026-08-27. Domain creation,
+  application secrets, live integrations, and production changes were not.
 
 The current Railway IaC beta plans resources only against the linked
 environment. The environment must be created and linked separately, and the
@@ -162,24 +172,31 @@ or complete project/service IDs into this repository.
 
 ## Staging rollout
 
-After staging apply approval:
+Current checklist:
 
-1. Apply exactly the reviewed plan without `--confirm-destructive`.
-2. Inspect `railway environment config --json` and `railway status --json`;
-   resolve names and IDs again.
-3. Generate one Railway domain for `api` on port `3000`; verify that no other
-   service has public networking.
-4. Deploy the exact release commit to staging.
-5. Read at most 200 build/deploy log lines per role. Search for errors and
-   expected role markers, never source bodies or secrets.
-6. Confirm `GET /healthz` returns `200` and `GET /readyz` returns `200`.
-7. Confirm an unauthenticated `/metrics` and `/v1/*` request is rejected.
-8. Confirm authenticated `/metrics` works and contains no labels or payloads
-   with private content.
-9. Confirm worker `worker_started` and `worker_heartbeat` events, one scheduler
-   `reconciliation_schedule_completed` event, and idempotent repeated scheduling.
-10. Keep Telegram and live classification disabled. A live ingestion request is
-    not part of this initial smoke.
+1. [x] Apply exactly the reviewed plan without destructive confirmation.
+2. [x] Read back environment configuration, service status, volumes, and
+       production isolation without exposing variable values.
+3. [x] Deploy commit `0d669f4`; all four staging deployments reached `SUCCESS`.
+4. [x] Apply all nine migrations once through the API pre-deploy command.
+5. [x] Pass Railway's API `/healthz` deployment gate on injected port `8080`.
+6. [x] Confirm the worker starts with Telegram and classification disabled.
+7. [ ] After separate approval, configure `APP_API_TOKEN`, generate one API
+       domain on port `8080`, and verify every other service remains private.
+8. [ ] Confirm public `GET /healthz` and `GET /readyz` return `200`.
+9. [ ] Confirm unauthenticated `/metrics` and `/v1/*` requests are rejected,
+       then verify authenticated `/metrics` contains no private labels or payloads.
+10. [ ] Observe a worker heartbeat and one scheduled
+        `reconciliation_schedule_completed` event, then prove repeated scheduling
+        is idempotent.
+11. [x] Keep Telegram, live classification, and automatic export disabled.
+
+During first provisioning, the worker began a few seconds before the API
+pre-deploy migration finished and emitted bounded `pipeline_job_claim_deferred`
+events for the then-missing schema. Its deployment remained healthy, the last
+deferral preceded successful migration completion, and no later deferral
+appeared in the bounded log tail. The first scheduled run is due at
+2026-08-28 03:17 UTC; it was not triggered manually.
 
 Bounded log examples:
 
@@ -199,6 +216,7 @@ Production remains blocked until all boxes are evidenced:
 
 - [x] Release verification passed twice from a clean commit.
 - [x] Staging IaC plan reviewed with no destructive resource change.
+- [x] Private staging base graph deployed; migrations and deployment health passed.
 - [ ] Staging soak covered at least one scheduled reconciliation cycle.
 - [ ] Bounded HN and Telegram staging checks passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.

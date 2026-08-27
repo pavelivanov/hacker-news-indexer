@@ -97,4 +97,6 @@ if Telegram's security guidance or the incident scope requires it.
 - **Session missing:** keep `TELEGRAM_ENABLED=false`; do not allow jobs to
   terminally fail while attempting ad-hoc login.
 
-Current persistence status: **NOT TESTED — Railway volume authorization pending**.
+Current persistence status: **NOT TESTED — the staging volume is mounted and
+`READY`, but no session has been uploaded and restart persistence has not been
+authorized or verified**.

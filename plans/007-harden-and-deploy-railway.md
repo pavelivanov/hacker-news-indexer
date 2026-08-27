@@ -121,6 +121,15 @@ For Telegram, create the session interactively on the operator's machine using a
 
 Apply IaC only after explicit approval. Deploy PostgreSQL/API/worker/scheduler to staging with classifier fixture/shadow mode, export disabled, and Telegram live ingestion disabled initially. Confirm migration, `/healthz`, `/readyz`, auth, worker heartbeat/lease recovery, scheduler idempotency, and bounded logs.
 
+**Execution note (2026-08-27):** The operator approved and applied the reviewed
+staging graph: five creates, zero updates, zero destroys. PostgreSQL, API,
+worker, and scheduler deployments reached `SUCCESS`; both volumes reached
+`READY`; all nine migrations applied through the API pre-deploy command; and
+Railway's `/healthz` deployment check passed. Railway injected `PORT=8080`, so
+the deferred API domain must target port `8080`, not the earlier local default
+of `3000`. No domain, application secret, live integration, production
+resource, or manual scheduler run was authorized or created.
+
 Then enable one external dependency at a time: HN live contract, Telegram bounded read, classifier shadow, and finally reviewed local publication. Never enable automatic export during staging rollout.
 
 **Verify**: service status healthy; bounded build/runtime logs show expected version/role and no secrets/source bodies; one bounded seed ingestion completes with exact counts and evaluation gates.
