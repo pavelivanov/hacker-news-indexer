@@ -130,6 +130,20 @@ the deferred API domain must target port `8080`, not the earlier local default
 of `3000`. No domain, application secret, live integration, production
 resource, or manual scheduler run was authorized or created.
 
+**Follow-up (2026-08-27):** The operator separately authorized
+`APP_API_TOKEN`, one staging API domain, and read-only smoke checks. The token
+was streamed through stdin to the API only; deployment suffix `fd3d` reached
+`SUCCESS`. Exactly one service domain became `ACTIVE` on port `8080`, all other
+roles remained private, and the bounded liveness/readiness/fail-closed
+auth/authenticated-metrics smoke passed without printing response bodies or
+secrets. Railway CLI `5.45.1` returned a generic create error despite creating
+the domain, so the runbook now requires readback before retrying.
+The CLI has no command for sealing an existing variable, and an attempted
+`isSealed` configuration patch was a no-op. Current Railway documentation
+requires the variable's dashboard three-dot menu. The operator completed that
+irreversible seal: API configuration retained the key, CLI variable readback
+omitted its value, and the post-seal authenticated smoke still passed.
+
 Then enable one external dependency at a time: HN live contract, Telegram bounded read, classifier shadow, and finally reviewed local publication. Never enable automatic export during staging rollout.
 
 **Verify**: service status healthy; bounded build/runtime logs show expected version/role and no secrets/source bodies; one bounded seed ingestion completes with exact counts and evaluation gates.
@@ -190,7 +204,7 @@ Deploy with a release summary, watch bounded logs/status, run authenticated smok
 
 - [x] `.railway/railway.ts` uses current supported IaC and plans the environment-independent base graph without destructive changes.
 - [x] Only API pre-deploy runs Prisma migrations.
-- [ ] Exactly one Railway domain is generated for API and no other staging service is public.
+- [x] Exactly one Railway domain is generated for API and no other staging service is public.
 - [ ] API, worker, scheduler, PostgreSQL, and Telegram session storage have minimum required access.
 - [ ] Staging external dependencies were enabled incrementally and all gates passed.
 - [ ] Backup restore and rollback were actually tested.
