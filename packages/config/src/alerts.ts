@@ -14,6 +14,7 @@ const KNOWN_DEPLOYMENT_STATUSES = new Set([
   "SUCCESS",
   "WAITING",
 ]);
+const WORKER_LIVENESS_GRACE_SECONDS = 180;
 
 export type OperationalAlertSeverity = "P2" | "P3";
 
@@ -156,10 +157,24 @@ export const evaluateOperationalAlerts = (
     "worker_heartbeat",
     now,
   );
-  if (workerHeartbeatAge === null || workerHeartbeatAge > 180) {
+  const workerStartAge = latestAgeSeconds(
+    snapshot.workerEvents,
+    "worker_started",
+    now,
+  );
+  const workerLivenessAge = [workerHeartbeatAge, workerStartAge]
+    .filter((age): age is number => age !== null)
+    .reduce<number | null>(
+      (youngest, age) => (youngest === null ? age : Math.min(youngest, age)),
+      null,
+    );
+  if (
+    workerLivenessAge === null ||
+    workerLivenessAge > WORKER_LIVENESS_GRACE_SECONDS
+  ) {
     add("worker_heartbeat_stale", "P2", "worker_heartbeat", {
       ageSeconds:
-        workerHeartbeatAge === null ? -1 : Math.round(workerHeartbeatAge),
+        workerLivenessAge === null ? -1 : Math.round(workerLivenessAge),
     });
   }
 

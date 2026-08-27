@@ -107,6 +107,53 @@ describe("operational alert policy", () => {
     );
   });
 
+  it("allows a worker startup grace without masking restart loops", () => {
+    const snapshot = healthySnapshot();
+    const recentStart = event("worker_started", {
+      timestamp: "2026-08-27T14:59:30.000Z",
+    });
+
+    expect(
+      evaluate({
+        ...snapshot,
+        workerEvents: [recentStart],
+      }).map((alert) => alert.code),
+    ).not.toContain("worker_heartbeat_stale");
+
+    const alerts = evaluate({
+      ...snapshot,
+      workerEvents: [
+        recentStart,
+        event("worker_started", {
+          timestamp: "2026-08-27T14:58:30.000Z",
+        }),
+        event("worker_started", {
+          timestamp: "2026-08-27T14:57:30.000Z",
+        }),
+      ],
+    });
+    expect(alerts.map((alert) => alert.code)).toContain("worker_restart_loop");
+    expect(alerts.map((alert) => alert.code)).not.toContain(
+      "worker_heartbeat_stale",
+    );
+  });
+
+  it("alerts when a worker never heartbeats after startup grace", () => {
+    const snapshot = healthySnapshot();
+    const alerts = evaluate({
+      ...snapshot,
+      workerEvents: [
+        event("worker_started", {
+          timestamp: "2026-08-27T14:56:59.000Z",
+        }),
+      ],
+    });
+
+    expect(alerts.map((alert) => alert.code)).toContain(
+      "worker_heartbeat_stale",
+    );
+  });
+
   it("alerts only after retryable failures become sustained", () => {
     const snapshot = healthySnapshot();
     const oneRetry = event("pipeline_job_finished", {

@@ -105,6 +105,15 @@ available; queue, lease, terminal, classification, export, review, and feed
 alert values were zero; and no alert fired. Scheduler enforcement was correctly
 disabled pending its first due run.
 
+A follow-up at 15:20 UTC overlapped the automatic deployment of merged commit
+`2dc3485`. The worker had started normally, but its first 60-second heartbeat
+was indexed just after the bounded log query, producing a false
+`worker_heartbeat_stale` P2. The policy now treats the most recent
+`worker_started` event as liveness during the same three-minute heartbeat grace
+window while still reporting three starts in ten minutes as a restart loop. A
+read-only recheck at 15:23 UTC passed with seven bounded worker events and no
+alerts.
+
 ### Railway native monitors and routing
 
 Current Railway documentation exposes Pro-plan CPU, RAM, disk, and network
