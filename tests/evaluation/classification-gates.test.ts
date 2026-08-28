@@ -7,6 +7,7 @@ interface EvaluationReport {
   readonly provider: string;
   readonly modelId: string;
   readonly promptVersion: string;
+  readonly decisionRouterVersion?: string;
   readonly mode: string;
   readonly split: string;
   readonly rows: number;
@@ -105,44 +106,59 @@ const expectAcceptanceGates = (report: EvaluationReport): void => {
 
 describe("classification evaluation gates", () => {
   it("benchmarks only the development split", async () => {
-    const report = await load("benchmark-fixture-v3.json");
+    const report = await load("benchmark-fixture-v4.json");
 
     expect(report).toMatchObject({
       mode: "benchmark",
-      reportVersion: 3,
+      reportVersion: 4,
+      promptVersion: "classification-prompt.v4",
       split: "development",
       rows: 69,
       terminalRuns: 69,
       activatedDecisions: 0,
       classificationCoverage: 1,
-      automaticCoverage: 55 / 69,
+      automaticCoverage: 53 / 69,
       automaticAccuracy: 1,
+      decisionRouterVersion: "decision-router.v1",
       stableGold: { rows: 65, macroF1: 1 },
     });
     expectAcceptanceGates(report);
   });
 
   it("passes the frozen 98-comment shadow replay without publication", async () => {
-    const report = await load("shadow-fixture-v3.json");
+    const report = await load("shadow-fixture-v4.json");
 
     expect(report).toMatchObject({
       mode: "shadow",
-      reportVersion: 3,
+      reportVersion: 4,
+      promptVersion: "classification-prompt.v4",
       split: "all",
       rows: 98,
       terminalRuns: 98,
       activatedDecisions: 0,
       classificationCoverage: 1,
       automaticAccuracy: 1,
-      automaticCoverage: 81 / 98,
+      automaticCoverage: 78 / 98,
+      decisionRouterVersion: "decision-router.v1",
       stableGold: { rows: 88, macroF1: 1 },
     });
     expectAcceptanceGates(report);
   });
 
+  it("preserves the pre-router fixture report as historical v3 evidence", async () => {
+    const report = await load("benchmark-fixture-v3.json");
+
+    expect(report).toMatchObject({
+      reportVersion: 3,
+      promptVersion: "classification-prompt.v3",
+      automaticCoverage: 55 / 69,
+    });
+    expect(report.decisionRouterVersion).toBeUndefined();
+  });
+
   it("keeps reports free of prompts, source documents, and provider output", async () => {
     const text = await readFile(
-      "evaluation/reports/shadow-fixture-v3.json",
+      "evaluation/reports/shadow-fixture-v4.json",
       "utf8",
     );
 
@@ -154,7 +170,7 @@ describe("classification evaluation gates", () => {
   });
 
   it("records non-sensitive per-case diagnostics for every development row", async () => {
-    const report = await load("benchmark-fixture-v3.json");
+    const report = await load("benchmark-fixture-v4.json");
 
     expect(report.cases).toHaveLength(69);
     expect(new Set(report.cases.map((entry) => entry.commentId)).size).toBe(69);

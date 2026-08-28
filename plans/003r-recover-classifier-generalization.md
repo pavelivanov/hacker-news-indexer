@@ -14,8 +14,9 @@
 - **Execution status**: IN PROGRESS — cycle locking, v1 terminal hashes,
   no-rerun enforcement, model non-activation, authenticated manual decision
   review, the fresh immutable v2 split, blind annotation validation, the
-  dual-kappa comparison gate, and fail-closed gold finalization are
-  implemented. Independent v2 annotation remains.
+  dual-kappa comparison gate, fail-closed gold finalization, and the inactive
+  two-stage application router are implemented. Independent v2 annotation and
+  development evaluation remain.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -133,6 +134,22 @@ v1 holdout cases.
 **Verify**: table-driven boundary tests cover all stage transitions; every
 uncertain path is inactive and review-required; fixture evaluation remains
 fully grounded with zero invented URLs.
+
+**Structural implementation (2026-08-28):** `classification-prompt.v4` makes
+the existing material-relevance and retained-class fields an explicit ordered
+Stage A / Stage B protocol. `decision-router.v1` independently cross-checks the
+two stages, discards extraction and normalizes the result to `REVIEW` when the
+signals conflict, and derives mandatory review for missing or ambiguous URLs,
+root-only discoveries, confidence below the fixed 0.95 automatic threshold,
+and every existing model-reported risk signal. Provider output remains in the
+run audit while only the routed output may become an inactive decision. The
+router cannot activate a decision and every model result still receives the
+unpromoted-provider review gate.
+
+This compatibility set was designed from the pre-existing rubric and safety
+policy, not from any v1 holdout case. It remains unselected and cannot be
+quality-evaluated or promoted until real v2 annotations produce `gold-v2`;
+therefore Step 3 is not yet complete.
 
 ### Step 4: Select economically after accuracy
 

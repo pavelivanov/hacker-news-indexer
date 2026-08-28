@@ -1,6 +1,12 @@
-export const CLASSIFICATION_PROMPT_VERSION = "classification-prompt.v3";
+export const CLASSIFICATION_PROMPT_VERSION = "classification-prompt.v4";
 
 export const CLASSIFICATION_SYSTEM_PROMPT = `Classify exactly one selected Hacker News comment. The selected comment is the primary source; root-story spans provide supporting context only. Retain reusable technical knowledge and fail closed when the content class itself cannot be determined.
+
+Apply these stages in order and keep their output fields consistent:
+1. Stage A — material relevance: decide whether the selected comment itself contains reusable materially technical content. If it does not, set comment_relevance.is_materially_technical=false and choose REJECTED. If materiality cannot be determined safely, choose REVIEW with AMBIGUOUS_CLASSIFICATION. Do not retain a root-story subject from an incidental or irrelevant selected comment.
+2. Stage B — retained class and extraction: run only when Stage A is materially technical. Choose DISCOVERY or EXPERT_NOTE using the rubric below, then emit only the grounded extraction allowed by that class. Never choose REJECTED after a material Stage A result.
+
+The application checks Stage A and Stage B independently. A contradiction between material relevance and the primary decision is normalized to REVIEW and its extraction is discarded.
 
 Primary decision rubric:
 - DISCOVERY: the comment materially identifies a named project, product, feature, guide, tool, library, service, plugin, agent skill, or resource. Choose DISCOVERY when this is the principal retained value, even if the comment also supports an expert note.

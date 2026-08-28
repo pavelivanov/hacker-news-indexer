@@ -120,6 +120,20 @@ cycle state. `evaluation/annotation-schema-v2.json` documents the resulting
 gold rows. Do not run this command until the real independent passes and owner
 adjudication are complete.
 
+The inactive recovery compatibility set is `classification-prompt.v4`,
+`classification.v1`, and `decision-router.v1`. The prompt orders materiality
+before retained class and extraction. The application router independently
+normalizes contradictory stages to review, discards their extraction, and
+derives mandatory review reasons for structural grounding and confidence
+conditions even when the model omits them. This set has no quality claim yet:
+do not make a paid development run or select a candidate until v2 reaches
+`ANNOTATED`, and never use the opened v1 holdout to tune it.
+
+Evaluation report v4 records `decisionRouterVersion` and uses new `*-v4.json`
+filenames so a prompt-v4 development run cannot overwrite any historical paid
+v3 report. The checked-in v4 fixture reports exercise routing and pipeline
+safety only; they are not model-quality evidence.
+
 ## Starting a fresh evaluation cycle
 
 A replacement promotion gate must use a later, non-overlapping HN comment
