@@ -72,6 +72,25 @@ Evaluation cycle manifests pin source, annotation, split, candidate, and result
 hashes, and live holdout mode refuses an already-opened cycle before making a
 provider request.
 
+### Inactive recovery compatibility set
+
+For fresh cycle v2, define but do not promote `classification-prompt.v4` with
+`classification.v1` and `decision-router.v1`. Prompt v4 makes material
+relevance Stage A and permits retained-class/extraction Stage B only for a
+material result. The deterministic application router cross-checks both
+stages, normalizes contradictions to `REVIEW`, discards contradictory
+extraction, and derives mandatory review for missing or ambiguous canonical
+URLs, root-only discoveries, confidence below 0.95, and existing risk signals.
+The original provider output remains auditable separately from the routed
+decision.
+
+This design follows the existing annotation rubric and conservative review
+policy; it does not encode any v1 holdout case or diagnostic. It is not a
+provider selection and has not earned a quality claim. Real independent v2
+annotation and development-only evaluation must precede any paid comparison,
+candidate freeze, or holdout authorization. `CLASSIFIER_ENABLED` remains
+`false`, and the unpromoted-model review gate still applies to every result.
+
 ## Measurements
 
 All model-selection reports exercise only the 69-row development split. The

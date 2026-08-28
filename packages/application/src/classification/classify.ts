@@ -23,6 +23,7 @@ import {
   CLASSIFICATION_PROMPT_VERSION,
   CLASSIFICATION_SYSTEM_PROMPT,
 } from "./prompt.js";
+import { routeClassificationDecision } from "./decision-router.js";
 import {
   validateClassifierOutput,
   type ClassifierOutputValidationErrorCode,
@@ -230,7 +231,10 @@ export const createClassifyComment =
         };
       }
 
-      const output = validated.output;
+      const providerOutput = validated.output;
+      const route = routeClassificationDecision(providerOutput);
+      const output = route.output;
+      const routedEvidenceSpanIds = new Set(route.evidenceSpanIds);
       const reviewPolicy = reviewPolicyFromReasons([
         ...UNPROMOTED_MODEL_REVIEW_DECISION.reasons,
         ...output.review.reasons.map(outputReviewReason),
@@ -245,7 +249,7 @@ export const createClassifyComment =
         provider: response.provider,
         modelId: response.modelId,
         outputHash: hasher.sha256(response.rawOutput),
-        providerOutput: output,
+        providerOutput,
         latencyMs: responses.reduce(
           (total, value) => total + value.latencyMs,
           0,
@@ -267,14 +271,16 @@ export const createClassifyComment =
         reviewRequired: reviewPolicy.required,
         validatedOutput: output,
         manualOverrideOfId: null,
-        evidenceSpans: validated.evidenceSpans.map((span) => ({
-          spanId: span.id,
-          sourceDocument: span.documentId,
-          origin: span.origin,
-          start: span.start,
-          end: span.end,
-          textHash: span.textHash,
-        })),
+        evidenceSpans: validated.evidenceSpans
+          .filter((span) => routedEvidenceSpanIds.has(span.id))
+          .map((span) => ({
+            spanId: span.id,
+            sourceDocument: span.documentId,
+            origin: span.origin,
+            start: span.start,
+            end: span.end,
+            textHash: span.textHash,
+          })),
       });
       if (reviewQueue !== null) {
         await reviewQueue.openPolicyReview({

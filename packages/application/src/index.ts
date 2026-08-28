@@ -34,6 +34,7 @@ export * from "./classification/evaluation-metrics.js";
 export * from "./classification/evaluation-cycle.js";
 export * from "./classification/annotation-packet.js";
 export * from "./classification/annotation-adjudication.js";
+export * from "./classification/decision-router.js";
 export * from "./classification/load-input.js";
 export * from "./classification/prompt.js";
 export * from "./classification/validate-output.js";

@@ -1,0 +1,2270 @@
+{
+  "reportVersion": 4,
+  "mode": "shadow",
+  "corpus": "evaluation/gold-v1.jsonl",
+  "corpusSha256": "7d23a114c404e30858a1b9c3d2ab7f66349ec41a3cdbf5405dd5fcd0447a95ce",
+  "provider": "fixture",
+  "modelId": "fixture-replay-v1",
+  "modelConfigId": "fixture-replay-v1",
+  "promptVersion": "classification-prompt.v4",
+  "promptHash": "2c4504a14bc62e55e08dcb54bc754e2016867e9b5ed7f20b4d2f75937dcf6487",
+  "schemaVersion": "classification.v1",
+  "decisionRouterVersion": "decision-router.v1",
+  "split": "all",
+  "rows": 98,
+  "terminalRuns": 98,
+  "activatedDecisions": 0,
+  "configuration": {
+    "endpoint": "fixture",
+    "reasoningEffort": null,
+    "structuredOutput": "fixture",
+    "toolsEnabled": false,
+    "parallelToolCalls": false,
+    "requestStorage": false,
+    "timeoutMs": 45000,
+    "concurrency": 1
+  },
+  "confusionMatrix": {
+    "DISCOVERY": {
+      "DISCOVERY": 13,
+      "EXPERT_NOTE": 0,
+      "REJECTED": 0,
+      "REVIEW": 0,
+      "INVALID": 0
+    },
+    "EXPERT_NOTE": {
+      "DISCOVERY": 0,
+      "EXPERT_NOTE": 27,
+      "REJECTED": 0,
+      "REVIEW": 0,
+      "INVALID": 0
+    },
+    "REJECTED": {
+      "DISCOVERY": 0,
+      "EXPERT_NOTE": 0,
+      "REJECTED": 58,
+      "REVIEW": 0,
+      "INVALID": 0
+    }
+  },
+  "classMetrics": {
+    "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
+    "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
+    "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+  },
+  "macroF1": 1,
+  "overallClassMetrics": {
+    "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
+    "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
+    "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+  },
+  "overallMacroF1": 1,
+  "classifiedRows": 98,
+  "abstainedRows": 0,
+  "classificationCoverage": 1,
+  "classifiedAccuracy": 1,
+  "automaticRows": 78,
+  "automaticCoverage": 0.7959183673469388,
+  "automaticAccuracy": 1,
+  "stableGold": {
+    "rows": 88,
+    "confusionMatrix": {
+      "DISCOVERY": {
+        "DISCOVERY": 10,
+        "EXPERT_NOTE": 0,
+        "REJECTED": 0,
+        "REVIEW": 0,
+        "INVALID": 0
+      },
+      "EXPERT_NOTE": {
+        "DISCOVERY": 0,
+        "EXPERT_NOTE": 24,
+        "REJECTED": 0,
+        "REVIEW": 0,
+        "INVALID": 0
+      },
+      "REJECTED": {
+        "DISCOVERY": 0,
+        "EXPERT_NOTE": 0,
+        "REJECTED": 54,
+        "REVIEW": 0,
+        "INVALID": 0
+      }
+    },
+    "classMetrics": {
+      "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
+      "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
+      "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "macroF1": 1,
+    "overallClassMetrics": {
+      "DISCOVERY": { "precision": 1, "recall": 1, "f1": 1 },
+      "EXPERT_NOTE": { "precision": 1, "recall": 1, "f1": 1 },
+      "REJECTED": { "precision": 1, "recall": 1, "f1": 1 }
+    },
+    "overallMacroF1": 1,
+    "classifiedRows": 88,
+    "abstainedRows": 0,
+    "classificationCoverage": 1,
+    "classifiedAccuracy": 1,
+    "extraction": {
+      "expectedDiscoveries": 10,
+      "predictedDiscoveries": 10,
+      "matchedDiscoveries": 10,
+      "discoveryExtractionPrecision": 1,
+      "discoveryExtractionRecall": 1,
+      "matchedEvidenceItems": 40,
+      "expectedEvidenceItems": 40,
+      "goldEvidenceOriginAgreement": 1,
+      "goldEvidenceOriginCoverage": 1,
+      "predictedUrlIds": 14,
+      "expectedUrlIds": 14,
+      "correctUrlIds": 14,
+      "urlGroundingPrecision": 1,
+      "urlGroundingRecall": 1
+    }
+  },
+  "discoveryPrecision": 1,
+  "expertNotePrecision": 1,
+  "extraction": {
+    "expectedDiscoveries": 13,
+    "predictedDiscoveries": 13,
+    "matchedDiscoveries": 13,
+    "discoveryExtractionPrecision": 1,
+    "discoveryExtractionRecall": 1,
+    "matchedEvidenceItems": 49,
+    "expectedEvidenceItems": 49,
+    "goldEvidenceOriginAgreement": 1,
+    "goldEvidenceOriginCoverage": 1,
+    "predictedUrlIds": 16,
+    "expectedUrlIds": 16,
+    "correctUrlIds": 16,
+    "urlGroundingPrecision": 1,
+    "urlGroundingRecall": 1
+  },
+  "urlGroundingPrecision": 1,
+  "urlGroundingRecall": 1,
+  "inventedUrlCount": 0,
+  "evidenceOriginAccuracy": 1,
+  "goldEvidenceOriginAgreement": 1,
+  "goldEvidenceOriginCoverage": 1,
+  "spanValidation": 1,
+  "schemaValidRate": 1,
+  "applicationValidRate": 1,
+  "reviewRate": 0.20408163265306123,
+  "reviewRouting": {
+    "truePositive": 17,
+    "falsePositive": 3,
+    "falseNegative": 0,
+    "trueNegative": 78,
+    "precision": 0.85,
+    "recall": 1,
+    "f1": 0.9189189189189189
+  },
+  "latencyMs": { "p50": 1, "p95": 1 },
+  "usage": {
+    "accountingVersion": 2,
+    "runs": 102,
+    "inputTokens": 0,
+    "cachedInputTokens": 0,
+    "cacheWriteInputTokens": 0,
+    "uncachedInputTokens": null,
+    "outputTokens": 0,
+    "inputTokenBreakdownComplete": false,
+    "outputTokenUsageComplete": false,
+    "tokenUsageComplete": false,
+    "main": {
+      "runs": 98,
+      "inputTokens": 0,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 0,
+      "uncachedInputTokens": null,
+      "outputTokens": 0,
+      "inputTokenBreakdownComplete": false,
+      "outputTokenUsageComplete": false,
+      "tokenUsageComplete": false
+    },
+    "adversarial": {
+      "runs": 4,
+      "inputTokens": 0,
+      "cachedInputTokens": 0,
+      "cacheWriteInputTokens": 0,
+      "uncachedInputTokens": null,
+      "outputTokens": 0,
+      "inputTokenBreakdownComplete": false,
+      "outputTokenUsageComplete": false,
+      "tokenUsageComplete": false
+    },
+    "pricing": null,
+    "estimatedUsd": null,
+    "estimatedAllInputUncachedUsd": null,
+    "estimatedUpperBoundUsd": null,
+    "estimatedUpperBoundAssumesHighestPublishedInputRate": true,
+    "estimateIncludesAdversarialCalls": true
+  },
+  "failures": {},
+  "adversarial": {
+    "cases": 4,
+    "terminalRuns": 4,
+    "failures": 0,
+    "toolActions": 0,
+    "networkActions": 0
+  },
+  "cases": [
+    {
+      "commentId": 49348358,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["LEGAL_RECOMMENDATION"],
+      "expectedReviewFlags": ["LEGAL_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49348450,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49350308,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49350799,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49353104,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49353141,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49353539,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49354775,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49355650,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49356163,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49356976,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49357415,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49360220,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49361052,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "GrapheneOS",
+            "predictedName": "GrapheneOS",
+            "expectedSubjectType": "PRODUCT",
+            "predictedSubjectType": "PRODUCT",
+            "expectedUrlCandidateIds": ["url:0"],
+            "predictedUrlCandidateIds": ["url:0"],
+            "correctUrlCandidateIds": ["url:0"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49361132,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["UNAVAILABLE_CONTENT"],
+      "expectedReviewFlags": ["UNAVAILABLE_CONTENT"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49362986,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49363352,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49363671,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49363706,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49364136,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49364238,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49366396,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "OpenRouter",
+            "predictedName": "OpenRouter",
+            "expectedSubjectType": "SERVICE",
+            "predictedSubjectType": "SERVICE",
+            "expectedUrlCandidateIds": ["url:0"],
+            "predictedUrlCandidateIds": ["url:0"],
+            "correctUrlCandidateIds": ["url:0"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49366580,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["AMBIGUOUS_CANONICAL_URL"],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "uscale algorithm",
+            "predictedName": "uscale algorithm",
+            "expectedSubjectType": "FEATURE",
+            "predictedSubjectType": "FEATURE",
+            "expectedUrlCandidateIds": ["url:2", "url:0", "url:1"],
+            "predictedUrlCandidateIds": ["url:2", "url:0", "url:1"],
+            "correctUrlCandidateIds": ["url:2", "url:0", "url:1"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49367035,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49367354,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49367810,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["LEGAL_RECOMMENDATION"],
+      "expectedReviewFlags": ["LEGAL_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49369163,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["LEGAL_RECOMMENDATION", "SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": [
+        "LEGAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION"
+      ],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49370357,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49371925,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "Flight Simulator map",
+            "predictedName": "Flight Simulator map",
+            "expectedSubjectType": "RESOURCE",
+            "predictedSubjectType": "RESOURCE",
+            "expectedUrlCandidateIds": ["url:0"],
+            "predictedUrlCandidateIds": ["url:0"],
+            "correctUrlCandidateIds": ["url:0"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49372025,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["MISSING_CANONICAL_URL", "AMBIGUOUS_CANONICAL_URL"],
+      "expectedReviewFlags": ["AMBIGUOUS_CANONICAL_URL"],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "Principles of AI Use",
+            "predictedName": "Principles of AI Use",
+            "expectedSubjectType": "GUIDE",
+            "predictedSubjectType": "GUIDE",
+            "expectedUrlCandidateIds": [],
+            "predictedUrlCandidateIds": [],
+            "correctUrlCandidateIds": [],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49372945,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49372995,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49375609,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49376272,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["LOW_CONFIDENCE"],
+      "expectedReviewFlags": ["LOW_CONFIDENCE"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49376834,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49376987,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49377240,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49377553,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49379179,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49379412,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["MEDICAL_RECOMMENDATION"],
+      "expectedReviewFlags": ["MEDICAL_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49379781,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49380334,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49380602,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49380648,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49381236,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49381689,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49382571,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS_OVERRIDDEN"
+    },
+    {
+      "commentId": 49382737,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49383354,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49384354,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49384447,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49384928,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49388070,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["AMBIGUOUS_CANONICAL_URL", "LEGAL_RECOMMENDATION"],
+      "expectedReviewFlags": ["LEGAL_RECOMMENDATION"],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "Project Ocean",
+            "predictedName": "Project Ocean",
+            "expectedSubjectType": "PROJECT",
+            "predictedSubjectType": "PROJECT",
+            "expectedUrlCandidateIds": ["url:0", "url:1", "url:2"],
+            "predictedUrlCandidateIds": ["url:0", "url:1", "url:2"],
+            "correctUrlCandidateIds": ["url:0", "url:1", "url:2"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49388526,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49388910,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "Kagi",
+            "predictedName": "Kagi",
+            "expectedSubjectType": "PRODUCT",
+            "predictedSubjectType": "PRODUCT",
+            "expectedUrlCandidateIds": ["url:0"],
+            "predictedUrlCandidateIds": ["url:0"],
+            "correctUrlCandidateIds": ["url:0"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49389170,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49389182,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49389372,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49389738,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49390842,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49391720,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49391865,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49391973,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["MISSING_CANONICAL_URL"],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "NickelMenu",
+            "predictedName": "NickelMenu",
+            "expectedSubjectType": "PLUGIN",
+            "predictedSubjectType": "PLUGIN",
+            "expectedUrlCandidateIds": [],
+            "predictedUrlCandidateIds": [],
+            "correctUrlCandidateIds": [],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49392339,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49392826,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": [
+        "LEGAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE"
+      ],
+      "expectedReviewFlags": [
+        "DESTRUCTIVE_OR_EVASION_ADVICE",
+        "LEGAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION"
+      ],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49392888,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49393076,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49393422,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49393603,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["MISSING_CANONICAL_URL", "SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "omp",
+            "predictedName": "omp",
+            "expectedSubjectType": "TOOL",
+            "predictedSubjectType": "TOOL",
+            "expectedUrlCandidateIds": [],
+            "predictedUrlCandidateIds": [],
+            "correctUrlCandidateIds": [],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49395024,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": [
+        "LEGAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE"
+      ],
+      "expectedReviewFlags": [
+        "DESTRUCTIVE_OR_EVASION_ADVICE",
+        "LEGAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION"
+      ],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49395071,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49395998,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49396801,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["LEGAL_RECOMMENDATION", "SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": [
+        "LEGAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION"
+      ],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49397785,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49397823,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49398416,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49398422,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49398678,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49398764,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49398869,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49400071,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "remote MCP server",
+            "predictedName": "remote MCP server",
+            "expectedSubjectType": "FEATURE",
+            "predictedSubjectType": "FEATURE",
+            "expectedUrlCandidateIds": ["url:0"],
+            "predictedUrlCandidateIds": ["url:0"],
+            "correctUrlCandidateIds": ["url:0"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49400145,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49400901,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49401019,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49401179,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "milktea",
+            "predictedName": "milktea",
+            "expectedSubjectType": "LIBRARY",
+            "predictedSubjectType": "LIBRARY",
+            "expectedUrlCandidateIds": ["url:0"],
+            "predictedUrlCandidateIds": ["url:0"],
+            "correctUrlCandidateIds": ["url:0"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49401215,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49401875,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "23Labs Hackathon",
+            "predictedName": "23Labs Hackathon",
+            "expectedSubjectType": "RESOURCE",
+            "predictedSubjectType": "RESOURCE",
+            "expectedUrlCandidateIds": ["url:0"],
+            "predictedUrlCandidateIds": ["url:0"],
+            "correctUrlCandidateIds": ["url:0"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49401913,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49401919,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS_OVERRIDDEN"
+    },
+    {
+      "commentId": 49402424,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49402473,
+      "expected": "DISCOVERY",
+      "predicted": "DISCOVERY",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["AMBIGUOUS_CANONICAL_URL"],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 1,
+      "predictedDiscoveryCount": 1,
+      "discoveryDiagnostics": {
+        "matches": [
+          {
+            "expectedName": "Hister",
+            "predictedName": "Hister",
+            "expectedSubjectType": "PROJECT",
+            "predictedSubjectType": "PROJECT",
+            "expectedUrlCandidateIds": ["url:2", "url:0", "url:1"],
+            "predictedUrlCandidateIds": ["url:2", "url:0", "url:1"],
+            "correctUrlCandidateIds": ["url:2", "url:0", "url:1"],
+            "missingUrlCandidateIds": [],
+            "unexpectedUrlCandidateIds": []
+          }
+        ],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49403193,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49403412,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49403620,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49403945,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "DISAGREEMENT_ADJUDICATED"
+    },
+    {
+      "commentId": 49406822,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49407075,
+      "expected": "REJECTED",
+      "predicted": "REJECTED",
+      "failureCode": null,
+      "reviewRequired": false,
+      "reviewReasons": [],
+      "expectedReviewFlags": [],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": false,
+      "predictedExpertNote": false,
+      "goldStatus": "CONSENSUS"
+    },
+    {
+      "commentId": 49409002,
+      "expected": "EXPERT_NOTE",
+      "predicted": "EXPERT_NOTE",
+      "failureCode": null,
+      "reviewRequired": true,
+      "reviewReasons": ["SECURITY_RECOMMENDATION"],
+      "expectedReviewFlags": ["SECURITY_RECOMMENDATION"],
+      "expectedDiscoveryCount": 0,
+      "predictedDiscoveryCount": 0,
+      "discoveryDiagnostics": {
+        "matches": [],
+        "unmatchedExpected": [],
+        "unmatchedPredicted": []
+      },
+      "expectedExpertNote": true,
+      "predictedExpertNote": true,
+      "goldStatus": "CONSENSUS"
+    }
+  ],
+  "acceptance": {
+    "stableGoldMacroF1": true,
+    "classificationCoverage": true,
+    "stableGoldDiscoveryPrecision": true,
+    "stableGoldExpertNotePrecision": true,
+    "stableGoldUrlGroundingPrecision": true,
+    "inventedUrlCount": true,
+    "evidenceOriginAccuracy": true,
+    "spanValidation": true,
+    "schemaValidRate": true,
+    "applicationValidRate": true,
+    "adversarialToolAndNetworkActions": true,
+    "latencyP95": true
+  },
+  "passed": true
+}

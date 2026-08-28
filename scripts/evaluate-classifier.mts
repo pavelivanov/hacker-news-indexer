@@ -16,6 +16,7 @@ import {
   calculateClassificationMetrics,
   calculateExtractionMetrics,
   assertEvaluationHoldoutMayOpen,
+  CLASSIFICATION_DECISION_ROUTER_VERSION,
   CLASSIFICATION_PROMPT_VERSION,
   CLASSIFICATION_SYSTEM_PROMPT,
   ClassificationExecutionError,
@@ -51,7 +52,7 @@ import type {
 type PrimaryClass = EvaluationPrimaryClass;
 type PrimaryPrediction = EvaluationPrediction;
 type EvidenceOrigin = "COMMENT" | "ROOT_STORY" | "BOTH";
-const REPORT_VERSION = 3;
+const REPORT_VERSION = 4;
 
 interface GoldSpan {
   readonly id: string;
@@ -511,6 +512,8 @@ if (provider !== "fixture" && mode !== "benchmark") {
       classifier.modelConfigId ||
     (benchmark as Record<string, unknown>)["promptVersion"] !==
       CLASSIFICATION_PROMPT_VERSION ||
+    (benchmark as Record<string, unknown>)["decisionRouterVersion"] !==
+      CLASSIFICATION_DECISION_ROUTER_VERSION ||
     (benchmark as Record<string, unknown>)["promptHash"] !==
       sha256(CLASSIFICATION_SYSTEM_PROMPT) ||
     (benchmark as Record<string, unknown>)["passed"] !== true
@@ -1059,6 +1062,7 @@ const report = {
   promptVersion: repository.runInputs[0]?.promptVersion,
   promptHash: repository.runInputs[0]?.promptHash,
   schemaVersion: repository.runInputs[0]?.schemaVersion,
+  decisionRouterVersion: CLASSIFICATION_DECISION_ROUTER_VERSION,
   split:
     mode === "benchmark"
       ? "development"

@@ -46,7 +46,7 @@ const boundedInput = buildClassifierInput({
 const validOutput = {
   schema_version: "classification.v1",
   primary_decision: "EXPERT_NOTE",
-  decision_confidence: 0.94,
+  decision_confidence: 0.99,
   comment_relevance: {
     is_materially_technical: true,
     reason: "The comment explains an implementation property.",
@@ -62,7 +62,7 @@ const validOutput = {
     evidence_span_ids: ["span:0"],
     related_subject_names: ["AcmeDB"],
     qualifiers: [],
-    confidence: 0.92,
+    confidence: 0.99,
   },
   review: { required: false, reasons: [] },
 } as const;
@@ -256,6 +256,80 @@ describe("classify comment", () => {
           reasons: ["LEGAL_RECOMMENDATION", "UNPROMOTED_MODEL_DECISION"],
           priority: "HIGH",
           priorityScore: 75,
+        },
+      },
+    ]);
+  });
+
+  it("persists cross-stage contradictions only as bounded review decisions", async () => {
+    const conflictingOutput = {
+      ...validOutput,
+      primary_decision: "DISCOVERY",
+      comment_relevance: {
+        is_materially_technical: false,
+        reason: "The materiality signal conflicts with the retained class.",
+        evidence_span_ids: ["span:0"],
+      },
+      discoveries: [
+        {
+          subject_type: "PROJECT",
+          name: "AcmeDB",
+          aliases: [],
+          description_claim: "A database with an append-only log.",
+          evidence_origin: "COMMENT",
+          evidence_span_ids: ["span:0"],
+          url_candidate_ids: [],
+          url_grounding: "NONE",
+          root_story_only: false,
+          confidence: 0.99,
+        },
+      ],
+      expert_note: null,
+    } as const;
+    const classifier = new FixtureClassifier({
+      outputs: new Map([[Number(commentId), conflictingOutput]]),
+    });
+    const repository = new MemoryClassificationRepository();
+    const openedReviews: unknown[] = [];
+
+    const result = await createClassifyComment(classifier, repository, hasher, {
+      openPolicyReview: (input) => {
+        openedReviews.push(input);
+        return Promise.resolve();
+      },
+    })({ commentId, boundedInput });
+
+    expect(result).toMatchObject({
+      kind: "DECISION",
+      output: {
+        primary_decision: "REVIEW",
+        comment_relevance: { is_materially_technical: false },
+        discoveries: [],
+        expert_note: null,
+        review: {
+          required: true,
+          reasons: ["AMBIGUOUS_CLASSIFICATION"],
+        },
+      },
+    });
+    expect(repository.runs[0]).toMatchObject({
+      status: "REVIEW",
+      providerOutput: { primary_decision: "DISCOVERY" },
+    });
+    expect(repository.decisions[0]).toMatchObject({
+      primaryDecision: "REVIEW",
+      materiallyTechnical: false,
+      reviewRequired: true,
+      validatedOutput: {
+        primary_decision: "REVIEW",
+        discoveries: [],
+      },
+    });
+    expect(repository.decisions[0]?.evidenceSpans).toHaveLength(1);
+    expect(openedReviews).toMatchObject([
+      {
+        policy: {
+          reasons: ["AMBIGUOUS_CLASSIFICATION", "UNPROMOTED_MODEL_DECISION"],
         },
       },
     ]);
