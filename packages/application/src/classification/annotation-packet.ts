@@ -5,6 +5,9 @@ import type { EvaluationPrimaryClass } from "./evaluation-metrics.js";
 export const EVALUATION_ANNOTATION_PACKET_SCHEMA_VERSION =
   "annotation-packet.v1";
 export const EVALUATION_ANNOTATION_PASS_SCHEMA_VERSION = "annotation-pass.v2";
+export const EVALUATION_ADJUDICATION_PACKET_SCHEMA_VERSION =
+  "annotation-adjudication-packet.v1";
+export const MINIMUM_ANNOTATION_COHENS_KAPPA = 0.75;
 
 export type EvaluationAnnotatorId = "A" | "B";
 export type EvaluationMaterialRelevance =
@@ -77,7 +80,7 @@ interface AnnotationExpertNote {
   readonly qualifiers: readonly string[];
 }
 
-interface AnnotationPassRow {
+export interface EvaluationAnnotationPassRow {
   readonly schemaVersion: typeof EVALUATION_ANNOTATION_PASS_SCHEMA_VERSION;
   readonly cycleId: string;
   readonly commentId: number;
@@ -91,6 +94,29 @@ interface AnnotationPassRow {
     readonly id: EvaluationAnnotatorId;
     readonly method: string;
   };
+}
+
+export interface EvaluationAnnotationDecisionDisagreement {
+  readonly commentId: number;
+  readonly materialRelevance: {
+    readonly annotatorA: EvaluationMaterialRelevance;
+    readonly annotatorB: EvaluationMaterialRelevance;
+  };
+  readonly primaryClass: {
+    readonly annotatorA: EvaluationPrimaryClass;
+    readonly annotatorB: EvaluationPrimaryClass;
+  };
+  readonly annotatorA: EvaluationAnnotationPassRow;
+  readonly annotatorB: EvaluationAnnotationPassRow;
+}
+
+export interface EvaluationAnnotationComparison {
+  readonly rows: number;
+  readonly exactDecisionAgreementRows: number;
+  readonly primaryClassKappa: number;
+  readonly materialRelevanceKappa: number;
+  readonly passed: boolean;
+  readonly disagreements: readonly EvaluationAnnotationDecisionDisagreement[];
 }
 
 const PRIMARY_CLASSES = new Set<EvaluationPrimaryClass>([
@@ -618,7 +644,7 @@ const parsePassRow = (
       EvaluationAnnotationSourceDocument
     >;
   },
-): AnnotationPassRow => {
+): EvaluationAnnotationPassRow => {
   const location = `row ${index + 1}`;
   const item = object(value, location);
   exactKeys(
@@ -761,13 +787,13 @@ const parsePassRow = (
   };
 };
 
-export const validateEvaluationAnnotationPass = (input: {
+export const parseEvaluationAnnotationPass = (input: {
   readonly cycleId: string;
   readonly annotatorId: EvaluationAnnotatorId;
   readonly documents: readonly EvaluationAnnotationSourceDocument[];
   readonly expectedCommentIds: readonly number[];
   readonly rows: readonly unknown[];
-}): EvaluationAnnotationPassSummary => {
+}): EvaluationAnnotationPassRow[] => {
   assertCycleId(input.cycleId);
   assertSourceSet(input.documents, input.expectedCommentIds);
   const sourceById = new Map(
@@ -788,9 +814,20 @@ export const validateEvaluationAnnotationPass = (input: {
   ) {
     fail("Annotation pass must contain every frozen comment exactly once");
   }
+  return rows;
+};
+
+export const validateEvaluationAnnotationPass = (input: {
+  readonly cycleId: string;
+  readonly annotatorId: EvaluationAnnotatorId;
+  readonly documents: readonly EvaluationAnnotationSourceDocument[];
+  readonly expectedCommentIds: readonly number[];
+  readonly rows: readonly unknown[];
+}): EvaluationAnnotationPassSummary => {
+  const rows = parseEvaluationAnnotationPass(input);
   return {
     rows: rows.length,
-    uniqueCommentIds: new Set(rowIds).size,
+    uniqueCommentIds: new Set(rows.map((row) => row.commentId)).size,
     materialRelevance: Object.fromEntries(
       [...MATERIAL_RELEVANCE].map((value) => [
         value,
@@ -805,4 +842,131 @@ export const validateEvaluationAnnotationPass = (input: {
     ) as Record<EvaluationPrimaryClass, number>,
     reviewRows: rows.filter((row) => row.reviewFlags.length > 0).length,
   };
+};
+
+const cohensKappa = <T extends string>(
+  left: readonly T[],
+  right: readonly T[],
+  labels: readonly T[],
+): number => {
+  if (left.length === 0 || left.length !== right.length) {
+    return fail("Cohen's kappa requires two non-empty, aligned label sets");
+  }
+  const observedAgreement =
+    left.filter((value, index) => value === right[index]).length / left.length;
+  const expectedAgreement = labels.reduce((total, label) => {
+    const leftRate =
+      left.filter((value) => value === label).length / left.length;
+    const rightRate =
+      right.filter((value) => value === label).length / right.length;
+    return total + leftRate * rightRate;
+  }, 0);
+  if (expectedAgreement === 1) {
+    return observedAgreement === 1 ? 1 : 0;
+  }
+  return (observedAgreement - expectedAgreement) / (1 - expectedAgreement);
+};
+
+export const compareEvaluationAnnotationPasses = (input: {
+  readonly annotatorA: readonly EvaluationAnnotationPassRow[];
+  readonly annotatorB: readonly EvaluationAnnotationPassRow[];
+}): EvaluationAnnotationComparison => {
+  const bById = new Map(input.annotatorB.map((row) => [row.commentId, row]));
+  const aIds = new Set(input.annotatorA.map((row) => row.commentId));
+  if (
+    input.annotatorA.length === 0 ||
+    input.annotatorA.length !== input.annotatorB.length ||
+    aIds.size !== input.annotatorA.length ||
+    bById.size !== input.annotatorB.length
+  ) {
+    fail("Annotation passes must contain the same unique comment IDs");
+  }
+  const aligned = input.annotatorA.map((annotatorA) => {
+    const annotatorB =
+      bById.get(annotatorA.commentId) ??
+      fail(`Annotator B is missing comment ${annotatorA.commentId}`);
+    if (
+      annotatorA.cycleId !== annotatorB.cycleId ||
+      annotatorA.annotator.id !== "A" ||
+      annotatorB.annotator.id !== "B"
+    ) {
+      fail(`Annotation pass identity mismatch for ${annotatorA.commentId}`);
+    }
+    return { annotatorA, annotatorB };
+  });
+  const primaryClassKappa = cohensKappa(
+    aligned.map(({ annotatorA }) => annotatorA.primaryClass),
+    aligned.map(({ annotatorB }) => annotatorB.primaryClass),
+    [...PRIMARY_CLASSES],
+  );
+  const materialRelevanceKappa = cohensKappa(
+    aligned.map(({ annotatorA }) => annotatorA.materialRelevance),
+    aligned.map(({ annotatorB }) => annotatorB.materialRelevance),
+    [...MATERIAL_RELEVANCE],
+  );
+  const disagreements = aligned
+    .filter(
+      ({ annotatorA, annotatorB }) =>
+        annotatorA.primaryClass !== annotatorB.primaryClass ||
+        annotatorA.materialRelevance !== annotatorB.materialRelevance,
+    )
+    .map(({ annotatorA, annotatorB }) => ({
+      commentId: annotatorA.commentId,
+      materialRelevance: {
+        annotatorA: annotatorA.materialRelevance,
+        annotatorB: annotatorB.materialRelevance,
+      },
+      primaryClass: {
+        annotatorA: annotatorA.primaryClass,
+        annotatorB: annotatorB.primaryClass,
+      },
+      annotatorA,
+      annotatorB,
+    }));
+  return {
+    rows: aligned.length,
+    exactDecisionAgreementRows: aligned.length - disagreements.length,
+    primaryClassKappa,
+    materialRelevanceKappa,
+    passed:
+      primaryClassKappa >= MINIMUM_ANNOTATION_COHENS_KAPPA &&
+      materialRelevanceKappa >= MINIMUM_ANNOTATION_COHENS_KAPPA,
+    disagreements,
+  };
+};
+
+export const serializeEvaluationAdjudicationPacket = (
+  comparison: EvaluationAnnotationComparison,
+  documents: readonly EvaluationAnnotationSourceDocument[],
+): string => {
+  if (comparison.disagreements.length === 0) {
+    return "";
+  }
+  const sourceById = new Map(
+    documents.map((document) => [document.commentId, document]),
+  );
+  if (sourceById.size !== documents.length) {
+    return fail("Adjudication source comment IDs must be unique");
+  }
+  return `${comparison.disagreements
+    .map((disagreement) => {
+      const source =
+        sourceById.get(disagreement.commentId) ??
+        fail(`Missing adjudication source for ${disagreement.commentId}`);
+      return JSON.stringify({
+        schemaVersion: EVALUATION_ADJUDICATION_PACKET_SCHEMA_VERSION,
+        cycleId: disagreement.annotatorA.cycleId,
+        commentId: disagreement.commentId,
+        source: {
+          comment: source.comment,
+          root: source.root,
+          urlCandidates: source.urlCandidates,
+        },
+        materialRelevance: disagreement.materialRelevance,
+        primaryClass: disagreement.primaryClass,
+        annotatorA: disagreement.annotatorA,
+        annotatorB: disagreement.annotatorB,
+      });
+    })
+    .join("\n")}\n`;
 };

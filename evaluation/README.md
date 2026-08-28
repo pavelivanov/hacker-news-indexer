@@ -76,6 +76,25 @@ labels, exact source-reproducing evidence, grounded opaque URL candidate IDs,
 canonical review/rejection codes, and class/content consistency. Do not update
 the cycle manifest until both passes are complete and independently validated.
 
+Once both files validate, compare them and prepare the adjudicator's bounded
+input:
+
+```bash
+npm run evaluation:compare-annotations -- \
+  --cycle v2 \
+  --annotator-a /secure/path/annotator-a.jsonl \
+  --annotator-b /secure/path/annotator-b.jsonl \
+  --output /secure/path/adjudication-v2.jsonl
+```
+
+The command validates the immutable cycle and both passes again, requires
+distinct pass-file hashes, computes separate Cohen's kappa values for primary
+class and material relevance, and requires both to be at least 0.75. A failed
+gate writes no adjudication file. A passing gate creates the output exactly
+once and includes only decision disagreements, their bounded source packet,
+and the two proposals; it contains no holdout assignment. Comparison does not
+mutate the cycle manifest or create gold labels.
+
 ## Starting a fresh evaluation cycle
 
 A replacement promotion gate must use a later, non-overlapping HN comment
