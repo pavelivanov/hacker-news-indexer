@@ -38,6 +38,7 @@
     "evaluation:prepare-annotations": "tsx scripts/prepare-annotation-packets.mts",
     "evaluation:validate-annotation": "tsx scripts/validate-annotation-pass.mts",
     "evaluation:compare-annotations": "tsx scripts/compare-annotation-passes.mts",
+    "evaluation:finalize-annotations": "tsx scripts/finalize-annotation-cycle.mts",
     "evaluation:validate-cycles": "tsx scripts/validate-evaluation-cycles.mts",
     "evaluation:capture-source": "node scripts/capture-seed.mjs",
     "evaluation:rescore-report": "tsx scripts/rescore-evaluation-report.mts",

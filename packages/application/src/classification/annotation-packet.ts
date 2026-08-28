@@ -52,30 +52,30 @@ export interface EvaluationAnnotationPassSummary {
   readonly reviewRows: number;
 }
 
-interface EvidenceSpan {
+export interface EvaluationAnnotationEvidenceSpan {
   readonly origin: "COMMENT" | "ROOT_STORY";
   readonly start: number;
   readonly end: number;
   readonly text: string;
 }
 
-interface AnnotationDiscovery {
+export interface EvaluationAnnotationDiscovery {
   readonly subjectType: string;
   readonly name: string;
   readonly aliases: readonly string[];
   readonly description: string;
   readonly evidenceOrigin: "COMMENT" | "ROOT_STORY" | "BOTH";
-  readonly evidenceSpans: readonly EvidenceSpan[];
+  readonly evidenceSpans: readonly EvaluationAnnotationEvidenceSpan[];
   readonly urlCandidateIds: readonly string[];
   readonly rootOnly: boolean;
 }
 
-interface AnnotationExpertNote {
+export interface EvaluationAnnotationExpertNote {
   readonly noteType: string;
   readonly title: string;
   readonly summary: string;
   readonly evidenceOrigin: "COMMENT" | "ROOT_STORY" | "BOTH";
-  readonly evidenceSpans: readonly EvidenceSpan[];
+  readonly evidenceSpans: readonly EvaluationAnnotationEvidenceSpan[];
   readonly relatedSubjectNames: readonly string[];
   readonly qualifiers: readonly string[];
 }
@@ -86,8 +86,8 @@ export interface EvaluationAnnotationPassRow {
   readonly commentId: number;
   readonly materialRelevance: EvaluationMaterialRelevance;
   readonly primaryClass: EvaluationPrimaryClass;
-  readonly discoveries: readonly AnnotationDiscovery[];
-  readonly expertNote: AnnotationExpertNote | null;
+  readonly discoveries: readonly EvaluationAnnotationDiscovery[];
+  readonly expertNote: EvaluationAnnotationExpertNote | null;
   readonly reviewFlags: readonly string[];
   readonly rejectionReason: string | null;
   readonly annotator: {
@@ -417,7 +417,7 @@ const parseEvidenceSpan = (
   value: unknown,
   location: string,
   document: EvaluationAnnotationSourceDocument,
-): EvidenceSpan => {
+): EvaluationAnnotationEvidenceSpan => {
   const item = object(value, location);
   exactKeys(item, ["origin", "start", "end", "text"], location);
   const origin = enumValue(
@@ -458,7 +458,7 @@ const parseEvidenceSpan = (
 };
 
 const assertUniqueSpans = (
-  spans: readonly EvidenceSpan[],
+  spans: readonly EvaluationAnnotationEvidenceSpan[],
   location: string,
 ): void => {
   const keys = spans.map(
@@ -471,7 +471,7 @@ const assertUniqueSpans = (
 };
 
 const evidenceOrigin = (
-  spans: readonly EvidenceSpan[],
+  spans: readonly EvaluationAnnotationEvidenceSpan[],
   location: string,
 ): "COMMENT" | "ROOT_STORY" | "BOTH" => {
   if (spans.length === 0) {
@@ -489,7 +489,7 @@ const parseDiscovery = (
   value: unknown,
   location: string,
   document: EvaluationAnnotationSourceDocument,
-): AnnotationDiscovery => {
+): EvaluationAnnotationDiscovery => {
   const item = object(value, location);
   exactKeys(
     item,
@@ -580,7 +580,7 @@ const parseExpertNote = (
   value: unknown,
   location: string,
   document: EvaluationAnnotationSourceDocument,
-): AnnotationExpertNote => {
+): EvaluationAnnotationExpertNote => {
   const item = object(value, location);
   exactKeys(
     item,
@@ -698,6 +698,18 @@ const parsePassRow = (
     item["expertNote"] === null
       ? null
       : parseExpertNote(item["expertNote"], `${location}.expertNote`, document);
+  const distinctEvidenceSpans = new Set(
+    [
+      ...discoveries.flatMap((discovery) => discovery.evidenceSpans),
+      ...(expertNote?.evidenceSpans ?? []),
+    ].map(
+      (span) =>
+        `${span.origin}\u0000${span.start}\u0000${span.end}\u0000${span.text}`,
+    ),
+  );
+  if (distinctEvidenceSpans.size > 32) {
+    fail(`${location} must not contain more than 32 unique evidence spans`);
+  }
   const reviewFlags = stringArray(
     item["reviewFlags"],
     `${location}.reviewFlags`,
