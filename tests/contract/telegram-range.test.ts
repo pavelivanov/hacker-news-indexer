@@ -14,14 +14,15 @@ describe.skipIf(process.env["CONTRACT_SOURCE"] !== "telegram")(
       if (
         !config.TELEGRAM_ENABLED ||
         config.TELEGRAM_API_ID === undefined ||
-        config.TELEGRAM_API_HASH === undefined
+        config.TELEGRAM_API_HASH === undefined ||
+        config.TELEGRAM_SESSION === undefined
       ) {
         throw new Error("Telegram contract credentials are not enabled");
       }
-      const telegram = createMtcuteTelegramSource({
+      const telegram = await createMtcuteTelegramSource({
         apiId: config.TELEGRAM_API_ID,
         apiHash: config.TELEGRAM_API_HASH,
-        sessionPath: config.TELEGRAM_SESSION_PATH,
+        session: config.TELEGRAM_SESSION,
         hasher: {
           sha256: (value) => createHash("sha256").update(value).digest("hex"),
         },

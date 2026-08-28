@@ -139,7 +139,7 @@ const assertSafeMetrics = (metrics, apiToken) => {
     "Bearer ",
     "APP_API_TOKEN",
     "DATABASE_URL",
-    "TELEGRAM_SESSION_PATH",
+    "TELEGRAM_SESSION",
     "postgresql://",
     "postgres://",
     "https://",

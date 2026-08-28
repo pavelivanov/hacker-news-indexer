@@ -60,20 +60,21 @@ const hnItems = new HackerNewsApiItems({
 });
 const resolvers = new Map<string, HnParentChainResolver>();
 
-const telegram = (() => {
+const telegram = await (async () => {
   if (!config.TELEGRAM_ENABLED) {
     return null;
   }
   if (
     config.TELEGRAM_API_ID === undefined ||
-    config.TELEGRAM_API_HASH === undefined
+    config.TELEGRAM_API_HASH === undefined ||
+    config.TELEGRAM_SESSION === undefined
   ) {
     throw new Error("Enabled Telegram configuration is incomplete");
   }
-  return createMtcuteTelegramSource({
+  return await createMtcuteTelegramSource({
     apiId: config.TELEGRAM_API_ID,
     apiHash: config.TELEGRAM_API_HASH,
-    sessionPath: config.TELEGRAM_SESSION_PATH,
+    session: config.TELEGRAM_SESSION,
     hasher,
     requestTimeoutMs: config.TELEGRAM_REQUEST_TIMEOUT_MS,
     maxFloodWaitMs: config.TELEGRAM_MAX_FLOOD_WAIT_MS,

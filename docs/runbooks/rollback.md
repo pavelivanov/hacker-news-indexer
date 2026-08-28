@@ -89,7 +89,8 @@ After rollback, confirm:
 - No unexpected `TERMINAL` jobs and no growing expired leases.
 - Scheduler idempotency for the current UTC date.
 - Nine or more expected migrations remain applied exactly once.
-- Telegram session file still exists on the worker volume without re-login.
+- When Telegram is enabled, the worker imports the sealed `TELEGRAM_SESSION`
+  after restart without interactive login or filesystem state.
 - No secret, source body, prompt, or payload appears in bounded logs.
 
 ## Drill record
@@ -137,10 +138,15 @@ The separate worker-volume persistence drill wrote one non-secret marker to
 new process started and emitted a heartbeat, then deleted the marker. It did not
 create or inspect a Telegram session while Telegram was disabled.
 
+That drill is historical evidence for the still-attached legacy volume. The
+current runtime design imports a sealed serialized session into memory; add a
+restart validation for that path before retiring the volume.
+
 The dated
 [staging rollback report](reports/2026-08-27-staging-rollback.md) records exact
 suffixes, timings, smoke and migration evidence, queue state, volume persistence,
 cleanup, deviations, and follow-ups.
 
-Current status: **TESTED IN STAGING — API ROLLBACK, ROLL-FORWARD, AND WORKER
-VOLUME PERSISTENCE PASSED**.
+Current status: **TESTED IN STAGING — API ROLLBACK, ROLL-FORWARD, AND LEGACY
+WORKER-VOLUME PERSISTENCE PASSED; SERIALIZED-SESSION RESTART VALIDATION
+PENDING**.

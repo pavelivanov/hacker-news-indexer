@@ -1,102 +1,104 @@
-# Telegram session runbook
+# Telegram serialized-session runbook
 
-The mtcute SQLite session is a credential. It belongs only on the operator's
-machine and the Railway worker volume. It must never enter Git, an environment
-variable, IaC, a Docker layer, a pre-deploy command, a log, or an API/scheduler
-service.
+`TELEGRAM_SESSION` is an mtcute-exported authorization credential. The worker
+imports it into in-memory storage on every start and validates it with a
+headless authorized call before processing jobs. No phone, login code, 2FA
+password, local SQLite file, Railway file upload, or interactive production
+login is part of the runtime path.
 
-## Create or validate locally
+The session string still represents the Telegram user or bot that created it.
+It removes interactive login from deployment; it does not make the integration
+anonymous or independent of an authorized Telegram identity. Anyone who obtains
+the string can act as that identity, so treat it as a password.
 
-The root `.env` is gitignored. Configure `TELEGRAM_API_ID`,
-`TELEGRAM_API_HASH`, `TELEGRAM_SESSION_PATH=.sessions/telegram.session`, and
-the intended `TELEGRAM_SOURCE_KEY`. Do not put a phone number, login code, 2FA
-password, or serialized session in `.env`.
+## Supply and validate locally
 
-Build and run the interactive initializer from a private terminal:
+Obtain a serialized session from an approved mtcute-compatible source without
+pasting it into chat or command-line arguments. A string exported by another
+client format is not assumed compatible. Configure only the gitignored `.env`:
 
-```sh
-umask 077
-npm run build
-npm run telegram:session:init
+```dotenv
+TELEGRAM_API_ID=...
+TELEGRAM_API_HASH=...
+TELEGRAM_SESSION=...
+TELEGRAM_SOURCE_KEY=hn_best_comments
+TELEGRAM_ENABLED=true
 ```
 
-The command uses mtcute's persistent SQLite storage, refuses non-interactive
-input, hides the login code and 2FA password, destroys the client cleanly, sets the session
-file to mode `0600`, and emits only `telegram_session_ready`. Re-running it
-validates and reuses an already-authorized session without printing its owner.
+Then build and run the headless authorization check:
 
-After the client closes, verify locally that there is one non-empty session
-file and no `-wal`, `-shm`, or journal file. Never display or checksum the file
-in shared logs. The repository ignores `.sessions/`, `*.session`, and
-`*.session-journal`.
+```sh
+npm run build
+npm run telegram:session:check
+```
 
-Before upload, run the bounded 100-ID contract from the operator machine:
+Success emits only `telegram_session_ready`; it never prints identity or session
+data. The check imports the string into memory, calls `getMe` without logging its
+result, and destroys the client. It must fail rather than request interactive
+input when the string is missing, malformed, revoked, or unauthorized.
+
+Before staging configuration, run the bounded 100-ID contract from the operator
+machine:
 
 ```sh
 node --env-file=.env scripts/run-contract-tests.mjs --target telegram
 ```
 
-This contacts Telegram. Stop if the range, source account, or source channel is
-not the approved one.
+This contacts Telegram and must print only the test summary. Stop if the range
+or source channel is not the approved one.
 
-## Bootstrap an empty Railway volume
+## Configure staging
 
-This is a remote mutation and requires staging approval. The volume must
-already be attached only to `worker` at `/data/telegram`; volumes are not
-mounted during Railway pre-deploy commands.
+This is a remote mutation and requires staging approval.
 
-1. Keep the worker stopped and `TELEGRAM_ENABLED=false`.
-2. Resolve the exact staging volume ID with
-   `railway volume --environment staging list --json`.
-3. Upload the closed local file under a new remote filename:
+1. Keep `TELEGRAM_ENABLED=false` on the worker.
+2. Add `TELEGRAM_API_ID`, `TELEGRAM_API_HASH`, `TELEGRAM_SESSION`, and
+   `TELEGRAM_SOURCE_KEY` to the staging worker through Railway's dashboard.
+   Never place the values in IaC, CLI arguments, shell history, deployment
+   notes, logs, or screenshots.
+3. Seal `TELEGRAM_API_HASH` and `TELEGRAM_SESSION`. Treat the API ID as
+   sensitive even though Telegram identifies it as an application identifier.
+4. Read back variable names only. Confirm the API and scheduler contain no
+   Telegram keys and that the worker contains all four names.
+5. Deploy with Telegram still disabled and confirm normal worker heartbeat.
+6. After separate enablement approval, set `TELEGRAM_ENABLED=true`. The worker
+   must reach `SUCCESS`, validate the imported session without prompting, and
+   emit its normal startup and heartbeat events without identity or session
+   data.
+7. Run one approved bounded ingestion range and confirm exact aggregate counts,
+   retry behavior, HN resolution, and absence of source bodies or secrets in
+   bounded logs.
 
-   ```sh
-   railway volume --environment staging files --volume <volume-id> upload .sessions/telegram.session /telegram.session --json
-   ```
+The existing staging `telegram-session` volume predates this design and will no
+longer be used after the serialized-session code deploys. Keep it attached until
+the rollout and restart validation pass. Removing it is destructive and requires
+a separate reviewed IaC plan and explicit approval.
 
-4. List only file metadata with
-   `railway volume --environment staging files --volume <volume-id> list / --json`.
-   Do not download or print the file.
-5. Set the worker path to `/data/telegram/telegram.session`, confirm the API and
-   scheduler lack Telegram keys, then deploy one worker.
-6. With Telegram still disabled, restart the worker and confirm the file
-   persists. Then request separate approval to enable Telegram.
-7. Enable it only for the bounded staging contract/range. Confirm
-   `worker_started`, `worker_heartbeat`, successful bounded jobs, and no
-   interactive login prompt or credential/content log.
+## Rotation and revocation
 
-If mtcute creates a journal during use, it stays on the same volume. Never copy
-a live SQLite database; stop the worker and allow clean client destruction
-before downloading or replacing session state.
-
-## Routine rotation
-
-1. Create a second session locally at a new gitignored path and pass the bounded
-   contract.
-2. Stop the staging worker and upload it under a new remote filename.
-3. Point `TELEGRAM_SESSION_PATH` to the new file through a reviewed variable/IaC
-   change, deploy, and pass the bounded check.
-4. Repeat in production only after explicit production approval.
+1. Obtain a replacement mtcute session string from an approved identity.
+2. Validate it locally with `telegram:session:check` and the bounded contract.
+3. Keep ingestion paused or Telegram disabled while replacing the sealed worker
+   variable through the Railway dashboard.
+4. Redeploy one worker, verify headless authorization and the bounded contract,
+   then resume ingestion.
 5. Revoke the old authorization from Telegram's official active-sessions UI.
-6. After the rollback window, delete the exact old remote file with explicit
-   confirmation. Record only its filename and rotation date, never its content.
 
-For a suspected compromise, revoke the old Telegram authorization first, keep
-live ingestion disabled, then create a replacement. Also rotate the API ID/hash
-if Telegram's security guidance or the incident scope requires it.
+For a suspected compromise, disable Telegram ingestion and revoke the exposed
+authorization first. Then rotate `TELEGRAM_SESSION`; rotate the API ID/hash too
+when Telegram guidance or the incident scope requires it.
 
 ## Failure handling
 
-- **Interactive login on every restart:** stop the worker; the volume/path is
-  wrong or the file is invalid. Do not re-authenticate inside a Railway shell.
-- **SQLite locked/corrupt:** stop every worker replica, preserve the file, and
-  restore a known-good closed session or rotate it. Never run multiple worker
-  replicas against one mtcute session.
+- **Missing/malformed session:** keep Telegram disabled, replace the sealed
+  value, and rerun the headless check. Never add an interactive Railway login.
+- **`AUTH_KEY_UNREGISTERED`:** the session is unauthorized or revoked; obtain a
+  new approved session and leave ingestion disabled.
+- **Repeated reconnect/auth errors:** stop the worker, verify only variable
+  presence and bounded error codes, then rotate the session if required.
 - **Flood wait above ceiling:** leave the job deferred and reduce/bound the
-  range. Do not bypass the configured wait ceiling.
-- **Session missing:** keep `TELEGRAM_ENABLED=false`; do not allow jobs to
-  terminally fail while attempting ad-hoc login.
+  range. Do not bypass the configured ceiling.
 
-Current persistence status: **NOT TESTED — the staging volume is mounted and
-`READY`, but no session has been uploaded and restart persistence has not been
-authorized or verified**.
+Current status: **SERIALIZED-SESSION SUPPORT IMPLEMENTED LOCALLY; LIVE SESSION
+VALIDATION, SEALED STAGING CONFIGURATION, BOUNDED INGESTION, AND LEGACY-VOLUME
+REMOVAL REMAIN GATED.**
