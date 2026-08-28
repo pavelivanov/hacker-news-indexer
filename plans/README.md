@@ -36,7 +36,7 @@ Generated on 2026-08-24 from `docs/telegram-hn-technical-knowledge-project-resea
 | 001 | Establish the project foundation and decision record | P1 | L | — | DONE |
 | 002 | Implement deterministic selection ingestion and HN resolution | P1 | L | 001 | DONE |
 | 003 | Implement grounded classification and the evaluation harness | P1 | L | 002 | BLOCKED (Sol prompt-v3 failed the single sealed holdout) |
-| 003R | Recover classifier generalization on a fresh evaluation cycle | P1 | M | 003 implementation | IN PROGRESS (fresh v2 split frozen; independent annotation pending) |
+| 003R | Recover classifier generalization on a fresh evaluation cycle | P1 | M | 003 implementation | IN PROGRESS (blind v2 packets ready; independent annotation pending) |
 | 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 implementation | DONE |
 | 005 | Implement the private knowledge-feed APIs and reconciliation | P1 | L | 004 | DONE |
 | 006 | Implement the FindThatProject export outbox | P2 | M | 004 | DONE |

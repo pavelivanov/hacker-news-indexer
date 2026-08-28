@@ -13,8 +13,8 @@
 
 - **Execution status**: IN PROGRESS — cycle locking, v1 terminal hashes,
   no-rerun enforcement, model non-activation, authenticated manual decision
-  review, and the fresh immutable v2 split are implemented. Independent v2
-  annotation remains.
+  review, the fresh immutable v2 split, and blind annotation packet validation
+  are implemented. Independent v2 annotation remains.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -93,6 +93,15 @@ or candidate selection.
 
 **Verify**: distinct annotator hashes, exact evidence reproduction, valid URL
 candidate IDs, complete development/holdout partition, and kappa gate pass.
+
+**Workflow implementation (2026-08-28):** `evaluation:prepare-annotations`
+verifies the frozen v2 source and creates separate A/B packet directories with
+different deterministic row orders and no holdout or prediction fields.
+`evaluation:validate-annotation` enforces complete independent pass files,
+separate material-relevance and primary-class labels, exact evidence, opaque
+grounded URL IDs, and canonical review/rejection codes. Packet preparation
+does not label rows or mutate the cycle manifest; the two independent passes
+and adjudication are still required.
 
 ### Step 3: Implement two-stage classification on v2 development only
 
