@@ -21,9 +21,8 @@ idempotency observation after bounded source ingestion is separately approved.
 - Configured schedule: `17 3 * * *` UTC.
 - Scheduled deployment: commit `2dc3485`, deployment suffix `d521`.
 - Post-merge deployment: commit `2dda9b9`, deployment suffix `45f0`.
-- Railway CLI: authenticated Homebrew fallback `5.28.0`, read-only operations
-  only. The incomplete asdf `5.45.2` installation still requires repair before
-  infrastructure mutation.
+- Railway CLI: authenticated `5.45.5`; the earlier incomplete asdf installation
+  has been repaired.
 
 Full project, environment, service, deployment, instance, and volume IDs remain
 outside Git.
@@ -58,6 +57,11 @@ schedule” log filter from each.
   alert aggregates remained zero.
 - Ten-minute CPU/memory floors remained at or below 0.6%; Telegram-session and
   PostgreSQL volumes remained at 1.7% and 3.1%.
+- After merge commit `74603f8` deployed, the same scheduler-required check
+  passed again at 2026-08-28 08:43:42 UTC. It recovered one completion event,
+  found all four services healthy, observed CPU floors of 0% and memory floors
+  at or below 0.7%, retained the 1.7% and 3.1% volume readings, and emitted no
+  alerts.
 
 ## Idempotency evidence
 
@@ -82,10 +86,9 @@ stdout despite exit zero, so it was discarded and is not cited as evidence.
   until their first expected completion.
 - Repeat the same-key live scheduling observation after a bounded staging
   source corpus exists and remote execution is explicitly authorized.
-- Repair or upgrade the asdf Railway CLI to `5.45.2+` before any configuration
-  change or production work.
-- Native monitor routing, live synthetic alert failures, HN/Telegram staging
-  checks, and production promotion remain separately gated.
+- Native monitor routing, live synthetic alert failures, the Telegram staging
+  check, and production promotion remain separately gated. The bounded HN live
+  contract passed at 08:42 UTC.
 
 Soak status: **COMPLETE FOR THE EMPTY STAGING CORPUS — FIRST CRON AND FRESHNESS
 GATE PASSED; NON-EMPTY LIVE IDEMPOTENCY REMAINS A FOLLOW-UP**.
