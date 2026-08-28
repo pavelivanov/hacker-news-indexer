@@ -34,6 +34,16 @@ cycle records without printing source text:
 npm run evaluation:validate-cycles
 ```
 
+Cycle v2 was captured and frozen on 2026-08-28 before annotation or prompt
+work. Its fresh public Telegram window is `32947..33037`: 91 occurrences resolve
+to exactly 90 unique canonical HN comments, with zero overlap with v1. The
+immutable split contains 63 development rows and 27 sealed holdout rows. The
+capture evidence is in `evaluation/captures/v2`, the canonical packets are in
+`evaluation/source-v2.json`, and `evaluation/cycles/v2.json` pins source digest
+`5734ee729f88db253a2cb21195afe70953070034a81b3f77db2b4bf7401108fd`.
+The next gate is two independent annotation passes and adjudication; neither
+annotator may see model predictions or the sealed holdout assignment.
+
 ## Starting a fresh evaluation cycle
 
 A replacement promotion gate must use a later, non-overlapping HN comment

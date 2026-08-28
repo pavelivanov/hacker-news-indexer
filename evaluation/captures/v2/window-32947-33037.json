@@ -1,0 +1,1968 @@
+{
+  "schemaVersion": 1,
+  "source": "TELEGRAM_PUBLIC_EMBED",
+  "sourceKey": "hn_best_comments",
+  "minId": 32947,
+  "maxId": 33037,
+  "messages": [
+    {
+      "id": 32947,
+      "date": "2026-08-24T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Anthropic's best AI model struggles to attract users as cheaper tools thrive\n\nWhere Anthropic f'ed up was treating their monetization the way they treat model training. Turns out that success in experimentation is not transferrable.\n\nThey have tried to find the highest that the market pays for sota models; however, on the consumer side, this is just too confusing and unsettling:\n\n\"You can only use Fable for a week as a part of your plan\"\n\"Be ready! You have to start paying per token!\"\n\"Nevermind! we extended it for a couple more weeks\"\n\"Wait, now it's up to half your usage\"\n\"Ok, now its...\"\n\nMost people want to not care. We want our AI like electricity -- Kind of just there no matter how easy/hard is for the supply. You don't want your electricity company to be on the brink of cutting you off any second.\n\nThat's Anthropic. You don't feel they want to give you a dependable service for an, albeit premium, price. It's a constant bargaining game. That forces people to look beyond the walled garden. There, they find models that are fine... and without the shenanigans.\n\na1371, 19 hours ago",
+      "contentHash": "15a9c4fe25c1ef9c4d49251af35f889ff09bde017da2a28e7438fa727c8daac4",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49411102"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1092,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49413750"
+        }
+      ]
+    },
+    {
+      "id": 32948,
+      "date": "2026-08-24T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: I were 17, I'd learn how to build LLMs from scratch\n\nThere's this dilemma where in theory there's a ton of demand for engineers that can do real LLM machine-learning, but in practice there are very few available positions and entrepreneurship opportunities.\n\nThe reality is that an incredibly small minority of companies in the world do any real training or optimisation. It's unnecessary and inefficient for most purposes unless you are fully dedicated to being an LLM company, and still then it's a struggle. Those few that do train, they spend most of their budget on compute and have relatively small teams.\n\nGetting experience in this field requires having access to very expensive hardware to begin with. And the skills will be quite hard to convert into any real value for someone, leading to a decent income, unless you have a ton of funding from patient investors, or you have decent contacts in Bay Area networks to get hired at the right place.\n\nWith all due respect, paulg is in somewhat of a bubble, this is not congruent with the global situation.\n\noersted, 12 hours ago",
+      "contentHash": "e7668c5eb7f5a9d92f8de85fc1247956753c068ceb6308b08630ae07dab89857",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49412396"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1076,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49416016"
+        }
+      ]
+    },
+    {
+      "id": 32949,
+      "date": "2026-08-24T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: MS Paint and Photos inivisibly watermark even locally generated output with GUID\n\nThe AI aspect of this is a red herring. The real problem is that they're secretly adding in a unique identifier into every image you create. If somebody does not like your meme, they can just send a copyright subpoena to Microsoft to instantly get your full name, address, email, phone number, and any other data associated with your Microsoft account. Just like age verification, this is another weapon in the war against internet anonymity.\n\nweberer, 3 hours ago",
+      "contentHash": "2889769e5a29e2e442c7fade986d1c92434ec3b024e70dbfd0ecf8ec504bfc6d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 80,
+          "url": "https://news.ycombinator.com/item?id=49421158"
+        },
+        {
+          "kind": "text_link",
+          "offset": 539,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49421902"
+        }
+      ]
+    },
+    {
+      "id": 32950,
+      "date": "2026-08-24T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Andreessen Horowitz is investing billions into a bleak future\n\n\"A man who wishes to make a profession of goodness in everything must necessarily come to grief among so many who are not good. Therefore, it is necessary for a prince, who wishes to maintain himself, to learn how not to be good, and to use this knowledge and not use it, according to the necessity of the case\" -- Niccolo Machiavelli\n\nIt's a self fulfilling prophecy... while us commoners, or so called \"activists\" or ethicists ponder and debate on culture, morality, law and ethics... The powerful are just living an alternate life devoid of all these moral qualms and are have clearly distanced themselves from the mundane, have distanced themselves from the guilt or any kind of accountability. In their eyes, they are just capitalising on the human tendencies which have been always existed (the seven deadly sins), so the \"absolve\" themselves pretty quickly by saying that they are not creating new \"sins\", just leveraging, or allowing the people to go along those sins.\n\nThey think, why should they be the ones to not capitalise on them, if someone else might and will. It's a coordination problem of our society. No one wants to let go. They want to hedge, they invest in ozempic and invest in fast-food at the same time, there is no moral compass guiding them. It's for us commoners to debate and think about.\n\npulkitsh1234, 8 hours ago",
+      "contentHash": "dc1ec45e0071cd77de3b0e4d0ecec0b2fd2255d46e8dcdca064db1dea5f281e5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 61,
+          "url": "https://news.ycombinator.com/item?id=49416055"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1401,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49418267"
+        }
+      ]
+    },
+    {
+      "id": 32951,
+      "date": "2026-08-24T19:05:01.000Z",
+      "editDate": null,
+      "text": "Re: Anna's Archive Owes $340 Million, Lost Several Domains, but It's Still Online\n\nLong live Anna’s Archive. I stand on the shoulders of the Internet, Wikipedia, Anna’s Archive, Z-Library, LibGen, YouTube, Hacker News, Reddit, and Sci-Hub.\n\nI deeply admire the people who are obsessed with their passions and strive to build things that will lay the foundations for others.\n\nnum42, 4 hours ago",
+      "contentHash": "d3f8687c0a224da522f2b1244cd232e51ec09dd84af113692f2807c663c328cc",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 77,
+          "url": "https://news.ycombinator.com/item?id=49420902"
+        },
+        {
+          "kind": "text_link",
+          "offset": 382,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49421267"
+        }
+      ]
+    },
+    {
+      "id": 32952,
+      "date": "2026-08-24T19:10:00.000Z",
+      "editDate": null,
+      "text": "Re: My agent.md to improve LLM-assisted code quality\n\nA bunch of these should be enforce with linting, that way people who still hand-craft code get the same kind of feedback, e.g. Always use {}, even on a one-line \"if\" statement. & Keep function names short. Less than 30 characters.\n\nThen this one really is a pattern that creates a lot of churn:\n\n- Add a small, to the point, comment to explain what the block does and why. Use examples when possible. Propose ASCII drawings to explain complete systems.\n\nThe what _is_ the code.\n\nOptionOfT, 23 hours ago",
+      "contentHash": "a71ac52a896b6613626f5a4bda9017c4a22b3ffc40a9dcce9714a87b9424bd23",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 48,
+          "url": "https://news.ycombinator.com/item?id=49410932"
+        },
+        {
+          "kind": "text_link",
+          "offset": 544,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49411956"
+        }
+      ]
+    },
+    {
+      "id": 32953,
+      "date": "2026-08-24T19:10:00.000Z",
+      "editDate": null,
+      "text": "Re: Why Sal Khan't: On Learning by Making but Teaching by Telling\n\nOverall, I do agree with the thesis but:\n\n> Now… how does Sal Khan want my kid to learn?\n\n> Watch a video.\n\nI find this a little uncharitable. I learned a lot of math at a young age from Sal Khan's early videos (back when he used to erase by switching to a black pen and scribbling across the entire screen) and, to put it in the author's terms, it served as an easy-to-digest scaffolding on top of which to build a deeper understanding. I don't think Khanacademy ever sold itself as a magic learning resource that removes the need to work out problems yourself.\n\nskulk, 1 day ago",
+      "contentHash": "6cc889d3ba6e9610e1f8f35ee5754d625c2db9539d29265e4e671b77c1dcf6e7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 61,
+          "url": "https://news.ycombinator.com/item?id=49409862"
+        },
+        {
+          "kind": "text_link",
+          "offset": 638,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49410492"
+        }
+      ]
+    },
+    {
+      "id": 32954,
+      "date": "2026-08-24T19:10:00.000Z",
+      "editDate": null,
+      "text": "Re: OpenAI: GPT 5.6 Sol price reduction (until at least Nov 21)\n\nThe fact that AI models can be so easily distilled and replicated is such a stroke of luck.\n\n10 or 15 years ago if one had asked me to envision a future where a private company invents artificial intelligence, I'd have thought for sure they'd have a massive moat, be very difficult to catch, and it would create an almost instant monopoly.\n\nRather, it seems that selling intelligence might end up as a race to the bottom.\n\nWho woulda thought that just having access to enough textual inputs and outputs and a vaugely similar transformer architecture would be enough to copy-cat rather useful intelligence.\n\neigenspace, 3 hours ago",
+      "contentHash": "5c9cd0463f00fc4626ece47f3780248436d7a418fd12cebd9ea00f1b6b6d4d16",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 59,
+          "url": "https://news.ycombinator.com/item?id=49421074"
+        },
+        {
+          "kind": "text_link",
+          "offset": 684,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49421351"
+        }
+      ]
+    },
+    {
+      "id": 32955,
+      "date": "2026-08-24T19:10:01.000Z",
+      "editDate": null,
+      "text": "Re: How Europe is killing makers and micro-entrepreneurs\n\nOne of the biggest problems that I have in the EU is that it's almost federated. EU will pass laws, countries will adopt those laws, but you end up with 20-24 different versions of those laws. With some countries being strict or lenient about the law that everyone agreed to. And a lot it is written from the perspective that large corporations are the only ones who do business throughout the EU. It's completely missed that small entrepreneurs may also want to take part. Modern technology makes it feasible, but old ideas just drags it down.\n\nyardie, 5 hours ago",
+      "contentHash": "4d7a9280fcf87e7778f189e0880cdc386a8333b71e56bb5bd92a9dd5508e1c40",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 52,
+          "url": "https://news.ycombinator.com/item?id=49419237"
+        },
+        {
+          "kind": "text_link",
+          "offset": 612,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49419725"
+        }
+      ]
+    },
+    {
+      "id": 32956,
+      "date": "2026-08-24T19:10:01.000Z",
+      "editDate": null,
+      "text": "Re: Woman stranded in Spain after UK's eVisa system mistakes her for twin sister\n\nThis is not a software issue (not directly).\n\nSure, the software has a bug. Software does. Almost always. What is broken here is that it is possible to get stuck in an airport with no possibility of escalating sensibly to a chain of human beings with agency to resolve it. You could have a software process which works 99.9% of the time, and have staff at hand which could solve any solvable remaining issues like this one. They call the Home Office internal hotline, explain the issue, resolve it by manually interfering on the spot (and have a bug filed), and everyone carries on.\n\nInstead, we demand a 100% correct system, and save money on actually having people around who can deal with the edge cases and make sure everyone has a good time. Of course, getting a project from 99.9% to 100% costs a lot of money, because that includes literally all edge cases ever (getting to 100% is as likely as reaching ∞ by multiplying any given starting number by 2 until you reach it), and so it will likely end up being more expensive in budget overruns than the 99.9% plus humans system.\n\nObviously, politicians must choose for the fictional 100% case, because they can't afford the cheaper 99.9% plus human one.\n\nFreak_NL, 8 hours ago",
+      "contentHash": "f1d3cdde7accf873e453d58b6a427d07880344b9e3b13335311fd875f4ff2cae",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49417394"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1302,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49418298"
+        }
+      ]
+    },
+    {
+      "id": 32957,
+      "date": "2026-08-24T19:15:00.000Z",
+      "editDate": null,
+      "text": "Re: Anthropic's best AI model struggles to attract users as cheaper tools thrive\n\nThis isn't the reason I'm considering leaving Anthropic.\n\nI don't think I can tolerate its writing style anymore. Reading Claude output is starting to cause actual psychological harm. I have tried many ways to get it to stop writing in its stupid punchy linked-in marketing-team voice, and I can't.\n\nIs there a model out there that sounds sound this awful? It's like rubbing sand into the folds of my brain.\n\nkibibu, 6 hours ago",
+      "contentHash": "7c76e34708675a060258ce7951d30b4a6831d5f3d11019112b197ae576a0a5eb",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49411102"
+        },
+        {
+          "kind": "text_link",
+          "offset": 499,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49419208"
+        }
+      ]
+    },
+    {
+      "id": 32958,
+      "date": "2026-08-24T19:35:00.000Z",
+      "editDate": null,
+      "text": "Re: I spent $266 and four AI models to own my tablet. GLM-5.3 finished it in a day\n\nNice to see the capabilities of the model but the article has heavy AI tones, making it boring to read.\n\nan AI:DR; is enough: the models found unpatched vulnerabilities and managed to create an exploit to root the tablet, chinese models did it while American ones fell back to their safeguards.\n\nAntonyGarand, 1 day ago",
+      "contentHash": "a91405d0a91b98e66924958c5c2edccf7c475f504c187c80d2975a37cbf6a6cc",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49409073"
+        },
+        {
+          "kind": "text_link",
+          "offset": 394,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49410196"
+        }
+      ]
+    },
+    {
+      "id": 32959,
+      "date": "2026-08-24T19:35:00.000Z",
+      "editDate": null,
+      "text": "Re: I were 17, I'd learn how to build LLMs from scratch\n\nYes. It's like looking at the (Apollo) moon rocket launch and then suggesting teenagers should learn to build rockets in their garages for the coming space age.\n\nIt is viable as a toy project, but there are vanishingly few career opportunities.\n\nyobbo, 11 hours ago",
+      "contentHash": "0b45d76ba651e6f77016b9a2e88793aea4a6f8985df1f329d59392e1546c9673",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49412396"
+        },
+        {
+          "kind": "text_link",
+          "offset": 310,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49416907"
+        }
+      ]
+    },
+    {
+      "id": 32960,
+      "date": "2026-08-24T19:35:00.000Z",
+      "editDate": null,
+      "text": "Re: I were 17, I'd learn how to build LLMs from scratch\n\nA lot of people here are responding to the message but not to the meaning.\n\nIt would be a good idea for young people to deeply know how these programs work. Not so that they can spend their career building them, but so that they can approach the next class of problems we'll all start trying to solve, with intuition all the way down to the weights and underlying mathematics. And also, to develop a healthy intuition of when \"Just LLM it\" will not be the right choice.\n\n\"Build an OS\" wasn't a common university project because we were all expected to go out and work on Windows, but because understanding the bare-metal firmware for a computer helps you deeply understand how to intuit building for a whole class of problems.\n\nmattlutze, 9 hours ago",
+      "contentHash": "c1585a555d72e67386242fb2a7b0cb39dbddf097f62486616d7db81294b27ec8",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49412396"
+        },
+        {
+          "kind": "text_link",
+          "offset": 796,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49417689"
+        }
+      ]
+    },
+    {
+      "id": 32961,
+      "date": "2026-08-24T19:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Fable and the end of the free lunch\n\nThe real revolution is Deepseek v4 flash and similar models (GPT 5.6 Luna, muse spark 1.2, mimo, etc...) - Genuinely good performance for a tiny fraction of the cost of Fable and even GLM etc...\n\nI think a lot of people would be very content if they never got smarter, and just kept getting even cheaper/faster. Of course, both things continue to happen on a seemingly monthly basis\n\nnchmy, 24 hours ago",
+      "contentHash": "d0d60875044845c618191b91dc351a44bc56419c3b9d9063cfc3fff130def62c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 35,
+          "url": "https://news.ycombinator.com/item?id=49411468"
+        },
+        {
+          "kind": "text_link",
+          "offset": 432,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49412015"
+        }
+      ]
+    },
+    {
+      "id": 32962,
+      "date": "2026-08-24T19:35:01.000Z",
+      "editDate": null,
+      "text": "Re: I were 17, I'd learn how to build LLMs from scratch\n\nWhile knowledge is always great, I would encourage people not to seek advice from successful people like this (survivorship bias).\n\nMoreover I am not sure it is even good advice? Would you advise a 17 y.o. to learn how transistors work or how to code (i.e. is LLM training the right level in the stack)? LLM training, a discipline where relevant work is already out of reach for 99.999% of budgets really as essential as this post implies?\n\nkoe123, 12 hours ago",
+      "contentHash": "d7b0e2803ec9facac7f495c0f4ae8933b6e59910628a343373bdfb5195ab00e6",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49412396"
+        },
+        {
+          "kind": "text_link",
+          "offset": 506,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49416109"
+        }
+      ]
+    },
+    {
+      "id": 32963,
+      "date": "2026-08-24T19:40:00.000Z",
+      "editDate": null,
+      "text": "Re: How I find problems to solve as a staff engineer\n\nThe author notes:\n\n> One caveat: my experience comes mainly from working on infrastructure and developer tools at large companies, on teams where engineers have a lot of bottom-up autonomy to influence their roadmaps. In a more top-down environment, there may simply be less room to work this way.\n\nI wonder if the overall trend in tech is that engineers are experiencing less bottom-up autonomy and more top-down controlled environments. I would be curious to see how many tech companies (or the average engineer's experience) have changed from being tech led where engineers have autonomy to being more product management led. My suspicion without evidence is that the overall engineering autonomy has decreased over the years as the culture of tech has (in my opinion) shifted away from tech focus to more business, management, product focus with engineers just as the widgets who are tasked with fulfilling the goals of business, management, product.\n\nall hypothesis, only anecdata\n\nwpasc, 24 hours ago",
+      "contentHash": "d34bd9af0722ef0d6f76dda435e8dd9ae71f9d7fdad3eb8deba25f1e3d95be18",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 48,
+          "url": "https://news.ycombinator.com/item?id=49411643"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1048,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49412007"
+        }
+      ]
+    },
+    {
+      "id": 32964,
+      "date": "2026-08-24T19:40:00.000Z",
+      "editDate": null,
+      "text": "Re: Over 170k Nonprofits Lost All Their Data. Is Microsoft to Blame?\n\nYep, this is the sort of thing happens when you've deeply internalized that trustworthiness and continuity is not important. Microsoft today is not a serious company, it is not run by serious people, and it is at the forefront of a deeply unserious industry.\n\n12_throw_away, 1 day ago",
+      "contentHash": "3222d430e6907358c8a5d6abdf0fbef2e776a9cec4025d7c28e1be9b71638da1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 64,
+          "url": "https://news.ycombinator.com/item?id=49411395"
+        },
+        {
+          "kind": "text_link",
+          "offset": 345,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49411696"
+        }
+      ]
+    },
+    {
+      "id": 32965,
+      "date": "2026-08-24T19:40:00.000Z",
+      "editDate": null,
+      "text": "Re: Anthropic's best AI model struggles to attract users as cheaper tools thrive\n\nYeah, I agree with this. The constant state of \"...will the rug be pulled?!?\" does discourage relying on it as a model and building a workflow on it. Anthropic used to just be a reliable thing you could play with. Now it's this constant source of anxiety.\n\nIt also didn't help that the government yanked it which adds another source of anxiety since OpenAI is on much better terms with the administration and the administration seems corrupt enough that they would mess with Anthropic if they got a big enough donation from OpenAI.\n\nBut anyway after Sol entered the picture, I don't think Anthropic can get away with this as much and I also think they're going to face a massive backlash from Max subscribers if they do end up ending the +50% promotion at the end of the month because Sol is a Fable peer and priced very competitively.\n\nfluidcruft, 20 hours ago",
+      "contentHash": "569ba4bb4a2141ce312d4beac0ba4fe3863a4a110dee08b49bf6fbf5c8b9866a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49411102"
+        },
+        {
+          "kind": "text_link",
+          "offset": 931,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49413828"
+        }
+      ]
+    },
+    {
+      "id": 32966,
+      "date": "2026-08-24T19:40:01.000Z",
+      "editDate": null,
+      "text": "Re: Coding expertise is going to collapse from AI reliance\n\n100%\n\nWe're already seeing this at the enterprise level. Companies have dictates from leadership that \"if you're writing code manually, you're doing it wrong.\"\n\nOkay, that kind of works for a while. We are indeed producing a shit-ton of code, but the reality is that engineers are pumping out code faster than the humans can understand and (honestly) review it. That sounds great until you realize that \"hey Claude, read this Jira ticket and implement the feature in this code base\" isn't really worth $200K/year.\n\nThis is all complicated by the fact that we're also losing our grasp on reality from the other direction because we have leadership air dropping AI generated manifestos on the product owners and product owners having to use AI to transmute all that shit into 1,500 word Jira tickets that are 10% necessary feature work and 90% LLM boilerplate.\n\nSo now you have software engineers whose job has changed radically to the point that the hardest part about being a software engineer is just filtering through AI generated artifacts from all directions just to try to get a feature out the door.\n\nryandvm, 3 hours ago",
+      "contentHash": "32e5a004eaa4c7e3a4b3a462ad90ffa6ac76984201be8afaef1ae1a154d04f3d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 54,
+          "url": "https://news.ycombinator.com/item?id=49421554"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1176,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49421984"
+        }
+      ]
+    },
+    {
+      "id": 32967,
+      "date": "2026-08-24T19:40:01.000Z",
+      "editDate": null,
+      "text": "Re: I were 17, I'd learn how to build LLMs from scratch\n\nIt's like looking at the early internet and then suggesting teenagers should write browsers as their projects instead of webpages.\n\nbmacho, 11 hours ago",
+      "contentHash": "69a9cef1cf3ed1762fa9baea9df9943b4949eb7acbbba6416493e53007aa0091",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49412396"
+        },
+        {
+          "kind": "text_link",
+          "offset": 197,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49417041"
+        }
+      ]
+    },
+    {
+      "id": 32968,
+      "date": "2026-08-24T19:45:00.000Z",
+      "editDate": null,
+      "text": "Re: How I find problems to solve as a staff engineer\n\nFunny people should have that problem. I have spent most of my career in the startup space, and my experience has consistently been that the amount of problems to solve is vastly larger than what I can reasonably achieve in my waking hours.\n\nSo I don't find problems to solve, I try to assess which problems are most urgent, or which solution solves several of them at once. Learning to get that kind of prioritisation right to keep all teams and customers happy and productive is what I'm very proud of in my career.\n\n9dev, 24 hours ago",
+      "contentHash": "8c5a0978b30529e50fdf30d73ff60ac018cf651c4bdad421c2ea145f7510a276",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 48,
+          "url": "https://news.ycombinator.com/item?id=49411643"
+        },
+        {
+          "kind": "text_link",
+          "offset": 579,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49411890"
+        }
+      ]
+    },
+    {
+      "id": 32969,
+      "date": "2026-08-24T19:45:00.000Z",
+      "editDate": null,
+      "text": "Re: Andreessen Horowitz is investing billions into a bleak future\n\n> Lee's stated goal was to “desensitize everyone to the phrase ‘cheating.’” If you say it enough, he argues, “cheat begins to lose its meaning.” A16z praised Lee's approach as “rooted in deliberate strategy and intentionality.”\n\nInvestors: but surely they won't cheat me!\n\nvintermann, 10 hours ago",
+      "contentHash": "9db1d041a268784a3d71b732ec0ee13d48b3b9cbb1c4d3921cd0f46008dd6e2d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 61,
+          "url": "https://news.ycombinator.com/item?id=49416055"
+        },
+        {
+          "kind": "text_link",
+          "offset": 352,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49417428"
+        }
+      ]
+    },
+    {
+      "id": 32970,
+      "date": "2026-08-24T20:08:31.000Z",
+      "editDate": null,
+      "text": "Re: Anthropic's best AI model struggles to attract users as cheaper tools thrive\n\nThey've put themselves in a corner. Fable was too good and they gave it away with the $20 plan. It had to be a big step from Opus 4.8 to show progress, and Opus 4.8 is GREAT at coding in many different domains.\n\nBut they're getting killed on token cost. They have to get people paying more for tokens. So then they put Fable in the $200 plan and release Opus 5. I'm suspicious of Opus 5. It is mostly worse than 4.8. It _seems_ like they nerfed it to create more distance between it and Fable.\n\nSo what have most of us done? Stayed on Opus 4.8. The statistics bear this out. 4.8 still dominates.\n\nNow they're stuck. If they take 4.8 away, everyone will riot. If they make Opus 5.x better than 4.8, they disincentivize everyone from moving to Fable and most importantly, paying more.\n\nReally, all they can do is take the L for now and just let 4.8 be the apex of the $20 pro plan for the foreseeable future while they work like hell to make Fable THAT much better that it earns the $200 to $infinity that they really want everyone to pay.\n\nbentt, 24 hours ago",
+      "contentHash": "d27ee60bb8c29b3ea32b042ab6c52ec98e5c33bd0d2e5e98c45046f2fc60c869",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49411102"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1128,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49412107"
+        }
+      ]
+    },
+    {
+      "id": 32971,
+      "date": "2026-08-24T20:08:31.000Z",
+      "editDate": null,
+      "text": "Re: Xiaomi: New CPU matches Apple cores single threaded, much faster multithreaded\n\nThis is still an ARM C1-Ultra. Same one used in Mediatek dimensity 9500, which also got more than 4000 points in GB6 lab test. But actual results inside phone with smartphone cooling and wattage requirement became close to 3300.\n\nBut perhaps the most important thing, Xiaomi is now able to make chip similar to Mediatek. They are the third largest Smartphone manufacturer by shipment volume. And they are still growing.\n\nThis is bad news for Mediatek and Qualcomm.\n\nksec, 4 hours ago",
+      "contentHash": "7daf448f89e631c72d7712a07bffe2c254aa69793d3311a29d04faa013f8468f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49420873"
+        },
+        {
+          "kind": "text_link",
+          "offset": 556,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49421598"
+        }
+      ]
+    },
+    {
+      "id": 32972,
+      "date": "2026-08-24T20:10:00.000Z",
+      "editDate": null,
+      "text": "Re: Anthropic's best AI model struggles to attract users as cheaper tools thrive\n\nThey've put themselves in a corner. Fable was too good and they gave it away with the $20 plan. It had to be a big step from Opus 4.8 to show progress, and Opus 4.8 is GREAT at coding in many different domains.\n\nBut they're getting killed on token cost. They have to get people paying more for tokens. So then they put Fable in the $200 plan and release Opus 5. I'm suspicious of Opus 5. It is mostly worse than 4.8. It _seems_ like they nerfed it to create more distance between it and Fable.\n\nSo what have most of us done? Stayed on Opus 4.8. The statistics bear this out. 4.8 still dominates.\n\nNow they're stuck. If they take 4.8 away, everyone will riot. If they make Opus 5.x better than 4.8, they disincentivize everyone from moving to Fable and most importantly, paying more.\n\nReally, all they can do is take the L for now and just let 4.8 be the apex of the $20 pro plan for the foreseeable future while they work like hell to make Fable THAT much better that it earns the $200 to $infinity that they really want everyone to pay.\n\nbentt, 1 day ago",
+      "contentHash": "81a3203c6f55388e7ae785cb5e452b6325b2d899da7158270201b2c9be58954c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49411102"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1128,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49412107"
+        }
+      ]
+    },
+    {
+      "id": 32973,
+      "date": "2026-08-24T20:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Xiaomi: New CPU matches Apple cores single threaded, much faster multithreaded\n\nI can feel the scores of messages being sent to the federal government from lobbyists saying what a threat Chinese hardware is to national security.\n\nfishfasell, 5 hours ago",
+      "contentHash": "206f089a8350b2848e98097928186faba98edc5d19b234bb688d1639fef1fa48",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49420873"
+        },
+        {
+          "kind": "text_link",
+          "offset": 246,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49421180"
+        }
+      ]
+    },
+    {
+      "id": 32974,
+      "date": "2026-08-24T20:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Anthropic's best AI model struggles to attract users as cheaper tools thrive\n\nhttp://archive.today/ZLojz\n\npmontra, 1 day ago",
+      "contentHash": "2895e6ddc175b3079986500859bbf7988e0e2fe043fa82d4c5e565292f51b193",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49411102"
+        },
+        {
+          "kind": "text_link",
+          "offset": 82,
+          "length": 26,
+          "url": "http://archive.today/ZLojz"
+        },
+        {
+          "kind": "text_link",
+          "offset": 119,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49411353"
+        }
+      ]
+    },
+    {
+      "id": 32975,
+      "date": "2026-08-24T21:40:00.000Z",
+      "editDate": null,
+      "text": "Re: How Europe is killing makers and micro-entrepreneurs\n\nA couple of things to note:\n\n1. The EU commission wanted a single central registry\n\n2. It was the member states, via the Council of Ministers, that torpedoed this.\n\n3. The EU now advises its member states to not implement/enforce this\n\n4. Until the correction, which is on its way, can be fully enacted.\n\nSo the same old same old:  member states do shitty stuff and blame the EU.\n\nmpweiher, 7 hours ago",
+      "contentHash": "ef6b8c4779796ba6d1366ea68a59c2be6983cef410f2b13500af5d029ce3e3d1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 52,
+          "url": "https://news.ycombinator.com/item?id=49419237"
+        },
+        {
+          "kind": "text_link",
+          "offset": 449,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49420499"
+        }
+      ]
+    },
+    {
+      "id": 32976,
+      "date": "2026-08-25T00:05:01.000Z",
+      "editDate": null,
+      "text": "Re: Xiaomi: New CPU matches Apple cores single threaded, much faster multithreaded\n\n> This is bad news for Mediatek and Qualcomm.\n\nAnd good news for everyone else.\n\npelagicAustral, 8 hours ago",
+      "contentHash": "5b1c39723c4423a43432888427bdeaeede087b35a680438901937893c0c16ca9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49420873"
+        },
+        {
+          "kind": "text_link",
+          "offset": 181,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49421665"
+        }
+      ]
+    },
+    {
+      "id": 32977,
+      "date": "2026-08-25T02:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Where did all the public bathrooms go?\n\nThis really hits home. As a person with IBS I basically cannot peacefully go outside in EU. I lived for many years in China and Thailand, and toilets are free, clean, and plentiful there, and you can easily ask any place to use their toilet - there's no stigma. I even had to run into a police station in rural China once. They were 100% chill about it, though they had to unlock a gate for me.\n\nXi Jinping really will be remembered as the Toilet King, he did issue a few decrees early on, and now in every Tier-88 rural Chinese village road you can find a modern toilet (yes, squat), clean, with water. Paper is hit and miss still though. Cross to Hong Kong and it's the same, but paper is reliable. Hong Kong is definitely richer.\n\nThen take any shopping mall in Bangkok, that's an absolutely next level experience, clean, smells good, relaxing music. Mmm...\n\nAnd EU is a freaking horror show. In many public toilets there's a used syringe compartment as well. Truly a 5-star service.\n\nmstaoru, 7 hours ago",
+      "contentHash": "127597178be24bbf0fe0b5e18eb035f4eaca6d6bd3d121dc195fe0c1d9a3b907",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49422800"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1041,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49424971"
+        }
+      ]
+    },
+    {
+      "id": 32978,
+      "date": "2026-08-25T03:50:01.000Z",
+      "editDate": null,
+      "text": "Re: IPFS Maintainers Winding Down\n\nThe post here is pretty confusing (so no blame to anyone who reads this as \"IPFS the project\" shutting down instead of just a single maintainer team, it's totally misleading) - but this is actually just a sunset announcement for _Shipyard_ - one of many IPFS implementation maintainers.\n\n*The IPFS Project is not sunsetting or shutting down* - just switching to individual maintainer grants instead of centralized implementation support within Shipyard.\n\nmomack2, 8 hours ago",
+      "contentHash": "5e84731e2e38e42c64d2e71a2fc33b07efa87db4c5c987480f60bc7da515b871",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 29,
+          "url": "https://news.ycombinator.com/item?id=49421489"
+        },
+        {
+          "kind": "text_link",
+          "offset": 499,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49424920"
+        }
+      ]
+    },
+    {
+      "id": 32979,
+      "date": "2026-08-25T04:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Where did all the public bathrooms go?\n\nI guess if you don’t have a massive population of antisocial people who destroy the public facility, you can provide them. It’s a shame we in the west surrendered that. Not the worst thing in the world, but I do find it frustrating often to not have a bathroom available nearby (small bladder)\n\nBut, while the toilets aren’t the worst sacrifice, the cumulative sacrifices made on the alter of our huge antisocial populations are profound\n\ntalon8635, 8 hours ago",
+      "contentHash": "eeadba085f72af7ef47eb1be9d1bd01d3b57c97de1a6991b644a252794c9e068",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49422800"
+        },
+        {
+          "kind": "text_link",
+          "offset": 494,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49425905"
+        }
+      ]
+    },
+    {
+      "id": 32980,
+      "date": "2026-08-25T06:05:00.000Z",
+      "editDate": null,
+      "text": "Re: How Europe is killing makers and micro-entrepreneurs\n\nI don't know if this EU regulation will work or not (most likely not), but I can share how it is done in China (where package volume is orders of magnitude higher).\n\nChina identifies \"choke points\" most packages pass: large platforms and logistics companies. Yes, Chinese e-commerce is more centralized on Alibaba/JD/PDD etc, but there are actually much more logistics companies in China than in EU.\n\nThey also do not introduce these regulations \"from tomorrow\" (well, sometimes they do, but it's a different topic). E.g. the non-degradable plastic regulation was issued in 2020 to come in effect in 2025. This gives time to prepare and implement (unlike EU border controls mess...)\n\nSo now if something is shipped in non-degradable plastic, the logistics company is fined along with the sender. This is much more scalable and easy to implement. Logistics companies might rise their prices a bit in light of expanded work scope, but it would be peanuts compared to every individual seller.\n\nCould EU just ask DHL/Hermes/whatever to charge an additional €1 \"for recycling\"? Yes, but...\n\nBut of course EU is fundamentally different in a way that the politicians need to please the electorate, so nothing is really planned ahead.\n\nmstaoru, 15 hours ago",
+      "contentHash": "8e37c973ad10c2dad5d29af5e10b3b94ef42d250073c43cb1436496a67dbc11b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 52,
+          "url": "https://news.ycombinator.com/item?id=49419237"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1295,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49420456"
+        }
+      ]
+    },
+    {
+      "id": 32981,
+      "date": "2026-08-25T11:35:00.000Z",
+      "editDate": null,
+      "text": "Re: iCloud+ Hide My Email addresses will remain on icloud.com\n\nThis is a huge selling point. Private email relays often get blocked, the only lasting solution is to put them on the same domain as, and in the same format as, a significant number of non-private email addresses. As far as I’m aware the only other provider doing this is Fastmail.\n\nComments about lock-in aren’t wrong, but it has to be this way. You can make arbitrary email addresses at your own domain, but anybody who feels like it can trivially automatically detect that those are all you.\n\nPersonally I use unique at own domain only where I’m identifying myself anyway, like my bank, and Fastmail masked email where I’m not. For most things it’s not actually that terrible to accept a small risk that they’re offline for a day between your being booted without warning and you changing your email address with them.\n\nkqp, 9 hours ago",
+      "contentHash": "64ba3124246d4a4a5dce22dfc1d1a2bec756d7c3cb91e44c0df948abb9d0adc9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 57,
+          "url": "https://news.ycombinator.com/item?id=49426564"
+        },
+        {
+          "kind": "text_link",
+          "offset": 891,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49428288"
+        }
+      ]
+    },
+    {
+      "id": 32982,
+      "date": "2026-08-25T13:50:02.000Z",
+      "editDate": null,
+      "text": "Re: How Europe is killing makers and micro-entrepreneurs\n\nYes. I used to sell objects on Amazon in Europe. You can sell from just one country, but then each sale outside of that country is an \"export\" that triggers high fees.\n\nFor sales to be \"local\", products need to be stored in warehouses in each country. But that in turn means the owner of said products (the seller) has to be registered for VAT in that country, and submitting annual reports in each country's language.\n\nI went to the trouble of registering in 6 different countries; in some countries, Amazon more or less helps sellers submit reports; in others, they offer to partner with local lawyers.\n\nThe result is a mess of reports, injunctions, penalties for late filing, etc. coming to you in Polish, German, Spanish, Hungarian. I eventually gave up.\n\nEurope is not actually a \"single market\". It's a federated bureaucracy entirely indifferent (or hostile) to small businesses.\n\nbambax, 23 hours ago",
+      "contentHash": "c11de64860128bec52723287f9894538ce3e61d3f7acf0b9b350bee0e34aca1c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 52,
+          "url": "https://news.ycombinator.com/item?id=49419237"
+        },
+        {
+          "kind": "text_link",
+          "offset": 953,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49420563"
+        }
+      ]
+    },
+    {
+      "id": 32983,
+      "date": "2026-08-25T14:20:00.000Z",
+      "editDate": null,
+      "text": "Re: How Europe is killing makers and micro-entrepreneurs\n\nThanks to tomis who posted the EU FAQ on the topic below: https://op.europa.eu/en/publication-detail/-/publication/ad1...\n\nNone of this applies to companies that are micro-enterprises or use generic rather than branded packaging. There's a helpful diagram on page 13. The author of this article seems to have imagined a worst-case scenario based on either a misunderstanding or misrepresentation of the EU rules; the discussion here seems to have a lot of people who are in a big rush to demonize their perceived political opponents on ideological grounds.\n\nanigbrowl, 17 hours ago",
+      "contentHash": "4d6971dcd75d0f1ba90d8ca3e8f2d186b3caf16f7531c53c4ba711ccb1d2a112",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 52,
+          "url": "https://news.ycombinator.com/item?id=49419237"
+        },
+        {
+          "kind": "text_link",
+          "offset": 116,
+          "length": 63,
+          "url": "https://op.europa.eu/en/publication-detail/-/publication/ad14cb8f-8d4f-11f1-9262-01aa75ed71a1"
+        },
+        {
+          "kind": "text_link",
+          "offset": 627,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49426049"
+        }
+      ]
+    },
+    {
+      "id": 32984,
+      "date": "2026-08-25T15:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Where did all the public bathrooms go?\n\nLack of bathrooms has been called tragedy of the commons in this thread, but it's not the \"commons\" that are the problem.\n\nThe worst 10% of society determine what we can and can't have. The \"commons\" aren't having public sex, shooting up drugs, or destroying the bathrooms with lack of... etiquette. The commons are victimized when these things happen and then there's eventually no choice but to shut them down unless there's willingness to crack down on the explicit problematic behavior.\n\nxyzelement, 20 hours ago",
+      "contentHash": "dcf9b7292f6686c6dd6000727e583ef531e9b2af720a539ceecedfb6fe63c398",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49422800"
+        },
+        {
+          "kind": "text_link",
+          "offset": 548,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49424470"
+        }
+      ]
+    },
+    {
+      "id": 32985,
+      "date": "2026-08-25T16:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple introduces M6 and M5 Ultra for a big leap in performance and AI compute\n\nI know, this is a bit of a meaningless comment, but it's funny in a way. Feels like late 90s again:\n\n    - Xiaomi: We have matched Apple in CPU performance.\n    - Apple: *Meep Meep...*\n\nbayindirh, 3 hours ago",
+      "contentHash": "3e3cb4c23d811f944f18607f05ba2f1d43d6f088637b2077e1e3338ce8472342",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 77,
+          "url": "https://news.ycombinator.com/item?id=49433292"
+        },
+        {
+          "kind": "text_link",
+          "offset": 280,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49434017"
+        }
+      ]
+    },
+    {
+      "id": 32986,
+      "date": "2026-08-25T17:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple introduces M6 and M5 Ultra for a big leap in performance and AI compute\n\nEven w/the pricing spike, inflation adjusted we are back to roughly the prices of a new Mac SE/30 for something that can beat a turing test w/o sweating.\n\nI yield the floor to no one when it comes to pessimism, but that's incredible.\n\nrecursivedoubts, 4 hours ago",
+      "contentHash": "b2c69195746ac34993b30d77df0aa1fea4664fe69fc23b39b50af30d4b77d91f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 77,
+          "url": "https://news.ycombinator.com/item?id=49433292"
+        },
+        {
+          "kind": "text_link",
+          "offset": 335,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49433608"
+        }
+      ]
+    },
+    {
+      "id": 32987,
+      "date": "2026-08-25T19:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Dolly Parton has died\n\nI’ve never been much of a country music fan, but I’ve always been a Dolly fan. Great songwriter, philanthropist, and seemed like a genuinely nice person. RIP, Dolly, you were one of the greats.\n\nmikestew, 2 hours ago",
+      "contentHash": "d1bdb8fc7a579c30e48c074bff8266edf3dbadf2f034ebeda028dc05f84295e3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 21,
+          "url": "https://news.ycombinator.com/item?id=49438052"
+        },
+        {
+          "kind": "text_link",
+          "offset": 232,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49438245"
+        }
+      ]
+    },
+    {
+      "id": 32988,
+      "date": "2026-08-25T20:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Dolly Parton has died\n\n“Dolly Parton's Imagination Library has gifted over 318 million free books to children worldwide since its inception”\n\nAmazing contributions to many aspects of life\n\nAboutplants, 2 hours ago",
+      "contentHash": "05eff16ce34bf8c2a62c722939cd2bee29911715c19ce8333cb56555ee4cfdf1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 21,
+          "url": "https://news.ycombinator.com/item?id=49438052"
+        },
+        {
+          "kind": "text_link",
+          "offset": 206,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49438447"
+        }
+      ]
+    },
+    {
+      "id": 32989,
+      "date": "2026-08-25T20:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple introduces M6 and M5 Ultra\n\nReading Infinite Games, they tell an anecdote about a Microsoft exec on a flight telling an Apple exec that the Zune was a way better portable music player than the iPod. The Apple exec was just “yup, you’re probably right” and then soon after the iPhone dropped\n\nderwiki, 7 hours ago",
+      "contentHash": "993858dbfd57b4ab56b1422f43c6a7178d8f6966dd195f1a3875379569b60f70",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 32,
+          "url": "https://news.ycombinator.com/item?id=49433292"
+        },
+        {
+          "kind": "text_link",
+          "offset": 311,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49434332"
+        }
+      ]
+    },
+    {
+      "id": 32990,
+      "date": "2026-08-25T22:05:00.000Z",
+      "editDate": null,
+      "text": "Re: My Friend Aaron\n\nOP here - longtime HN user. I submitted this story to a writing contest a few months back, but didn’t hear anything from them.\n\nI posted it here on a punt and getting front page of HN is 10x the feeling any writing contest could give me!\n\nThanks to all who read and commented, and glad to hear it resonates with some of you!\n\n[EDIT]: There've been a lot more comments since I wrote this one. I want you all to know that I've read every single comment and am ever so grateful for everyone who responded here / took the time to read the story!\n\nsarreph, 3 hours ago",
+      "contentHash": "de4eea8dddbdb5f02d9ebca2a1321f9a63ba796052b85346a8caeaccf66074a9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 15,
+          "url": "https://news.ycombinator.com/item?id=49437069"
+        },
+        {
+          "kind": "text_link",
+          "offset": 573,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49438943"
+        }
+      ]
+    },
+    {
+      "id": 32991,
+      "date": "2026-08-25T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple introduces M6 and M5 Ultra\n\nI was blown away by M1 Pro, and used it for 4 years before it became a little sluggish, and replacing it with an Asus S16 running on Ryzen AI 9 HX 370 (an excellent laptop). One of the main reasons was missing my old Linux setup.\n\nI've briefly tested M5 Pro in an Apple store and was surprised by how quick it felt and did anything. A tangible and significant difference, and I really feel it would be good getting it, or M6.\n\nHowever - before, MacOS was a big factor driving me towards Apple - now, it would be hard for me to give up my Linux setup and all the stuff I love about it, even for such performance...Linux progressed really nicely, while MacOS deteriorated at the same rate, and it's changing the balance and the decision for me.\n\nalluro2, 3 hours ago",
+      "contentHash": "1efbe82fde25388dc41f68227a0459ad0c8053bae4ef098eb95dbb6db59ff026",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 32,
+          "url": "https://news.ycombinator.com/item?id=49433292"
+        },
+        {
+          "kind": "text_link",
+          "offset": 791,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49439167"
+        }
+      ]
+    },
+    {
+      "id": 32992,
+      "date": "2026-08-25T23:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Starbase, LA\n\nIt’s easy to be pessimistic about Musk timelines/ big tech but I am thrilled that ambitious, real world, hard projects are happening in the US again.\n\nianm218, 6 hours ago",
+      "contentHash": "9fa17b3487baab699ba41ff7890393b1cc355a79d6a7b6ea9494931619f2f6a1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49436822"
+        },
+        {
+          "kind": "text_link",
+          "offset": 178,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49437971"
+        }
+      ]
+    },
+    {
+      "id": 32993,
+      "date": "2026-08-26T01:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Bomb fishing is wreaking havoc on Indonesia's coral reefs\n\nI'm a scuba diver here in Thailand and you can still see blast fishing damage from decades ago that never fully recovered. It's truly as terrible as the article makes it out to be.\n\nWhat is interesting is that both Indonesia and Thailand have strong and similar anti blast fishing laws since early 00s that charge 5+ years of prison time.\n\nHowever, Thailand has been much more successful with taming blast fishing which is practically gone now and the story here is very insightful.\n\nSome of it is due to Thailand's geography and high demand for marine tourism but the biggest push here was EU and US regulation that gave Thailand opportunity to shape up. In 2015 (same year when Thai anti blast laws were codified more strictly) US TIP (trafficking in persons) report down-graded Thailand to tier 3 mostly due to fishing slave workers while at the same time EU's IUU (illegal, unreported and unregulated fishing) issued a yellow card. All of which lead to the biggest fishery reform in Thai history which mostly eliminated blast fishing.\n\nSince then Thailand is back to tier 2 of TIP and got lost the yellow card from EU's IUU. Indonesia never got tier 3 of TIP despite many arguing it should have and never got a card from IUU. Stories like this turn me into a globalization believer - I know it's not perfect but the system is kinda working?\n\nwraptile, 10 hours ago",
+      "contentHash": "990ddb2c65c3460e303d72a23853c3f05d0d32c07f05112b2189bc4e6827184b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 57,
+          "url": "https://news.ycombinator.com/item?id=49434820"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1419,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49435974"
+        }
+      ]
+    },
+    {
+      "id": 32994,
+      "date": "2026-08-26T03:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Nitter and XCancel receive cease and desist notices\n\nA real shame. Even if you put all the political arguments aside it sucks when a site requires you to log in before you can read content on it.\n\nFor me that’ll mean I just don’t read content on there any more. Which I realise X doesn’t care about, I’m not monetisable anyway. But a shame nonetheless.\n\nafavour, 4 hours ago",
+      "contentHash": "64c242190a4344a9c877a984904f43c5e58546b9cdccb2e1ed16781d3c6b9a51",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49437283"
+        },
+        {
+          "kind": "text_link",
+          "offset": 367,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49441899"
+        }
+      ]
+    },
+    {
+      "id": 32995,
+      "date": "2026-08-26T04:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple introduces M6 and M5 Ultra\n\nStill rocking an M1 Air - 2020 build.  8GB ram.  No slowdown or deterioration at all.  Battery health reports the battery max capacity at 84%.  Best computer I've ever owned, by far.\n\ngreenowl, 8 hours ago",
+      "contentHash": "ed7cda56f9917ba6a6031f03eadb8880c538a392071d177b0a4f761acb9de33e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 32,
+          "url": "https://news.ycombinator.com/item?id=49433292"
+        },
+        {
+          "kind": "text_link",
+          "offset": 232,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49440111"
+        }
+      ]
+    },
+    {
+      "id": 32996,
+      "date": "2026-08-26T08:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple introduces M6 and M5 Ultra\n\nMore validated by the day that my $450 M4 Mac Mini (16GB) was the best deal in computing for a long, long time.\n\npaxys, 19 hours ago",
+      "contentHash": "2c4d4221525f294476a57cf476392f21257b6d5492d9957749723be0b9389a17",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 32,
+          "url": "https://news.ycombinator.com/item?id=49433292"
+        },
+        {
+          "kind": "text_link",
+          "offset": 158,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49433632"
+        }
+      ]
+    },
+    {
+      "id": 32997,
+      "date": "2026-08-26T08:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Nitter and XCancel receive cease and desist notices\n\nThe only reason why I needed nitter to access x is due to organizations still using it as their main communication solution to their customers. Even my local council uses it. I would like this to be the final push for people to get off x but I suspect its going g to stay and I guess I don't get to see news from my local council anymore.\n\nUgvx, 11 hours ago",
+      "contentHash": "3af011e7aefc3fa25d782a85d555d7d4a8a9e909296c999c951db33bdffc9fb8",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49437283"
+        },
+        {
+          "kind": "text_link",
+          "offset": 403,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49441208"
+        }
+      ]
+    },
+    {
+      "id": 32998,
+      "date": "2026-08-26T12:50:00.000Z",
+      "editDate": null,
+      "text": "Re: When str.lower() is a security vulnerability in Python\n\n> This is why calling str.lower() represents a difference in the implementation and the specification, and therefore a vulnerability:\n\nI wish there was some explanation how this is a vulnerability and not just a bug generating erroneous data.\n\nVulnerability for me sounds like there’s a reasonable way to create an exploit from the bug, and I don’t see one here as someone who’s not very familiar with the topic.\n\nechoangle, 15 hours ago",
+      "contentHash": "b39e8ae6f8afd9130391b7a46823227248edd0fb3e04acbd15dc70037a91a98f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 54,
+          "url": "https://news.ycombinator.com/item?id=49440410"
+        },
+        {
+          "kind": "text_link",
+          "offset": 485,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49441068"
+        }
+      ]
+    },
+    {
+      "id": 32999,
+      "date": "2026-08-26T14:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Nitter and XCancel receive cease and desist notices\n\nOnce upon a time I used Twitter's API to scan for tweets that were talking about a particular Wikipedia page. \nDoing semantic analysis, I did insert the tweets in the right place of the page. I did it as a student, using the free API. \nTwitter was the open, technically respected network with a great engineering blog. \nNow it's a political project to elect the extreme-right in Europe.\n\nmaelito, 5 hours ago",
+      "contentHash": "78ce7897069783148b1a24bff840bcf68c709ac2dcdeaf83defa382d3664f168",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49437283"
+        },
+        {
+          "kind": "text_link",
+          "offset": 454,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49445838"
+        }
+      ]
+    },
+    {
+      "id": 33000,
+      "date": "2026-08-26T14:35:00.000Z",
+      "editDate": null,
+      "text": "Re: AWS Acquires DuckDB\n\nThe title is misleading. AWS acquired DuckLabs, NOT DuckDB. The DuckDB source code is still owned by the nonprofit DuckDB Foundation.\n\nQuote from the article:\n\n\"As the CWI representative on the DuckDB Foundation... When DuckLabs spun out of CWI, we created this foundation, which holds all IP of open-source DuckDB, and will continue to do so.\" - Peter Boncz\n\ndaviewales, 1 hour ago",
+      "contentHash": "7796aea45a4f0997642e20c8e581d7b1cd27cb75ef7efa6dbcf3e4547f107c02",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 19,
+          "url": "https://news.ycombinator.com/item?id=49448321"
+        },
+        {
+          "kind": "text_link",
+          "offset": 397,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49448892"
+        }
+      ]
+    },
+    {
+      "id": 33001,
+      "date": "2026-08-26T15:05:00.000Z",
+      "editDate": null,
+      "text": "Re: FDA authorizes first wearable device that monitors ketone and blood sugar levels\n\nA friend died of diabetic ketoacidosis. He loved technology and seeing people succeed. Thinking of him with this news. Miss you Dan.\n\nGrateful we're moving forward on so many fronts in the world.\n\nmadrox, 17 hours ago",
+      "contentHash": "818da58b386d9890013a8ac86de794422adddfe7f0d5955b0fe263cf25c7577e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 80,
+          "url": "https://news.ycombinator.com/item?id=49439017"
+        },
+        {
+          "kind": "text_link",
+          "offset": 291,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49441432"
+        }
+      ]
+    },
+    {
+      "id": 33002,
+      "date": "2026-08-26T15:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Black hole singularity is a surface not a point\n\nShould be pointed out that this is a critique of common popsci journalism tropes and not a fancy new research result. Anyone who has taken a graduate level class in General Relativity would have been able to tell you the same.\n\nsigmoid10, 22 hours ago",
+      "contentHash": "fe39dd636c813f39f6521f5de8e7eacca750da840b9159d9cd3c71cb107eb057",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 47,
+          "url": "https://news.ycombinator.com/item?id=49437210"
+        },
+        {
+          "kind": "text_link",
+          "offset": 292,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49437436"
+        }
+      ]
+    },
+    {
+      "id": 33003,
+      "date": "2026-08-26T16:20:00.000Z",
+      "editDate": null,
+      "text": "Re: New Mac Studio with M5 Max and M5 Ultra\n\nDue to pricing insanity (not that Apple prices weren’t insane before the ram/ssd shortages) I’m not in the market but I do wonder if my next computer should be a Mac Studio instead of a MBP that lives its life docked. Might be better to just run a Studio and Neo for the very few times I actually need remote capabilities.\n\njoshstrange, 1 day ago",
+      "contentHash": "e7572622d435fa9342a5dff29718f664cba44a90d54d07a42c9ff2e6476ac9aa",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 39,
+          "url": "https://news.ycombinator.com/item?id=49433316"
+        },
+        {
+          "kind": "text_link",
+          "offset": 382,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49433413"
+        }
+      ]
+    },
+    {
+      "id": 33004,
+      "date": "2026-08-26T16:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Disruption with Some GitHub Services\n\nI noticed earlier this week that my URL bar now pre-fills githubstatus.com instead of github.com when I type \"gith\"\n\nfrenchie4111, 1 hour ago",
+      "contentHash": "0a6dd1cd92cd798164173ad5a97011b8a9bb71ba67f86dac6eb06fce177807a6",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49450722"
+        },
+        {
+          "kind": "text_link",
+          "offset": 100,
+          "length": 16,
+          "url": "http://githubstatus.com/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 128,
+          "length": 10,
+          "url": "http://github.com/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 173,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49450987"
+        }
+      ]
+    },
+    {
+      "id": 33005,
+      "date": "2026-08-26T17:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Qwen3.8-Flash-Next: A New Architecture, Towards Ultimate Cost-Efficiency\n\nAdding to my homelab stack, hopefully it doesn't overthink like the little model. Actually, hoping it thinks a bit less. Wait actually I'm really praying it reasons a bit more directly. But wait, I'm really sure that it must be a bit better.\n\nlnenad, 4 hours ago",
+      "contentHash": "f93400a88894b5089a8d4d89859665cff964039e96ea5c5a9fde0134020bef3d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 72,
+          "url": "https://news.ycombinator.com/item?id=49448210"
+        },
+        {
+          "kind": "text_link",
+          "offset": 329,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49448838"
+        }
+      ]
+    },
+    {
+      "id": 33006,
+      "date": "2026-08-26T17:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Nitter and XCancel receive cease and desist notices\n\nMiddle powers should heed Cory Doctorow's advice [0] and start offering legal protection in their jurisdictions for precisely this type of projects.\n\nAmerica is a hostile nation, who has sought to align everyone with its interests, under a false pretense of mutual benefit, while instead its tech sector has caused much harm at a global scale. America is now doubling down on value extraction, at an obvious expense to everyone else.\n\nMiddle powers should not be granting to America any goodwill whatsoever. There is nothing in it for them anymore, except irresponsible reliance on a bad faith actor.\n\n[0] https://news.ycombinator.com/item?id=46509019\n\nnegura, 18 hours ago",
+      "contentHash": "d9a9bf5045518eacae4418329215df55b3b34b4b7f7dfc44371814e13029c631",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 51,
+          "url": "https://news.ycombinator.com/item?id=49437283"
+        },
+        {
+          "kind": "text_link",
+          "offset": 663,
+          "length": 45,
+          "url": "https://news.ycombinator.com/item?id=46509019"
+        },
+        {
+          "kind": "text_link",
+          "offset": 718,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49441948"
+        }
+      ]
+    },
+    {
+      "id": 33007,
+      "date": "2026-08-26T17:20:00.000Z",
+      "editDate": null,
+      "text": "Re: How credit card rewards became a $9.2B wealth transfer\n\nImportant context: this is US thing. EU capped interchange fees at 0.2% for debit and 0.3% for credit cards.\n\nSo in US card processing is x5-x10 more expensive.\n\nSXX, 1 day ago",
+      "contentHash": "b6ab693bfdfa035e850e10526b87edab2517dd2be155e5c4b693b15a682b5273",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 54,
+          "url": "https://news.ycombinator.com/item?id=49432201"
+        },
+        {
+          "kind": "text_link",
+          "offset": 227,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49432456"
+        }
+      ]
+    },
+    {
+      "id": 33008,
+      "date": "2026-08-26T17:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Qwen3.8-Flash-Next: A New Architecture, Towards Ultimate Cost-Efficiency\n\nYou’re absolutely right to be hopeful. Three honest possibilities, and I’ll be straight with you about each:\n\n1. It overthinks — Just like the previous iteration. High confidence.\n2. It doesn’t overthink — Improvement from the last model for your use case. Regression for others.\n3. It sometimes overthinks — Best case all around.  A feature, not an impairment.\n\nOne final thing worth mentioning:\n(I made myself irrationally angry writing this)\n\nredrix, 3 hours ago",
+      "contentHash": "4c8d3cf0cbb85f6d9f75c898548ee40f323087567397570b47d6397aa5651e9e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 72,
+          "url": "https://news.ycombinator.com/item?id=49448210"
+        },
+        {
+          "kind": "text_link",
+          "offset": 532,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49449454"
+        }
+      ]
+    },
+    {
+      "id": 33009,
+      "date": "2026-08-26T19:20:00.000Z",
+      "editDate": null,
+      "text": "Re: AWS Acquires DuckLabs\n\nI'm glad that DuckDB has a foundation in place and hope it is resilient enough to push the DB forward when the time comes.\n\nOut of all the big orgs, Amazon is probably the one that has the least regard for keeping technically interesting projects alive, and the certainly will bulldoze it for some dumb reason when the next re-org comes.\n\nhobofan, 6 hours ago",
+      "contentHash": "c6deba6729d0bf1697f4423e1292ef9911b7d85d85eb99650df2903a046898a5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 21,
+          "url": "https://news.ycombinator.com/item?id=49448321"
+        },
+        {
+          "kind": "text_link",
+          "offset": 375,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49448538"
+        }
+      ]
+    },
+    {
+      "id": 33010,
+      "date": "2026-08-26T20:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Meta reaches $17B settlement over social media harms to children\n\nPay 25% from your 2025 profit for harming children since at least 2019 and be able to continue doing so. Sounds like a loss for society and a win for Meta.\n\n_ink_, 7 hours ago",
+      "contentHash": "b8b8a207bac2db8df86a5fa523432ef2eb70766aeb45e68baf247ec23b509dc8",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 64,
+          "url": "https://news.ycombinator.com/item?id=49448819"
+        },
+        {
+          "kind": "text_link",
+          "offset": 234,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49449127"
+        }
+      ]
+    },
+    {
+      "id": 33011,
+      "date": "2026-08-26T21:05:00.000Z",
+      "editDate": null,
+      "text": "Re: RAG Is Simpler Than You Think\n\nI worked on large scale RAG systems before and can say people vastly underestimate full text search and vastly overestimate embeddings. FTS is really easy, portable and scalable and gets you very far, the 80/20 rule applies. Embeddings appear to be nice and magic but when you really get into them you notice: semantic similarity isn’t as good as you think and certainly it won’t make everyone happy. You will inevitably end up having to re-embed more or different chunks of your text to accommodate more and more precise embedding search - at which point you’ll go the last mile and do reranking etc etc all the while having to support the operational burden of vector search.\nThen you turn around and build a search query with 500 keywords and sure it’s painful but it just works, accommodates all use cases, scales and is overall less annoying to maintain.\n\nusernametaken29, 10 hours ago",
+      "contentHash": "9f68ef59b7d86ac21c9cdc95d1d9e1d1df91a21fb0947161de5dc096a8f2af78",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 29,
+          "url": "https://news.ycombinator.com/item?id=49445727"
+        },
+        {
+          "kind": "text_link",
+          "offset": 913,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49446726"
+        }
+      ]
+    },
+    {
+      "id": 33012,
+      "date": "2026-08-26T21:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Twitter Viewer – View Twitter Without Account\n\nI used Twitter for over 10 years without an account then suddenly in 2022 that was completely disrupted and no longer an option. Reddit is now this way too.\n\nBut I find it ridiculous that Twitter, Facebook, LinkedIn, etc. get used by government agencies and local businesses to post announcements and these sites are increasingly if not completely unusable without being logged in (and in some cases requiring an app instead of the site). Even Bluesky has this problem!\n\nSometimes this information is really important! And I even if I did have an account I may not have access to log in on every device (or even want to).\n\nIt’s absurd that social media can become this like critical communications platform for severe weather alerts or business hours or anything but the sites hosting it are completely hostile to allowing you to see it.\n\nSites like this are a bandaid on a gangrenous foot. Thanks for allowing me to see links from twitter but it isn’t a sustainable solution clearly.\n\nkemotep, 6 hours ago",
+      "contentHash": "b53de2f2066b8d4e3ac86fa02ea58b59143d8efae06e0e0979bd058e9406d850",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 45,
+          "url": "https://news.ycombinator.com/item?id=49449576"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1046,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49450712"
+        }
+      ]
+    },
+    {
+      "id": 33013,
+      "date": "2026-08-26T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: How Universities Should Prepare Founders\n\nThis is shockingly vapid and wishy-washy even for PG.\n\nLeaving this weird, rather Valley-specific, even YC-specific, navel-gazing definition of \"founder\" aside, universities should do what they promise to do for their students. And if possible for way, way, way less money.\n\nHe seems quite out of touch with the level of economic hardship involved in being a student; a huge number of students already work a couple of jobs and are navigating small businesses, especially here in the UK where he apparently now lives. They aren't going to have enough \"free time\" to play with a \"project\" even if a bit more is made available by loosening the curriculum.\n\nIf any change is necessary it should be that every university student has access to actual education and ongoing (post-graduation) support to start a real, not hypothetical business, rather than leaving them in this \"ripe for YC picking\" state where they have \"done projects\" but don't really have any awareness of business.\n\nIf students leave university immediately able to run their own businesses, understand how to bootstrap, be closer to self-funding etc., that leaves them in a stronger position than if they can show they have done stuff but need an external startup meat grinder to get them anywhere. Especially since the job market is being screwed the world over.\n\nBut YC doesn't want its people to be that independent. It wants them persuadable, overconfident and desperate to sign up to space camp.\n\ndofm, 2 days ago",
+      "contentHash": "3c235f532227b521c51c2bb900489fc6662c2235a9b6dbaeef5eaa5c37ee2c27",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 40,
+          "url": "https://news.ycombinator.com/item?id=49428121"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1519,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49430878"
+        }
+      ]
+    },
+    {
+      "id": 33014,
+      "date": "2026-08-26T23:50:00.000Z",
+      "editDate": null,
+      "text": "Re: U.S. State Department Pauses Immigrant Visa Applications\n\nSo for those that don't know, it's quite common for a visa renewal to be required to leave the country. Depending on the visa, you might have to do this every year.\n\nSo just imagine, having a normal job in the US and you're asked to leave to renew your visa and this stuff happens.\n\nThat's no more appointment, not even a new date and you're now very likely unable to work and possibly can't even enter the country to get your belongings if you were to leave.\n\nJust 'putting a pause' on people with existing appointments with no answer for when they might resume is.... Inhumane\n\nhvb2, 5 hours ago",
+      "contentHash": "bc73402dfe940668ce68aaf5ea900601ecce3f7b527efc9cb4f03b31e60ab87f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 56,
+          "url": "https://news.ycombinator.com/item?id=49452709"
+        },
+        {
+          "kind": "text_link",
+          "offset": 648,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49453962"
+        }
+      ]
+    },
+    {
+      "id": 33015,
+      "date": "2026-08-27T03:50:00.000Z",
+      "editDate": null,
+      "text": "Re: U.S. State Department pauses immigrant visa applications\n\nthe current admin are working hard to destroy the U.S as if they're foreign agents.\n\nnot only are they making it hard & unbearable for families of US citizens & PR holders to be together.\n\nwhile at the same time - discouraging talent to come to the US at a crucial time when talent is at a premium due to A.I development.\n\nlast the backwards energy policy of banning renewable energy.\n\ndzonga, 9 hours ago",
+      "contentHash": "100c0607416a31061801f4a10dd469cb13a390f9638cc3c1cdfc95a1253621a7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 56,
+          "url": "https://news.ycombinator.com/item?id=49452709"
+        },
+        {
+          "kind": "text_link",
+          "offset": 456,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49453997"
+        }
+      ]
+    },
+    {
+      "id": 33016,
+      "date": "2026-08-27T04:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Taylor Farms: How One Company's Reach Became a National Risk\n\nFood is being produced at a scale, efficiency, and level of safety unheard of generations ago. One of the recommendations in this article is to buy \"through farmers markets, community-supported agriculture programs, farm stands, and direct online sales.\" That's a fine way to get fresh food, but if you think the people selling lettuce at farmers markets or farm stands have any verified food safety or food handling expertise, they don't. And online sales? Who knows.\n\nFood packaged and distributed by these mega-suppliers probably has less human handling through the supply chain than any other food, and they have lot numbers and sources logged for all of it, which allowed them to quickly pinpoint the farm that was the source of the Cyclospora outbreak.\n\nThere are downsides to the consolidation of food suppliers, to be sure, but food safety is probably better for it.\n\nSoftTalker, 13 hours ago",
+      "contentHash": "d328d91aee85ad44231af997dd020c760e420bf840854184852f860b63c84d1b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 60,
+          "url": "https://news.ycombinator.com/item?id=49449749"
+        },
+        {
+          "kind": "text_link",
+          "offset": 954,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49450953"
+        }
+      ]
+    },
+    {
+      "id": 33017,
+      "date": "2026-08-27T05:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Nvidia agrees to acquire Hugging Face for $13B\n\nNvidia's been pretty terrible for open source / free software. No need to quote Linus Torvalds here. They want to control what runs on their hardware. They want to you write code against their proprietary drivers and APIs, not directly against the hardware (which these days of course also contains plenty of software, but still).\n\nDon't expect things to go differently this time around. Nvidia wants control over the software stack. Acquiring HF fits in perfectly. The play is long term.\n\nGeertB, 3 hours ago",
+      "contentHash": "d375eea8cece4a509c7b53ae24bb82508dec05f72f4541521cf81dfc6634a349",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49458161"
+        },
+        {
+          "kind": "text_link",
+          "offset": 550,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49458842"
+        }
+      ]
+    },
+    {
+      "id": 33018,
+      "date": "2026-08-27T07:50:00.000Z",
+      "editDate": null,
+      "text": "Re: The Hugging Face incident and the road ahead\n\nI would like to contest the following,\n\n    > and take dangerous actions that no human directed.\n\nA human did direct it. They did. From their own prior report, https://openai.com/index/hugging-face-model-evaluation-secur... ,\n\n     > This incident occurred during an internal evaluation which prompts models to pursue advanced exploitation using complex attack paths, in an effort to quantify their cyber capabilities\n\nModel is told and being tested to \"pursue advanced exploitation.\"\n\nThe model pursues \"advanced exploitation\" as told.\n\nWhy are we surprised? The model did exactly what it was told, albeit in an unintended, emergent strategy that's very different from what was intended exactly like the hundreds of such algorithms before.\n\nThis narrative that these machines have magical, malicious \"unaligned\" autonomy is a rather convenient interpretation that lets the process off the hook. I am not interested in blaming companies or people, but processes and engineering; and in this case, a system was given a goal and it achieved that goal.\n\nAre we meant to be surprised that computers do as they're told in unexpected ways when incentivised exactly as indicated from decades of research? (e.g. - https://en.wikipedia.org/wiki/Eurisko https://en.wikipedia.org/wiki/Evolved_antenna )\n\nThe issue isn't the models becoming smarter. The issue is that the process of \"testing\" was careless. There's a huge distinction here, and one allows us to grow; the other shrinks our world. Just a thought.\n\nareoform, 10 hours ago",
+      "contentHash": "b57d0c1bcd7bb8abcdb79226a7fa9ffaaab45221769f2962b43eea0395ee06a5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 44,
+          "url": "https://news.ycombinator.com/item?id=49454314"
+        },
+        {
+          "kind": "text_link",
+          "offset": 210,
+          "length": 63,
+          "url": "https://openai.com/index/hugging-face-model-evaluation-security-incident/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1256,
+          "length": 37,
+          "url": "https://en.wikipedia.org/wiki/Eurisko"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1294,
+          "length": 45,
+          "url": "https://en.wikipedia.org/wiki/Evolved_antenna"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1561,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49456365"
+        }
+      ]
+    },
+    {
+      "id": 33019,
+      "date": "2026-08-27T09:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Nvidia agrees to acquire Hugging Face for $13B\n\n> NVIDIA is one of the most open labs.\n\nOf course they are. They're commoditizing their complement.\n\nI want to own the hardware, not play around in an nvidia fiefdom full of nvidia rules.\n\nmatheusmoreira, 6 hours ago",
+      "contentHash": "5528d98995f96e5d1a83fc94d86e5c6a659b9dfb207fa9f689851cf83e2e1e90",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49458161"
+        },
+        {
+          "kind": "text_link",
+          "offset": 257,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49459338"
+        }
+      ]
+    },
+    {
+      "id": 33020,
+      "date": "2026-08-27T10:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Tim Curry has died\n\nI often chuckle at the observation that Tim Curry and Michael Caine's respective roles in the Muppet films were so beloved because Michael Caine acted like all the muppets were real actors, and Tim Curry acted like he was a muppet. He would have an impressive range of serious / comedic roles anyway, but I admire the ability for an actor that successful to be able to put himself be in such a silly role that well too.\n\nTallGuyShort, 18 hours ago",
+      "contentHash": "8cf916311d4e6e11faf8f94218305c75734e35a76b8223a11480f3ab38a96025",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 18,
+          "url": "https://news.ycombinator.com/item?id=49451448"
+        },
+        {
+          "kind": "text_link",
+          "offset": 459,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49451991"
+        }
+      ]
+    },
+    {
+      "id": 33021,
+      "date": "2026-08-27T14:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Nvidia agrees to acquire Hugging Face for $13B\n\nI guess this unfortunately means HuggingFace won't be \"the first company to go public with an emoji instead of the three-letter ticker\" as the cofounders originally intended:\n\n  \"When we started the company, a running joke with my co-founders was that we wanted to be the first company to go public with an emoji instead of the three-letter ticker when you go in the NASDAQ.\"\n  \n  -- Clem Delangue (https://unsupervisedlearning.substack.com/p/the-future-of-open-vs-closed-source)\n\nmrshu, 6 hours ago",
+      "contentHash": "cdc628d7bd6c529f2a2190566f6275bb7e9842b0e06ca5abd0d49d85790f9f05",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49458161"
+        },
+        {
+          "kind": "text_link",
+          "offset": 540,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49461482"
+        }
+      ]
+    },
+    {
+      "id": 33022,
+      "date": "2026-08-27T14:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Tell HN: PayPal Blocks GrapheneOS\n\nThis is arguably the most irritating thing with just about every largecorp developer: \"os that hasn't been updated in 6 years? Sure boss!\". Os that is built specifically around security and privacy with daily updates: \"No, you can't do that\". Annoying - yes. Safe way to make sure I will stop being your customer - also YES!\n\naxegon_, 3 hours ago",
+      "contentHash": "a9259c4e03f6ede9a692ec113ca0bb6c9da52fdc079cec4c62e8dfa6bfd51bda",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 33,
+          "url": "https://news.ycombinator.com/item?id=49462253"
+        },
+        {
+          "kind": "text_link",
+          "offset": 374,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49463094"
+        }
+      ]
+    },
+    {
+      "id": 33023,
+      "date": "2026-08-27T14:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Nvidia agrees to acquire Hugging Face for $13B\n\nGrim prediction:\n\n\"Quantized models are no longer permitted on the Hugging Face platform. Reduced precision models are a safety hazard and a violation of our TOS. Click here to speak with a sales representative about our many exciting cloud hosting offerings or enterprise GPU packages.\"\n\nrandusername, 3 hours ago",
+      "contentHash": "46c1c6a5659c6be8ddd6b1042752b28564d25cebbcb43cdf5d33ab2bf476370b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49458161"
+        },
+        {
+          "kind": "text_link",
+          "offset": 355,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49463440"
+        }
+      ]
+    },
+    {
+      "id": 33024,
+      "date": "2026-08-27T14:50:00.000Z",
+      "editDate": null,
+      "text": "Re: U.S. State Department pauses immigrant visa applications\n\nMy company has a H-1B guy that travelled home to India a few months ago and since then can't come back because the next date he can get with the US embassy is next year. Seems he may get stuck even longer...\n\nI am to some degree on board with keeping a closer eye on immigration, but the way the current administration does it feels intentionally cruel. The guy at my company has a house, wife, and kids in the US; his visa is perfectly legal, so it seems it would make sense to process these people quickly. But instead, he is now in some limbo. Same for ICE. Clamping down on illegal immigration makes sense, but it doesn't make sense for ICE to behave like some unaccountable secret police that hires the biggest assholes they can find who can then do whatever they want.\n\nvjvjvjvjghv, 14 hours ago",
+      "contentHash": "6892457974a63e2735492cb086190bb23cd26bcf26db8b0854973efd8a34e5c1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 56,
+          "url": "https://news.ycombinator.com/item?id=49452709"
+        },
+        {
+          "kind": "text_link",
+          "offset": 851,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49458138"
+        }
+      ]
+    },
+    {
+      "id": 33025,
+      "date": "2026-08-27T15:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Nvidia agrees to acquire Hugging Face for $13B\n\nNvidia for Hugging Face will be even worse than Microsoft for GitHub and we know now how low the bar is here.\n\ndoe88, 7 hours ago",
+      "contentHash": "ceab54556544581b5875d803bfa70ea998a8b098510e36638c4c182adba9b32d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49458161"
+        },
+        {
+          "kind": "text_link",
+          "offset": 170,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49461344"
+        }
+      ]
+    },
+    {
+      "id": 33026,
+      "date": "2026-08-27T19:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Nebula Sans\n\nIt's a little beside the point of the post, but I just want to fly a flag for Nebula: I subscribed solely to get early versions of Jet Lag: The Game, but I'm finding myself watching it more and more! It has many of the channels I would go to YouTube for, but I've also discovered several really good ones that I had never heard of. And it has a similar feel to Kagi, in the sense of \"freeing\" yourself from the algorithm. It happens so often on YouTube that I see a video recommended but think to myself \"if I click this, am I going to get recommendations for terrible stuff for the next month? What does this tell Google about me?\". Same thing with all the big streaming services.\n\nWith Nebula, no such worry. The homepage and app isn't creepily algorithmically designed to optimize my engagement with the platform, it's just a bunch of high-quality videos and channels that I can watch with no fuss. It's remarkable how nice that feels in 2026. Really highly recommended.\n\nOskarS, 1 day ago",
+      "contentHash": "cae38c6a76eec2b22f8c107d830a988f8303dcc313f03856078d263c78955a93",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49450448"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1000,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49451112"
+        }
+      ]
+    },
+    {
+      "id": 33027,
+      "date": "2026-08-27T19:35:00.000Z",
+      "editDate": null,
+      "text": "Re: GLM-5.3-Flash\n\nThis is going so fast! What a time to be on hackernews:\n\nJuly 16th: The \"Kimi K3 moment\" - China has caught up to Opus!\n\n4 weeks later: GLM 5.3 - Same performance, but cut the amount of parameters and cost to a third!\n\n12 days later: GLM 5.3 Flash - Almost GLM5.3 performance but cut the parameters in half, cut prices to a fifth and serving on Chinese chips!\n\nbertili, 1 day ago",
+      "contentHash": "76b8b172fd27f4c137128d647c8a89e88ae1d954faa81f0d49c04c45cb0c74af",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 13,
+          "url": "https://news.ycombinator.com/item?id=49449507"
+        },
+        {
+          "kind": "text_link",
+          "offset": 389,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49451851"
+        }
+      ]
+    },
+    {
+      "id": 33028,
+      "date": "2026-08-27T20:35:00.000Z",
+      "editDate": null,
+      "text": "Re: CEO fired developers to make room for AI. Developers create open source AI CEO\n\nLol!! Don't forget. This is a modern day class war. This current LLM based so called AI, could have easily used for automating simple tasks and employees could have easily provided with 3 day work week. The goal is to monopolize human knowledge with all the stolen data and make profits from it.\n\ngla67890543, 10 hours ago",
+      "contentHash": "88f0d9aa4e1fd05fc58db15638ef21fbf2a1432ed1debe9279b99ce13b6ca62a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49458418"
+        },
+        {
+          "kind": "text_link",
+          "offset": 394,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49462318"
+        }
+      ]
+    },
+    {
+      "id": 33029,
+      "date": "2026-08-27T21:35:00.000Z",
+      "editDate": null,
+      "text": "Re: U.S. State Department pauses immigrant visa applications\n\nNot trying to make a political point at all and perhaps a controversial take. But, it’s specifically and maybe implicitly by design. Meaning they made this way precisely so you have to reapply so they can change their mind or block you out later. Nothing about getting a visa is permanent and you’re fully at risk when you move here with that type of status. If you evaluate the situation that’s always been the case.\n\nconductr, 22 hours ago",
+      "contentHash": "3858d4c46a04d24b53a1a8df1bd7bc1116942649996ec8b1befdd0bd95320d69",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 56,
+          "url": "https://news.ycombinator.com/item?id=49452709"
+        },
+        {
+          "kind": "text_link",
+          "offset": 491,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49457495"
+        }
+      ]
+    },
+    {
+      "id": 33030,
+      "date": "2026-08-27T22:50:00.000Z",
+      "editDate": null,
+      "text": "Re: U.S. State Department pauses immigrant visa applications\n\nThe cruelty is the point.\n\nshostack, 22 hours ago",
+      "contentHash": "0b18411c63b1c8c30e4df5c7f194b05d8b8e711f39e8cd360a3910579669fc07",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 56,
+          "url": "https://news.ycombinator.com/item?id=49452709"
+        },
+        {
+          "kind": "text_link",
+          "offset": 99,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49457961"
+        }
+      ]
+    },
+    {
+      "id": 33031,
+      "date": "2026-08-27T23:20:00.000Z",
+      "editDate": null,
+      "text": "Re: CEO fired developers to make room for AI. Developers create open source AI CEO\n\n> The next session opens with a <past_decisions> block so the Executive remembers what it recommended last month.\n\nThis is morbidly unrealistic.\n\npmlnr, 17 hours ago",
+      "contentHash": "634fb0ac5d06c913a8699196653f693a46d1775207f0f49fb3a7b268cf138a90",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49458418"
+        },
+        {
+          "kind": "text_link",
+          "offset": 237,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49460535"
+        }
+      ]
+    },
+    {
+      "id": 33032,
+      "date": "2026-08-27T23:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Mechanical Turk shutting down September 30\n\nMechanical Turk had a good run, but not surprised it's shutting down. I'm sure the platform was getting flooded with people doing task arbitrage and using lots of AI anyway.\n\nI believe the issue is that this can no longer be a horizontal play. MTurk was mostly for unskilled tasks...the kind AI can do well enough that it isn't worth the cost differential to verify it or keep farmed to humans. The \"trust but verify\" AI output is now the kind that requires domain expertise. This is what most full stack AI companies are bringing to industries.\n\nCurious if this kind of work will come around again one day or was just a moment in time. If it does I'm sure it will be specifically about generating training data.\n\nmadrox, 23 hours ago",
+      "contentHash": "b6ddf296b878b4aef59839002aeb4bddf3b192d957d56214cd8d4ec4a03b7c3f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 42,
+          "url": "https://news.ycombinator.com/item?id=49457545"
+        },
+        {
+          "kind": "text_link",
+          "offset": 770,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49457864"
+        }
+      ]
+    },
+    {
+      "id": 33033,
+      "date": "2026-08-28T00:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Mechanical Turk shutting down September 30\n\nAs AMT's largest requester for the past 10 years, this news was relayed to requesters at the same time as respondents. It's also worth noting that our lead contact, the Sr Program Manager at AWS leading AMT, transitioned to Amazon Bedrock and SageMaker Model Evaluations a ~2-3 years ago.. Leaving behind essential zero team managing the project after they migrated over the stored value accounts to native AWS billing.\n\nx0xMaximus, 24 hours ago",
+      "contentHash": "79d65d43cf053a8f832acf59701976bc445b41466ab7cb0618b3b6ea4b676eed",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 42,
+          "url": "https://news.ycombinator.com/item?id=49457545"
+        },
+        {
+          "kind": "text_link",
+          "offset": 481,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49457670"
+        }
+      ]
+    },
+    {
+      "id": 33034,
+      "date": "2026-08-28T00:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Saving 100 terabytes of memory by optimizing 1.1.1.1's DNS cache\n\nThe way I usually prevent having to scale out to a bazillion systems is never getting more than 10 users.\n\nbcrosby95, 4 hours ago",
+      "contentHash": "d627088a2e854f8cb494e2fad05ae90e8a2212e7f2c5823fa80506a7645dd7a8",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 64,
+          "url": "https://news.ycombinator.com/item?id=49468083"
+        },
+        {
+          "kind": "text_link",
+          "offset": 188,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49470840"
+        }
+      ]
+    },
+    {
+      "id": 33035,
+      "date": "2026-08-28T01:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Tell HN: PayPal blocks GrapheneOS\n\nI see this happen from time to time. Lately, almost all of the apps work fine on GrapheneOS. The best strategy is to keep writing the business once every two or so weeks that you can’t log in to and use the app. Don’t go too technical at first, because most of the time, the moment they hear things like “rooted” or “unofficial,” they just say your phone is the issue. To date, I was able to convince, or at least contribute to, making three apps work on GOS.\n\nzerof1l, 15 hours ago",
+      "contentHash": "e8412c33246fe1e7e57e6396f03ff8445d505b4575dd9661b4823d57fd9695cb",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 33,
+          "url": "https://news.ycombinator.com/item?id=49462253"
+        },
+        {
+          "kind": "text_link",
+          "offset": 509,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49462672"
+        }
+      ]
+    },
+    {
+      "id": 33036,
+      "date": "2026-08-28T01:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Small Models Have Arrived\n\n> But I also think the demand for \"fast/cheap/good-enough\" models is just about to take off.\n\nThere's a sort of \"revelation\" I had in ~early '24 when I used a 7B local model with a library called Guidance (initially out of MS, then the team moved) to create a flow where the model would receive pseudocode for tests, first write the tests, and once I approved then started writing code until the tests passed. This was before \"thinking\" models, and yet using that library I was able to \"guide\" the model in the required \"prompt / instruct\" context such that it was working towards completion, and I saw the first things like we see now in the thinking traces \"oh, test x doesn't pass because blah, I need to...\" and so on.\n\nAnyway, the revelation was \"even if the models never improve, I'll have years of fun finding out all the ways I can use these things\". And, obviously, the models improved a lot since then. But I think that revelation can still be applied, as a sort of \"truism\". We have, right now, access to things that 10-20 years ago would be considered magic. We are still finding ways of cobbling together systems with glue, duct tape and prayers and find new things they can do.\n\nI think the \"good-enough\" stage has come not just for API models (cheap, fast, etc) but for local as well. Even if slower, even if clunkier, but they are good enough for a set of ever increasing tasks, and what's more it's incredibly fun to work with them.\n\nNitpickLawyer, 9 hours ago",
+      "contentHash": "9fed421c5d9b7c442908076fa1b75c5305811b60249606b7bf84a1dab651b8e9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 25,
+          "url": "https://news.ycombinator.com/item?id=49466917"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1497,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49467780"
+        }
+      ]
+    },
+    {
+      "id": 33037,
+      "date": "2026-08-28T02:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Saving 100 terabytes of memory by optimizing 1.1.1.1's DNS cache\n\nThis is the right way to deliver software.\n\nProduce working product first, validate the idea, stabilize the business, start generating profit, and then you can start optimizing your costs.\n\nIn fact optimization is by far the easiest part of the process because there are many system programming experts on this HN thread who consider these optimizations to be trivial.\n\nlpapez, 6 hours ago",
+      "contentHash": "446f566fdb667ce04adaaa7dcbf3c15f7a06a4f5085d670a8eaefe92eb94ce6a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 64,
+          "url": "https://news.ycombinator.com/item?id=49468083"
+        },
+        {
+          "kind": "text_link",
+          "offset": 448,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49470370"
+        }
+      ]
+    }
+  ]
+}
