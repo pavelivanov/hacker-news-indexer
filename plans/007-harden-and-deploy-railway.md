@@ -148,8 +148,11 @@ After PR 11 merged as commit `98b9507`, Railway automatically deployed that
 commit to the staging API, worker, and scheduler. All four services remained
 `SUCCESS`, the worker emitted its first `worker_heartbeat` at 13:42 UTC, and
 the authenticated staging smoke passed against the new API deployment. The
-first scheduler cron remained due at 03:17 UTC on 2026-08-28, so no scheduler
-completion or idempotency claim was recorded early.
+first scheduler cron completed at 03:21 UTC on 2026-08-28 with its daily key,
+lock acquired, and zero jobs for the empty staging corpus. A same-key local
+PostgreSQL integration test with one seeded comment scheduled one job on the
+first call and zero on the second. The scheduler-required live check passed
+after a later redeploy by querying bounded logs across recent deployments.
 
 Then enable one external dependency at a time: HN live contract, Telegram bounded read, classifier shadow, and finally reviewed local publication. Never enable automatic export during staging rollout.
 
@@ -239,6 +242,12 @@ has remained above 85%, while PostgreSQL and Telegram volume capacity alert
 above 80%. The first read-only resource baseline passed at 22:41 UTC with all
 reported utilization below 4% and no alerts.
 
+The first scheduler completion exposed that Railway service-level log queries
+follow only the latest deployment. The checker now selects bounded recent
+`SUCCESS`/`REMOVED` scheduler deployments and recovers completion events across
+redeploys. With scheduler enforcement enabled, the staging check found the
+03:21 UTC event after the 08:13 UTC redeploy and passed with no alerts.
+
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does
 not document CLI or IaC creation. Initial thresholds are recorded in the
@@ -279,7 +288,7 @@ Deploy with a release summary, watch bounded logs/status, run authenticated smok
 - [x] Exactly one Railway domain is generated for API and no other staging service is public.
 - [ ] API, worker, scheduler, PostgreSQL, and Telegram session storage have minimum required access.
 - [ ] Staging external dependencies were enabled incrementally and all gates passed.
-- [ ] Backup restore and rollback were actually tested.
+- [x] Backup restore and rollback were actually tested.
 - [ ] Metrics/alerts cover service and pipeline failure modes without leaking data.
 - [ ] Production deploy is healthy and a bounded end-to-end run succeeds.
 - [ ] Plan 007 is marked `DONE`.

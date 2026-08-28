@@ -36,8 +36,14 @@ As of 2026-08-28:
 - PR 11 merged as commit `98b9507` and auto-deployed to staging at 13:40 UTC.
   API, worker, scheduler, and PostgreSQL remained `SUCCESS`; the worker emitted
   `worker_heartbeat` at 13:42 UTC; and the authenticated smoke passed against
-  the new API deployment. The scheduler had not yet reached its first 03:17 UTC
-  cron run, so scheduler completion and idempotency remain unverified.
+  the new API deployment.
+- The first scheduler cron completed at 03:21 UTC on 2026-08-28 with lock
+  acquired, schedule key `2026-08-28`, and zero jobs for the empty staging
+  corpus. The same-key PostgreSQL integration test proved one seeded comment
+  creates one job across two schedule calls. After commit `2dda9b9` redeployed
+  the scheduler, the deployment-history-aware freshness check passed at 08:20
+  UTC with scheduler enforcement enabled and zero alerts. See the
+  [dated scheduler-soak report](reports/2026-08-28-staging-scheduler-soak.md).
 - The read-only PostgreSQL recovery preflight found PITR disabled, no backup
   bucket, no configured backup schedules, and no on-demand backups. The owner
   then authorized a lower-cost logical restore drill: an `age`-encrypted dump
@@ -228,7 +234,7 @@ Current checklist:
 10. [x] Seal `APP_API_TOKEN` through Railway's dashboard, verify CLI value
         readback omits it, and confirm a post-seal authenticated smoke still
         passes.
-11. [ ] Observe a worker heartbeat and one scheduled
+11. [x] Observe a worker heartbeat and one scheduled
         `reconciliation_schedule_completed` event, then prove repeated scheduling
         is idempotent.
 12. [x] Keep Telegram, live classification, and automatic export disabled.
@@ -237,12 +243,14 @@ During first provisioning, the worker began a few seconds before the API
 pre-deploy migration finished and emitted bounded `pipeline_job_claim_deferred`
 events for the then-missing schema. Its deployment remained healthy, the last
 deferral preceded successful migration completion, and no later deferral
-appeared in the bounded log tail. The first scheduled run is due at
-2026-08-28 03:17 UTC; it was not triggered manually.
+appeared in the bounded log tail.
 
 After commit `98b9507` auto-deployed, the worker emitted a safe heartbeat at
-2026-08-27 13:42 UTC. The combined checklist item remains open until the first
-cron completion is observed and repeated scheduling is proven idempotent.
+2026-08-27 13:42 UTC. The first cron then completed at 03:21 UTC on 2026-08-28
+with its daily key and no jobs for the empty corpus. The repository's
+PostgreSQL integration test repeated one schedule key against a seeded comment
+and produced one job total. This closes the empty-corpus soak; repeat against a
+non-empty live staging corpus after bounded ingestion is authorized.
 
 Bounded log examples:
 
@@ -286,7 +294,7 @@ Production remains blocked until all boxes are evidenced:
 - [x] Staging IaC plan reviewed with no destructive resource change.
 - [x] Private staging base graph deployed; migrations and deployment health passed.
 - [x] Public API health/readiness/auth/metrics smoke passed without secret output.
-- [ ] Staging soak covered at least one scheduled reconciliation cycle.
+- [x] Staging soak covered at least one scheduled reconciliation cycle.
 - [ ] Bounded HN and Telegram staging checks passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
 - [x] Backup restore drill passed with recorded RPO/RTO.

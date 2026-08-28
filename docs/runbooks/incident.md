@@ -104,6 +104,13 @@ After the first scheduler completion is observed, set
 alerts. Do not enable that gate before the first scheduled run and mistake a
 not-yet-due cron for an outage.
 
+Railway service-level logs follow the latest deployment, so a normal redeploy
+can hide the preceding cron event. The checker therefore inspects at most 20
+recent `SUCCESS` or `REMOVED` scheduler deployments within the bounded 27-hour
+window and fetches only “Reconciliation schedule” log entries. On established
+staging, the first 03:21 UTC completion remained visible after the 08:13 UTC
+redeploy and the scheduler-required check passed at 08:20 UTC.
+
 Railway automatically injects project, environment, service, deployment,
 replica, region, and Git commit variables. The logger maps present values to
 safe base bindings on every API, worker, and scheduler event. A deployment of
