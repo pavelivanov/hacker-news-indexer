@@ -3,7 +3,9 @@ import { spawn } from "node:child_process";
 import {
   evaluateOperationalAlerts,
   resourceUtilizationPercent,
+  selectRecentOperationalDeploymentIds,
   sustainedUtilizationFloorPercent,
+  type OperationalDeploymentHistoryItem,
   type OperationalLogEvent,
   type OperationalResourceSignal,
   type OperationalSnapshot,
@@ -15,7 +17,10 @@ const MAX_COMMAND_BYTES = 2 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 10_000;
 const COMMAND_TIMEOUT_MS = 30_000;
 const SAFE_ENVIRONMENT = /^[A-Za-z0-9._-]{1,64}$/u;
+const SAFE_RAILWAY_ID = /^[0-9a-f-]{36}$/u;
 const RESOURCE_SERVICE_NAMES = ["api", "worker", "postgres"] as const;
+const SCHEDULER_LOG_WINDOW_MS = 27 * 60 * 60_000;
+const MAX_SCHEDULER_DEPLOYMENTS = 20;
 
 type ResourceServiceName = (typeof RESOURCE_SERVICE_NAMES)[number];
 
@@ -561,6 +566,77 @@ const collectServices = async (
   return services;
 };
 
+const collectSchedulerLogs = async (environment: string): Promise<string> => {
+  const rawHistory = safeJson(
+    await runRailway([
+      "deployment",
+      "list",
+      "--service",
+      "scheduler",
+      "--environment",
+      environment,
+      "--limit",
+      String(MAX_SCHEDULER_DEPLOYMENTS),
+      "--json",
+    ]),
+    "RAILWAY_SCHEDULER_DEPLOYMENTS_INVALID",
+  );
+  if (!Array.isArray(rawHistory)) {
+    throw new SafeFailure("RAILWAY_SCHEDULER_DEPLOYMENTS_INVALID");
+  }
+  const deployments: OperationalDeploymentHistoryItem[] = rawHistory.map(
+    (rawDeployment) => {
+      const deployment = record(
+        rawDeployment,
+        "RAILWAY_SCHEDULER_DEPLOYMENTS_INVALID",
+      );
+      const id = deployment["id"];
+      const status = deployment["status"];
+      const createdAt = deployment["createdAt"];
+      if (
+        typeof id !== "string" ||
+        !SAFE_RAILWAY_ID.test(id) ||
+        typeof status !== "string" ||
+        typeof createdAt !== "string"
+      ) {
+        throw new SafeFailure("RAILWAY_SCHEDULER_DEPLOYMENTS_INVALID");
+      }
+      return { id, status, createdAt };
+    },
+  );
+  let deploymentIds: readonly string[];
+  try {
+    deploymentIds = selectRecentOperationalDeploymentIds(
+      deployments,
+      new Date().toISOString(),
+      SCHEDULER_LOG_WINDOW_MS,
+      MAX_SCHEDULER_DEPLOYMENTS,
+    );
+  } catch {
+    throw new SafeFailure("RAILWAY_SCHEDULER_DEPLOYMENTS_INVALID");
+  }
+  const outputs = await Promise.all(
+    deploymentIds.map((deploymentId) =>
+      runRailway([
+        "logs",
+        deploymentId,
+        "--service",
+        "scheduler",
+        "--environment",
+        environment,
+        "--since",
+        "27h",
+        "--lines",
+        "100",
+        "--filter",
+        "Reconciliation schedule",
+        "--json",
+      ]),
+    ),
+  );
+  return outputs.join("\n");
+};
+
 const collectDatabase = async (
   context: RailwayContext,
   environment: string,
@@ -684,18 +760,7 @@ const main = async (): Promise<void> => {
         "1000",
         "--json",
       ]),
-      runRailway([
-        "logs",
-        "--service",
-        "scheduler",
-        "--environment",
-        environment,
-        "--since",
-        "27h",
-        "--lines",
-        "500",
-        "--json",
-      ]),
+      collectSchedulerLogs(environment),
       collectResources(environment),
       collectDatabase(context, environment),
     ]);
