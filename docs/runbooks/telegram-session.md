@@ -1,10 +1,11 @@
 # Telegram serialized-session runbook
 
-`TELEGRAM_SESSION` is an mtcute-exported authorization credential. The worker
-imports it into in-memory storage on every start and validates it with a
-headless authorized call before processing jobs. No phone, login code, 2FA
-password, local SQLite file, Railway file upload, or interactive production
-login is part of the runtime path.
+`TELEGRAM_SESSION` is a serialized Telegram authorization credential. The
+worker accepts native mtcute, GramJS, Telethon v1, and Pyrogram strings through
+mtcute's official converters, imports the detected format into in-memory storage
+on every start, and validates it with a headless authorized call before
+processing jobs. No phone, login code, 2FA password, local SQLite file, Railway
+file upload, or interactive production login is part of the runtime path.
 
 The session string still represents the Telegram user or bot that created it.
 It removes interactive login from deployment; it does not make the integration
@@ -13,9 +14,10 @@ the string can act as that identity, so treat it as a password.
 
 ## Supply and validate locally
 
-Obtain a serialized session from an approved mtcute-compatible source without
-pasting it into chat or command-line arguments. A string exported by another
-client format is not assumed compatible. Configure only the gitignored `.env`:
+Obtain a serialized session from an approved mtcute, GramJS, Telethon v1, or
+Pyrogram source without pasting it into chat or command-line arguments. Other
+formats, including Telethon v2, are unsupported. Configure only the gitignored
+`.env`:
 
 ```dotenv
 TELEGRAM_API_ID=...
@@ -32,10 +34,11 @@ npm run build
 npm run telegram:session:check
 ```
 
-Success emits only `telegram_session_ready`; it never prints identity or session
-data. The check imports the string into memory, calls `getMe` without logging its
-result, and destroys the client. It must fail rather than request interactive
-input when the string is missing, malformed, revoked, or unauthorized.
+Success emits only `telegram_session_ready` and the detected non-secret format;
+it never prints identity or session data. The check imports the string into
+memory, calls `getMe` without logging its result, and destroys the client. It
+must fail rather than request interactive input when the string is missing,
+malformed, revoked, or unauthorized.
 
 Before staging configuration, run the bounded 100-ID contract from the operator
 machine:
@@ -92,6 +95,8 @@ when Telegram guidance or the incident scope requires it.
 
 - **Missing/malformed session:** keep Telegram disabled, replace the sealed
   value, and rerun the headless check. Never add an interactive Railway login.
+- **Unsupported format:** supply native mtcute, GramJS, Telethon v1, or Pyrogram;
+  conversion never prints or rewrites the original secret.
 - **`AUTH_KEY_UNREGISTERED`:** the session is unauthorized or revoked; obtain a
   new approved session and leave ingestion disabled.
 - **Repeated reconnect/auth errors:** stop the worker, verify only variable
@@ -99,6 +104,7 @@ when Telegram guidance or the incident scope requires it.
 - **Flood wait above ceiling:** leave the job deferred and reduce/bound the
   range. Do not bypass the configured ceiling.
 
-Current status: **SERIALIZED-SESSION SUPPORT IMPLEMENTED LOCALLY; LIVE SESSION
-VALIDATION, SEALED STAGING CONFIGURATION, BOUNDED INGESTION, AND LEGACY-VOLUME
-REMOVAL REMAIN GATED.**
+Current status: **GRAMJS SESSION CONVERSION, HEADLESS AUTHORIZATION, AND THE
+BOUNDED 100-ID LOCAL CONTRACT PASSED ON 2026-08-28; SEALED STAGING
+CONFIGURATION, BOUNDED INGESTION, RESTART VALIDATION, AND LEGACY-VOLUME REMOVAL
+REMAIN GATED.**

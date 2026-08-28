@@ -16,6 +16,7 @@
     "@hn-knowledge/contracts": "0.1.0",
     "@hn-knowledge/domain": "0.1.0",
     "@hn-knowledge/ports": "0.1.0",
+    "@mtcute/convert": "0.31.0",
     "@mtcute/node": "0.31.0"
   }
 }

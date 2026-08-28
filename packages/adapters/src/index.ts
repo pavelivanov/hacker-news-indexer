@@ -27,6 +27,7 @@ export {
   type TelegramMessageRecord,
   type TelegramMessagesClient,
   type TelegramMtprotoSourceOptions,
+  type TelegramSessionFormat,
 } from "./telegram/mtproto-source.js";
 export {
   HackerNewsApiItems,

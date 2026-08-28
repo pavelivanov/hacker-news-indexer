@@ -113,13 +113,14 @@ Use Railway reference variables for PostgreSQL `DATABASE_URL`. Set/seal independ
 
 Do not give Telegram or classifier secrets to the API/scheduler. Do not pass secrets as Docker build args. Mark production secrets sealed through the Railway UI when appropriate.
 
-For Telegram, accept only an mtcute-compatible serialized session through the
-worker-only `TELEGRAM_SESSION` secret. Import it into in-memory storage and
-verify authorization headlessly before processing jobs. Never print, commit,
-pass in command-line arguments, or place the string in IaC. Seal it through the
-Railway dashboard and define rotation/revocation in the runbook. A serialized
-session still represents the Telegram identity that created it; it removes
-deployment login and file transfer, not the underlying authorization.
+For Telegram, accept native mtcute, GramJS, Telethon v1, or Pyrogram serialized
+sessions through the worker-only `TELEGRAM_SESSION` secret, using mtcute's
+official converters for external formats. Import the result into in-memory
+storage and verify authorization headlessly before processing jobs. Never
+print, commit, pass in command-line arguments, or place the string in IaC. Seal
+it through the Railway dashboard and define rotation/revocation in the runbook.
+A serialized session still represents the Telegram identity that created it;
+it removes deployment login and file transfer, not the underlying authorization.
 
 **Verify**: `railway variable list --service <service> --json` confirms key presence/scope without outputting values; API and scheduler lack Telegram/classifier keys; one worker imports the sealed session after a restart without filesystem state or interactive login.
 
@@ -165,6 +166,11 @@ Before live integration, the operator replaced that design with a sealed
 `TELEGRAM_SESSION` string imported into memory. Keep the unused legacy volume
 attached until the new path passes local contract, staging restart, and bounded
 ingestion checks; its removal is a separate destructive change.
+
+The supplied GramJS string then passed mtcute's official conversion, headless
+authorization, and the bounded exact 100-ID Telegram contract at 10:31 UTC on
+2026-08-28. The commands emitted no identity, credential, or source body. Sealed
+worker configuration and bounded staging ingestion remain approval-gated.
 
 Then enable one external dependency at a time: HN live contract, Telegram bounded read, classifier shadow, and finally reviewed local publication. Never enable automatic export during staging rollout.
 
