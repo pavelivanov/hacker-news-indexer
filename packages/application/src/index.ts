@@ -32,6 +32,7 @@ export * from "./export/eligibility.js";
 export * from "./export/findthatproject-service.js";
 export * from "./classification/evaluation-metrics.js";
 export * from "./classification/evaluation-cycle.js";
+export * from "./classification/annotation-packet.js";
 export * from "./classification/load-input.js";
 export * from "./classification/prompt.js";
 export * from "./classification/validate-output.js";

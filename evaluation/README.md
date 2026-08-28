@@ -44,6 +44,38 @@ capture evidence is in `evaluation/captures/v2`, the canonical packets are in
 The next gate is two independent annotation passes and adjudication; neither
 annotator may see model predictions or the sealed holdout assignment.
 
+Prepare two blind, differently ordered packet sets outside the repository. The
+command verifies the frozen source digest, refuses an existing output
+directory, emits 15-row chunks by default, and prints only body-free metadata:
+
+```bash
+npm run evaluation:prepare-annotations -- \
+  --cycle v2 \
+  --output-dir /tmp/hn-v2-annotation-packets
+```
+
+Give annotator A only `annotator-a/`, and annotator B only `annotator-b/`,
+together with `docs/annotation-guide.md` and
+`evaluation/annotation-pass-schema-v2.json`. Do not give either annotator the
+packet manifest, cycle manifest, holdout file, other annotation pass, model
+outputs, or historical aggregate targets. Packet rows contain no holdout
+assignment or model prediction.
+
+Validate each completed JSONL pass independently without printing source text:
+
+```bash
+npm run evaluation:validate-annotation -- \
+  --cycle v2 --annotator A --input /secure/path/annotator-a.jsonl
+npm run evaluation:validate-annotation -- \
+  --cycle v2 --annotator B --input /secure/path/annotator-b.jsonl
+```
+
+The validator requires every frozen comment exactly once, the expected
+annotator identity and method, separate material-relevance and primary-class
+labels, exact source-reproducing evidence, grounded opaque URL candidate IDs,
+canonical review/rejection codes, and class/content consistency. Do not update
+the cycle manifest until both passes are complete and independently validated.
+
 ## Starting a fresh evaluation cycle
 
 A replacement promotion gate must use a later, non-overlapping HN comment

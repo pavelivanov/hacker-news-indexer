@@ -48,3 +48,25 @@ Each subject mention, Discovery, and note records its own evidence origin. Evide
 Create a review task for missing or ambiguous canonical URLs; normalized-name-only subject merges; root-story-only discoveries; legal, medical, or security recommendations; destructive or evasion-oriented advice; low confidence; prompt-injection signals; flagged, deleted, or unavailable content; Telegram/HN divergence; conflicting evidence origins; invalid evidence spans; unsupported or ungrounded URLs; or ambiguous classification.
 
 FindThatProject export always requires review during initial rollout and is limited to an approved, high-confidence Discovery with an explicit subject type, a grounded HTTP(S) canonical URL, selected-comment materiality, present evidence origin, and no unresolved flags. Expert notes are not exportable in v1.
+
+## Fresh-cycle independent passes
+
+Cycle v2 separates material relevance from the final primary class. Record
+`materialRelevance` as `MATERIAL`, `NOT_MATERIAL`, or `UNCERTAIN`, then make the
+best bounded `DISCOVERY`, `EXPERT_NOTE`, or `REJECTED` decision. An uncertain
+materiality decision must include `AMBIGUOUS_CLASSIFICATION`; it does not permit
+skipping evidence or the remaining structural fields.
+
+Each annotator receives only their own shuffled packet directory, this guide,
+and `evaluation/annotation-pass-schema-v2.json`. They must not receive the
+other pass, model predictions, historical class totals or examples, the cycle
+manifest, or the holdout ID file. Annotators may use only packet text and URL
+candidates; they must not browse or fetch external pages.
+
+Annotation-pass output is one JSON object per line with schema version
+`annotation-pass.v2`. Evidence offsets use JavaScript UTF-16 coordinates into
+the supplied `comment.plainText` or `root.plainText`. Copy exact evidence text,
+but return only opaque `url:<n>` candidate IDs in discoveries. Derived names,
+descriptions, note text, aliases, and qualifiers must not contain raw URLs.
+Use annotator IDs `A` and `B` respectively and method
+`independent-bounded-review`.
