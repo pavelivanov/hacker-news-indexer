@@ -13,9 +13,9 @@
 
 - **Execution status**: IN PROGRESS — cycle locking, v1 terminal hashes,
   no-rerun enforcement, model non-activation, authenticated manual decision
-  review, the fresh immutable v2 split, blind annotation validation, and the
-  dual-kappa comparison gate are implemented. Independent v2 annotation
-  remains.
+  review, the fresh immutable v2 split, blind annotation validation, the
+  dual-kappa comparison gate, and fail-closed gold finalization are
+  implemented. Independent v2 annotation remains.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -110,6 +110,15 @@ Cohen's kappa at 0.75. It refuses to write on failure and otherwise creates an
 exclusive, holdout-blind packet containing only decision disagreements, their
 bounded source, and both proposals. It still does not adjudicate or mutate the
 cycle.
+
+`evaluation:finalize-annotations` accepts strict, source-free adjudication
+responses only after both kappa gates pass. It requires every disagreement
+exactly once, a written bounded rationale, and selection of the complete A or B
+proposal rather than a third outcome. Agreed decisions use a fixed A-extraction
+policy. Only after all validation succeeds does it create the canonical pass,
+response, and `gold.v2` artifacts and advance the manifest to `ANNOTATED` with
+their hashes. The workflow is ready, but it has not been run: real independent
+passes and owner adjudication remain required.
 
 ### Step 3: Implement two-stage classification on v2 development only
 

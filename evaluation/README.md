@@ -95,6 +95,31 @@ once and includes only decision disagreements, their bounded source packet,
 and the two proposals; it contains no holdout assignment. Comparison does not
 mutate the cycle manifest or create gold labels.
 
+Give that packet only to the adjudicator, along with `docs/annotation-guide.md`
+and `evaluation/annotation-adjudication-schema-v2.json`. The returned JSONL
+must contain exactly one resolution for every packet row. Finalize only after
+reviewing the response file:
+
+```bash
+npm run evaluation:finalize-annotations -- \
+  --cycle v2 \
+  --annotator-a /secure/path/annotator-a.jsonl \
+  --annotator-b /secure/path/annotator-b.jsonl \
+  --adjudication /secure/path/adjudication-responses-v2.jsonl
+```
+
+The finalizer revalidates the frozen source and holdout digests, distinct and
+complete A/B passes, both kappa gates, and exact disagreement coverage. Each
+resolution can select only the complete A or B proposal and requires a bounded
+rationale. Consensus decisions retain A's grounded extraction by a fixed
+deterministic policy. The command then exclusively creates the canonical A/B
+pass files, the source-free adjudication response, and `gold-v2.jsonl`, before
+atomically advancing `cycles/v2.json` to `ANNOTATED` with artifact hashes. It
+prints aggregate metadata only and refuses existing artifacts or any later
+cycle state. `evaluation/annotation-schema-v2.json` documents the resulting
+gold rows. Do not run this command until the real independent passes and owner
+adjudication are complete.
+
 ## Starting a fresh evaluation cycle
 
 A replacement promotion gate must use a later, non-overlapping HN comment

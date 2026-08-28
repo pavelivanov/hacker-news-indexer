@@ -66,8 +66,9 @@ candidates; they must not browse or fetch external pages.
 Annotation-pass output is one JSON object per line with schema version
 `annotation-pass.v2`. Evidence offsets use JavaScript UTF-16 coordinates into
 the supplied `comment.plainText` or `root.plainText`. Copy exact evidence text,
-but return only opaque `url:<n>` candidate IDs in discoveries. Derived names,
-descriptions, note text, aliases, and qualifiers must not contain raw URLs.
+use no more than 32 distinct evidence spans per row, and return only opaque
+`url:<n>` candidate IDs in discoveries. Derived names, descriptions, note
+text, aliases, and qualifiers must not contain raw URLs.
 Use annotator IDs `A` and `B` respectively and method
 `independent-bounded-review`.
 
@@ -78,3 +79,11 @@ contains the bounded source and the two independent proposals; they must not
 receive holdout assignments, model predictions, or historical targets. Every
 resolved disagreement requires a written rationale in the later adjudicated
 gold artifact.
+
+Return one `annotation-adjudication.v2` JSONL row for every packet row using
+`evaluation/annotation-adjudication-schema-v2.json`. Select either the complete
+A proposal or the complete B proposal; do not invent a third label or combine
+their extraction fields. Record a stable adjudicator ID, use method
+`bounded-disagreement-review`, and write a source-bounded rationale of at least
+20 characters without raw URLs. If a packet contains no rows, the response is
+an empty file.

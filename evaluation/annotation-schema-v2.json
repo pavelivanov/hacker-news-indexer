@@ -1,0 +1,355 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hn-knowledge.local/schemas/gold-annotation-v2.json",
+  "title": "Gold annotation v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "cycleId",
+    "commentId",
+    "materialRelevance",
+    "primaryClass",
+    "evidenceSpans",
+    "discoveries",
+    "expertNote",
+    "reviewFlags",
+    "rejectionReason",
+    "holdout",
+    "annotation"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "gold.v2" },
+    "cycleId": { "type": "string", "pattern": "^v[1-9][0-9]*$" },
+    "commentId": { "type": "integer", "minimum": 1 },
+    "materialRelevance": {
+      "enum": ["MATERIAL", "NOT_MATERIAL", "UNCERTAIN"]
+    },
+    "primaryClass": {
+      "enum": ["DISCOVERY", "EXPERT_NOTE", "REJECTED"]
+    },
+    "evidenceSpans": {
+      "type": "array",
+      "maxItems": 32,
+      "items": { "$ref": "#/$defs/evidenceSpan" }
+    },
+    "discoveries": {
+      "type": "array",
+      "maxItems": 5,
+      "items": { "$ref": "#/$defs/discovery" }
+    },
+    "expertNote": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/expertNote" }]
+    },
+    "reviewFlags": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 12,
+      "items": { "$ref": "#/$defs/reviewFlag" }
+    },
+    "rejectionReason": {
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/rejectionReason" }]
+    },
+    "holdout": { "type": "boolean" },
+    "annotation": { "$ref": "#/$defs/annotationMetadata" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "primaryClass": { "const": "DISCOVERY" } } },
+      "then": {
+        "properties": {
+          "discoveries": { "minItems": 1 },
+          "rejectionReason": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "primaryClass": { "const": "EXPERT_NOTE" } } },
+      "then": {
+        "properties": {
+          "discoveries": { "maxItems": 0 },
+          "expertNote": { "$ref": "#/$defs/expertNote" },
+          "rejectionReason": { "type": "null" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "primaryClass": { "const": "REJECTED" } } },
+      "then": {
+        "properties": {
+          "discoveries": { "maxItems": 0 },
+          "expertNote": { "type": "null" },
+          "rejectionReason": { "$ref": "#/$defs/rejectionReason" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "materialRelevance": { "const": "MATERIAL" } }
+      },
+      "then": {
+        "properties": { "primaryClass": { "not": { "const": "REJECTED" } } }
+      }
+    },
+    {
+      "if": {
+        "properties": { "materialRelevance": { "const": "NOT_MATERIAL" } }
+      },
+      "then": { "properties": { "primaryClass": { "const": "REJECTED" } } }
+    },
+    {
+      "if": {
+        "properties": { "materialRelevance": { "const": "UNCERTAIN" } }
+      },
+      "then": {
+        "properties": {
+          "reviewFlags": {
+            "contains": { "const": "AMBIGUOUS_CLASSIFICATION" }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "derivedText": {
+      "type": "string",
+      "minLength": 1,
+      "not": { "pattern": "https?://" }
+    },
+    "evidenceOrigin": {
+      "enum": ["COMMENT", "ROOT_STORY", "BOTH"]
+    },
+    "evidenceSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "documentId",
+        "origin",
+        "start",
+        "end",
+        "text",
+        "textSha256"
+      ],
+      "properties": {
+        "id": { "type": "string", "pattern": "^span:(comment|root):[0-9]+$" },
+        "documentId": {
+          "type": "string",
+          "pattern": "^(comment|root):[1-9][0-9]*$"
+        },
+        "origin": { "enum": ["COMMENT", "ROOT_STORY"] },
+        "start": { "type": "integer", "minimum": 0 },
+        "end": { "type": "integer", "minimum": 1 },
+        "text": { "type": "string", "minLength": 1, "maxLength": 4096 },
+        "textSha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "subjectType": {
+      "enum": [
+        "PROJECT",
+        "TOOL",
+        "LIBRARY",
+        "SERVICE",
+        "PRODUCT",
+        "FEATURE",
+        "PLUGIN",
+        "AGENT_SKILL",
+        "GUIDE",
+        "RESOURCE"
+      ]
+    },
+    "discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subjectType",
+        "name",
+        "aliases",
+        "description",
+        "evidenceOrigin",
+        "evidenceSpanIds",
+        "urlCandidateIds",
+        "rootOnly"
+      ],
+      "properties": {
+        "subjectType": { "$ref": "#/$defs/subjectType" },
+        "name": {
+          "allOf": [{ "$ref": "#/$defs/derivedText" }, { "maxLength": 160 }]
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 10,
+          "items": {
+            "allOf": [{ "$ref": "#/$defs/derivedText" }, { "maxLength": 160 }]
+          }
+        },
+        "description": {
+          "allOf": [{ "$ref": "#/$defs/derivedText" }, { "maxLength": 1000 }]
+        },
+        "evidenceOrigin": { "$ref": "#/$defs/evidenceOrigin" },
+        "evidenceSpanIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "maxItems": 12,
+          "items": {
+            "type": "string",
+            "pattern": "^span:(comment|root):[0-9]+$"
+          }
+        },
+        "urlCandidateIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 12,
+          "items": { "type": "string", "pattern": "^url:[0-9]+$" }
+        },
+        "rootOnly": { "type": "boolean" }
+      }
+    },
+    "noteType": {
+      "enum": [
+        "TECHNICAL_EXPLANATION",
+        "CORRECTION",
+        "PRODUCT_EXPERIENCE",
+        "IMPLEMENTATION_CAVEAT",
+        "SECURITY",
+        "OPERATIONS",
+        "COMPARISON",
+        "GUIDE"
+      ]
+    },
+    "expertNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "noteType",
+        "title",
+        "summary",
+        "evidenceOrigin",
+        "evidenceSpanIds",
+        "relatedSubjectNames",
+        "qualifiers"
+      ],
+      "properties": {
+        "noteType": { "$ref": "#/$defs/noteType" },
+        "title": {
+          "allOf": [{ "$ref": "#/$defs/derivedText" }, { "maxLength": 200 }]
+        },
+        "summary": {
+          "allOf": [{ "$ref": "#/$defs/derivedText" }, { "maxLength": 2000 }]
+        },
+        "evidenceOrigin": { "$ref": "#/$defs/evidenceOrigin" },
+        "evidenceSpanIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "pattern": "^span:(comment|root):[0-9]+$"
+          }
+        },
+        "relatedSubjectNames": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 12,
+          "items": {
+            "allOf": [{ "$ref": "#/$defs/derivedText" }, { "maxLength": 160 }]
+          }
+        },
+        "qualifiers": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 12,
+          "items": {
+            "allOf": [{ "$ref": "#/$defs/derivedText" }, { "maxLength": 300 }]
+          }
+        }
+      }
+    },
+    "reviewFlag": {
+      "enum": [
+        "MISSING_CANONICAL_URL",
+        "AMBIGUOUS_CANONICAL_URL",
+        "ROOT_ONLY_DISCOVERY",
+        "LEGAL_RECOMMENDATION",
+        "MEDICAL_RECOMMENDATION",
+        "SECURITY_RECOMMENDATION",
+        "DESTRUCTIVE_OR_EVASION_ADVICE",
+        "LOW_CONFIDENCE",
+        "PROMPT_INJECTION",
+        "UNAVAILABLE_CONTENT",
+        "TELEGRAM_HN_DIVERGENCE",
+        "CONFLICTING_EVIDENCE_ORIGIN",
+        "INVALID_EVIDENCE_SPAN",
+        "UNSUPPORTED_URL",
+        "AMBIGUOUS_CLASSIFICATION"
+      ]
+    },
+    "rejectionReason": {
+      "enum": [
+        "NON_TECHNICAL",
+        "JOKE_OR_ONE_LINER",
+        "GENERIC_OPINION",
+        "PERSONAL_STORY",
+        "INCIDENTAL_MENTION",
+        "NEWS_WITHOUT_REUSABLE_DETAIL",
+        "UNAVAILABLE_CONTENT",
+        "LOW_INFORMATION"
+      ]
+    },
+    "annotatorDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "materialRelevance", "primaryClass"],
+      "properties": {
+        "id": { "enum": ["A", "B"] },
+        "materialRelevance": {
+          "enum": ["MATERIAL", "NOT_MATERIAL", "UNCERTAIN"]
+        },
+        "primaryClass": {
+          "enum": ["DISCOVERY", "EXPERT_NOTE", "REJECTED"]
+        }
+      }
+    },
+    "annotationMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["annotatorA", "annotatorB", "adjudication"],
+      "properties": {
+        "annotatorA": { "$ref": "#/$defs/annotatorDecision" },
+        "annotatorB": { "$ref": "#/$defs/annotatorDecision" },
+        "adjudication": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "adjudicator",
+            "preferredPass",
+            "materialRelevanceDisagreement",
+            "primaryClassDisagreement",
+            "rationale"
+          ],
+          "properties": {
+            "adjudicator": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9._-]{0,119}$"
+            },
+            "preferredPass": { "enum": ["A", "B"] },
+            "materialRelevanceDisagreement": { "type": "boolean" },
+            "primaryClassDisagreement": { "type": "boolean" },
+            "rationale": {
+              "type": "string",
+              "minLength": 20,
+              "maxLength": 1000,
+              "not": { "pattern": "https?://" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

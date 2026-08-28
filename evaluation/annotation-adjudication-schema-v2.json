@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hn-knowledge.local/schemas/annotation-adjudication-v2.json",
+  "title": "Evaluation annotation adjudication response v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "cycleId",
+    "commentId",
+    "preferredPass",
+    "rationale",
+    "adjudicator"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "annotation-adjudication.v2" },
+    "cycleId": { "type": "string", "pattern": "^v[1-9][0-9]*$" },
+    "commentId": { "type": "integer", "minimum": 1 },
+    "preferredPass": { "enum": ["A", "B"] },
+    "rationale": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 1000,
+      "not": { "pattern": "https?://" }
+    },
+    "adjudicator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "method"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9._-]{0,119}$"
+        },
+        "method": { "const": "bounded-disagreement-review" }
+      }
+    }
+  }
+}
