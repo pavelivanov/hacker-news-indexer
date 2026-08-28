@@ -13,8 +13,9 @@
 
 - **Execution status**: IN PROGRESS — cycle locking, v1 terminal hashes,
   no-rerun enforcement, model non-activation, authenticated manual decision
-  review, the fresh immutable v2 split, and blind annotation packet validation
-  are implemented. Independent v2 annotation remains.
+  review, the fresh immutable v2 split, blind annotation validation, and the
+  dual-kappa comparison gate are implemented. Independent v2 annotation
+  remains.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -102,6 +103,13 @@ separate material-relevance and primary-class labels, exact evidence, opaque
 grounded URL IDs, and canonical review/rejection codes. Packet preparation
 does not label rows or mutate the cycle manifest; the two independent passes
 and adjudication are still required.
+
+`evaluation:compare-annotations` revalidates both passes, requires distinct
+file hashes, and independently gates both primary-class and material-relevance
+Cohen's kappa at 0.75. It refuses to write on failure and otherwise creates an
+exclusive, holdout-blind packet containing only decision disagreements, their
+bounded source, and both proposals. It still does not adjudicate or mutate the
+cycle.
 
 ### Step 3: Implement two-stage classification on v2 development only
 

@@ -70,3 +70,11 @@ but return only opaque `url:<n>` candidate IDs in discoveries. Derived names,
 descriptions, note text, aliases, and qualifiers must not contain raw URLs.
 Use annotator IDs `A` and `B` respectively and method
 `independent-bounded-review`.
+
+After both passes validate, the comparison gate calculates Cohen's kappa
+independently for material relevance and primary class. Both must be at least
+0.75. The adjudicator receives only the generated disagreement packet, which
+contains the bounded source and the two independent proposals; they must not
+receive holdout assignments, model predictions, or historical targets. Every
+resolved disagreement requires a written rationale in the later adjudicated
+gold artifact.

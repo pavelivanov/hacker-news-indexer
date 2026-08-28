@@ -3,7 +3,11 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 import {
+  compareEvaluationAnnotationPasses,
+  MINIMUM_ANNOTATION_COHENS_KAPPA,
+  parseEvaluationAnnotationPass,
   prepareEvaluationAnnotationPacket,
+  serializeEvaluationAdjudicationPacket,
   serializeEvaluationAnnotationPacket,
   validateEvaluationAnnotationPass,
   type EvaluationAnnotationSourceDocument,
@@ -134,6 +138,16 @@ const validPassRows = (): unknown[] => [
   },
 ];
 
+const validPassRowsForB = (): unknown[] => {
+  const rows = structuredClone(validPassRows());
+  for (const value of rows) {
+    const row = value as Record<string, unknown>;
+    const annotator = row["annotator"] as Record<string, unknown>;
+    annotator["id"] = "B";
+  }
+  return rows;
+};
+
 describe("evaluation annotation packets", () => {
   it("publishes the separate materiality and primary-class schema", async () => {
     const schema = JSON.parse(
@@ -218,6 +232,81 @@ describe("evaluation annotation packets", () => {
       primaryClass: { DISCOVERY: 1, EXPERT_NOTE: 1, REJECTED: 1 },
       reviewRows: 0,
     });
+  });
+
+  it("compares aligned independent passes with separate kappa gates", () => {
+    const annotatorA = parseEvaluationAnnotationPass({
+      cycleId: "v2",
+      annotatorId: "A",
+      documents,
+      expectedCommentIds,
+      rows: validPassRows(),
+    });
+    const annotatorB = parseEvaluationAnnotationPass({
+      cycleId: "v2",
+      annotatorId: "B",
+      documents,
+      expectedCommentIds,
+      rows: validPassRowsForB(),
+    });
+    const comparison = compareEvaluationAnnotationPasses({
+      annotatorA,
+      annotatorB,
+    });
+
+    expect(comparison).toMatchObject({
+      rows: 3,
+      exactDecisionAgreementRows: 3,
+      primaryClassKappa: 1,
+      materialRelevanceKappa: 1,
+      passed: true,
+      disagreements: [],
+    });
+    expect(serializeEvaluationAdjudicationPacket(comparison, documents)).toBe(
+      "",
+    );
+  });
+
+  it("fails either kappa gate and serializes only decision disagreements", () => {
+    const bRows = validPassRowsForB();
+    const rejected = bRows[2] as Record<string, unknown>;
+    rejected["materialRelevance"] = "UNCERTAIN";
+    rejected["reviewFlags"] = ["AMBIGUOUS_CLASSIFICATION"];
+    const annotatorA = parseEvaluationAnnotationPass({
+      cycleId: "v2",
+      annotatorId: "A",
+      documents,
+      expectedCommentIds,
+      rows: validPassRows(),
+    });
+    const annotatorB = parseEvaluationAnnotationPass({
+      cycleId: "v2",
+      annotatorId: "B",
+      documents,
+      expectedCommentIds,
+      rows: bRows,
+    });
+    const comparison = compareEvaluationAnnotationPasses({
+      annotatorA,
+      annotatorB,
+    });
+    const packet = serializeEvaluationAdjudicationPacket(comparison, documents);
+
+    expect(comparison.primaryClassKappa).toBe(1);
+    expect(comparison.materialRelevanceKappa).toBeLessThan(
+      MINIMUM_ANNOTATION_COHENS_KAPPA,
+    );
+    expect(comparison).toMatchObject({
+      exactDecisionAgreementRows: 2,
+      passed: false,
+    });
+    expect(comparison.disagreements).toHaveLength(1);
+    expect(packet.trim().split("\n")).toHaveLength(1);
+    expect(packet).toContain(
+      '"schemaVersion":"annotation-adjudication-packet.v1"',
+    );
+    expect(packet).toContain('"source":{"comment"');
+    expect(packet).not.toContain('"holdout"');
   });
 
   it("rejects evidence that does not reproduce the frozen source", () => {
