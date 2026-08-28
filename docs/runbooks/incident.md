@@ -200,7 +200,7 @@ provider token, and rerun evaluation gates before re-enabling.
 Set `TELEGRAM_ENABLED=false`, stop worker replicas, and follow
 `telegram-session.md`. Revoke a compromised authorization in Telegram's
 official active-sessions UI before creating a replacement. Do not log in from a
-Railway shell or attach the session volume to another service.
+Railway shell, print/read back `TELEGRAM_SESSION`, or copy it to another service.
 
 ## Content deletion or HN tombstone
 

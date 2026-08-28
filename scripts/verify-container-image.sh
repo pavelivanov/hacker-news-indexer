@@ -15,12 +15,12 @@ if [ "$node_version" != "v24.19.0" ]; then
 fi
 
 if docker image inspect --format '{{json .Config.Env}}' "$image_name" \
-  | grep -E 'DATABASE_URL|APP_API_TOKEN|EXPORT_CONSUMER_TOKEN|TELEGRAM_API|CLASSIFIER_API_TOKEN' >/dev/null; then
+  | grep -E 'DATABASE_URL|APP_API_TOKEN|EXPORT_CONSUMER_TOKEN|TELEGRAM_API|TELEGRAM_SESSION|CLASSIFIER_API_TOKEN' >/dev/null; then
   echo "Release image configuration contains a secret variable." >&2
   exit 1
 fi
 if docker history --no-trunc "$image_name" \
-  | grep -E 'DATABASE_URL=|APP_API_TOKEN=|EXPORT_CONSUMER_TOKEN=|TELEGRAM_API_(ID|HASH)=|CLASSIFIER_API_TOKEN=' >/dev/null; then
+  | grep -E 'DATABASE_URL=|APP_API_TOKEN=|EXPORT_CONSUMER_TOKEN=|TELEGRAM_API_(ID|HASH)=|TELEGRAM_SESSION=|CLASSIFIER_API_TOKEN=' >/dev/null; then
   echo "Release image history contains a secret assignment." >&2
   exit 1
 fi

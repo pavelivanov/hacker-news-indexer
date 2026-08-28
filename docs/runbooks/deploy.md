@@ -1,7 +1,7 @@
 # Railway deployment runbook
 
 This runbook is the release checklist for the private API, worker, scheduler,
-PostgreSQL database, and Telegram session volume. It deliberately separates
+PostgreSQL database, and sealed Telegram session. It deliberately separates
 read-only planning, staging changes, and production changes.
 
 ## Current execution state
@@ -14,8 +14,11 @@ As of 2026-08-28:
 - The checkout is linked to `staging` (environment ID suffix `62dc`) in
   `hacker-news-indexer` (project ID suffix `5328`). The environment contains
   the private `postgres`, `api`, `worker`, and `scheduler` services plus ready
-  PostgreSQL and Telegram-session volumes. The separate `production`
-  environment (environment ID suffix `1bf3`) remains empty.
+  PostgreSQL and legacy Telegram-session volumes. This pending change replaces
+  file-backed application sessions with a sealed serialized session imported in
+  memory; the legacy volume remains attached until rollout verification and
+  separately approved removal. The `production` environment (environment ID
+  suffix `1bf3`) remains empty.
 - The branch through commit `8de3522` passed `npm run release:verify` twice from
   a clean worktree. Both runs included a clean nine-migration replay, 175 unit
   tests, 45 integration tests, evaluation/export gates, image inspection, and
@@ -48,9 +51,9 @@ As of 2026-08-28:
   deployments, resource utilization remained low, and no alert fired.
 - The bounded official HN API contract passed at 08:42 UTC against one known
   item using the production adapter. It made no mutation and emitted no source
-  body. Telegram remains the next external-dependency gate; its API credentials
-  and authorized session are not currently present in the operator environment
-  or staging worker.
+  body. Telegram remains the next external-dependency gate. The operator has
+  configured the API credentials locally, but an mtcute-compatible serialized
+  session has not yet passed local or staging validation.
 - The read-only PostgreSQL recovery preflight found PITR disabled, no backup
   bucket, no configured backup schedules, and no on-demand backups. The owner
   then authorized a lower-cost logical restore drill: an `age`-encrypted dump
@@ -97,12 +100,12 @@ non-API service, or widens secret scope.
 
 ## Intended resource graph
 
-| Resource    | Public     | Start command                                                 | Pre-deploy                  | Persistent state                |
-| ----------- | ---------- | ------------------------------------------------------------- | --------------------------- | ------------------------------- |
-| `postgres`  | No         | Railway managed                                               | None                        | Railway database volume/backups |
-| `api`       | Post-apply | `node --enable-source-maps apps/api/dist/server.js`           | `npm run db:migrate:deploy` | None                            |
-| `worker`    | No         | `node --enable-source-maps apps/worker/dist/index.js`         | None                        | `/data/telegram` volume         |
-| `scheduler` | No         | `node --enable-source-maps apps/worker/dist/schedule-once.js` | None                        | None                            |
+| Resource    | Public     | Start command                                                 | Pre-deploy                  | Persistent state                                                 |
+| ----------- | ---------- | ------------------------------------------------------------- | --------------------------- | ---------------------------------------------------------------- |
+| `postgres`  | No         | Railway managed                                               | None                        | Railway database volume/backups                                  |
+| `api`       | Post-apply | `node --enable-source-maps apps/api/dist/server.js`           | `npm run db:migrate:deploy` | None                                                             |
+| `worker`    | No         | `node --enable-source-maps apps/worker/dist/index.js`         | None                        | Sealed in-memory Telegram session; legacy volume pending removal |
+| `scheduler` | No         | `node --enable-source-maps apps/worker/dist/schedule-once.js` | None                        | None                                                             |
 
 All three application services build the repository root Dockerfile with the
 full npm-workspace context. Keep one replica of each initially. Only `api` gets
@@ -125,23 +128,23 @@ redeploy all backend roles.
 Use the private database reference `${{postgres.DATABASE_URL}}`. Service names
 in Railway references are case-sensitive.
 
-| Variable                                                |   API    |        Worker        | Scheduler |             Secret              |
-| ------------------------------------------------------- | :------: | :------------------: | :-------: | :-----------------------------: |
-| `NODE_ENV=production`                                   |   Yes    |         Yes          |    Yes    |               No                |
-| `LOG_LEVEL=info`                                        |   Yes    |         Yes          |    Yes    |               No                |
-| `DATABASE_URL=${{postgres.DATABASE_URL}}`               |   Yes    |         Yes          |    Yes    |            Reference            |
-| `APP_API_TOKEN`                                         |   Yes    |          No          |    No     |             Sealed              |
-| `EXPORT_CONSUMER_TOKEN`                                 | Optional |          No          |    No     | Sealed, distinct from API token |
-| `APP_REVIEW_ACTOR_ID`                                   |   Yes    |          No          |    No     |               No                |
-| `TELEGRAM_ENABLED`                                      |    No    |         Yes          |    No     |               No                |
-| `TELEGRAM_API_ID`                                       |    No    |  Only when enabled   |    No     |       Treat as sensitive        |
-| `TELEGRAM_API_HASH`                                     |    No    |  Only when enabled   |    No     |             Sealed              |
-| `TELEGRAM_SOURCE_KEY`                                   |    No    |  Only when enabled   |    No     |               No                |
-| `TELEGRAM_SESSION_PATH=/data/telegram/telegram.session` |    No    |         Yes          |    No     |            Path only            |
-| `CLASSIFIER_ENABLED`                                    |    No    |         Yes          |    No     |               No                |
-| `CLASSIFIER_PROVIDER` / `CLASSIFIER_MODEL`              |    No    | Only after Plan 003R |    No     |               No                |
-| `CLASSIFIER_API_TOKEN`                                  |    No    | Only after Plan 003R |    No     |             Sealed              |
-| `WORKER_*` / `HN_REQUEST_TIMEOUT_MS`                    |    No    |         Yes          |    No     |               No                |
+| Variable                                   |   API    |        Worker        | Scheduler |             Secret              |
+| ------------------------------------------ | :------: | :------------------: | :-------: | :-----------------------------: |
+| `NODE_ENV=production`                      |   Yes    |         Yes          |    Yes    |               No                |
+| `LOG_LEVEL=info`                           |   Yes    |         Yes          |    Yes    |               No                |
+| `DATABASE_URL=${{postgres.DATABASE_URL}}`  |   Yes    |         Yes          |    Yes    |            Reference            |
+| `APP_API_TOKEN`                            |   Yes    |          No          |    No     |             Sealed              |
+| `EXPORT_CONSUMER_TOKEN`                    | Optional |          No          |    No     | Sealed, distinct from API token |
+| `APP_REVIEW_ACTOR_ID`                      |   Yes    |          No          |    No     |               No                |
+| `TELEGRAM_ENABLED`                         |    No    |         Yes          |    No     |               No                |
+| `TELEGRAM_API_ID`                          |    No    |  Only when enabled   |    No     |       Treat as sensitive        |
+| `TELEGRAM_API_HASH`                        |    No    |  Only when enabled   |    No     |             Sealed              |
+| `TELEGRAM_SOURCE_KEY`                      |    No    |  Only when enabled   |    No     |               No                |
+| `TELEGRAM_SESSION`                         |    No    |  Only when enabled   |    No     |             Sealed              |
+| `CLASSIFIER_ENABLED`                       |    No    |         Yes          |    No     |               No                |
+| `CLASSIFIER_PROVIDER` / `CLASSIFIER_MODEL` |    No    | Only after Plan 003R |    No     |               No                |
+| `CLASSIFIER_API_TOKEN`                     |    No    | Only after Plan 003R |    No     |             Sealed              |
+| `WORKER_*` / `HN_REQUEST_TIMEOUT_MS`       |    No    |         Yes          |    No     |               No                |
 
 Omit `EXPORT_CONSUMER_TOKEN` to keep consumer access disabled during the first
 staging rollout. Start staging with `TELEGRAM_ENABLED=false` and
@@ -247,8 +250,8 @@ Current checklist:
 12. [x] Keep Telegram, live classification, and automatic export disabled.
 13. [x] Pass the bounded official HN API read contract without source-body
         logging.
-14. [ ] Bootstrap and validate the Telegram session, then pass one bounded
-        Telegram read contract after separate approval.
+14. [ ] Validate a serialized Telegram session, seal it on the worker, then
+        pass one bounded Telegram read contract after separate approval.
 
 During first provisioning, the worker began a few seconds before the API
 pre-deploy migration finished and emitted bounded `pipeline_job_claim_deferred`
@@ -298,9 +301,12 @@ Telegram bounded contract/session persistence, classifier shadow after Plan
 003R, then reviewed local publication. Automatic export remains disabled.
 
 The HN contract passed on 2026-08-28 with one known-item read through the
-production adapter. The Telegram gate cannot start until the operator adds
-`TELEGRAM_API_ID` and `TELEGRAM_API_HASH`, initializes the gitignored local
-session interactively, and approves upload to the staging worker volume.
+production adapter. The Telegram gate now uses an mtcute-compatible
+`TELEGRAM_SESSION` secret: the worker imports it into memory and validates it
+headlessly, with no runtime login or session-file upload. The string still
+represents an authorized Telegram identity and must be sealed on the worker
+only. The legacy staging volume remains attached and unused until deletion is
+separately reviewed and approved.
 
 ## Production gate
 

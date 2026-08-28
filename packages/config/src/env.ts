@@ -77,10 +77,7 @@ const environmentSchema = z
     TELEGRAM_ENABLED: booleanWithDefault(false),
     TELEGRAM_API_ID: optionalPositiveInteger,
     TELEGRAM_API_HASH: optionalString,
-    TELEGRAM_SESSION_PATH: z.preprocess(
-      emptyToUndefined,
-      z.string().trim().min(1).default(".sessions/telegram.session"),
-    ),
+    TELEGRAM_SESSION: optionalString,
     TELEGRAM_SOURCE_KEY: z.preprocess(
       emptyToUndefined,
       z.string().trim().min(1).default("hn_best_comments"),
@@ -117,7 +114,11 @@ const environmentSchema = z
       });
     }
     if (value.TELEGRAM_ENABLED) {
-      for (const key of ["TELEGRAM_API_ID", "TELEGRAM_API_HASH"] as const) {
+      for (const key of [
+        "TELEGRAM_API_ID",
+        "TELEGRAM_API_HASH",
+        "TELEGRAM_SESSION",
+      ] as const) {
         if (value[key] === undefined) {
           context.addIssue({
             code: "custom",

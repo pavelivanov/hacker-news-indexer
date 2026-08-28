@@ -33,6 +33,8 @@ const baseEnvironment = {
 
 export default defineRailway(() => {
   const database = postgres("postgres");
+  // Retained in staging until the serialized-session rollout is verified and
+  // its separate, destructive removal is approved. New runtimes do not use it.
   const telegramSession = volume("telegram-session");
 
   const api = service("api", {
@@ -69,7 +71,6 @@ export default defineRailway(() => {
       ...baseEnvironment,
       DATABASE_URL: database.env.DATABASE_URL,
       TELEGRAM_ENABLED: "false",
-      TELEGRAM_SESSION_PATH: "/data/telegram/telegram.session",
       CLASSIFIER_ENABLED: "false",
     },
     volumeMounts: {

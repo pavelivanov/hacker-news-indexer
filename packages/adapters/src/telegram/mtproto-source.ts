@@ -13,7 +13,7 @@ import type {
   SelectionSource,
   Sleeper,
 } from "@hn-knowledge/ports";
-import { TelegramClient, type Message } from "@mtcute/node";
+import { MemoryStorage, TelegramClient, type Message } from "@mtcute/node";
 
 const DEFAULT_CHUNK_SIZE = 100;
 const DEFAULT_REQUEST_TIMEOUT_MS = 15_000;
@@ -59,7 +59,7 @@ export interface TelegramMtprotoSourceOptions {
 export interface MtcuteTelegramSourceOptions extends TelegramMtprotoSourceOptions {
   readonly apiId: number;
   readonly apiHash: string;
-  readonly sessionPath: string;
+  readonly session: string;
 }
 
 export interface MtcuteTelegramSource {
@@ -479,15 +479,27 @@ export class TelegramMtprotoSource implements SelectionSource {
   }
 }
 
-export const createMtcuteTelegramSource = (
+export const createMtcuteTelegramSource = async (
   options: MtcuteTelegramSourceOptions,
-): MtcuteTelegramSource => {
+): Promise<MtcuteTelegramSource> => {
   const client = new TelegramClient({
     apiId: options.apiId,
     apiHash: options.apiHash,
-    storage: options.sessionPath,
+    storage: new MemoryStorage(),
     disableUpdates: true,
   });
+  try {
+    await client.importSession(options.session);
+    await client.getMe();
+  } catch (error: unknown) {
+    try {
+      await client.destroy();
+    } catch {
+      // Preserve the import/authentication failure as the actionable cause.
+    }
+    throw error;
+  }
+
   return {
     source: new TelegramMtprotoSource(
       new MtcuteTelegramMessagesClient(client),

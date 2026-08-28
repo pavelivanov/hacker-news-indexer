@@ -24,6 +24,7 @@ describe("application configuration", () => {
       WORKER_HEARTBEAT_INTERVAL_MS: 60_000,
     });
     expect(config.TELEGRAM_API_HASH).toBeUndefined();
+    expect(config.TELEGRAM_SESSION).toBeUndefined();
     expect(config.CLASSIFIER_API_TOKEN).toBeUndefined();
     expect(config.EXPORT_CONSUMER_TOKEN).toBeUndefined();
   });
@@ -44,6 +45,13 @@ describe("application configuration", () => {
     expect(() => parseConfig({ TELEGRAM_ENABLED: "true" })).toThrow(
       /TELEGRAM_API_ID/u,
     );
+    expect(() =>
+      parseConfig({
+        TELEGRAM_ENABLED: "true",
+        TELEGRAM_API_ID: "12345",
+        TELEGRAM_API_HASH: "telegram-hash-value",
+      }),
+    ).toThrow(/TELEGRAM_SESSION/u);
     expect(() => parseConfig({ CLASSIFIER_ENABLED: "true" })).toThrow(
       /CLASSIFIER_PROVIDER/u,
     );
@@ -65,7 +73,7 @@ describe("application configuration", () => {
       DATABASE_URL: "postgresql://user:db-password@db.internal:5432/app",
       TELEGRAM_API_ID: "12345",
       TELEGRAM_API_HASH: "telegram-hash-value",
-      TELEGRAM_SESSION_PATH: "/private/session-value",
+      TELEGRAM_SESSION: "telegram-session-value",
       CLASSIFIER_API_TOKEN: "classifier-token-value",
     };
     const redactedJson = JSON.stringify(redactConfig(parseConfig(secrets)));

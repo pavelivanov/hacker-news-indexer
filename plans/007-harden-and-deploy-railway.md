@@ -15,7 +15,7 @@
 
 ## Why this matters
 
-This plan creates a repeatable staging-to-production release with isolated services, single-path migrations, persistent Telegram session storage, health checks, backups, observability, and rollback/runbooks. Railway state must be explicit and reviewed rather than assembled ad hoc.
+This plan creates a repeatable staging-to-production release with isolated services, single-path migrations, a sealed serialized Telegram session, health checks, backups, observability, and rollback/runbooks. Railway state must be explicit and reviewed rather than assembled ad hoc.
 
 ## Current state expected from dependencies
 
@@ -50,7 +50,7 @@ This plan creates a repeatable staging-to-production release with isolated servi
 - `.railway/railway.ts` generated with current CLI and its project graph.
 - `docs/runbooks/{deploy,rollback,telegram-session,backup-restore,incident}.md`.
 - Release verification/smoke/load scripts and CI release workflow.
-- Railway staging and production environments, PostgreSQL, API, worker, scheduler/cron, worker volume, variables, health checks, restart/drain policy, logs/metrics/backups.
+- Railway staging and production environments, PostgreSQL, API, worker, scheduler/cron, variables, health checks, restart/drain policy, logs/metrics/backups, and retirement of the legacy worker volume after verification.
 - Security, recovery, and performance validation.
 
 **Out of scope**:
@@ -59,7 +59,7 @@ This plan creates a repeatable staging-to-production release with isolated servi
 - Frontend deployment.
 - Direct downstream FindThatProject mutation.
 - Applying/deleting Railway resources without operator approval.
-- Putting Telegram session bootstrap in pre-deploy commands.
+- Putting Telegram session bootstrap or interactive login in pre-deploy/runtime commands.
 
 ## Git workflow
 
@@ -86,7 +86,7 @@ Define staging and production with:
 
 - managed PostgreSQL service, private only;
 - API service from the root Dockerfile, start command API, public domain, `/healthz` deployment healthcheck, restart-on-failure, graceful drain;
-- worker service from the same Dockerfile, worker start command, no public domain, one replica, persistent volume mounted at the Telegram session path;
+- worker service from the same Dockerfile, worker start command, no public domain, one replica, and no filesystem dependency for its sealed serialized Telegram session;
 - scheduler/cron service from the same image, `schedule:once`, no public domain, a conservative daily reconciliation schedule initially;
 - full repository build context because npm workspaces import shared packages;
 - watch paths so docs/frontend-only changes do not redeploy every backend service unnecessarily.
@@ -108,14 +108,20 @@ re-verified.
 Use Railway reference variables for PostgreSQL `DATABASE_URL`. Set/seal independently scoped secrets:
 
 - API: `APP_API_TOKEN`, `EXPORT_CONSUMER_TOKEN` if export endpoint is enabled;
-- worker: classifier provider credentials, Telegram API ID/hash, source key, session bootstrap only when needed;
+- worker: classifier provider credentials plus Telegram API ID/hash, source key, and serialized session only when enabled;
 - scheduler: database URL and schedule configuration only.
 
 Do not give Telegram or classifier secrets to the API/scheduler. Do not pass secrets as Docker build args. Mark production secrets sealed through the Railway UI when appropriate.
 
-For Telegram, create the session interactively on the operator's machine using a gitignored path. Bootstrap the worker volume without printing or committing the session. The runbook must define how the worker imports bootstrap state on an empty volume, persists future state under the mounted path, and how to rotate/revoke it. Never use a Railway pre-deploy command for this because volumes are not mounted there.
+For Telegram, accept only an mtcute-compatible serialized session through the
+worker-only `TELEGRAM_SESSION` secret. Import it into in-memory storage and
+verify authorization headlessly before processing jobs. Never print, commit,
+pass in command-line arguments, or place the string in IaC. Seal it through the
+Railway dashboard and define rotation/revocation in the runbook. A serialized
+session still represents the Telegram identity that created it; it removes
+deployment login and file transfer, not the underlying authorization.
 
-**Verify**: `railway variable list --service <service> --json` confirms key presence/scope without outputting values; API lacks Telegram/classifier keys; worker volume survives a restart and reads the session without interactive login.
+**Verify**: `railway variable list --service <service> --json` confirms key presence/scope without outputting values; API and scheduler lack Telegram/classifier keys; one worker imports the sealed session after a restart without filesystem state or interactive login.
 
 ### Step 4: Deploy staging in safe modes
 
@@ -154,6 +160,12 @@ PostgreSQL integration test with one seeded comment scheduled one job on the
 first call and zero on the second. The scheduler-required live check passed
 after a later redeploy by querying bounded logs across recent deployments.
 
+The initial staging graph included a worker-mounted Telegram-session volume.
+Before live integration, the operator replaced that design with a sealed
+`TELEGRAM_SESSION` string imported into memory. Keep the unused legacy volume
+attached until the new path passes local contract, staging restart, and bounded
+ingestion checks; its removal is a separate destructive change.
+
 Then enable one external dependency at a time: HN live contract, Telegram bounded read, classifier shadow, and finally reviewed local publication. Never enable automatic export during staging rollout.
 
 **Verify**: service status healthy; bounded build/runtime logs show expected version/role and no secrets/source bodies; one bounded seed ingestion completes with exact counts and evaluation gates.
@@ -167,7 +179,7 @@ Document and test:
 - restore into a disposable staging database and integrity checks for key table counts/FKs;
 - image/deployment rollback;
 - expand/contract migration discipline because Prisma migrations are forward-only;
-- Telegram session revocation/rotation;
+- Telegram serialized-session revocation/rotation;
 - classifier credential rotation and provider outage/shadow disable;
 - job queue pause, lease recovery, poison-job quarantine;
 - content deletion/tombstone incident response.
@@ -238,9 +250,9 @@ indexed, exposing and correcting a startup-race false positive: a recent
 disabling restart-loop detection. The post-grace staging recheck passed with no
 alerts at 15:23 UTC. The checker also consumes Railway's bounded raw resource
 metrics: CPU/memory alert only after a sufficiently covered ten-minute window
-has remained above 85%, while PostgreSQL and Telegram volume capacity alert
-above 80%. The first read-only resource baseline passed at 22:41 UTC with all
-reported utilization below 4% and no alerts.
+has remained above 85%, while PostgreSQL and the still-attached legacy Telegram
+volume alert above 80%. The first read-only resource baseline passed at 22:41
+UTC with all reported utilization below 4% and no alerts.
 
 The first scheduler completion exposed that Railway service-level log queries
 follow only the latest deployment. The checker now selects bounded recent
@@ -252,8 +264,8 @@ After merge commit `74603f8` auto-deployed, the scheduler-required check passed
 again at 08:43 UTC with all services healthy, one completion recovered across
 deployments, low resource utilization, and zero alerts. The bounded official
 HN API contract also passed through the production adapter without emitting
-source content. Telegram session bootstrap and its bounded staging contract
-remain the next external-dependency gate.
+source content. Telegram serialized-session validation, sealed staging setup,
+and its bounded contract remain the next external-dependency gate.
 
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does
@@ -284,7 +296,8 @@ Deploy with a release summary, watch bounded logs/status, run authenticated smok
 - Secret-scope and no-build-secret checks.
 - Staging bounded HN/Telegram/classifier workflow.
 - PostgreSQL backup/restore integrity drill.
-- Deployment rollback and worker volume persistence.
+- Deployment rollback and serialized-session restart validation; retain the
+  historical worker-volume drill as evidence until the legacy volume is removed.
 - Synthetic failure/alert tests.
 - Production bounded smoke and post-release observation.
 
@@ -293,7 +306,7 @@ Deploy with a release summary, watch bounded logs/status, run authenticated smok
 - [x] `.railway/railway.ts` uses current supported IaC and plans the environment-independent base graph without destructive changes.
 - [x] Only API pre-deploy runs Prisma migrations.
 - [x] Exactly one Railway domain is generated for API and no other staging service is public.
-- [ ] API, worker, scheduler, PostgreSQL, and Telegram session storage have minimum required access.
+- [ ] API, worker, scheduler, PostgreSQL, and the sealed Telegram session have minimum required access.
 - [ ] Staging external dependencies were enabled incrementally and all gates passed.
 - [x] Backup restore and rollback were actually tested.
 - [ ] Metrics/alerts cover service and pipeline failure modes without leaking data.
@@ -306,7 +319,8 @@ Deploy with a release summary, watch bounded logs/status, run authenticated smok
 - `railway config plan` includes an unexpected database/volume deletion or replacement.
 - Current Railway IaC/CLI differs materially from this plan; re-query docs and update the plan.
 - Prisma migration would run from more than one service.
-- Telegram session cannot persist without exposure or interactive login on every restart.
+- Telegram session cannot import from a sealed worker-only secret without
+  exposure or interactive login on restart.
 - Backup restore or rollback drill fails.
 - Any acceptance/evaluation/export gate is red.
 
