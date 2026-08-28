@@ -248,6 +248,13 @@ follow only the latest deployment. The checker now selects bounded recent
 redeploys. With scheduler enforcement enabled, the staging check found the
 03:21 UTC event after the 08:13 UTC redeploy and passed with no alerts.
 
+After merge commit `74603f8` auto-deployed, the scheduler-required check passed
+again at 08:43 UTC with all services healthy, one completion recovered across
+deployments, low resource utilization, and zero alerts. The bounded official
+HN API contract also passed through the production adapter without emitting
+source content. Telegram session bootstrap and its bounded staging contract
+remain the next external-dependency gate.
+
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does
 not document CLI or IaC creation. Initial thresholds are recorded in the

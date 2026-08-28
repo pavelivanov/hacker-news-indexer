@@ -8,11 +8,9 @@ read-only planning, staging changes, and production changes.
 
 As of 2026-08-28:
 
-- The unqualified `railway` command currently resolves to an incomplete asdf
-  npm installation of CLI `5.45.2`. The independent Homebrew CLI `5.28.0`
-  remains authenticated and passed read-only status and metrics checks. Repair
-  or upgrade the `5.45.2+` installation before any further IaC or remote
-  mutation; do not use the older fallback for configuration changes.
+- The unqualified `railway` command resolves to authenticated CLI `5.45.5`.
+  This closes the earlier incomplete-asdf-installation blocker; continue to
+  reconfirm the version and linked context before every remote mutation.
 - The checkout is linked to `staging` (environment ID suffix `62dc`) in
   `hacker-news-indexer` (project ID suffix `5328`). The environment contains
   the private `postgres`, `api`, `worker`, and `scheduler` services plus ready
@@ -44,6 +42,15 @@ As of 2026-08-28:
   the scheduler, the deployment-history-aware freshness check passed at 08:20
   UTC with scheduler enforcement enabled and zero alerts. See the
   [dated scheduler-soak report](reports/2026-08-28-staging-scheduler-soak.md).
+- Merge commit `74603f8` then auto-deployed to all three application services.
+  The post-merge scheduler-required observability check passed at 08:43 UTC:
+  all four services were healthy, one prior completion was recovered across
+  deployments, resource utilization remained low, and no alert fired.
+- The bounded official HN API contract passed at 08:42 UTC against one known
+  item using the production adapter. It made no mutation and emitted no source
+  body. Telegram remains the next external-dependency gate; its API credentials
+  and authorized session are not currently present in the operator environment
+  or staging worker.
 - The read-only PostgreSQL recovery preflight found PITR disabled, no backup
   bucket, no configured backup schedules, and no on-demand backups. The owner
   then authorized a lower-cost logical restore drill: an `age`-encrypted dump
@@ -238,6 +245,10 @@ Current checklist:
         `reconciliation_schedule_completed` event, then prove repeated scheduling
         is idempotent.
 12. [x] Keep Telegram, live classification, and automatic export disabled.
+13. [x] Pass the bounded official HN API read contract without source-body
+        logging.
+14. [ ] Bootstrap and validate the Telegram session, then pass one bounded
+        Telegram read contract after separate approval.
 
 During first provisioning, the worker began a few seconds before the API
 pre-deploy migration finished and emitted bounded `pipeline_job_claim_deferred`
@@ -286,6 +297,11 @@ Enable external dependencies one at a time only after approval: HN contract,
 Telegram bounded contract/session persistence, classifier shadow after Plan
 003R, then reviewed local publication. Automatic export remains disabled.
 
+The HN contract passed on 2026-08-28 with one known-item read through the
+production adapter. The Telegram gate cannot start until the operator adds
+`TELEGRAM_API_ID` and `TELEGRAM_API_HASH`, initializes the gitignored local
+session interactively, and approves upload to the staging worker volume.
+
 ## Production gate
 
 Production remains blocked until all boxes are evidenced:
@@ -295,7 +311,8 @@ Production remains blocked until all boxes are evidenced:
 - [x] Private staging base graph deployed; migrations and deployment health passed.
 - [x] Public API health/readiness/auth/metrics smoke passed without secret output.
 - [x] Staging soak covered at least one scheduled reconciliation cycle.
-- [ ] Bounded HN and Telegram staging checks passed without content/secret logs.
+- [x] Bounded HN live contract passed without content/secret logs.
+- [ ] Bounded Telegram staging check passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
 - [x] Backup restore drill passed with recorded RPO/RTO.
 - [x] API rollback and worker-volume persistence drills passed.
