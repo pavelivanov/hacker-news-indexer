@@ -1,12 +1,14 @@
 import { createHash } from "node:crypto";
 
+import { convertToGramjsSession } from "@mtcute/convert";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const state = vi.hoisted(() => ({
   destroyed: 0,
   getMeCalls: 0,
-  importedSessions: [] as string[],
+  importedSessions: [] as unknown[],
   rejectImport: false,
+  rejectStringImport: false,
   storageKinds: [] as string[],
 }));
 
@@ -19,9 +21,10 @@ vi.mock("@mtcute/node", () => ({
       state.storageKinds.push(options.storage.constructor.name);
     }
 
-    importSession(session: string): Promise<void> {
+    importSession(session: unknown): Promise<void> {
       state.importedSessions.push(session);
-      return state.rejectImport
+      return state.rejectImport ||
+        (state.rejectStringImport && typeof session === "string")
         ? Promise.reject(new Error("invalid session"))
         : Promise.resolve();
     }
@@ -55,6 +58,7 @@ describe("mtcute serialized sessions", () => {
     state.getMeCalls = 0;
     state.importedSessions.length = 0;
     state.rejectImport = false;
+    state.rejectStringImport = false;
     state.storageKinds.length = 0;
   });
 
@@ -69,12 +73,44 @@ describe("mtcute serialized sessions", () => {
     expect(state.importedSessions).toEqual(["serialized-session"]);
     expect(state.getMeCalls).toBe(1);
     expect(state.storageKinds).toEqual(["MemoryStorage"]);
+    expect(telegram.sessionFormat).toBe("mtcute");
 
     await telegram.close();
     expect(state.destroyed).toBe(1);
   });
 
-  it("destroys the client when session import fails", async () => {
+  it("converts a GramJS string when native mtcute import rejects it", async () => {
+    const dc = {
+      id: 2,
+      ipAddress: "149.154.167.51",
+      port: 443,
+      testMode: false,
+    };
+    const session = convertToGramjsSession({
+      version: 3,
+      primaryDcs: { main: dc, media: dc },
+      self: null,
+      authKey: new Uint8Array(256).fill(7),
+    });
+    state.rejectStringImport = true;
+
+    const telegram = await createMtcuteTelegramSource({
+      apiId: 12_345,
+      apiHash: "api-hash",
+      session,
+      hasher,
+    });
+
+    expect(state.importedSessions).toHaveLength(2);
+    expect(typeof state.importedSessions[0]).toBe("string");
+    expect(state.importedSessions[1]).toMatchObject({ version: 3 });
+    expect(telegram.sessionFormat).toBe("gramjs");
+
+    await telegram.close();
+    expect(state.destroyed).toBe(2);
+  });
+
+  it("destroys the client when no supported session format imports", async () => {
     state.rejectImport = true;
 
     await expect(
@@ -84,7 +120,7 @@ describe("mtcute serialized sessions", () => {
         session: "invalid-session",
         hasher,
       }),
-    ).rejects.toThrow("invalid session");
+    ).rejects.toThrow("Unsupported Telegram session format");
 
     expect(state.getMeCalls).toBe(0);
     expect(state.destroyed).toBe(1);

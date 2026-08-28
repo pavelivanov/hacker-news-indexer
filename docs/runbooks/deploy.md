@@ -52,8 +52,11 @@ As of 2026-08-28:
 - The bounded official HN API contract passed at 08:42 UTC against one known
   item using the production adapter. It made no mutation and emitted no source
   body. Telegram remains the next external-dependency gate. The operator has
-  configured the API credentials locally, but an mtcute-compatible serialized
-  session has not yet passed local or staging validation.
+  configured the API credentials and a GramJS session locally. The official
+  converter produced a valid mtcute session, the headless authorization check
+  passed, and the bounded 100-ID read contract completed without logging source
+  bodies. Sealed staging configuration and bounded staging ingestion remain
+  approval-gated.
 - The read-only PostgreSQL recovery preflight found PITR disabled, no backup
   bucket, no configured backup schedules, and no on-demand backups. The owner
   then authorized a lower-cost logical restore drill: an `age`-encrypted dump
@@ -250,8 +253,10 @@ Current checklist:
 12. [x] Keep Telegram, live classification, and automatic export disabled.
 13. [x] Pass the bounded official HN API read contract without source-body
         logging.
-14. [ ] Validate a serialized Telegram session, seal it on the worker, then
-        pass one bounded Telegram read contract after separate approval.
+14. [x] Validate the serialized Telegram session locally and pass the bounded
+        100-ID Telegram read contract without source-body logging.
+15. [ ] Seal the session on the worker, enable one staging worker, and pass one
+        bounded staging ingestion after separate approval.
 
 During first provisioning, the worker began a few seconds before the API
 pre-deploy migration finished and emitted bounded `pipeline_job_claim_deferred`
@@ -301,12 +306,19 @@ Telegram bounded contract/session persistence, classifier shadow after Plan
 003R, then reviewed local publication. Automatic export remains disabled.
 
 The HN contract passed on 2026-08-28 with one known-item read through the
-production adapter. The Telegram gate now uses an mtcute-compatible
-`TELEGRAM_SESSION` secret: the worker imports it into memory and validates it
-headlessly, with no runtime login or session-file upload. The string still
-represents an authorized Telegram identity and must be sealed on the worker
-only. The legacy staging volume remains attached and unused until deletion is
-separately reviewed and approved.
+production adapter. The Telegram gate now uses a native mtcute, GramJS,
+Telethon v1, or Pyrogram `TELEGRAM_SESSION` secret: the worker converts supported
+external formats, imports the result into memory, and validates it headlessly,
+with no runtime login or session-file upload. The string still represents an
+authorized Telegram identity and must be sealed on the worker only. The legacy
+staging volume remains attached and unused until deletion is separately
+reviewed and approved.
+
+At 2026-08-28 10:31 UTC, the supplied GramJS session passed conversion and
+headless authorization, then the exact 100-ID Telegram contract passed through
+the production adapter. The command emitted only the safe format label and test
+summary. No identity, session value, message body, or Railway mutation was
+produced.
 
 ## Production gate
 

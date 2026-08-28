@@ -13,6 +13,11 @@ import type {
   SelectionSource,
   Sleeper,
 } from "@hn-knowledge/ports";
+import {
+  convertFromGramjsSession,
+  convertFromPyrogramSession,
+  convertFromTelethonSession,
+} from "@mtcute/convert";
 import { MemoryStorage, TelegramClient, type Message } from "@mtcute/node";
 
 const DEFAULT_CHUNK_SIZE = 100;
@@ -64,8 +69,12 @@ export interface MtcuteTelegramSourceOptions extends TelegramMtprotoSourceOption
 
 export interface MtcuteTelegramSource {
   readonly source: SelectionSource;
+  readonly sessionFormat: TelegramSessionFormat;
   close(): Promise<void>;
 }
+
+export type TelegramSessionFormat =
+  "mtcute" | "gramjs" | "telethon" | "pyrogram";
 
 export class TelegramDeferredError extends Error {
   readonly code = "TELEGRAM_FLOOD_WAIT_DEFERRED";
@@ -482,31 +491,78 @@ export class TelegramMtprotoSource implements SelectionSource {
 export const createMtcuteTelegramSource = async (
   options: MtcuteTelegramSourceOptions,
 ): Promise<MtcuteTelegramSource> => {
-  const client = new TelegramClient({
-    apiId: options.apiId,
-    apiHash: options.apiHash,
-    storage: new MemoryStorage(),
-    disableUpdates: true,
-  });
-  try {
-    await client.importSession(options.session);
-    await client.getMe();
-  } catch (error: unknown) {
+  type ImportedSession = Exclude<
+    Parameters<TelegramClient["importSession"]>[0],
+    string
+  >;
+  type SessionCandidate = {
+    readonly format: TelegramSessionFormat;
+    readonly value: string | ImportedSession;
+  };
+
+  const candidates: SessionCandidate[] = [
+    { format: "mtcute", value: options.session },
+  ];
+  const externalConverters = [
+    ["gramjs", convertFromGramjsSession],
+    ["telethon", convertFromTelethonSession],
+    ["pyrogram", convertFromPyrogramSession],
+  ] as const;
+  for (const [format, convert] of externalConverters) {
     try {
-      await client.destroy();
+      const value = convert(options.session);
+      if (
+        value.authKey.length === 256 &&
+        value.primaryDcs.main.id >= 1 &&
+        value.primaryDcs.main.id <= 5
+      ) {
+        candidates.push({ format, value });
+      }
     } catch {
-      // Preserve the import/authentication failure as the actionable cause.
+      // The value is not encoded in this external session format.
     }
-    throw error;
   }
 
-  return {
-    source: new TelegramMtprotoSource(
-      new MtcuteTelegramMessagesClient(client),
-      options,
-    ),
-    async close(): Promise<void> {
+  let formatError: unknown;
+  for (const candidate of candidates) {
+    const client = new TelegramClient({
+      apiId: options.apiId,
+      apiHash: options.apiHash,
+      storage: new MemoryStorage(),
+      disableUpdates: true,
+    });
+    try {
+      await client.importSession(candidate.value);
+    } catch (error: unknown) {
+      formatError = error;
       await client.destroy();
-    },
-  };
+      continue;
+    }
+
+    try {
+      await client.getMe();
+    } catch (error: unknown) {
+      try {
+        await client.destroy();
+      } catch {
+        // Preserve the authorization failure as the actionable cause.
+      }
+      throw error;
+    }
+
+    return {
+      source: new TelegramMtprotoSource(
+        new MtcuteTelegramMessagesClient(client),
+        options,
+      ),
+      sessionFormat: candidate.format,
+      async close(): Promise<void> {
+        await client.destroy();
+      },
+    };
+  }
+
+  throw new Error("Unsupported Telegram session format", {
+    cause: formatError,
+  });
 };

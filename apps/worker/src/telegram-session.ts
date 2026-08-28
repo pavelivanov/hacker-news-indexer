@@ -23,7 +23,12 @@ const main = async (): Promise<void> => {
     maxFloodWaitMs: config.TELEGRAM_MAX_FLOOD_WAIT_MS,
   });
   try {
-    console.log(JSON.stringify({ event: "telegram_session_ready" }));
+    console.log(
+      JSON.stringify({
+        event: "telegram_session_ready",
+        sessionFormat: telegram.sessionFormat,
+      }),
+    );
   } finally {
     await telegram.close();
   }
