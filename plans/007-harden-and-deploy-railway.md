@@ -169,8 +169,18 @@ ingestion checks; its removal is a separate destructive change.
 
 The supplied GramJS string then passed mtcute's official conversion, headless
 authorization, and the bounded exact 100-ID Telegram contract at 10:31 UTC on
-2026-08-28. The commands emitted no identity, credential, or source body. Sealed
-worker configuration and bounded staging ingestion remain approval-gated.
+2026-08-28. The commands emitted no identity, credential, or source body.
+
+After merge commit `c2b672a` deployed, the operator confirmed the session and
+API hash sealed on the staging worker. Runtime headless authorization passed,
+Telegram-enabled deployment `b60867c9-82b9-4343-90dc-1b6809fdefa1` reached
+`SUCCESS`, and approved run `f2551955-5deb-4b4e-9ec1-d8bc68d14d5a` processed
+the exact 100-ID range. It observed 100 occurrences, resolved 98 HN comments,
+retained zero Telegram bodies, and made no retries. Its only terminal jobs were
+the expected 98 `CLASSIFIER_DISABLED` results. Authenticated API smoke and
+restart deployment `a30528d4-b575-4f7a-990e-b8e09a5d035b` also passed without
+warning/error events or runtime login. The legacy volume remained untouched;
+its removal is still a separate destructive change.
 
 Then enable one external dependency at a time: HN live contract, Telegram bounded read, classifier shadow, and finally reviewed local publication. Never enable automatic export during staging rollout.
 
@@ -271,7 +281,9 @@ again at 08:43 UTC with all services healthy, one completion recovered across
 deployments, low resource utilization, and zero alerts. The bounded official
 HN API contract also passed through the production adapter without emitting
 source content. Telegram serialized-session validation, sealed staging setup,
-and its bounded contract remain the next external-dependency gate.
+bounded ingestion, and restart persistence passed at 11:26 UTC on 2026-08-28.
+The next external-dependency gate is Plan 003R classifier shadow validation;
+live classification remains disabled.
 
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does
@@ -312,7 +324,7 @@ Deploy with a release summary, watch bounded logs/status, run authenticated smok
 - [x] `.railway/railway.ts` uses current supported IaC and plans the environment-independent base graph without destructive changes.
 - [x] Only API pre-deploy runs Prisma migrations.
 - [x] Exactly one Railway domain is generated for API and no other staging service is public.
-- [ ] API, worker, scheduler, PostgreSQL, and the sealed Telegram session have minimum required access.
+- [x] API, worker, scheduler, PostgreSQL, and the sealed Telegram session have minimum required access.
 - [ ] Staging external dependencies were enabled incrementally and all gates passed.
 - [x] Backup restore and rollback were actually tested.
 - [ ] Metrics/alerts cover service and pipeline failure modes without leaking data.
