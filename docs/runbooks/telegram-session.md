@@ -72,6 +72,28 @@ This is a remote mutation and requires staging approval.
    retry behavior, HN resolution, and absence of source bodies or secrets in
    bounded logs.
 
+## Staging evidence
+
+At 2026-08-28 11:19 UTC, worker deployment
+`b60867c9-82b9-4343-90dc-1b6809fdefa1` reached `SUCCESS` with Telegram enabled
+after the sealed GramJS session passed the headless runtime check. The worker
+emitted a normal startup and heartbeat with no warning or error event.
+
+Approved ingestion run `f2551955-5deb-4b4e-9ec1-d8bc68d14d5a` then processed
+the exact message-ID range `32847` through `32946`. It observed all 100
+occurrences, completed one ingestion job and 98 HN-resolution jobs on their
+first attempts, produced 200 HN references, and retained zero Telegram message
+bodies. The run ended `PARTIAL` only because the 98 downstream classification
+jobs terminated with the expected `CLASSIFIER_DISABLED` code while live
+classification remains out of scope. The 197 bounded job events contained no
+warning or error level.
+
+The authenticated staging API health/readiness/auth/metrics smoke passed after
+ingestion. Worker restart deployment `a30528d4-b575-4f7a-990e-b8e09a5d035b`
+then reached `SUCCESS` and emitted `worker_started` with Telegram enabled,
+proving the sealed session survives a restart without runtime login. The
+legacy volume remained attached and untouched.
+
 The existing staging `telegram-session` volume predates this design and will no
 longer be used after the serialized-session code deploys. Keep it attached until
 the rollout and restart validation pass. Removing it is destructive and requires
@@ -104,7 +126,8 @@ when Telegram guidance or the incident scope requires it.
 - **Flood wait above ceiling:** leave the job deferred and reduce/bound the
   range. Do not bypass the configured ceiling.
 
-Current status: **GRAMJS SESSION CONVERSION, HEADLESS AUTHORIZATION, AND THE
-BOUNDED 100-ID LOCAL CONTRACT PASSED ON 2026-08-28; SEALED STAGING
-CONFIGURATION, BOUNDED INGESTION, RESTART VALIDATION, AND LEGACY-VOLUME REMOVAL
-REMAIN GATED.**
+Current status: **GRAMJS SESSION CONVERSION, SEALED STAGING CONFIGURATION,
+HEADLESS AUTHORIZATION, THE BOUNDED 100-ID INGESTION, AND RESTART VALIDATION
+PASSED ON 2026-08-28. TELEGRAM REMAINS ENABLED ON THE STAGING WORKER;
+CLASSIFICATION REMAINS DISABLED. LEGACY-VOLUME REMOVAL REQUIRES A SEPARATE
+DESTRUCTIVE-CHANGE REVIEW.**

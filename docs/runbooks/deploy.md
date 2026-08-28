@@ -51,12 +51,10 @@ As of 2026-08-28:
   deployments, resource utilization remained low, and no alert fired.
 - The bounded official HN API contract passed at 08:42 UTC against one known
   item using the production adapter. It made no mutation and emitted no source
-  body. Telegram remains the next external-dependency gate. The operator has
-  configured the API credentials and a GramJS session locally. The official
-  converter produced a valid mtcute session, the headless authorization check
-  passed, and the bounded 100-ID read contract completed without logging source
-  bodies. Sealed staging configuration and bounded staging ingestion remain
-  approval-gated.
+  body. The operator then sealed the Telegram session and API hash on the
+  staging worker. Headless GramJS authorization, the exact 100-ID staging
+  ingestion, API smoke, and a post-ingestion worker restart passed by 11:26 UTC
+  without logging source bodies or secrets. Classification remains disabled.
 - The read-only PostgreSQL recovery preflight found PITR disabled, no backup
   bucket, no configured backup schedules, and no on-demand backups. The owner
   then authorized a lower-cost logical restore drill: an `age`-encrypted dump
@@ -255,7 +253,7 @@ Current checklist:
         logging.
 14. [x] Validate the serialized Telegram session locally and pass the bounded
         100-ID Telegram read contract without source-body logging.
-15. [ ] Seal the session on the worker, enable one staging worker, and pass one
+15. [x] Seal the session on the worker, enable one staging worker, and pass one
         bounded staging ingestion after separate approval.
 
 During first provisioning, the worker began a few seconds before the API
@@ -320,6 +318,23 @@ the production adapter. The command emitted only the safe format label and test
 summary. No identity, session value, message body, or Railway mutation was
 produced.
 
+After merge commit `c2b672a` deployed, the operator confirmed
+`TELEGRAM_SESSION` and `TELEGRAM_API_HASH` sealed on the staging worker. The
+runtime headless check returned `telegram_session_ready` with the non-secret
+`gramjs` label. Telegram-enabled worker deployment
+`b60867c9-82b9-4343-90dc-1b6809fdefa1` reached `SUCCESS` and emitted a normal
+heartbeat with no warning or error event.
+
+At 11:22 UTC, approved run `f2551955-5deb-4b4e-9ec1-d8bc68d14d5a` ingested
+the exact range `32847..32946`: 100 occurrences, 98 successful HN resolutions,
+200 references, zero retained Telegram bodies, and no retry or warning/error
+events. Its `PARTIAL` state is expected because classification is deliberately
+disabled; all 98 classifier jobs terminated once with `CLASSIFIER_DISABLED`.
+The authenticated API smoke passed afterward. Restart deployment
+`a30528d4-b575-4f7a-990e-b8e09a5d035b` then reached `SUCCESS` with Telegram
+enabled, validating sealed-session persistence. The legacy volume was not used
+or modified.
+
 ## Production gate
 
 Production remains blocked until all boxes are evidenced:
@@ -330,7 +345,7 @@ Production remains blocked until all boxes are evidenced:
 - [x] Public API health/readiness/auth/metrics smoke passed without secret output.
 - [x] Staging soak covered at least one scheduled reconciliation cycle.
 - [x] Bounded HN live contract passed without content/secret logs.
-- [ ] Bounded Telegram staging check passed without content/secret logs.
+- [x] Bounded Telegram staging check passed without content/secret logs.
 - [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
 - [x] Backup restore drill passed with recorded RPO/RTO.
 - [x] API rollback and worker-volume persistence drills passed.
