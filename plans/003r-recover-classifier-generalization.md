@@ -12,9 +12,9 @@
 ## Status
 
 - **Execution status**: IN PROGRESS — cycle locking, v1 terminal hashes,
-  no-rerun enforcement, model non-activation, and authenticated manual decision
-  review are implemented. Fresh source capture and independent v2 annotation
-  remain.
+  no-rerun enforcement, model non-activation, authenticated manual decision
+  review, and the fresh immutable v2 split are implemented. Independent v2
+  annotation remains.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -70,6 +70,18 @@ uses a new directory and refuses overwrite.
 **Verify**: `npm run evaluation:validate-cycles` reports v1 terminal and v2
 `SPLIT_FROZEN`; overlap is zero; v2 has at least 90 rows; source text and secrets
 are absent from command output.
+
+**Execution evidence (2026-08-28):** Captured the later, non-overlapping
+Telegram window `32947..33037` in `evaluation/captures/v2`: 91 occurrences
+resolved to exactly 90 unique canonical HN comments. The capture manifest is
+frozen with Telegram digest
+`f9f6a7e02365bc5e0ab1890dd06ca2762d4ec4cf7d412e2d6e53cf95cef7ab89`
+and HN digest
+`5155a9d479ec27575061d820ae58b0fe2b1c5ad5f43321bc3e84534a25b4276a`.
+Cycle v2 pins source digest
+`5734ee729f88db253a2cb21195afe70953070034a81b3f77db2b4bf7401108fd`
+and a deterministic 63-row development / 27-row sealed holdout split.
+Validation reports v1 `OPENED_FAILED`, v2 `SPLIT_FROZEN`, and zero row overlap.
 
 ### Step 2: Independently annotate and adjudicate
 
