@@ -15,7 +15,8 @@
   no-rerun enforcement, model non-activation, authenticated manual decision
   review, the fresh immutable v2 split, blind annotation validation, the
   dual-kappa comparison gate, fail-closed gold finalization, and the inactive
-  two-stage application router are implemented. Independent v2 annotation and
+  two-stage application router are implemented. Live evaluation is pinned to
+  an annotated cycle and its frozen artifacts. Independent v2 annotation and
   development evaluation remain.
 - **Priority**: P1
 - **Effort**: M
@@ -160,6 +161,20 @@ once one cost-effective candidate passes.
 
 **Verify**: each paid run has one hypothesis and one report; no holdout rows are
 evaluated; the selected candidate passes every fixed development gate.
+
+**Runner guardrails (2026-08-29):** Every live benchmark now requires an
+explicit cycle in `ANNOTATED` state and derives source and gold artifacts from
+that manifest. It verifies their digests and the exact frozen development row
+set before constructing any request workload. Caller-supplied corpus/source
+paths are rejected, live report filenames include the cycle ID, and each path
+gets an exclusive attempt marker before the first request to prevent concurrent
+or accidental exact reruns. Failed or interrupted attempts keep that marker for
+review. Holdout runs use the same artifact/split checks and the exact
+hash-pinned development report and frozen candidate.
+The candidate-selection command accepts only a passing live report for the
+current compatibility set with zero activated decisions and atomically freezes
+its hash and exact configuration. These controls make Step 4 ready to execute
+after annotation; no provider call has been made.
 
 ### Step 5: Open the new holdout once
 

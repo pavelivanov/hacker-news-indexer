@@ -91,6 +91,16 @@ annotation and development-only evaluation must precede any paid comparison,
 candidate freeze, or holdout authorization. `CLASSIFIER_ENABLED` remains
 `false`, and the unpromoted-model review gate still applies to every result.
 
+Live recovery evaluation requires an explicit annotated cycle and accepts no
+caller-selected source or gold path. The evaluator verifies both manifest
+digests and the exact development/holdout partition, records the cycle ID in
+the report, and creates an exclusive cycle-scoped attempt marker before the
+first provider request. Failed attempts retain the marker for review. This
+prevents a v1-default, cross-cycle, concurrent, or accidental exact rerun from
+becoming candidate evidence. A separate atomic transition freezes only a
+passing live development report for the current compatibility set and rejects
+fixture, failed, activated, stale, or repeated candidate selections.
+
 ## Measurements
 
 All model-selection reports exercise only the 69-row development split. The

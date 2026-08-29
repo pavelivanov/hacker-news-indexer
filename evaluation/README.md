@@ -180,6 +180,39 @@ and its passing report, set the cycle to `CANDIDATE_SELECTED`, and review the
 manifest change before opening the holdout. Do not lower a gate after candidate
 selection.
 
+Live development evaluation is cycle-aware and is blocked until the selected
+cycle is `ANNOTATED`. The evaluator derives the source and gold paths from the
+manifest, verifies both frozen digests and the exact development partition,
+and refuses `--corpus` or `--source` overrides. Live report names include the
+cycle ID, and an exclusive `.attempt` marker is written before the first
+provider request, so neither a concurrent retry nor a later cycle can overwrite
+or duplicate the exact attempt. A successful report removes its marker; a
+failed/interrupted run deliberately leaves the marker for review rather than
+silently retrying paid calls:
+
+```bash
+npm run eval -- \
+  --cycle v2 \
+  --provider openai \
+  --model gpt-5.6-sol \
+  --reasoning-effort low
+```
+
+If the report passes, review its metrics, cost, configuration, cycle, and
+artifact hashes before freezing it exactly once:
+
+```bash
+npm run evaluation:select-candidate -- \
+  --cycle v2 \
+  --report evaluation/reports/benchmark-v2-openai-gpt-5-6-sol-low-v4.json
+```
+
+Candidate selection requires the current prompt/schema/router compatibility
+set, a passing live development report with zero activated decisions, the
+exact source/gold digests and row count, and an `ANNOTATED` manifest. It
+atomically advances the cycle to `CANDIDATE_SELECTED`; fixture reports, failed
+reports, path overrides, and repeated selection are rejected.
+
 Live holdout mode requires the matching cycle explicitly:
 
 ```bash
@@ -206,10 +239,11 @@ npm run evaluation:validate-corpus
 The checked-in `benchmark-fixture-v3.json` and `shadow-fixture-v3.json` reports
 are deterministic gold replays through the production validation path. They
 prove pipeline behavior, not model quality. Historical v1/v2 reports remain
-for audit. A report for a live provider must use only the 69-row development
+for audit. The historical v1 live reports use only its 69-row development
+split. New live reports use only the chosen cycle's manifest-pinned development
 split until a configuration is selected. The selected Sol-low/prompt-v3
-configuration failed its single 29-row holdout; that opened split is never a
-prompt-tuning set and cannot be reused as a fresh promotion gate.
+configuration failed its single 29-row v1 holdout; that opened split is never
+a prompt-tuning set and cannot be reused as a fresh promotion gate.
 
 Report v3 separates classified quality from `REVIEW`/invalid abstention and
 reports classification and automatic coverage. Discovery evidence is matched
@@ -279,16 +313,21 @@ The OpenAI benchmark adapter loads the ignored local `.env` file and requires
 Classification can remain disabled while running development evaluation.
 
 ```bash
-npm run eval -- --provider openai --reasoning-effort low --concurrency 2
+npm run eval -- \
+  --cycle v2 \
+  --provider openai \
+  --reasoning-effort low \
+  --concurrency 2
 ```
 
-The command sends only the 69-row development split, uses strict JSON Schema
-output with no tools and `store: false`, and writes an aggregate report. Usage
-accounting includes the four adversarial calls and separates uncached input,
-cached input, cache-write input, and output tokens using the provider's token
-details. The report records the resulting price estimate, an all-input-uncached
-comparison, and a conservative bound that prices every input token at the
-highest published input/cache-write rate. Use `--mode holdout` only after a
-development report passes every acceptance gate. Never use the holdout for
-prompt, model, or reasoning-effort tuning. The authorized Sol-low/prompt-v3
-holdout has already run and failed; the cycle guard rejects any rerun.
+For v2, the command sends only the manifest-pinned 63-row development split,
+uses strict JSON Schema output with no tools and `store: false`, and writes an
+aggregate cycle-scoped report. Usage accounting includes the four adversarial
+calls and separates uncached input, cached input, cache-write input, and output
+tokens using the provider's token details. The report records the resulting
+price estimate, an all-input-uncached comparison, and a conservative bound that
+prices every input token at the highest published input/cache-write rate. Use
+`--mode holdout` only after a development report passes every acceptance gate.
+Never use the holdout for prompt, model, or reasoning-effort tuning. The
+authorized Sol-low/prompt-v3 holdout has already run and failed; the cycle guard
+rejects any rerun.

@@ -10,9 +10,13 @@ import {
 } from "../packages/application/src/index.ts";
 
 interface EvaluationReport {
+  readonly reportVersion?: unknown;
+  readonly cycleId?: unknown;
+  readonly sourceSha256?: unknown;
   readonly mode?: unknown;
   readonly split?: unknown;
   readonly rows?: unknown;
+  readonly terminalRuns?: unknown;
   readonly activatedDecisions?: unknown;
   readonly corpusSha256?: unknown;
   readonly provider?: unknown;
@@ -20,6 +24,7 @@ interface EvaluationReport {
   readonly modelConfigId?: unknown;
   readonly promptVersion?: unknown;
   readonly promptHash?: unknown;
+  readonly decisionRouterVersion?: unknown;
   readonly passed?: unknown;
 }
 
@@ -88,14 +93,18 @@ for (const manifest of manifests) {
     }
   }
 
+  let candidateReport: EvaluationReport | null = null;
   if (manifest.candidate !== null) {
-    const candidateReport = await readReport(
-      manifest.candidate.developmentReport,
-    );
+    candidateReport = await readReport(manifest.candidate.developmentReport);
     if (
+      (manifest.cycleId !== "v1" &&
+        candidateReport.cycleId !== manifest.cycleId) ||
+      (manifest.cycleId !== "v1" &&
+        candidateReport.sourceSha256 !== manifest.source.sha256) ||
       candidateReport.mode !== "benchmark" ||
       candidateReport.split !== "development" ||
       candidateReport.rows !== manifest.split.developmentCommentIds.length ||
+      candidateReport.terminalRuns !== candidateReport.rows ||
       candidateReport.activatedDecisions !== 0 ||
       candidateReport.passed !== true ||
       candidateReport.corpusSha256 !== manifest.annotations.gold?.sha256 ||
@@ -120,9 +129,13 @@ for (const manifest of manifests) {
     const candidate = manifest.candidate;
     const report = await readReport(manifest.holdoutOpening.report);
     if (
+      (manifest.cycleId !== "v1" && report.cycleId !== manifest.cycleId) ||
+      (manifest.cycleId !== "v1" &&
+        report.sourceSha256 !== manifest.source.sha256) ||
       report.mode !== "holdout" ||
       report.split !== "holdout" ||
       report.rows !== manifest.split.holdoutCommentIds.length ||
+      report.terminalRuns !== report.rows ||
       report.activatedDecisions !== 0 ||
       report.passed !== manifest.holdoutOpening.passed ||
       report.corpusSha256 !== manifest.annotations.gold?.sha256 ||
@@ -130,7 +143,9 @@ for (const manifest of manifests) {
       report.modelId !== candidate.modelId ||
       report.modelConfigId !== candidate.modelConfigId ||
       report.promptVersion !== candidate.promptVersion ||
-      report.promptHash !== candidate.promptHash
+      report.promptHash !== candidate.promptHash ||
+      report.reportVersion !== candidateReport?.reportVersion ||
+      report.decisionRouterVersion !== candidateReport?.decisionRouterVersion
     ) {
       throw new TypeError(
         `${manifest.cycleId} holdout opening disagrees with selected candidate`,

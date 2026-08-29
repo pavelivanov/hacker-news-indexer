@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { format } from "prettier";
@@ -15,7 +15,11 @@ import {
   buildClassifierInput,
   calculateClassificationMetrics,
   calculateExtractionMetrics,
+  assertEvaluationCycleArtifactsMatch,
+  assertEvaluationDevelopmentMayRun,
   assertEvaluationHoldoutMayOpen,
+  assertEvaluationRowsMatchCycle,
+  CLASSIFICATION_EVALUATION_REPORT_VERSION,
   CLASSIFICATION_DECISION_ROUTER_VERSION,
   CLASSIFICATION_PROMPT_VERSION,
   CLASSIFICATION_SYSTEM_PROMPT,
@@ -52,7 +56,6 @@ import type {
 type PrimaryClass = EvaluationPrimaryClass;
 type PrimaryPrediction = EvaluationPrediction;
 type EvidenceOrigin = "COMMENT" | "ROOT_STORY" | "BOTH";
-const REPORT_VERSION = 4;
 
 interface GoldSpan {
   readonly id: string;
@@ -197,7 +200,9 @@ const argument = (name: string): string | null => {
   return index < 0 ? null : (process.argv[index + 1] ?? null);
 };
 const provider = argument("--provider") ?? "fixture";
-const corpus = argument("--corpus") ?? "evaluation/gold-v1.jsonl";
+const corpusArgument = argument("--corpus");
+const sourceArgument = argument("--source");
+const cycleIdArgument = argument("--cycle");
 const mode = argument("--mode") ?? "benchmark";
 if (
   !(["fixture", "openai"] as const).includes(provider as "fixture" | "openai")
@@ -213,6 +218,65 @@ if (
 }
 
 const root = path.resolve(process.cwd());
+const liveProvider = provider !== "fixture";
+if (liveProvider && mode === "shadow") {
+  throw new Error(
+    "Live shadow mode is disabled; use the gated holdout mode after development passes",
+  );
+}
+if (liveProvider && cycleIdArgument === null) {
+  throw new Error("Live evaluation blocked: --cycle is required");
+}
+if (!liveProvider && cycleIdArgument !== null) {
+  throw new Error("Fixture evaluation does not accept --cycle");
+}
+if (liveProvider && (corpusArgument !== null || sourceArgument !== null)) {
+  throw new Error(
+    "Live evaluation derives --corpus and --source from the frozen cycle",
+  );
+}
+
+let liveCycle: EvaluationCycleManifest | null = null;
+if (liveProvider) {
+  const cycleDirectory = path.join(root, "evaluation/cycles");
+  const cycleNames = (await readdir(cycleDirectory)).filter((name) =>
+    /^v[1-9][0-9]*\.json$/u.test(name),
+  );
+  const cycles: EvaluationCycleManifest[] = [];
+  for (const name of cycleNames) {
+    cycles.push(
+      parseEvaluationCycleManifest(
+        JSON.parse(
+          await readFile(path.join(cycleDirectory, name), "utf8"),
+        ) as unknown,
+      ),
+    );
+  }
+  validateEvaluationCycleSet(cycles);
+  liveCycle = cycles.find((entry) => entry.cycleId === cycleIdArgument) ?? null;
+  if (liveCycle === null) {
+    throw new Error(
+      `Live evaluation blocked: unknown evaluation cycle ${cycleIdArgument}`,
+    );
+  }
+  if (mode === "benchmark") {
+    assertEvaluationDevelopmentMayRun(liveCycle);
+  } else if (
+    liveCycle.status === "OPENED_FAILED" ||
+    liveCycle.status === "OPENED_PASSED" ||
+    liveCycle.holdoutOpening !== null
+  ) {
+    throw new Error(`${liveCycle.cycleId} holdout has already been opened`);
+  } else if (
+    liveCycle.status !== "CANDIDATE_SELECTED" ||
+    liveCycle.candidate === null
+  ) {
+    throw new Error(
+      `${liveCycle.cycleId} holdout has no frozen passing candidate`,
+    );
+  }
+}
+
 if (provider === "openai") {
   const envPath = path.join(root, ".env");
   if (existsSync(envPath)) {
@@ -238,13 +302,21 @@ if (
 ) {
   throw new Error("Evaluation concurrency must be between 1 and 8");
 }
+const corpus =
+  liveCycle?.annotations.gold?.path ??
+  corpusArgument ??
+  "evaluation/gold-v1.jsonl";
 const corpusPath = path.resolve(
   root,
   corpus === "seed-v1" ? "evaluation/gold-v1.jsonl" : corpus,
 );
+const sourcePath =
+  liveCycle === null
+    ? path.resolve(sourceArgument ?? "/tmp/hn-evaluation-source.json")
+    : path.resolve(root, liveCycle.source.path);
 const [goldText, sourceText, adversarialText] = await Promise.all([
   readFile(corpusPath, "utf8"),
-  readFile("/tmp/hn-evaluation-source.json", "utf8"),
+  readFile(sourcePath, "utf8"),
   readFile(path.join(root, "evaluation/adversarial-v1.json"), "utf8"),
 ]);
 const gold = goldText
@@ -257,6 +329,17 @@ const evaluatedRows =
     : mode === "holdout"
       ? gold.filter((row) => row.holdout)
       : gold;
+if (liveCycle !== null) {
+  assertEvaluationCycleArtifactsMatch(liveCycle, {
+    corpusSha256: sha256(goldText),
+    sourceSha256: sha256(sourceText),
+  });
+  assertEvaluationRowsMatchCycle(
+    liveCycle,
+    mode as "benchmark" | "holdout",
+    evaluatedRows.map((row) => row.commentId),
+  );
+}
 const source = JSON.parse(sourceText) as EvaluationSource;
 const adversarial = JSON.parse(adversarialText) as AdversarialFile;
 const sourceById = new Map(
@@ -448,66 +531,65 @@ const classifier: ClassifierPort = (() => {
   });
 })();
 const liveReportName = (reportMode: string): string => {
+  if (liveCycle === null) {
+    throw new Error("Live report requires an evaluation cycle");
+  }
   const slug = `${provider}-${classifier.modelId}-${reasoningEffort}`
     .toLowerCase()
     .replaceAll(/[^a-z0-9]+/gu, "-")
     .replaceAll(/^-|-$/gu, "");
-  return `${reportMode}-${slug}-v${REPORT_VERSION}.json`;
+  return `${reportMode}-${liveCycle.cycleId}-${slug}-v${CLASSIFICATION_EVALUATION_REPORT_VERSION}.json`;
 };
-if (provider !== "fixture" && mode !== "benchmark") {
-  if (mode !== "holdout") {
-    throw new Error(
-      "Live shadow mode is disabled; use the gated holdout mode after development passes",
-    );
-  }
-  const cycleId = argument("--cycle");
-  if (cycleId === null) {
-    throw new Error("Holdout blocked: --cycle is required");
-  }
-  const cycleDirectory = path.join(root, "evaluation/cycles");
-  const cycleNames = (await readdir(cycleDirectory)).filter((name) =>
-    /^v[1-9][0-9]*\.json$/u.test(name),
-  );
-  const cycles: EvaluationCycleManifest[] = [];
-  for (const name of cycleNames) {
-    cycles.push(
-      parseEvaluationCycleManifest(
-        JSON.parse(
-          await readFile(path.join(cycleDirectory, name), "utf8"),
-        ) as unknown,
-      ),
-    );
-  }
-  validateEvaluationCycleSet(cycles);
-  const cycle = cycles.find((entry) => entry.cycleId === cycleId);
-  if (cycle === undefined) {
-    throw new Error(`Holdout blocked: unknown evaluation cycle ${cycleId}`);
-  }
-  assertEvaluationHoldoutMayOpen(cycle, {
+const liveOutputPath =
+  liveCycle === null
+    ? null
+    : path.join(root, "evaluation/reports", liveReportName(mode));
+if (liveCycle !== null && mode === "holdout") {
+  assertEvaluationHoldoutMayOpen(liveCycle, {
     corpusSha256: sha256(goldText),
+    sourceSha256: sha256(sourceText),
     provider,
     modelId: classifier.modelId,
     modelConfigId: classifier.modelConfigId,
     promptVersion: CLASSIFICATION_PROMPT_VERSION,
     promptHash: sha256(CLASSIFICATION_SYSTEM_PROMPT),
   });
-  const benchmarkPath = path.join(
-    root,
-    "evaluation/reports",
-    liveReportName("benchmark"),
-  );
+  const candidate = liveCycle.candidate;
+  if (candidate === null) {
+    throw new Error("Holdout blocked: frozen candidate is missing");
+  }
+  const benchmarkPath = path.resolve(root, candidate.developmentReport.path);
+  let benchmarkText: string;
   let benchmark: unknown;
   try {
-    benchmark = JSON.parse(await readFile(benchmarkPath, "utf8")) as unknown;
+    benchmarkText = await readFile(benchmarkPath, "utf8");
+    benchmark = JSON.parse(benchmarkText) as unknown;
   } catch (error) {
     throw new Error("Holdout blocked: matching development report is missing", {
       cause: error,
     });
   }
+  if (sha256(benchmarkText) !== candidate.developmentReport.sha256) {
+    throw new Error(
+      "Holdout blocked: frozen development report digest has changed",
+    );
+  }
   if (
     benchmark === null ||
     typeof benchmark !== "object" ||
     Array.isArray(benchmark) ||
+    (benchmark as Record<string, unknown>)["cycleId"] !== liveCycle.cycleId ||
+    (benchmark as Record<string, unknown>)["mode"] !== "benchmark" ||
+    (benchmark as Record<string, unknown>)["split"] !== "development" ||
+    (benchmark as Record<string, unknown>)["rows"] !==
+      liveCycle.split.developmentCommentIds.length ||
+    (benchmark as Record<string, unknown>)["activatedDecisions"] !== 0 ||
+    (benchmark as Record<string, unknown>)["corpusSha256"] !==
+      sha256(goldText) ||
+    (benchmark as Record<string, unknown>)["sourceSha256"] !==
+      sha256(sourceText) ||
+    (benchmark as Record<string, unknown>)["provider"] !== provider ||
+    (benchmark as Record<string, unknown>)["modelId"] !== classifier.modelId ||
     (benchmark as Record<string, unknown>)["modelConfigId"] !==
       classifier.modelConfigId ||
     (benchmark as Record<string, unknown>)["promptVersion"] !==
@@ -520,6 +602,37 @@ if (provider !== "fixture" && mode !== "benchmark") {
   ) {
     throw new Error(
       "Holdout blocked: matching development configuration did not pass",
+    );
+  }
+}
+const liveReservationPath =
+  liveOutputPath === null ? null : `${liveOutputPath}.attempt`;
+if (liveOutputPath !== null) {
+  await mkdir(path.dirname(liveOutputPath), { recursive: true });
+  if (existsSync(liveOutputPath)) {
+    throw new Error(
+      `Live evaluation blocked: report already exists for ${liveCycle?.cycleId}`,
+    );
+  }
+  try {
+    await writeFile(
+      liveReservationPath as string,
+      `${JSON.stringify(
+        {
+          schemaVersion: "evaluation-attempt.v1",
+          cycleId: liveCycle?.cycleId,
+          mode,
+          report: path.relative(root, liveOutputPath),
+        },
+        null,
+        2,
+      )}\n`,
+      { encoding: "utf8", flag: "wx" },
+    );
+  } catch (error) {
+    throw new Error(
+      `Live evaluation blocked: attempt already exists for ${liveCycle?.cycleId}`,
+      { cause: error },
     );
   }
 }
@@ -1052,7 +1165,14 @@ const acceptance = {
   latencyP95: latencyP95 < 60_000,
 };
 const report = {
-  reportVersion: REPORT_VERSION,
+  reportVersion: CLASSIFICATION_EVALUATION_REPORT_VERSION,
+  ...(liveCycle === null
+    ? {}
+    : {
+        cycleId: liveCycle.cycleId,
+        source: path.relative(root, sourcePath),
+        sourceSha256: sha256(sourceText),
+      }),
   mode,
   corpus: path.relative(root, corpusPath),
   corpusSha256: sha256(goldText),
@@ -1147,20 +1267,25 @@ const report = {
 const reportName = (() => {
   if (provider === "fixture") {
     return mode === "shadow"
-      ? `shadow-fixture-v${REPORT_VERSION}.json`
+      ? `shadow-fixture-v${CLASSIFICATION_EVALUATION_REPORT_VERSION}.json`
       : mode === "holdout"
-        ? `holdout-fixture-v${REPORT_VERSION}.json`
-        : `benchmark-fixture-v${REPORT_VERSION}.json`;
+        ? `holdout-fixture-v${CLASSIFICATION_EVALUATION_REPORT_VERSION}.json`
+        : `benchmark-fixture-v${CLASSIFICATION_EVALUATION_REPORT_VERSION}.json`;
   }
   return liveReportName(mode);
 })();
 const reportPath = path.join(root, "evaluation/reports", reportName);
 await mkdir(path.dirname(reportPath), { recursive: true });
-await writeFile(
-  reportPath,
-  await format(JSON.stringify(report), { parser: "json" }),
-  "utf8",
-);
+const reportText = await format(JSON.stringify(report), { parser: "json" });
+if (liveCycle === null) {
+  await writeFile(reportPath, reportText, "utf8");
+} else {
+  if (liveReservationPath === null || reportPath !== liveOutputPath) {
+    throw new Error("Live report reservation is invalid");
+  }
+  await writeFile(reportPath, reportText, { encoding: "utf8", flag: "wx" });
+  await unlink(liveReservationPath);
+}
 console.log(
   JSON.stringify(
     {

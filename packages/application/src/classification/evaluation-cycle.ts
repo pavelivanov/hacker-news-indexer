@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 export const EVALUATION_CYCLE_SCHEMA_VERSION = "evaluation-cycle.v1";
 export const EVALUATION_SPLIT_ALGORITHM = "SHA256_SORT_V1";
 export const MINIMUM_EVALUATION_CYCLE_ROWS = 90;
+export const CLASSIFICATION_EVALUATION_REPORT_VERSION = 4;
 
 export type EvaluationCycleStatus =
   | "SPLIT_FROZEN"
@@ -71,11 +72,35 @@ export interface PrepareEvaluationCycleInput {
 
 export interface EvaluationHoldoutCandidateInput {
   readonly corpusSha256: string;
+  readonly sourceSha256: string;
   readonly provider: string;
   readonly modelId: string;
   readonly modelConfigId: string;
   readonly promptVersion: string;
   readonly promptHash: string;
+}
+
+export type EvaluationCycleRunMode = "benchmark" | "holdout";
+
+export interface EvaluationCycleArtifactsInput {
+  readonly corpusSha256: string;
+  readonly sourceSha256: string;
+}
+
+export interface SelectEvaluationCandidateInput extends EvaluationCycleArtifactsInput {
+  readonly cycleId: string;
+  readonly mode: string;
+  readonly split: string;
+  readonly rows: number;
+  readonly terminalRuns: number;
+  readonly activatedDecisions: number;
+  readonly passed: boolean;
+  readonly provider: string;
+  readonly modelId: string;
+  readonly modelConfigId: string;
+  readonly promptVersion: string;
+  readonly promptHash: string;
+  readonly developmentReport: EvaluationFileDigest;
 }
 
 const HASH = /^[0-9a-f]{64}$/u;
@@ -433,6 +458,101 @@ export const prepareEvaluationCycle = (
   return { manifest, holdout };
 };
 
+export const assertEvaluationDevelopmentMayRun = (
+  manifest: EvaluationCycleManifest,
+): void => {
+  if (manifest.status !== "ANNOTATED" || manifest.annotations.gold === null) {
+    fail(`${manifest.cycleId} development evaluation requires ANNOTATED`);
+  }
+};
+
+export const assertEvaluationCycleArtifactsMatch = (
+  manifest: EvaluationCycleManifest,
+  input: EvaluationCycleArtifactsInput,
+): void => {
+  if (manifest.annotations.gold?.sha256 !== input.corpusSha256) {
+    fail(`${manifest.cycleId} runtime corpus does not match frozen gold`);
+  }
+  if (manifest.source.sha256 !== input.sourceSha256) {
+    fail(`${manifest.cycleId} runtime source does not match frozen source`);
+  }
+};
+
+export const assertEvaluationRowsMatchCycle = (
+  manifest: EvaluationCycleManifest,
+  mode: EvaluationCycleRunMode,
+  commentIds: readonly number[],
+): void => {
+  const expected =
+    mode === "benchmark"
+      ? manifest.split.developmentCommentIds
+      : manifest.split.holdoutCommentIds;
+  if (
+    new Set(commentIds).size !== commentIds.length ||
+    !sameIds(sortedIds(commentIds), expected)
+  ) {
+    fail(`${manifest.cycleId} ${mode} rows do not match the frozen split`);
+  }
+};
+
+export const selectEvaluationCandidate = (
+  manifest: EvaluationCycleManifest,
+  input: SelectEvaluationCandidateInput,
+): EvaluationCycleManifest => {
+  assertEvaluationDevelopmentMayRun(manifest);
+  assertEvaluationCycleArtifactsMatch(manifest, input);
+  if (input.cycleId !== manifest.cycleId) {
+    fail(`${manifest.cycleId} development report belongs to another cycle`);
+  }
+  if (input.mode !== "benchmark" || input.split !== "development") {
+    fail(`${manifest.cycleId} candidate requires a development benchmark`);
+  }
+  if (input.rows !== manifest.split.developmentCommentIds.length) {
+    fail(`${manifest.cycleId} development report row count is invalid`);
+  }
+  if (input.terminalRuns !== input.rows) {
+    fail(`${manifest.cycleId} development report run count is incomplete`);
+  }
+  if (input.activatedDecisions !== 0) {
+    fail(`${manifest.cycleId} development report activated a decision`);
+  }
+  if (!input.passed) {
+    fail(`${manifest.cycleId} development report did not pass`);
+  }
+  if (input.provider !== "openai") {
+    fail(`${manifest.cycleId} candidate provider is unsupported`);
+  }
+  const updated: EvaluationCycleManifest = {
+    ...manifest,
+    status: "CANDIDATE_SELECTED",
+    candidate: {
+      provider: nonEmptyString(input.provider, "candidate.provider"),
+      modelId: nonEmptyString(input.modelId, "candidate.modelId"),
+      modelConfigId: nonEmptyString(
+        input.modelConfigId,
+        "candidate.modelConfigId",
+      ),
+      promptVersion: nonEmptyString(
+        input.promptVersion,
+        "candidate.promptVersion",
+      ),
+      promptHash: hash(input.promptHash, "candidate.promptHash"),
+      developmentReport: {
+        path: safeRelativePath(
+          input.developmentReport.path,
+          "candidate.developmentReport.path",
+        ),
+        sha256: hash(
+          input.developmentReport.sha256,
+          "candidate.developmentReport.sha256",
+        ),
+      },
+    },
+  };
+  validateManifest(updated);
+  return updated;
+};
+
 export const assertEvaluationHoldoutMayOpen = (
   manifest: EvaluationCycleManifest,
   input: EvaluationHoldoutCandidateInput,
@@ -447,9 +567,7 @@ export const assertEvaluationHoldoutMayOpen = (
   if (manifest.status !== "CANDIDATE_SELECTED" || manifest.candidate === null) {
     return fail(`${manifest.cycleId} holdout has no frozen passing candidate`);
   }
-  if (manifest.annotations.gold?.sha256 !== input.corpusSha256) {
-    fail(`${manifest.cycleId} candidate corpus does not match frozen gold`);
-  }
+  assertEvaluationCycleArtifactsMatch(manifest, input);
   const candidate = manifest.candidate;
   if (
     candidate.provider !== input.provider ||
