@@ -856,7 +856,7 @@ export const validateEvaluationAnnotationPass = (input: {
   };
 };
 
-const cohensKappa = <T extends string>(
+export const cohensKappa = <T extends string>(
   left: readonly T[],
   right: readonly T[],
   labels: readonly T[],

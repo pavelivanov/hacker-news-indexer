@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { describe, expect, it } from "vitest";
 
 import {
+  cohensKappa,
   compareEvaluationAnnotationPasses,
   MINIMUM_ANNOTATION_COHENS_KAPPA,
   parseEvaluationAnnotationPass,
@@ -470,5 +471,47 @@ describe("evaluation annotation packets", () => {
         rows,
       }),
     ).toThrow(/annotator.id must be A/u);
+  });
+});
+
+describe("cohensKappa hand-computed values", () => {
+  it("returns 0.6 for po = 0.8 and pe = 0.5", () => {
+    // 10 items, 8 agree. left marginals 5A/5B, right 6A/4B.
+    // pe = 0.5*0.6 + 0.5*0.4 = 0.5; kappa = (0.8 - 0.5) / (1 - 0.5) = 0.6.
+    const left = ["A", "A", "A", "A", "A", "B", "B", "B", "B", "B"] as const;
+    const right = ["A", "A", "A", "A", "A", "B", "B", "B", "A", "A"] as const;
+
+    expect(cohensKappa(left, right, ["A", "B"])).toBeCloseTo(0.6, 10);
+  });
+
+  it("returns 1 for perfect agreement with non-uniform marginals", () => {
+    // Identical 7A/3B passes: pe = 0.7^2 + 0.3^2 = 0.58, po = 1,
+    // kappa = (1 - 0.58) / (1 - 0.58) = 1.
+    const labels = [
+      "A", "A", "A", "A", "A", "A", "A", "B", "B", "B",
+    ] as const;
+
+    expect(cohensKappa(labels, labels, ["A", "B"])).toBe(1);
+  });
+
+  it("returns 1 when pe = 1 with perfect agreement (single-label degenerate marginals)", () => {
+    // pe = 1 requires both marginals concentrated on one label; with both
+    // annotators degenerate on the same label, po = 1 and the pe = 1 branch
+    // returns 1. (pe = 1 with po < 1 is unreachable: any disagreement would
+    // give the right sequence a second label and pe < 1.)
+    const labels = ["A", "A", "A", "A", "A"] as const;
+
+    expect(cohensKappa(labels, labels, ["A"])).toBe(1);
+  });
+
+  it("returns 1 for identical length-40 sequences across 4 classes", () => {
+    // Balanced 10/10/10/10 marginals: pe = 4 * 0.25^2 = 0.25, po = 1.
+    const labels = Array.from(
+      { length: 40 },
+      (_, index) => (["W", "X", "Y", "Z"] as const)[index % 4]!,
+    );
+
+    expect(labels).toHaveLength(40);
+    expect(cohensKappa(labels, labels, ["W", "X", "Y", "Z"])).toBe(1);
   });
 });
