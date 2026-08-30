@@ -10,6 +10,7 @@ import {
   claimEvaluationHoldout,
   parseEvaluationCycleManifest,
   prepareEvaluationCycle,
+  recordEvaluationAnnotationFailure,
   recordEvaluationHoldoutResult,
   selectEvaluationCandidate,
   validateEvaluationCycleSet,
@@ -141,6 +142,90 @@ describe("immutable evaluation cycles", () => {
     expect(() => assertEvaluationDevelopmentMayRun(v2)).toThrow(
       /requires ANNOTATED/u,
     );
+  });
+
+  it("terminalizes a failed annotation gate before a fresh cycle", async () => {
+    const v1 = await loadV1();
+    const frozen = prepareEvaluationCycle({
+      cycleId: "v2",
+      source: {
+        path: "evaluation/source-v2.json",
+        sha256: "4".repeat(64),
+        commentIds: freshIds,
+      },
+      holdoutPath: "evaluation/holdout-v2.json",
+      priorManifests: [v1],
+    }).manifest;
+    const input = {
+      cycleId: "v2",
+      rows: 90,
+      exactDecisionAgreementRows: 70,
+      primaryClassKappa: 0.5713,
+      materialRelevanceKappa: 0.598,
+      requiredKappa: 0.75,
+      annotatorA: {
+        path: "evaluation/annotations/failed/v2/annotator-a.jsonl",
+        sha256: "a".repeat(64),
+      },
+      annotatorB: {
+        path: "evaluation/annotations/failed/v2/annotator-b.jsonl",
+        sha256: "b".repeat(64),
+      },
+      report: {
+        path: "evaluation/reports/annotation-comparison-v2.json",
+        sha256: "c".repeat(64),
+      },
+    } as const;
+
+    const failed = recordEvaluationAnnotationFailure(frozen, input);
+
+    expect(failed).toMatchObject({
+      status: "ANNOTATION_FAILED",
+      annotations: {
+        annotatorA: input.annotatorA,
+        annotatorB: input.annotatorB,
+        gold: null,
+      },
+      annotationFailure: {
+        report: input.report,
+        rows: 90,
+        exactDecisionAgreementRows: 70,
+        primaryClassKappa: 0.5713,
+        materialRelevanceKappa: 0.598,
+        requiredKappa: 0.75,
+      },
+      candidate: null,
+      holdoutOpening: null,
+    });
+    expect(() => validateEvaluationCycleSet([v1, failed])).not.toThrow();
+    expect(() => assertEvaluationDevelopmentMayRun(failed)).toThrow(
+      /requires ANNOTATED/u,
+    );
+    expect(() => recordEvaluationAnnotationFailure(failed, input)).toThrow(
+      /requires SPLIT_FROZEN/u,
+    );
+    expect(() =>
+      recordEvaluationAnnotationFailure(frozen, {
+        ...input,
+        primaryClassKappa: 0.8,
+        materialRelevanceKappa: 0.8,
+      }),
+    ).toThrow(/did not fail/u);
+
+    const v3 = prepareEvaluationCycle({
+      cycleId: "v3",
+      source: {
+        path: "evaluation/source-v3.json",
+        sha256: "d".repeat(64),
+        commentIds: Array.from(
+          { length: 90 },
+          (_, index) => 60_000_000 + index,
+        ),
+      },
+      holdoutPath: "evaluation/holdout-v3.json",
+      priorManifests: [v1, failed],
+    }).manifest;
+    expect(() => validateEvaluationCycleSet([v1, failed, v3])).not.toThrow();
   });
 
   it("pins development evaluation to cycle artifacts and split rows", async () => {

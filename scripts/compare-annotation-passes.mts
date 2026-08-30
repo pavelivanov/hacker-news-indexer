@@ -1,5 +1,12 @@
 import { createHash } from "node:crypto";
-import { readFile, readdir, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  readFile,
+  readdir,
+  rename,
+  unlink,
+  writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 
 import {
@@ -7,9 +14,12 @@ import {
   MINIMUM_ANNOTATION_COHENS_KAPPA,
   parseEvaluationAnnotationPass,
   parseEvaluationCycleManifest,
+  recordEvaluationAnnotationFailure,
   serializeEvaluationAdjudicationPacket,
+  serializeEvaluationCycleManifest,
   validateEvaluationCycleSet,
   type EvaluationAnnotationSourceDocument,
+  type EvaluationCycleManifest,
 } from "../packages/application/src/index.ts";
 
 const argument = (name: string): string | undefined => {
@@ -37,15 +47,14 @@ const cyclesDirectory = path.join(root, "evaluation/cycles");
 const cycleManifestNames = (await readdir(cyclesDirectory)).filter((name) =>
   /^v[1-9][0-9]*\.json$/u.test(name),
 );
-const manifests = await Promise.all(
-  cycleManifestNames.map(async (name) =>
-    parseEvaluationCycleManifest(
-      JSON.parse(
-        await readFile(path.join(cyclesDirectory, name), "utf8"),
-      ) as unknown,
-    ),
-  ),
-);
+const manifestTexts = new Map<string, string>();
+const manifests: EvaluationCycleManifest[] = [];
+for (const name of cycleManifestNames) {
+  const text = await readFile(path.join(cyclesDirectory, name), "utf8");
+  const parsed = parseEvaluationCycleManifest(JSON.parse(text) as unknown);
+  manifestTexts.set(parsed.cycleId, text);
+  manifests.push(parsed);
+}
 validateEvaluationCycleSet(manifests);
 const manifest = manifests.find((candidate) => candidate.cycleId === cycleId);
 if (manifest === undefined) {
@@ -113,35 +122,149 @@ const comparison = compareEvaluationAnnotationPasses({
   annotatorB,
 });
 if (!comparison.passed) {
-  throw new Error(
-    `Inter-annotator kappa gate failed: primary=${comparison.primaryClassKappa.toFixed(4)}, material=${comparison.materialRelevanceKappa.toFixed(4)}, required=${MINIMUM_ANNOTATION_COHENS_KAPPA.toFixed(2)}`,
-  );
-}
-
-const outputPath = path.resolve(outputArgument);
-await writeFile(
-  outputPath,
-  serializeEvaluationAdjudicationPacket(comparison, source.documents),
-  { flag: "wx" },
-);
-console.log(
-  JSON.stringify(
+  const failureDirectoryRelativePath = `evaluation/annotations/failed/${cycleId}`;
+  const annotatorARelativePath = `${failureDirectoryRelativePath}/annotator-a.jsonl`;
+  const annotatorBRelativePath = `${failureDirectoryRelativePath}/annotator-b.jsonl`;
+  const reportRelativePath = `evaluation/reports/annotation-comparison-${cycleId}.json`;
+  const annotatorAFile = {
+    path: annotatorARelativePath,
+    sha256: annotatorASha256,
+  };
+  const annotatorBFile = {
+    path: annotatorBRelativePath,
+    sha256: annotatorBSha256,
+  };
+  const reportText = `${JSON.stringify(
     {
+      schemaVersion: "annotation-comparison.v1",
       cycleId,
+      status: "ANNOTATION_FAILED",
       rows: comparison.rows,
       exactDecisionAgreementRows: comparison.exactDecisionAgreementRows,
-      adjudicationRows: comparison.disagreements.length,
-      primaryClassKappa: Number(comparison.primaryClassKappa.toFixed(4)),
-      materialRelevanceKappa: Number(
-        comparison.materialRelevanceKappa.toFixed(4),
-      ),
+      primaryClassKappa: comparison.primaryClassKappa,
+      materialRelevanceKappa: comparison.materialRelevanceKappa,
       requiredKappa: MINIMUM_ANNOTATION_COHENS_KAPPA,
-      annotatorASha256,
-      annotatorBSha256,
-      outputPath,
-      includesHoldoutAssignment: false,
+      passed: false,
+      annotatorA: annotatorAFile,
+      annotatorB: annotatorBFile,
+      includesSourceBodies: false,
+      includesRowIds: false,
+      includesHoldoutAssignments: false,
     },
     null,
     2,
-  ),
-);
+  )}\n`;
+  const updatedManifest = recordEvaluationAnnotationFailure(manifest, {
+    cycleId,
+    rows: comparison.rows,
+    exactDecisionAgreementRows: comparison.exactDecisionAgreementRows,
+    primaryClassKappa: comparison.primaryClassKappa,
+    materialRelevanceKappa: comparison.materialRelevanceKappa,
+    requiredKappa: MINIMUM_ANNOTATION_COHENS_KAPPA,
+    annotatorA: annotatorAFile,
+    annotatorB: annotatorBFile,
+    report: { path: reportRelativePath, sha256: sha256(reportText) },
+  });
+  validateEvaluationCycleSet(
+    manifests.map((candidate) =>
+      candidate.cycleId === cycleId ? updatedManifest : candidate,
+    ),
+  );
+
+  const failureDirectory = path.resolve(root, failureDirectoryRelativePath);
+  const reportPath = path.resolve(root, reportRelativePath);
+  const manifestPath = path.join(cyclesDirectory, `${cycleId}.json`);
+  const manifestTemporaryPath = path.join(
+    cyclesDirectory,
+    `.${cycleId}.json.annotation-failed-${process.pid}`,
+  );
+  await mkdir(failureDirectory, { recursive: true });
+  const artifacts = [
+    [path.resolve(root, annotatorARelativePath), annotatorAText],
+    [path.resolve(root, annotatorBRelativePath), annotatorBText],
+    [reportPath, reportText],
+  ] as const;
+  const createdPaths: string[] = [];
+  let manifestUpdated = false;
+  try {
+    for (const [artifactPath, contents] of artifacts) {
+      await writeFile(artifactPath, contents, { flag: "wx" });
+      createdPaths.push(artifactPath);
+    }
+    await writeFile(
+      manifestTemporaryPath,
+      serializeEvaluationCycleManifest(updatedManifest),
+      { flag: "wx" },
+    );
+    createdPaths.push(manifestTemporaryPath);
+    if ((await readFile(manifestPath, "utf8")) !== manifestTexts.get(cycleId)) {
+      throw new Error(`${cycleId} manifest changed during annotation failure`);
+    }
+    await rename(manifestTemporaryPath, manifestPath);
+    createdPaths.pop();
+    manifestUpdated = true;
+  } catch (error) {
+    if (!manifestUpdated) {
+      await Promise.all(
+        createdPaths.map((createdPath) =>
+          unlink(createdPath).catch(() => undefined),
+        ),
+      );
+    }
+    throw error;
+  }
+
+  console.log(
+    JSON.stringify(
+      {
+        cycleId,
+        status: updatedManifest.status,
+        rows: comparison.rows,
+        exactDecisionAgreementRows: comparison.exactDecisionAgreementRows,
+        primaryClassKappa: Number(comparison.primaryClassKappa.toFixed(4)),
+        materialRelevanceKappa: Number(
+          comparison.materialRelevanceKappa.toFixed(4),
+        ),
+        requiredKappa: MINIMUM_ANNOTATION_COHENS_KAPPA,
+        passed: false,
+        annotatorASha256,
+        annotatorBSha256,
+        comparisonReport: reportRelativePath,
+        adjudicationPacketWritten: false,
+        includesSourceBodiesInOutput: false,
+        includesHoldoutIdsInOutput: false,
+      },
+      null,
+      2,
+    ),
+  );
+  process.exitCode = 1;
+} else {
+  const outputPath = path.resolve(outputArgument);
+  await writeFile(
+    outputPath,
+    serializeEvaluationAdjudicationPacket(comparison, source.documents),
+    { flag: "wx" },
+  );
+  console.log(
+    JSON.stringify(
+      {
+        cycleId,
+        rows: comparison.rows,
+        exactDecisionAgreementRows: comparison.exactDecisionAgreementRows,
+        adjudicationRows: comparison.disagreements.length,
+        primaryClassKappa: Number(comparison.primaryClassKappa.toFixed(4)),
+        materialRelevanceKappa: Number(
+          comparison.materialRelevanceKappa.toFixed(4),
+        ),
+        requiredKappa: MINIMUM_ANNOTATION_COHENS_KAPPA,
+        annotatorASha256,
+        annotatorBSha256,
+        outputPath,
+        includesHoldoutAssignment: false,
+      },
+      null,
+      2,
+    ),
+  );
+}

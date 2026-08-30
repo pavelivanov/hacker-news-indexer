@@ -17,8 +17,9 @@
   dual-kappa comparison gate, fail-closed gold finalization, and the inactive
   two-stage application router are implemented. Live evaluation is pinned to
   an annotated cycle and its frozen artifacts, and holdout opening has a
-  durable claim/terminal lifecycle. Independent v2 annotation and development
-  evaluation remain.
+  durable claim/terminal lifecycle. V2 is terminal `ANNOTATION_FAILED` after
+  its independent passes missed both kappa gates. Separate calibration and a
+  fresh v3 cycle remain; no development evaluation was run.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -109,10 +110,11 @@ and adjudication are still required.
 
 `evaluation:compare-annotations` revalidates both passes, requires distinct
 file hashes, and independently gates both primary-class and material-relevance
-Cohen's kappa at 0.75. It refuses to write on failure and otherwise creates an
-exclusive, holdout-blind packet containing only decision disagreements, their
-bounded source, and both proposals. It still does not adjudicate or mutate the
-cycle.
+Cohen's kappa at 0.75. A failure writes no adjudication packet: it exclusively
+preserves both passes, creates a body-free comparison report, and atomically
+terminalizes the cycle as `ANNOTATION_FAILED`. A pass creates an exclusive,
+holdout-blind packet containing only decision disagreements, their bounded
+source, and both proposals. Neither path creates gold labels.
 
 `evaluation:finalize-annotations` accepts strict, source-free adjudication
 responses only after both kappa gates pass. It requires every disagreement
@@ -120,10 +122,19 @@ exactly once, a written bounded rationale, and selection of the complete A or B
 proposal rather than a third outcome. Agreed decisions use a fixed A-extraction
 policy. Only after all validation succeeds does it create the canonical pass,
 response, and `gold.v2` artifacts and advance the manifest to `ANNOTATED` with
-their hashes. The workflow is ready, but it has not been run: real independent
-passes and owner adjudication remain required.
+their hashes. V2 did not reach this step; the workflow remains ready for a
+future cycle whose independent passes clear both agreement gates.
 
-### Step 3: Implement two-stage classification on v2 development only
+**V2 outcome (2026-08-30):** Both independent pass files validated across all
+90 rows and had distinct hashes. Primary-class kappa was `0.5713` and
+material-relevance kappa was `0.5980`, below the fixed `0.75` gate. No
+adjudication packet or gold corpus was created, and no provider call occurred.
+The exact pass hashes and body-free comparison report are frozen under the
+terminal v2 manifest. Row-level disagreement must not be used for reconciliation
+or prompt work. Calibration must use a separate excluded corpus before a later
+fresh v3 cycle.
+
+### Step 3: Implement two-stage classification on fresh-cycle development only
 
 Version the compatibility set. Stage A decides whether the comment contains
 reusable materially technical content or must be rejected/reviewed. Stage B
@@ -150,7 +161,7 @@ unpromoted-provider review gate.
 
 This compatibility set was designed from the pre-existing rubric and safety
 policy, not from any v1 holdout case. It remains unselected and cannot be
-quality-evaluated or promoted until real v2 annotations produce `gold-v2`;
+quality-evaluated or promoted until a fresh cycle passes annotation and produces gold;
 therefore Step 3 is not yet complete.
 
 ### Step 4: Select economically after accuracy
@@ -175,7 +186,7 @@ hash-pinned development report and frozen candidate.
 The candidate-selection command accepts only a passing live report for the
 current compatibility set with zero activated decisions and atomically freezes
 its hash and exact configuration. These controls make Step 4 ready to execute
-after annotation; no provider call has been made.
+after a fresh annotation pass; no provider call has been made.
 
 Every paid development attempt additionally requires a strict, reviewed,
 repository-contained hypothesis file. It is bound to one cycle, provider/model
@@ -188,9 +199,9 @@ provider call was made while implementing or verifying this guardrail.
 
 ### Step 5: Open the new holdout once
 
-Record the exact candidate and passing development report in the v2 cycle
-manifest. With explicit owner authorization, run holdout mode using `--cycle
-v2`. Record either terminal outcome without tuning or retrying.
+Record the exact candidate and passing development report in the successful
+fresh-cycle manifest. With explicit owner authorization, run holdout mode for
+that cycle. Record either terminal outcome without tuning or retrying.
 
 **Verify**: one holdout report, zero activated decisions, exact frozen hashes,
 all gates pass before provider promotion, or the cycle is terminal failed and
@@ -209,13 +220,13 @@ provider call. The lifecycle is implemented but has not been exercised on v2.
 
 ## Done criteria
 
-- [ ] Fresh v2 source, independent annotations, adjudication, and immutable
+- [ ] Fresh source, independent annotations, adjudication, and immutable
       split validate.
 - [ ] No v1 holdout row or diagnostic was used to tune the compatibility set.
 - [ ] Two-stage routing and application-owned mandatory review are tested.
 - [x] Model decisions remain inactive; only authenticated manual review can
       activate them.
-- [ ] One v2 candidate passes all development and one-time holdout gates.
+- [ ] One fresh-cycle candidate passes all development and one-time holdout gates.
 - [ ] Provider ADR is updated with quality, latency, and actual cost evidence.
 - [ ] Global and evaluation verification gates pass.
 

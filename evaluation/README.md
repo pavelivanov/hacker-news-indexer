@@ -41,8 +41,13 @@ immutable split contains 63 development rows and 27 sealed holdout rows. The
 capture evidence is in `evaluation/captures/v2`, the canonical packets are in
 `evaluation/source-v2.json`, and `evaluation/cycles/v2.json` pins source digest
 `5734ee729f88db253a2cb21195afe70953070034a81b3f77db2b4bf7401108fd`.
-The next gate is two independent annotation passes and adjudication; neither
-annotator may see model predictions or the sealed holdout assignment.
+Two structurally valid independent passes completed on 2026-08-30, but the
+agreement gate failed: primary-class kappa was `0.5713` and
+material-relevance kappa was `0.5980`, below the fixed `0.75` requirement. V2
+is terminal `ANNOTATION_FAILED`; it must not be adjudicated, relabeled, or used
+for model selection. The exact pass digests and body-free comparison are pinned
+in the cycle manifest. The next recovery attempt is v3 after calibration on a
+separate, excluded corpus.
 
 Prepare two blind, differently ordered packet sets outside the repository. The
 command verifies the frozen source digest, refuses an existing output
@@ -50,8 +55,8 @@ directory, emits 15-row chunks by default, and prints only body-free metadata:
 
 ```bash
 npm run evaluation:prepare-annotations -- \
-  --cycle v2 \
-  --output-dir /tmp/hn-v2-annotation-packets
+  --cycle v3 \
+  --output-dir /tmp/hn-v3-annotation-packets
 ```
 
 Give annotator A only `annotator-a/`, and annotator B only `annotator-b/`,
@@ -65,9 +70,9 @@ Validate each completed JSONL pass independently without printing source text:
 
 ```bash
 npm run evaluation:validate-annotation -- \
-  --cycle v2 --annotator A --input /secure/path/annotator-a.jsonl
+  --cycle v3 --annotator A --input /secure/path/annotator-a.jsonl
 npm run evaluation:validate-annotation -- \
-  --cycle v2 --annotator B --input /secure/path/annotator-b.jsonl
+  --cycle v3 --annotator B --input /secure/path/annotator-b.jsonl
 ```
 
 The validator requires every frozen comment exactly once, the expected
@@ -81,19 +86,22 @@ input:
 
 ```bash
 npm run evaluation:compare-annotations -- \
-  --cycle v2 \
+  --cycle v3 \
   --annotator-a /secure/path/annotator-a.jsonl \
   --annotator-b /secure/path/annotator-b.jsonl \
-  --output /secure/path/adjudication-v2.jsonl
+  --output /secure/path/adjudication-v3.jsonl
 ```
 
 The command validates the immutable cycle and both passes again, requires
 distinct pass-file hashes, computes separate Cohen's kappa values for primary
 class and material relevance, and requires both to be at least 0.75. A failed
-gate writes no adjudication file. A passing gate creates the output exactly
-once and includes only decision disagreements, their bounded source packet,
-and the two proposals; it contains no holdout assignment. Comparison does not
-mutate the cycle manifest or create gold labels.
+gate writes no adjudication file; it exclusively preserves both passes,
+creates a body-free comparison report, and atomically advances the cycle to
+terminal `ANNOTATION_FAILED`. The report format is defined by
+`evaluation/annotation-comparison-schema-v1.json`. A passing gate creates the
+output exactly once and includes only decision disagreements, their bounded
+source packet, and the two proposals; it contains no holdout assignment.
+Neither outcome creates gold labels.
 
 Give that packet only to the adjudicator, along with `docs/annotation-guide.md`
 and `evaluation/annotation-adjudication-schema-v2.json`. The returned JSONL
@@ -102,10 +110,10 @@ reviewing the response file:
 
 ```bash
 npm run evaluation:finalize-annotations -- \
-  --cycle v2 \
+  --cycle v3 \
   --annotator-a /secure/path/annotator-a.jsonl \
   --annotator-b /secure/path/annotator-b.jsonl \
-  --adjudication /secure/path/adjudication-responses-v2.jsonl
+  --adjudication /secure/path/adjudication-responses-v3.jsonl
 ```
 
 The finalizer revalidates the frozen source and holdout digests, distinct and
@@ -113,8 +121,8 @@ complete A/B passes, both kappa gates, and exact disagreement coverage. Each
 resolution can select only the complete A or B proposal and requires a bounded
 rationale. Consensus decisions retain A's grounded extraction by a fixed
 deterministic policy. The command then exclusively creates the canonical A/B
-pass files, the source-free adjudication response, and `gold-v2.jsonl`, before
-atomically advancing `cycles/v2.json` to `ANNOTATED` with artifact hashes. It
+pass files, the source-free adjudication response, and `gold-v3.jsonl`, before
+atomically advancing `cycles/v3.json` to `ANNOTATED` with artifact hashes. It
 prints aggregate metadata only and refuses existing artifacts or any later
 cycle state. `evaluation/annotation-schema-v2.json` documents the resulting
 gold rows. Do not run this command until the real independent passes and owner
@@ -126,7 +134,7 @@ before retained class and extraction. The application router independently
 normalizes contradictory stages to review, discards their extraction, and
 derives mandatory review reasons for structural grounding and confidence
 conditions even when the model omits them. This set has no quality claim yet:
-do not make a paid development run or select a candidate until v2 reaches
+do not make a paid development run or select a candidate until v3 reaches
 `ANNOTATED`, and never use the opened v1 holdout to tune it.
 
 Evaluation report v4 introduced `decisionRouterVersion` for prompt v4. Report
@@ -145,7 +153,7 @@ directory; the command refuses to overwrite any capture file:
 npm run evaluation:capture-source -- \
   --min-id FIRST_MESSAGE_ID \
   --max-id LAST_MESSAGE_ID \
-  --output-dir evaluation/captures/v2
+  --output-dir evaluation/captures/v3
 ```
 
 Build the canonical comment/root packets from that capture. This builder is
@@ -154,8 +162,8 @@ least 90 unique canonical comments:
 
 ```bash
 npm run evaluation:build-source -- \
-  evaluation/captures/v2/hn-items.json \
-  evaluation/source-v2.json
+  evaluation/captures/v3/hn-items.json \
+  evaluation/source-v3.json
 ```
 
 Before either annotator labels a row or any prompt work starts, freeze the new
@@ -163,14 +171,14 @@ split exactly once:
 
 ```bash
 npm run evaluation:prepare-cycle -- \
-  --cycle v2 \
-  --source evaluation/source-v2.json
+  --cycle v3 \
+  --source evaluation/source-v3.json
 ```
 
 The command refuses duplicate IDs, fewer than 90 rows, overlap with any earlier
 cycle, an HN ID window that is not later than the preceding cycle, skipped
-cycle numbers, or an existing output. It writes `holdout-v2.json` and
-`cycles/v2.json` with exclusive-create semantics and a deterministic 30% split.
+cycle numbers, or an existing output. It writes `holdout-v3.json` and
+`cycles/v3.json` with exclusive-create semantics and a deterministic 30% split.
 The split fields and source digest must never change after that commit.
 
 Annotator A and B then label independently. Record both distinct file digests
@@ -188,14 +196,14 @@ and refuses `--corpus` or `--source` overrides. Every paid development run also
 requires one reviewed JSON hypothesis under `evaluation/hypotheses/`, matching
 `evaluation/evaluation-hypothesis-schema-v1.json`. The hypothesis pins the
 cycle, provider/model configuration, reasoning effort, prompt hash, router,
-expected result, and pass/fail decision rule. For example, the first v2 Sol-low
+expected result, and pass/fail decision rule. For example, the first v3 Sol-low
 hypothesis uses the following configuration fields plus concrete `statement`
 and `decisionRule` strings of at least 40 characters:
 
 ```json
 {
   "schemaVersion": "evaluation-hypothesis.v1",
-  "cycleId": "v2",
+  "cycleId": "v3",
   "mode": "benchmark",
   "provider": "openai",
   "modelId": "gpt-5.6-sol",
@@ -218,11 +226,11 @@ review rather than silently retrying paid calls:
 
 ```bash
 npm run eval -- \
-  --cycle v2 \
+  --cycle v3 \
   --provider openai \
   --model gpt-5.6-sol \
   --reasoning-effort low \
-  --hypothesis evaluation/hypotheses/v2-sol-low.json
+  --hypothesis evaluation/hypotheses/v3-sol-low.json
 ```
 
 If the report passes, review its metrics, cost, configuration, cycle, and
@@ -230,8 +238,8 @@ artifact hashes before freezing it exactly once:
 
 ```bash
 npm run evaluation:select-candidate -- \
-  --cycle v2 \
-  --report evaluation/reports/benchmark-v2-openai-gpt-5-6-sol-low-v5.json
+  --cycle v3 \
+  --report evaluation/reports/benchmark-v3-openai-gpt-5-6-sol-low-v5.json
 ```
 
 Candidate selection revalidates the hypothesis file and digest. It also
@@ -246,7 +254,7 @@ Live holdout mode requires the matching cycle explicitly:
 ```bash
 npm run eval -- \
   --mode holdout \
-  --cycle v2 \
+  --cycle v3 \
   --provider openai \
   --model <frozen-model> \
   --reasoning-effort <frozen-effort>
@@ -265,8 +273,8 @@ without provider calls:
 
 ```bash
 npm run evaluation:finalize-holdout -- \
-  --cycle v2 \
-  --report evaluation/reports/holdout-v2-openai-<frozen-model>-<effort>-v5.json
+  --cycle v3 \
+  --report evaluation/reports/holdout-v3-openai-<frozen-model>-<effort>-v5.json
 ```
 
 Recovery verifies the report, the unchanged development hypothesis, the
@@ -365,15 +373,16 @@ Classification can remain disabled while running development evaluation.
 
 ```bash
 npm run eval -- \
-  --cycle v2 \
+  --cycle v3 \
   --provider openai \
   --model gpt-5.6-sol \
   --reasoning-effort low \
   --concurrency 2 \
-  --hypothesis evaluation/hypotheses/v2-sol-low.json
+  --hypothesis evaluation/hypotheses/v3-sol-low.json
 ```
 
-For v2, the command sends only the manifest-pinned 63-row development split,
+For a fresh annotated cycle, the command sends only the manifest-pinned
+development split,
 uses strict JSON Schema output with no tools and `store: false`, and writes an
 aggregate cycle-scoped report. Usage accounting includes the four adversarial
 calls and separates uncached input, cached input, cache-write input, and output

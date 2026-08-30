@@ -1,7 +1,7 @@
 {
   "schemaVersion": "evaluation-cycle.v1",
   "cycleId": "v2",
-  "status": "SPLIT_FROZEN",
+  "status": "ANNOTATION_FAILED",
   "source": {
     "path": "evaluation/source-v2.json",
     "sha256": "5734ee729f88db253a2cb21195afe70953070034a81b3f77db2b4bf7401108fd",
@@ -51,9 +51,26 @@
     }
   },
   "annotations": {
-    "annotatorA": null,
-    "annotatorB": null,
+    "annotatorA": {
+      "path": "evaluation/annotations/failed/v2/annotator-a.jsonl",
+      "sha256": "4e95fe4dd1533bbb22e92dccb2049954e378e635447db085bba26974ca57da8c"
+    },
+    "annotatorB": {
+      "path": "evaluation/annotations/failed/v2/annotator-b.jsonl",
+      "sha256": "fa4702aac7586e19052e95ceaefb499b578cf781202c64926b2b70a9f467a095"
+    },
     "gold": null
+  },
+  "annotationFailure": {
+    "report": {
+      "path": "evaluation/reports/annotation-comparison-v2.json",
+      "sha256": "5887f33a68f70d4e06a6e7c5cea98160910f9d388b6627e33732ca60ef51e299"
+    },
+    "rows": 90,
+    "exactDecisionAgreementRows": 70,
+    "primaryClassKappa": 0.5713211331160691,
+    "materialRelevanceKappa": 0.5980148883374691,
+    "requiredKappa": 0.75
   },
   "candidate": null,
   "holdoutOpening": null

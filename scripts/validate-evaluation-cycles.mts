@@ -28,6 +28,23 @@ interface EvaluationReport {
   readonly passed?: unknown;
 }
 
+interface AnnotationComparisonReport {
+  readonly schemaVersion?: unknown;
+  readonly cycleId?: unknown;
+  readonly status?: unknown;
+  readonly rows?: unknown;
+  readonly exactDecisionAgreementRows?: unknown;
+  readonly primaryClassKappa?: unknown;
+  readonly materialRelevanceKappa?: unknown;
+  readonly requiredKappa?: unknown;
+  readonly passed?: unknown;
+  readonly annotatorA?: unknown;
+  readonly annotatorB?: unknown;
+  readonly includesSourceBodies?: unknown;
+  readonly includesRowIds?: unknown;
+  readonly includesHoldoutAssignments?: unknown;
+}
+
 const root = process.cwd();
 const cyclesDirectory = path.join(root, "evaluation/cycles");
 const names = (await readdir(cyclesDirectory))
@@ -90,6 +107,36 @@ for (const manifest of manifests) {
   for (const file of annotationFiles) {
     if (file !== null) {
       await readVerified(file);
+    }
+  }
+
+  if (manifest.annotationFailure !== null) {
+    const failure = manifest.annotationFailure;
+    const report = JSON.parse(
+      await readVerified(failure.report),
+    ) as AnnotationComparisonReport;
+    if (
+      report.schemaVersion !== "annotation-comparison.v1" ||
+      report.cycleId !== manifest.cycleId ||
+      report.status !== "ANNOTATION_FAILED" ||
+      report.rows !== failure.rows ||
+      report.exactDecisionAgreementRows !==
+        failure.exactDecisionAgreementRows ||
+      report.primaryClassKappa !== failure.primaryClassKappa ||
+      report.materialRelevanceKappa !== failure.materialRelevanceKappa ||
+      report.requiredKappa !== failure.requiredKappa ||
+      report.passed !== false ||
+      JSON.stringify(report.annotatorA) !==
+        JSON.stringify(manifest.annotations.annotatorA) ||
+      JSON.stringify(report.annotatorB) !==
+        JSON.stringify(manifest.annotations.annotatorB) ||
+      report.includesSourceBodies !== false ||
+      report.includesRowIds !== false ||
+      report.includesHoldoutAssignments !== false
+    ) {
+      throw new TypeError(
+        `${manifest.cycleId} annotation failure disagrees with comparison report`,
+      );
     }
   }
 
