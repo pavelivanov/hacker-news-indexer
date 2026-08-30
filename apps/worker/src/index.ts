@@ -28,6 +28,7 @@ import {
 import type { IngestionRange, PipelineJob } from "@hn-knowledge/domain";
 import type { SelectionSource } from "@hn-knowledge/ports";
 
+import { createWorkerClassifier } from "./classifier.js";
 import { jobError, WorkerJobError } from "./jobs/errors.js";
 import { createClassifyJobHandler } from "./jobs/classify.js";
 import { createIngestJobHandler } from "./jobs/ingest.js";
@@ -120,7 +121,7 @@ const resolve = createResolveJobHandler(
   pipelineMetrics,
 );
 const classify = createClassifyJobHandler(
-  null,
+  createWorkerClassifier(config),
   classifications,
   hasher,
   reviews,

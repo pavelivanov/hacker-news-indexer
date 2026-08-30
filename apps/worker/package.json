@@ -3,6 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "exports": {
+    "./classifier": {
+      "types": "./dist/classifier.d.ts",
+      "default": "./dist/classifier.js"
+    },
+    "./jobs/classify": {
+      "types": "./dist/jobs/classify.d.ts",
+      "default": "./dist/jobs/classify.js"
+    }
+  },
   "scripts": {
     "build": "tsc -b --pretty false",
     "dev": "tsx watch src/index.ts",
