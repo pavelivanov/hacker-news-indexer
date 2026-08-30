@@ -179,6 +179,26 @@ if (!comparison.passed) {
     `.${cycleId}.json.annotation-failed-${process.pid}`,
   );
   await mkdir(failureDirectory, { recursive: true });
+  const writeExclusiveOrVerify = async (
+    artifactPath: string,
+    contents: string,
+  ): Promise<boolean> => {
+    try {
+      await writeFile(artifactPath, contents, { flag: "wx" });
+      return true;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") {
+        throw error;
+      }
+    }
+    const existing = await readFile(artifactPath, "utf8");
+    if (sha256(existing) === sha256(contents)) {
+      return false;
+    }
+    await unlink(artifactPath);
+    await writeFile(artifactPath, contents, { flag: "wx" });
+    return true;
+  };
   const artifacts = [
     [path.resolve(root, annotatorARelativePath), annotatorAText],
     [path.resolve(root, annotatorBRelativePath), annotatorBText],
@@ -188,8 +208,9 @@ if (!comparison.passed) {
   let manifestUpdated = false;
   try {
     for (const [artifactPath, contents] of artifacts) {
-      await writeFile(artifactPath, contents, { flag: "wx" });
-      createdPaths.push(artifactPath);
+      if (await writeExclusiveOrVerify(artifactPath, contents)) {
+        createdPaths.push(artifactPath);
+      }
     }
     await writeFile(
       manifestTemporaryPath,
