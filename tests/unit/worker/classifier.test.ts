@@ -197,7 +197,9 @@ describe("classify job handler classifier wiring", () => {
       4,
     );
 
-    await expect(handler(classifyJob(1))).rejects.toThrow("CLASSIFIER_DISABLED");
+    await expect(handler(classifyJob(1))).rejects.toThrow(
+      "CLASSIFIER_DISABLED",
+    );
   });
 
   it("does not throw CLASSIFIER_DISABLED when a classifier port is wired", async () => {

@@ -14,8 +14,10 @@ import type { ClassifierPort } from "@hn-knowledge/ports";
  * NOTE: with CLASSIFIER_ENABLED=true every ingested comment triggers a
  * paid provider call. The default remains false.
  */
-export const createWorkerClassifier = (config: AppConfig): ClassifierPort | null => {
-  if (config.CLASSIFIER_ENABLED !== true) {
+export const createWorkerClassifier = (
+  config: AppConfig,
+): ClassifierPort | null => {
+  if (!config.CLASSIFIER_ENABLED) {
     return null;
   }
   if (config.CLASSIFIER_PROVIDER !== "openai") {
@@ -27,13 +29,17 @@ export const createWorkerClassifier = (config: AppConfig): ClassifierPort | null
     config.CLASSIFIER_API_TOKEN === undefined ||
     config.CLASSIFIER_API_TOKEN.trim().length === 0
   ) {
-    throw new Error("CLASSIFIER_API_TOKEN is required when CLASSIFIER_ENABLED=true");
+    throw new Error(
+      "CLASSIFIER_API_TOKEN is required when CLASSIFIER_ENABLED=true",
+    );
   }
   if (
     config.CLASSIFIER_MODEL === undefined ||
     config.CLASSIFIER_MODEL.trim().length === 0
   ) {
-    throw new Error("CLASSIFIER_MODEL is required when CLASSIFIER_ENABLED=true");
+    throw new Error(
+      "CLASSIFIER_MODEL is required when CLASSIFIER_ENABLED=true",
+    );
   }
   return new OpenAiClassifier({
     apiToken: config.CLASSIFIER_API_TOKEN,

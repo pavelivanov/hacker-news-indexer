@@ -487,9 +487,7 @@ describe("cohensKappa hand-computed values", () => {
   it("returns 1 for perfect agreement with non-uniform marginals", () => {
     // Identical 7A/3B passes: pe = 0.7^2 + 0.3^2 = 0.58, po = 1,
     // kappa = (1 - 0.58) / (1 - 0.58) = 1.
-    const labels = [
-      "A", "A", "A", "A", "A", "A", "A", "B", "B", "B",
-    ] as const;
+    const labels = ["A", "A", "A", "A", "A", "A", "A", "B", "B", "B"] as const;
 
     expect(cohensKappa(labels, labels, ["A", "B"])).toBe(1);
   });
@@ -506,10 +504,13 @@ describe("cohensKappa hand-computed values", () => {
 
   it("returns 1 for identical length-40 sequences across 4 classes", () => {
     // Balanced 10/10/10/10 marginals: pe = 4 * 0.25^2 = 0.25, po = 1.
-    const labels = Array.from(
-      { length: 40 },
-      (_, index) => (["W", "X", "Y", "Z"] as const)[index % 4]!,
-    );
+    const classes = ["W", "X", "Y", "Z"] as const;
+    const labels: ("W" | "X" | "Y" | "Z")[] = [];
+    for (const label of classes) {
+      for (let index = 0; index < 10; index += 1) {
+        labels.push(label);
+      }
+    }
 
     expect(labels).toHaveLength(40);
     expect(cohensKappa(labels, labels, ["W", "X", "Y", "Z"])).toBe(1);
