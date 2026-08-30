@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "annotation-comparison.v1",
+  "title": "Body-free independent annotation comparison",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "cycleId",
+    "status",
+    "rows",
+    "exactDecisionAgreementRows",
+    "primaryClassKappa",
+    "materialRelevanceKappa",
+    "requiredKappa",
+    "passed",
+    "annotatorA",
+    "annotatorB",
+    "includesSourceBodies",
+    "includesRowIds",
+    "includesHoldoutAssignments"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "annotation-comparison.v1" },
+    "cycleId": { "type": "string", "pattern": "^v[1-9][0-9]*$" },
+    "status": { "const": "ANNOTATION_FAILED" },
+    "rows": { "type": "integer", "minimum": 1 },
+    "exactDecisionAgreementRows": { "type": "integer", "minimum": 0 },
+    "primaryClassKappa": { "type": "number", "minimum": -1, "maximum": 1 },
+    "materialRelevanceKappa": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1
+    },
+    "requiredKappa": { "const": 0.75 },
+    "passed": { "const": false },
+    "annotatorA": { "$ref": "#/$defs/fileDigest" },
+    "annotatorB": { "$ref": "#/$defs/fileDigest" },
+    "includesSourceBodies": { "const": false },
+    "includesRowIds": { "const": false },
+    "includesHoldoutAssignments": { "const": false }
+  },
+  "$defs": {
+    "fileDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  }
+}

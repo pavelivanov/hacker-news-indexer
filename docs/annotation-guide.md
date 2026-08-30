@@ -51,11 +51,19 @@ FindThatProject export always requires review during initial rollout and is limi
 
 ## Fresh-cycle independent passes
 
-Cycle v2 separates material relevance from the final primary class. Record
+Fresh cycles separate material relevance from the final primary class. Record
 `materialRelevance` as `MATERIAL`, `NOT_MATERIAL`, or `UNCERTAIN`, then make the
 best bounded `DISCOVERY`, `EXPERT_NOTE`, or `REJECTED` decision. An uncertain
 materiality decision must include `AMBIGUOUS_CLASSIFICATION`; it does not permit
 skipping evidence or the remaining structural fields.
+
+If either kappa gate fails, that cycle is terminal annotation evidence. Do not
+show row-level disagreements to the annotators, reconcile the failed rows, or
+repeat labels until agreement happens to pass. Calibrate the materiality
+boundary on a separate corpus excluded from every evaluation cycle. Annotators
+may discuss only those calibration rows. Revise this guide only from that
+separate exercise, require agreement on a second excluded calibration batch,
+then label a later fresh cycle independently from scratch.
 
 Each annotator receives only their own shuffled packet directory, this guide,
 and `evaluation/annotation-pass-schema-v2.json`. They must not receive the

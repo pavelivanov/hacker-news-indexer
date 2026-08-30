@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 
+import { MINIMUM_ANNOTATION_COHENS_KAPPA } from "./annotation-packet.js";
+
 export const EVALUATION_CYCLE_SCHEMA_VERSION = "evaluation-cycle.v1";
 export const EVALUATION_SPLIT_ALGORITHM = "SHA256_SORT_V1";
 export const MINIMUM_EVALUATION_CYCLE_ROWS = 90;
@@ -7,6 +9,7 @@ export const CLASSIFICATION_EVALUATION_REPORT_VERSION = 5;
 
 export type EvaluationCycleStatus =
   | "SPLIT_FROZEN"
+  | "ANNOTATION_FAILED"
   | "ANNOTATED"
   | "CANDIDATE_SELECTED"
   | "HOLDOUT_CLAIMED"
@@ -40,6 +43,14 @@ export interface EvaluationCycleManifest {
     readonly annotatorA: EvaluationFileDigest | null;
     readonly annotatorB: EvaluationFileDigest | null;
     readonly gold: EvaluationFileDigest | null;
+  };
+  readonly annotationFailure: null | {
+    readonly report: EvaluationFileDigest;
+    readonly rows: number;
+    readonly exactDecisionAgreementRows: number;
+    readonly primaryClassKappa: number;
+    readonly materialRelevanceKappa: number;
+    readonly requiredKappa: number;
   };
   readonly candidate: null | {
     readonly provider: string;
@@ -81,6 +92,18 @@ export interface EvaluationHoldoutCandidateInput {
   readonly promptHash: string;
 }
 
+export interface RecordEvaluationAnnotationFailureInput {
+  readonly cycleId: string;
+  readonly rows: number;
+  readonly exactDecisionAgreementRows: number;
+  readonly primaryClassKappa: number;
+  readonly materialRelevanceKappa: number;
+  readonly requiredKappa: number;
+  readonly annotatorA: EvaluationFileDigest;
+  readonly annotatorB: EvaluationFileDigest;
+  readonly report: EvaluationFileDigest;
+}
+
 export type EvaluationCycleRunMode = "benchmark" | "holdout";
 
 export interface EvaluationCycleArtifactsInput {
@@ -119,6 +142,7 @@ const HASH = /^[0-9a-f]{64}$/u;
 const CYCLE_ID = /^v([1-9][0-9]*)$/u;
 const STATUSES = new Set<EvaluationCycleStatus>([
   "SPLIT_FROZEN",
+  "ANNOTATION_FAILED",
   "ANNOTATED",
   "CANDIDATE_SELECTED",
   "HOLDOUT_CLAIMED",
@@ -180,6 +204,25 @@ const positiveInteger = (value: unknown, location: string): number => {
     return fail(`${location} must be a positive safe integer`);
   }
   return value as number;
+};
+
+const nonNegativeInteger = (value: unknown, location: string): number => {
+  if (!Number.isSafeInteger(value) || (value as number) < 0) {
+    return fail(`${location} must be a non-negative safe integer`);
+  }
+  return value as number;
+};
+
+const kappa = (value: unknown, location: string): number => {
+  if (
+    typeof value !== "number" ||
+    !Number.isFinite(value) ||
+    value < -1 ||
+    value > 1
+  ) {
+    return fail(`${location} must be a finite number from -1 to 1`);
+  }
+  return value;
 };
 
 const integerArray = (value: unknown, location: string): number[] => {
@@ -308,21 +351,26 @@ const validateManifest = (manifest: EvaluationCycleManifest): void => {
   const annotationCount = annotationFiles.filter(
     (entry) => entry !== null,
   ).length;
-  if (annotationCount !== 0 && annotationCount !== annotationFiles.length) {
-    fail(`${manifest.cycleId} annotation digests must be recorded together`);
-  }
   if (
-    annotationCount === annotationFiles.length &&
-    new Set(annotationFiles.map((entry) => entry?.path)).size !==
-      annotationFiles.length
+    annotationCount > 1 &&
+    new Set(
+      annotationFiles
+        .filter((entry) => entry !== null)
+        .map((entry) => entry.path),
+    ).size !== annotationCount
   ) {
     fail(`${manifest.cycleId} annotation passes must use distinct files`);
   }
 
   const annotated = annotationCount === annotationFiles.length;
+  const annotationFailed =
+    manifest.annotations.annotatorA !== null &&
+    manifest.annotations.annotatorB !== null &&
+    manifest.annotations.gold === null;
   if (manifest.status === "SPLIT_FROZEN") {
     if (
-      annotated ||
+      annotationCount !== 0 ||
+      manifest.annotationFailure !== null ||
       manifest.candidate !== null ||
       manifest.holdoutOpening !== null
     ) {
@@ -331,6 +379,48 @@ const validateManifest = (manifest: EvaluationCycleManifest): void => {
       );
     }
     return;
+  }
+  if (manifest.status === "ANNOTATION_FAILED") {
+    const failure = manifest.annotationFailure;
+    const annotatorA = manifest.annotations.annotatorA;
+    const annotatorB = manifest.annotations.annotatorB;
+    if (failure === null || annotatorA === null || annotatorB === null) {
+      return fail(
+        `${manifest.cycleId} annotation failure requires two passes and a comparison report`,
+      );
+    }
+    if (
+      !annotationFailed ||
+      manifest.candidate !== null ||
+      manifest.holdoutOpening !== null
+    ) {
+      fail(
+        `${manifest.cycleId} annotation failure requires two passes and no later-stage artifacts`,
+      );
+    }
+    if (
+      failure.rows !== sourceIds.length ||
+      failure.exactDecisionAgreementRows > failure.rows ||
+      failure.requiredKappa !== MINIMUM_ANNOTATION_COHENS_KAPPA ||
+      (failure.primaryClassKappa >= failure.requiredKappa &&
+        failure.materialRelevanceKappa >= failure.requiredKappa)
+    ) {
+      fail(`${manifest.cycleId} annotation failure metrics are invalid`);
+    }
+    const failurePaths = [
+      annotatorA.path,
+      annotatorB.path,
+      failure.report.path,
+    ];
+    if (new Set(failurePaths).size !== failurePaths.length) {
+      fail(`${manifest.cycleId} annotation failure artifacts must differ`);
+    }
+    return;
+  }
+  if (manifest.annotationFailure !== null) {
+    fail(
+      `${manifest.cycleId} ${manifest.status} cannot retain an annotation failure`,
+    );
   }
   if (!annotated) {
     fail(
@@ -383,6 +473,7 @@ export const validateEvaluationCycleSet = (
     validateManifest(manifest);
     if (
       index < ordered.length - 1 &&
+      manifest.status !== "ANNOTATION_FAILED" &&
       manifest.status !== "OPENED_FAILED" &&
       manifest.status !== "OPENED_PASSED"
     ) {
@@ -467,11 +558,107 @@ export const prepareEvaluationCycle = (
       },
     },
     annotations: { annotatorA: null, annotatorB: null, gold: null },
+    annotationFailure: null,
     candidate: null,
     holdoutOpening: null,
   };
   validateEvaluationCycleSet([...input.priorManifests, manifest]);
   return { manifest, holdout };
+};
+
+export const recordEvaluationAnnotationFailure = (
+  manifest: EvaluationCycleManifest,
+  input: RecordEvaluationAnnotationFailureInput,
+): EvaluationCycleManifest => {
+  if (
+    manifest.status !== "SPLIT_FROZEN" ||
+    manifest.annotations.annotatorA !== null ||
+    manifest.annotations.annotatorB !== null ||
+    manifest.annotations.gold !== null ||
+    manifest.annotationFailure !== null
+  ) {
+    fail(`${manifest.cycleId} annotation failure requires SPLIT_FROZEN`);
+  }
+  if (input.cycleId !== manifest.cycleId) {
+    fail(`${manifest.cycleId} annotation comparison belongs to another cycle`);
+  }
+  const rows = positiveInteger(input.rows, "annotationFailure.rows");
+  const exactDecisionAgreementRows = nonNegativeInteger(
+    input.exactDecisionAgreementRows,
+    "annotationFailure.exactDecisionAgreementRows",
+  );
+  const primaryClassKappa = kappa(
+    input.primaryClassKappa,
+    "annotationFailure.primaryClassKappa",
+  );
+  const materialRelevanceKappa = kappa(
+    input.materialRelevanceKappa,
+    "annotationFailure.materialRelevanceKappa",
+  );
+  const requiredKappa = kappa(
+    input.requiredKappa,
+    "annotationFailure.requiredKappa",
+  );
+  if (
+    rows !== manifest.source.commentIds.length ||
+    exactDecisionAgreementRows > rows
+  ) {
+    fail(`${manifest.cycleId} annotation comparison row counts are invalid`);
+  }
+  if (
+    requiredKappa !== MINIMUM_ANNOTATION_COHENS_KAPPA ||
+    (primaryClassKappa >= requiredKappa &&
+      materialRelevanceKappa >= requiredKappa)
+  ) {
+    fail(`${manifest.cycleId} annotation comparison did not fail its gate`);
+  }
+  const annotatorA: EvaluationFileDigest = {
+    path: safeRelativePath(
+      input.annotatorA.path,
+      "annotationFailure.annotatorA.path",
+    ),
+    sha256: hash(
+      input.annotatorA.sha256,
+      "annotationFailure.annotatorA.sha256",
+    ),
+  };
+  const annotatorB: EvaluationFileDigest = {
+    path: safeRelativePath(
+      input.annotatorB.path,
+      "annotationFailure.annotatorB.path",
+    ),
+    sha256: hash(
+      input.annotatorB.sha256,
+      "annotationFailure.annotatorB.sha256",
+    ),
+  };
+  if (
+    annotatorA.path === annotatorB.path ||
+    annotatorA.sha256 === annotatorB.sha256
+  ) {
+    fail(`${manifest.cycleId} failed annotation passes must be independent`);
+  }
+  const updated: EvaluationCycleManifest = {
+    ...manifest,
+    status: "ANNOTATION_FAILED",
+    annotations: { annotatorA, annotatorB, gold: null },
+    annotationFailure: {
+      report: {
+        path: safeRelativePath(
+          input.report.path,
+          "annotationFailure.report.path",
+        ),
+        sha256: hash(input.report.sha256, "annotationFailure.report.sha256"),
+      },
+      rows,
+      exactDecisionAgreementRows,
+      primaryClassKappa,
+      materialRelevanceKappa,
+      requiredKappa,
+    },
+  };
+  validateManifest(updated);
+  return updated;
 };
 
 export const assertEvaluationDevelopmentMayRun = (
@@ -680,6 +867,7 @@ export const parseEvaluationCycleManifest = (
       "source",
       "split",
       "annotations",
+      "annotationFailure",
       "candidate",
       "holdoutOpening",
     ],
@@ -733,6 +921,50 @@ export const parseEvaluationCycleManifest = (
     ["annotatorA", "annotatorB", "gold"],
     "manifest.annotations",
   );
+
+  const annotationFailureValue = item["annotationFailure"];
+  let annotationFailure: EvaluationCycleManifest["annotationFailure"] = null;
+  if (annotationFailureValue !== null) {
+    const failure = object(
+      annotationFailureValue,
+      "manifest.annotationFailure",
+    );
+    exactKeys(
+      failure,
+      [
+        "report",
+        "rows",
+        "exactDecisionAgreementRows",
+        "primaryClassKappa",
+        "materialRelevanceKappa",
+        "requiredKappa",
+      ],
+      "manifest.annotationFailure",
+    );
+    annotationFailure = {
+      report: parseFileDigest(
+        failure["report"],
+        "manifest.annotationFailure.report",
+      ),
+      rows: positiveInteger(failure["rows"], "manifest.annotationFailure.rows"),
+      exactDecisionAgreementRows: nonNegativeInteger(
+        failure["exactDecisionAgreementRows"],
+        "manifest.annotationFailure.exactDecisionAgreementRows",
+      ),
+      primaryClassKappa: kappa(
+        failure["primaryClassKappa"],
+        "manifest.annotationFailure.primaryClassKappa",
+      ),
+      materialRelevanceKappa: kappa(
+        failure["materialRelevanceKappa"],
+        "manifest.annotationFailure.materialRelevanceKappa",
+      ),
+      requiredKappa: kappa(
+        failure["requiredKappa"],
+        "manifest.annotationFailure.requiredKappa",
+      ),
+    };
+  }
 
   const candidateValue = item["candidate"];
   let candidate: EvaluationCycleManifest["candidate"] = null;
@@ -848,6 +1080,7 @@ export const parseEvaluationCycleManifest = (
         "manifest.annotations.gold",
       ),
     },
+    annotationFailure,
     candidate,
     holdoutOpening,
   };

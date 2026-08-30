@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "annotation-comparison.v1",
+  "cycleId": "v2",
+  "status": "ANNOTATION_FAILED",
+  "rows": 90,
+  "exactDecisionAgreementRows": 70,
+  "primaryClassKappa": 0.5713211331160691,
+  "materialRelevanceKappa": 0.5980148883374691,
+  "requiredKappa": 0.75,
+  "passed": false,
+  "annotatorA": {
+    "path": "evaluation/annotations/failed/v2/annotator-a.jsonl",
+    "sha256": "4e95fe4dd1533bbb22e92dccb2049954e378e635447db085bba26974ca57da8c"
+  },
+  "annotatorB": {
+    "path": "evaluation/annotations/failed/v2/annotator-b.jsonl",
+    "sha256": "fa4702aac7586e19052e95ceaefb499b578cf781202c64926b2b70a9f467a095"
+  },
+  "includesSourceBodies": false,
+  "includesRowIds": false,
+  "includesHoldoutAssignments": false
+}
