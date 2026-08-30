@@ -25,6 +25,7 @@ import {
   assertEvaluationCycleArtifactsMatch,
   assertEvaluationDevelopmentMayRun,
   assertEvaluationHoldoutMayOpen,
+  assertEvaluationHypothesisMatches,
   assertEvaluationRowsMatchCycle,
   CLASSIFICATION_EVALUATION_REPORT_VERSION,
   CLASSIFICATION_DECISION_ROUTER_VERSION,
@@ -37,11 +38,14 @@ import {
   EVALUATION_PRIMARY_CLASSES,
   matchEvaluationDiscoveries,
   parseEvaluationCycleManifest,
+  parseEvaluationHypothesis,
+  parseEvaluationHypothesisReference,
   recordEvaluationHoldoutResult,
   serializeEvaluationCycleManifest,
   validateEvaluationCycleSet,
   type EvaluationCycleManifest,
   type EvaluationHoldoutCandidateInput,
+  type EvaluationHypothesisReference,
   type EvaluationConfusionMatrix,
   type EvaluationPrediction,
   type EvaluationPrimaryClass,
@@ -214,6 +218,7 @@ const provider = argument("--provider") ?? "fixture";
 const corpusArgument = argument("--corpus");
 const sourceArgument = argument("--source");
 const cycleIdArgument = argument("--cycle");
+const hypothesisArgument = argument("--hypothesis");
 const mode = argument("--mode") ?? "benchmark";
 if (
   !(["fixture", "openai"] as const).includes(provider as "fixture" | "openai")
@@ -246,6 +251,11 @@ if (liveProvider && (corpusArgument !== null || sourceArgument !== null)) {
     "Live evaluation derives --corpus and --source from the frozen cycle",
   );
 }
+if ((!liveProvider || mode !== "benchmark") && hypothesisArgument !== null) {
+  throw new Error(
+    "--hypothesis is accepted only for live development evaluation",
+  );
+}
 
 let liveCycle: EvaluationCycleManifest | null = null;
 let evaluationCycles: EvaluationCycleManifest[] = [];
@@ -271,6 +281,11 @@ if (liveProvider) {
   }
   if (mode === "benchmark") {
     assertEvaluationDevelopmentMayRun(liveCycle);
+    if (hypothesisArgument === null) {
+      throw new Error(
+        "Live development evaluation blocked: --hypothesis is required",
+      );
+    }
   } else if (
     liveCycle.status === "HOLDOUT_CLAIMED" ||
     liveCycle.status === "OPENED_FAILED" ||
@@ -587,6 +602,53 @@ const classifier: ClassifierPort = (() => {
     reasoningEffort: reasoningEffort as OpenAiReasoningEffort,
   });
 })();
+const promptHash = sha256(CLASSIFICATION_SYSTEM_PROMPT);
+let evaluationHypothesis: EvaluationHypothesisReference | null = null;
+const loadEvaluationHypothesis = async (
+  reference: EvaluationHypothesisReference,
+): Promise<void> => {
+  if (liveCycle === null) {
+    throw new Error("Evaluation hypothesis requires a live cycle");
+  }
+  const hypothesisText = await readFile(
+    path.resolve(root, reference.path),
+    "utf8",
+  );
+  if (sha256(hypothesisText) !== reference.sha256) {
+    throw new Error("Evaluation hypothesis digest has changed");
+  }
+  const hypothesis = parseEvaluationHypothesis(
+    JSON.parse(hypothesisText) as unknown,
+  );
+  assertEvaluationHypothesisMatches(hypothesis, {
+    cycleId: liveCycle.cycleId,
+    mode: "benchmark",
+    provider,
+    modelId: classifier.modelId,
+    modelConfigId: classifier.modelConfigId,
+    reasoningEffort,
+    promptVersion: CLASSIFICATION_PROMPT_VERSION,
+    promptHash,
+    decisionRouterVersion: CLASSIFICATION_DECISION_ROUTER_VERSION,
+  });
+};
+if (liveCycle !== null && mode === "benchmark") {
+  const hypothesisPath = path.resolve(root, hypothesisArgument as string);
+  const hypothesisRelativePath = path
+    .relative(root, hypothesisPath)
+    .split(path.sep)
+    .join("/");
+  parseEvaluationHypothesisReference({
+    path: hypothesisRelativePath,
+    sha256: "0".repeat(64),
+  });
+  const hypothesisText = await readFile(hypothesisPath, "utf8");
+  evaluationHypothesis = parseEvaluationHypothesisReference({
+    path: hypothesisRelativePath,
+    sha256: sha256(hypothesisText),
+  });
+  await loadEvaluationHypothesis(evaluationHypothesis);
+}
 const liveReportName = (reportMode: string): string => {
   if (liveCycle === null) {
     throw new Error("Live report requires an evaluation cycle");
@@ -610,7 +672,7 @@ if (liveCycle !== null && mode === "holdout") {
     modelId: classifier.modelId,
     modelConfigId: classifier.modelConfigId,
     promptVersion: CLASSIFICATION_PROMPT_VERSION,
-    promptHash: sha256(CLASSIFICATION_SYSTEM_PROMPT),
+    promptHash,
   };
   assertEvaluationHoldoutMayOpen(liveCycle, holdoutRuntimeInput);
   const candidate = liveCycle.candidate;
@@ -637,6 +699,8 @@ if (liveCycle !== null && mode === "holdout") {
     benchmark === null ||
     typeof benchmark !== "object" ||
     Array.isArray(benchmark) ||
+    (benchmark as Record<string, unknown>)["reportVersion"] !==
+      CLASSIFICATION_EVALUATION_REPORT_VERSION ||
     (benchmark as Record<string, unknown>)["cycleId"] !== liveCycle.cycleId ||
     (benchmark as Record<string, unknown>)["mode"] !== "benchmark" ||
     (benchmark as Record<string, unknown>)["split"] !== "development" ||
@@ -655,14 +719,17 @@ if (liveCycle !== null && mode === "holdout") {
       CLASSIFICATION_PROMPT_VERSION ||
     (benchmark as Record<string, unknown>)["decisionRouterVersion"] !==
       CLASSIFICATION_DECISION_ROUTER_VERSION ||
-    (benchmark as Record<string, unknown>)["promptHash"] !==
-      sha256(CLASSIFICATION_SYSTEM_PROMPT) ||
+    (benchmark as Record<string, unknown>)["promptHash"] !== promptHash ||
     (benchmark as Record<string, unknown>)["passed"] !== true
   ) {
     throw new Error(
       "Holdout blocked: matching development configuration did not pass",
     );
   }
+  evaluationHypothesis = parseEvaluationHypothesisReference(
+    (benchmark as Record<string, unknown>)["hypothesis"],
+  );
+  await loadEvaluationHypothesis(evaluationHypothesis);
 }
 const liveReservationPath =
   liveOutputPath === null ? null : `${liveOutputPath}.attempt`;
@@ -682,6 +749,7 @@ if (liveOutputPath !== null) {
           cycleId: liveCycle?.cycleId,
           mode,
           report: path.relative(root, liveOutputPath),
+          hypothesis: evaluationHypothesis,
         },
         null,
         2,
@@ -1251,6 +1319,7 @@ const report = {
   promptHash: repository.runInputs[0]?.promptHash,
   schemaVersion: repository.runInputs[0]?.schemaVersion,
   decisionRouterVersion: CLASSIFICATION_DECISION_ROUTER_VERSION,
+  hypothesis: evaluationHypothesis,
   split:
     mode === "benchmark"
       ? "development"

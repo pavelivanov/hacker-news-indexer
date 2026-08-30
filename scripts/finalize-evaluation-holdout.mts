@@ -3,7 +3,10 @@ import { readFile, readdir, rename, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import {
+  assertEvaluationHypothesisMatches,
   parseEvaluationCycleManifest,
+  parseEvaluationHypothesis,
+  parseEvaluationHypothesisReference,
   recordEvaluationHoldoutResult,
   serializeEvaluationCycleManifest,
   validateEvaluationCycleSet,
@@ -130,6 +133,52 @@ if (
     "Holdout report does not match the frozen development compatibility set",
   );
 }
+
+const developmentHypothesis = parseEvaluationHypothesisReference(
+  development["hypothesis"],
+);
+const holdoutHypothesis = parseEvaluationHypothesisReference(
+  report["hypothesis"],
+);
+if (
+  holdoutHypothesis.path !== developmentHypothesis.path ||
+  holdoutHypothesis.sha256 !== developmentHypothesis.sha256
+) {
+  throw new TypeError(
+    "Holdout report does not preserve the development hypothesis",
+  );
+}
+const hypothesisText = await readFile(
+  path.resolve(root, developmentHypothesis.path),
+  "utf8",
+);
+if (sha256(hypothesisText) !== developmentHypothesis.sha256) {
+  throw new Error("Frozen evaluation hypothesis digest has changed");
+}
+const configuration = object(
+  development["configuration"],
+  "Development report configuration",
+);
+const reasoningEffort = configuration["reasoningEffort"];
+if (typeof reasoningEffort !== "string" || reasoningEffort.trim() === "") {
+  throw new TypeError(
+    "Development report configuration.reasoningEffort is invalid",
+  );
+}
+const hypothesis = parseEvaluationHypothesis(
+  JSON.parse(hypothesisText) as unknown,
+);
+assertEvaluationHypothesisMatches(hypothesis, {
+  cycleId: manifest.cycleId,
+  mode: "benchmark",
+  provider: manifest.candidate.provider,
+  modelId: manifest.candidate.modelId,
+  modelConfigId: manifest.candidate.modelConfigId,
+  reasoningEffort,
+  promptVersion: manifest.candidate.promptVersion,
+  promptHash: manifest.candidate.promptHash,
+  decisionRouterVersion: development["decisionRouterVersion"] as string,
+});
 
 const updatedManifest = recordEvaluationHoldoutResult(manifest, {
   cycleId: stringField("cycleId"),

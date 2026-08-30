@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 export const EVALUATION_CYCLE_SCHEMA_VERSION = "evaluation-cycle.v1";
 export const EVALUATION_SPLIT_ALGORITHM = "SHA256_SORT_V1";
 export const MINIMUM_EVALUATION_CYCLE_ROWS = 90;
-export const CLASSIFICATION_EVALUATION_REPORT_VERSION = 4;
+export const CLASSIFICATION_EVALUATION_REPORT_VERSION = 5;
 
 export type EvaluationCycleStatus =
   | "SPLIT_FROZEN"
