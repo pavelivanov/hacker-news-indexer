@@ -9,6 +9,7 @@ export type EvaluationCycleStatus =
   | "SPLIT_FROZEN"
   | "ANNOTATED"
   | "CANDIDATE_SELECTED"
+  | "HOLDOUT_CLAIMED"
   | "OPENED_FAILED"
   | "OPENED_PASSED";
 
@@ -103,12 +104,24 @@ export interface SelectEvaluationCandidateInput extends EvaluationCycleArtifacts
   readonly developmentReport: EvaluationFileDigest;
 }
 
+export interface RecordEvaluationHoldoutInput extends EvaluationHoldoutCandidateInput {
+  readonly cycleId: string;
+  readonly mode: string;
+  readonly split: string;
+  readonly rows: number;
+  readonly terminalRuns: number;
+  readonly activatedDecisions: number;
+  readonly passed: boolean;
+  readonly report: EvaluationFileDigest;
+}
+
 const HASH = /^[0-9a-f]{64}$/u;
 const CYCLE_ID = /^v([1-9][0-9]*)$/u;
 const STATUSES = new Set<EvaluationCycleStatus>([
   "SPLIT_FROZEN",
   "ANNOTATED",
   "CANDIDATE_SELECTED",
+  "HOLDOUT_CLAIMED",
   "OPENED_FAILED",
   "OPENED_PASSED",
 ]);
@@ -333,7 +346,10 @@ const validateManifest = (manifest: EvaluationCycleManifest): void => {
   if (manifest.candidate === null) {
     fail(`${manifest.cycleId} ${manifest.status} state requires a candidate`);
   }
-  if (manifest.status === "CANDIDATE_SELECTED") {
+  if (
+    manifest.status === "CANDIDATE_SELECTED" ||
+    manifest.status === "HOLDOUT_CLAIMED"
+  ) {
     if (manifest.holdoutOpening !== null) {
       fail(
         `${manifest.cycleId} candidate state cannot contain a holdout result`,
@@ -558,6 +574,7 @@ export const assertEvaluationHoldoutMayOpen = (
   input: EvaluationHoldoutCandidateInput,
 ): void => {
   if (
+    manifest.status === "HOLDOUT_CLAIMED" ||
     manifest.status === "OPENED_FAILED" ||
     manifest.status === "OPENED_PASSED" ||
     manifest.holdoutOpening !== null
@@ -578,6 +595,76 @@ export const assertEvaluationHoldoutMayOpen = (
   ) {
     fail(`${manifest.cycleId} runtime does not match frozen candidate`);
   }
+};
+
+export const claimEvaluationHoldout = (
+  manifest: EvaluationCycleManifest,
+  input: EvaluationHoldoutCandidateInput,
+): EvaluationCycleManifest => {
+  assertEvaluationHoldoutMayOpen(manifest, input);
+  const updated: EvaluationCycleManifest = {
+    ...manifest,
+    status: "HOLDOUT_CLAIMED",
+  };
+  validateManifest(updated);
+  return updated;
+};
+
+export const recordEvaluationHoldoutResult = (
+  manifest: EvaluationCycleManifest,
+  input: RecordEvaluationHoldoutInput,
+): EvaluationCycleManifest => {
+  const candidate = manifest.candidate;
+  if (
+    manifest.status !== "HOLDOUT_CLAIMED" ||
+    manifest.holdoutOpening !== null
+  ) {
+    fail(`${manifest.cycleId} holdout result requires HOLDOUT_CLAIMED`);
+  }
+  if (candidate === null) {
+    return fail(`${manifest.cycleId} claimed holdout is missing its candidate`);
+  }
+  assertEvaluationCycleArtifactsMatch(manifest, input);
+  if (input.cycleId !== manifest.cycleId) {
+    fail(`${manifest.cycleId} holdout report belongs to another cycle`);
+  }
+  if (input.mode !== "holdout" || input.split !== "holdout") {
+    fail(`${manifest.cycleId} result requires a holdout report`);
+  }
+  if (input.rows !== manifest.split.holdoutCommentIds.length) {
+    fail(`${manifest.cycleId} holdout report row count is invalid`);
+  }
+  if (input.terminalRuns !== input.rows) {
+    fail(`${manifest.cycleId} holdout report run count is incomplete`);
+  }
+  if (input.activatedDecisions !== 0) {
+    fail(`${manifest.cycleId} holdout report activated a decision`);
+  }
+  if (input.report.path === candidate.developmentReport.path) {
+    fail(`${manifest.cycleId} holdout and development reports must differ`);
+  }
+  if (
+    candidate.provider !== input.provider ||
+    candidate.modelId !== input.modelId ||
+    candidate.modelConfigId !== input.modelConfigId ||
+    candidate.promptVersion !== input.promptVersion ||
+    candidate.promptHash !== input.promptHash
+  ) {
+    fail(`${manifest.cycleId} holdout report does not match frozen candidate`);
+  }
+  const updated: EvaluationCycleManifest = {
+    ...manifest,
+    status: input.passed ? "OPENED_PASSED" : "OPENED_FAILED",
+    holdoutOpening: {
+      report: {
+        path: safeRelativePath(input.report.path, "holdout.report.path"),
+        sha256: hash(input.report.sha256, "holdout.report.sha256"),
+      },
+      passed: input.passed,
+    },
+  };
+  validateManifest(updated);
+  return updated;
 };
 
 export const parseEvaluationCycleManifest = (

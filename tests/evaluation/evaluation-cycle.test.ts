@@ -7,8 +7,10 @@ import {
   assertEvaluationDevelopmentMayRun,
   assertEvaluationHoldoutMayOpen,
   assertEvaluationRowsMatchCycle,
+  claimEvaluationHoldout,
   parseEvaluationCycleManifest,
   prepareEvaluationCycle,
+  recordEvaluationHoldoutResult,
   selectEvaluationCandidate,
   validateEvaluationCycleSet,
 } from "@hn-knowledge/application";
@@ -296,5 +298,72 @@ describe("immutable evaluation cycles", () => {
     expect(() =>
       selectEvaluationCandidate(annotated, { ...input, terminalRuns: 62 }),
     ).toThrow(/run count is incomplete/u);
+
+    const runtime = {
+      corpusSha256: input.corpusSha256,
+      sourceSha256: input.sourceSha256,
+      provider: input.provider,
+      modelId: input.modelId,
+      modelConfigId: input.modelConfigId,
+      promptVersion: input.promptVersion,
+      promptHash: input.promptHash,
+    } as const;
+    const claimed = claimEvaluationHoldout(selected, runtime);
+
+    expect(claimed).toMatchObject({
+      status: "HOLDOUT_CLAIMED",
+      candidate: selected.candidate,
+      holdoutOpening: null,
+    });
+    expect(() => validateEvaluationCycleSet([v1, claimed])).not.toThrow();
+    expect(() => assertEvaluationHoldoutMayOpen(claimed, runtime)).toThrow(
+      /already been opened/u,
+    );
+
+    const holdoutInput = {
+      ...runtime,
+      cycleId: "v2",
+      mode: "holdout",
+      split: "holdout",
+      rows: 27,
+      terminalRuns: 27,
+      activatedDecisions: 0,
+      passed: true,
+      report: {
+        path: "evaluation/reports/holdout-v2-openai-test-v4.json",
+        sha256: "f".repeat(64),
+      },
+    } as const;
+    const terminal = recordEvaluationHoldoutResult(claimed, holdoutInput);
+
+    expect(terminal).toMatchObject({
+      status: "OPENED_PASSED",
+      holdoutOpening: {
+        passed: true,
+        report: holdoutInput.report,
+      },
+    });
+    expect(() => validateEvaluationCycleSet([v1, terminal])).not.toThrow();
+    expect(() => recordEvaluationHoldoutResult(terminal, holdoutInput)).toThrow(
+      /requires HOLDOUT_CLAIMED/u,
+    );
+    expect(
+      recordEvaluationHoldoutResult(claimed, {
+        ...holdoutInput,
+        passed: false,
+      }).status,
+    ).toBe("OPENED_FAILED");
+    expect(() =>
+      recordEvaluationHoldoutResult(claimed, {
+        ...holdoutInput,
+        terminalRuns: 26,
+      }),
+    ).toThrow(/run count is incomplete/u);
+    expect(() =>
+      recordEvaluationHoldoutResult(claimed, {
+        ...holdoutInput,
+        report: input.developmentReport,
+      }),
+    ).toThrow(/reports must differ/u);
   });
 });

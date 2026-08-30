@@ -224,10 +224,31 @@ npm run eval -- \
   --reasoning-effort <frozen-effort>
 ```
 
-The evaluator refuses a cycle whose holdout was already opened, lacks a frozen
-passing candidate, or differs in corpus, provider, model configuration, prompt
-version, or prompt hash. Cycle v1 is terminal `OPENED_FAILED`, so it cannot be
-run again even if a matching development report is present.
+After every preflight check and before the first provider request, the evaluator
+atomically changes `CANDIDATE_SELECTED` to `HOLDOUT_CLAIMED`. A claimed cycle
+refuses every later opening. After the report is exclusively written, the same
+run atomically records its digest and advances to `OPENED_PASSED` or
+`OPENED_FAILED`; only then is the attempt marker removed.
+
+If the process is interrupted after claiming, do not rerun the provider. The
+manifest and attempt marker deliberately remain fail-closed. If a complete
+holdout report was written before the interruption, finalize that exact report
+without provider calls:
+
+```bash
+npm run evaluation:finalize-holdout -- \
+  --cycle v2 \
+  --report evaluation/reports/holdout-v2-openai-<frozen-model>-<effort>-v4.json
+```
+
+Recovery verifies the report and hash-pinned development compatibility set,
+candidate configuration, cycle artifacts, full holdout row/run counts, and
+zero activated decisions before recording the terminal result. A claimed cycle
+without a complete valid report remains claimed for owner review. The evaluator
+also refuses a cycle whose holdout was already opened, lacks a frozen passing
+candidate, or differs in corpus, provider, model configuration, prompt version,
+or prompt hash. Cycle v1 is terminal `OPENED_FAILED`, so it cannot be run again
+even if a matching development report is present.
 
 Validate the corpus without printing source text:
 
