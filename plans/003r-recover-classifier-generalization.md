@@ -16,8 +16,9 @@
   review, the fresh immutable v2 split, blind annotation validation, the
   dual-kappa comparison gate, fail-closed gold finalization, and the inactive
   two-stage application router are implemented. Live evaluation is pinned to
-  an annotated cycle and its frozen artifacts. Independent v2 annotation and
-  development evaluation remain.
+  an annotated cycle and its frozen artifacts, and holdout opening has a
+  durable claim/terminal lifecycle. Independent v2 annotation and development
+  evaluation remain.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
@@ -185,6 +186,17 @@ v2`. Record either terminal outcome without tuning or retrying.
 **Verify**: one holdout report, zero activated decisions, exact frozen hashes,
 all gates pass before provider promotion, or the cycle is terminal failed and
 classification remains disabled.
+
+**Lifecycle implementation (2026-08-30):** Once all preflight checks pass, the
+evaluator atomically records `HOLDOUT_CLAIMED` before the first provider request;
+that state rejects every later opening. A completed report is exclusively
+written and atomically advances the manifest to `OPENED_PASSED` or
+`OPENED_FAILED` with its exact digest before the attempt marker is removed. If
+the process stops between those transitions, it remains claimed and cannot
+silently retry. A recovery command may terminalize an already-written complete
+report after revalidating the frozen development report, compatibility set,
+candidate, artifacts, row/run completeness, and zero activation, without any
+provider call. The lifecycle is implemented but has not been exercised on v2.
 
 ## Done criteria
 

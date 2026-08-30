@@ -1,6 +1,13 @@
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
-import { mkdir, readFile, readdir, unlink, writeFile } from "node:fs/promises";
+import {
+  mkdir,
+  readFile,
+  readdir,
+  rename,
+  unlink,
+  writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 
 import { format } from "prettier";
@@ -24,13 +31,17 @@ import {
   CLASSIFICATION_PROMPT_VERSION,
   CLASSIFICATION_SYSTEM_PROMPT,
   ClassificationExecutionError,
+  claimEvaluationHoldout,
   createClassifyComment,
   EVALUATION_PREDICTIONS,
   EVALUATION_PRIMARY_CLASSES,
   matchEvaluationDiscoveries,
   parseEvaluationCycleManifest,
+  recordEvaluationHoldoutResult,
+  serializeEvaluationCycleManifest,
   validateEvaluationCycleSet,
   type EvaluationCycleManifest,
+  type EvaluationHoldoutCandidateInput,
   type EvaluationConfusionMatrix,
   type EvaluationPrediction,
   type EvaluationPrimaryClass,
@@ -237,23 +248,22 @@ if (liveProvider && (corpusArgument !== null || sourceArgument !== null)) {
 }
 
 let liveCycle: EvaluationCycleManifest | null = null;
+let evaluationCycles: EvaluationCycleManifest[] = [];
+const cycleManifestTexts = new Map<string, string>();
 if (liveProvider) {
   const cycleDirectory = path.join(root, "evaluation/cycles");
   const cycleNames = (await readdir(cycleDirectory)).filter((name) =>
     /^v[1-9][0-9]*\.json$/u.test(name),
   );
-  const cycles: EvaluationCycleManifest[] = [];
   for (const name of cycleNames) {
-    cycles.push(
-      parseEvaluationCycleManifest(
-        JSON.parse(
-          await readFile(path.join(cycleDirectory, name), "utf8"),
-        ) as unknown,
-      ),
-    );
+    const text = await readFile(path.join(cycleDirectory, name), "utf8");
+    const manifest = parseEvaluationCycleManifest(JSON.parse(text) as unknown);
+    cycleManifestTexts.set(manifest.cycleId, text);
+    evaluationCycles.push(manifest);
   }
-  validateEvaluationCycleSet(cycles);
-  liveCycle = cycles.find((entry) => entry.cycleId === cycleIdArgument) ?? null;
+  validateEvaluationCycleSet(evaluationCycles);
+  liveCycle =
+    evaluationCycles.find((entry) => entry.cycleId === cycleIdArgument) ?? null;
   if (liveCycle === null) {
     throw new Error(
       `Live evaluation blocked: unknown evaluation cycle ${cycleIdArgument}`,
@@ -262,6 +272,7 @@ if (liveProvider) {
   if (mode === "benchmark") {
     assertEvaluationDevelopmentMayRun(liveCycle);
   } else if (
+    liveCycle.status === "HOLDOUT_CLAIMED" ||
     liveCycle.status === "OPENED_FAILED" ||
     liveCycle.status === "OPENED_PASSED" ||
     liveCycle.holdoutOpening !== null
@@ -276,6 +287,52 @@ if (liveProvider) {
     );
   }
 }
+
+const persistLiveCycleTransition = async (
+  updated: EvaluationCycleManifest,
+  transition: string,
+): Promise<void> => {
+  if (liveCycle === null || updated.cycleId !== liveCycle.cycleId) {
+    throw new Error("Live cycle transition does not match the active cycle");
+  }
+  const expectedText = cycleManifestTexts.get(liveCycle.cycleId);
+  if (expectedText === undefined) {
+    throw new Error("Live cycle transition is missing its original manifest");
+  }
+  const updatedCycles = evaluationCycles.map((candidate) =>
+    candidate.cycleId === updated.cycleId ? updated : candidate,
+  );
+  validateEvaluationCycleSet(updatedCycles);
+  const manifestPath = path.join(
+    root,
+    "evaluation/cycles",
+    `${updated.cycleId}.json`,
+  );
+  const temporaryPath = path.join(
+    root,
+    "evaluation/cycles",
+    `.${updated.cycleId}.json.${transition}-${process.pid}`,
+  );
+  let renamed = false;
+  try {
+    const updatedText = serializeEvaluationCycleManifest(updated);
+    await writeFile(temporaryPath, updatedText, { flag: "wx" });
+    if ((await readFile(manifestPath, "utf8")) !== expectedText) {
+      throw new Error(
+        `${updated.cycleId} manifest changed during ${transition}`,
+      );
+    }
+    await rename(temporaryPath, manifestPath);
+    renamed = true;
+    cycleManifestTexts.set(updated.cycleId, updatedText);
+    evaluationCycles = updatedCycles;
+    liveCycle = updated;
+  } finally {
+    if (!renamed) {
+      await unlink(temporaryPath).catch(() => undefined);
+    }
+  }
+};
 
 if (provider === "openai") {
   const envPath = path.join(root, ".env");
@@ -544,8 +601,9 @@ const liveOutputPath =
   liveCycle === null
     ? null
     : path.join(root, "evaluation/reports", liveReportName(mode));
+let holdoutRuntimeInput: EvaluationHoldoutCandidateInput | null = null;
 if (liveCycle !== null && mode === "holdout") {
-  assertEvaluationHoldoutMayOpen(liveCycle, {
+  holdoutRuntimeInput = {
     corpusSha256: sha256(goldText),
     sourceSha256: sha256(sourceText),
     provider,
@@ -553,7 +611,8 @@ if (liveCycle !== null && mode === "holdout") {
     modelConfigId: classifier.modelConfigId,
     promptVersion: CLASSIFICATION_PROMPT_VERSION,
     promptHash: sha256(CLASSIFICATION_SYSTEM_PROMPT),
-  });
+  };
+  assertEvaluationHoldoutMayOpen(liveCycle, holdoutRuntimeInput);
   const candidate = liveCycle.candidate;
   if (candidate === null) {
     throw new Error("Holdout blocked: frozen candidate is missing");
@@ -635,6 +694,15 @@ if (liveOutputPath !== null) {
       { cause: error },
     );
   }
+}
+if (liveCycle !== null && mode === "holdout") {
+  if (holdoutRuntimeInput === null) {
+    throw new Error("Holdout runtime configuration is missing");
+  }
+  await persistLiveCycleTransition(
+    claimEvaluationHoldout(liveCycle, holdoutRuntimeInput),
+    "claim-holdout",
+  );
 }
 const repository = new MemoryRepository();
 const predictions = new Map<number, PrimaryPrediction>();
@@ -1284,12 +1352,35 @@ if (liveCycle === null) {
     throw new Error("Live report reservation is invalid");
   }
   await writeFile(reportPath, reportText, { encoding: "utf8", flag: "wx" });
+  if (mode === "holdout") {
+    if (holdoutRuntimeInput === null) {
+      throw new Error("Holdout runtime configuration is missing");
+    }
+    await persistLiveCycleTransition(
+      recordEvaluationHoldoutResult(liveCycle, {
+        ...holdoutRuntimeInput,
+        cycleId: liveCycle.cycleId,
+        mode: report.mode,
+        split: report.split,
+        rows: report.rows,
+        terminalRuns: report.terminalRuns,
+        activatedDecisions: report.activatedDecisions,
+        passed: report.passed,
+        report: {
+          path: path.relative(root, reportPath),
+          sha256: sha256(reportText),
+        },
+      }),
+      "record-holdout",
+    );
+  }
   await unlink(liveReservationPath);
 }
 console.log(
   JSON.stringify(
     {
       reportPath: path.relative(root, reportPath),
+      ...(liveCycle === null ? {} : { cycleStatus: liveCycle.status }),
       rows: report.rows,
       terminalRuns: report.terminalRuns,
       macroF1: report.macroF1,

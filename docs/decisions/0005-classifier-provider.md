@@ -101,6 +101,14 @@ becoming candidate evidence. A separate atomic transition freezes only a
 passing live development report for the current compatibility set and rejects
 fixture, failed, activated, stale, or repeated candidate selections.
 
+The one-time holdout has an explicit durable lifecycle. After all artifact and
+candidate checks, the evaluator atomically claims the cycle before its first
+provider request. Claimed cycles cannot reopen. A complete report atomically
+records either terminal pass or failure with its digest; interrupted claimed
+runs remain blocked, and an already-written report can be terminalized by a
+no-provider recovery command only after repeating all compatibility,
+completeness, and zero-activation checks.
+
 ## Measurements
 
 All model-selection reports exercise only the 69-row development split. The
