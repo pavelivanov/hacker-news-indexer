@@ -22,6 +22,7 @@
     { "path": "../packages/domain" },
     { "path": "../packages/ports" },
     { "path": "../packages/db" },
-    { "path": "../apps/api" }
+    { "path": "../apps/api" },
+    { "path": "../apps/worker" }
   ]
 }
