@@ -95,3 +95,16 @@ their extraction fields. Record a stable adjudicator ID, use method
 `bounded-disagreement-review`, and write a source-bounded rationale of at least
 20 characters without raw URLs. If a packet contains no rows, the response is
 an empty file.
+
+## Endgame decision rule
+
+Pre-registered 2026-08-30, before any calibration corpus was labeled.
+
+If the second calibration batch (Plan 009, Step 3) still fails to reach
+κ ≥ 0.75 on either primary class or material relevance, the project adopts the
+assist-only endpoint: `CLASSIFIER_ENABLED` remains false for automatic
+decisions, all classification output is restricted to mandatory human review
+(the existing behavior of `decision-router.v1` + the unpromoted-provider review
+gate), Plan 003R is closed as satisfied-at-assist-level, and Plan 007
+production deployment proceeds with the review-only classifier. No further
+annotation cycles are opened.
