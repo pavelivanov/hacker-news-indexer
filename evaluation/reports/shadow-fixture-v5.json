@@ -163,6 +163,7 @@
     "f1": 0.9189189189189189
   },
   "latencyMs": { "p50": 1, "p95": 1 },
+  "latencySampleCount": 98,
   "usage": {
     "accountingVersion": 2,
     "runs": 102,
