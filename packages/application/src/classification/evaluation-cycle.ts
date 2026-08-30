@@ -291,7 +291,9 @@ const expectedHoldoutIds = (
     .sort((left, right) => {
       const leftHash = sha256Text(`${salt}:${left}`);
       const rightHash = sha256Text(`${salt}:${right}`);
-      return leftHash.localeCompare(rightHash) || left - right;
+      return (
+        leftHash < rightHash ? -1 : leftHash > rightHash ? 1 : 0
+      ) || left - right;
     })
     .slice(0, count)
     .sort((left, right) => left - right);
