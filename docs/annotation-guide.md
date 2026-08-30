@@ -11,6 +11,144 @@ This guide defines the conservative, mutually exclusive primary decision applied
 
 `REJECTED` must not contain a Discovery or Expert note. `REVIEW` is not a low-effort fallback: its reason must be explicit and bounded.
 
+### Priority ordering when classes overlap
+
+- If a comment both names a tool and explains a mechanism, decide by its
+  principal retained value: name + fact a reader could not reconstruct →
+  `DISCOVERY`; durable explanation whose value survives even if you already
+  knew the name → `EXPERT_NOTE`.
+- If a comment is unusable _and_ the problem is content state (deleted, flagged,
+  unavailable) rather than absence of value, prefer `REVIEW` over `REJECTED`
+  only when the unavailability is the sole obstacle; otherwise `REJECTED`.
+- `REVIEW` never wins a tie against a confident `DISCOVERY` or `EXPERT_NOTE`;
+  it exists for genuine ambiguity or gate-triggered conditions, not hesitancy.
+
+### Worked examples: DISCOVERY
+
+All examples in this guide are invented paraphrases written for training; they
+are not corpus rows.
+
+1. Clear positive: "We open-sourced our WAL replay engine — it's called
+   Rustream, MIT licensed, and it cut our restore times from hours to
+   minutes." Names a project with an identifiable scope and retained fact.
+   Class: `DISCOVERY`, subject `PROJECT`, evidence origin `COMMENT`.
+2. Borderline-but-in: "Not many people know the pg_hint_plan extension also
+   works on the forked planners in PG16+." The subject is best known as a
+   tool, but the retained value is a capability fact of that named subject —
+   a feature-level identification. `DISCOVERY` with subject `FEATURE`, because
+   the deciding value is a nameable capability of a named subject, not a
+   reusable explanation of how something works.
+3. Near-miss (→ `EXPERT_NOTE`): "The reason Postgres got faster on read-only
+   replicas is that the visibility map skips hint-bit setting during scans."
+   No named subject is identified; the retained value is the mechanism
+   explanation itself. Deciding reason: durable explanation with no new
+   named thing → `EXPERT_NOTE` (`TECHNICAL_EXPLANATION`).
+
+### Worked examples: EXPERT_NOTE
+
+1. Clear positive: "Beware: if you set both `max.connections` and a pooler
+   front-end, the pooler's idle timeout silently wins and you'll see phantom
+   'server closed the connection' errors." A reusable implementation caveat
+   that survives out of context. Class: `EXPERT_NOTE`,
+   `IMPLEMENTATION_CAVEAT`.
+2. Borderline-but-in: "After two years running this stack on spot instances
+   I'd never again deploy it without a drain script in front of every
+   rollout." First-hand experience, opinion-flavored, but it retains an
+   operational prescription. Deciding reason: a concrete operational lesson,
+   not a bare preference → `EXPERT_NOTE` (`OPERATIONS`).
+3. Near-miss (→ `DISCOVERY`): "We solved exactly this with a small utility
+   called drainomatic — link in profile." The retained value is the named
+   tool, however briefly described. Deciding reason: principal value is the
+   name + existence of a subject → `DISCOVERY`, subject `TOOL`.
+
+### Worked examples: REJECTED
+
+1. Clear positive: "Politicians will never understand databases, lol." No
+   technical subject, no retained value. Class: `REJECTED`.
+2. Borderline-but-in: "This reminds me of the time my startup died because
+   our cofounder kept rewriting our schema." A first-hand anecdote, but it
+   carries no generalizable technical content — no named subject, no
+   mechanism, no reusable caveat. Deciding reason: personal narrative with
+   zero retained technical value → `REJECTED`, not `PRODUCT_EXPERIENCE`.
+3. Near-miss (→ `EXPERT_NOTE`): "We lost a weekend to this; the fix is to
+   disable the optimizer's parallel scans on tables under 1 GB." Looks like a
+   war story but retains a concrete, reusable fix. Deciding reason:
+   generalizable remedy survives the anecdote → `EXPERT_NOTE`
+   (`CORRECTION` or `IMPLEMENTATION_CAVEAT`).
+
+### Worked examples: REVIEW
+
+1. Clear positive: the comment text is present but grounds a security
+   recommendation ("just set this TLS flag to 'unsafe' and move on") — policy
+   gate demands human judgment. Class: `REVIEW`, reason: security
+   recommendation.
+2. Borderline-but-in: the selected comment reads "Deleted by author" and the
+   root title alone hints at a tool name. Deciding reason: content state is
+   unavailable and the only candidate evidence would be root-only, which
+   requires review → `REVIEW`, not `REJECTED`, because unavailability — not
+   lack of value — is the obstacle.
+3. Near-miss (→ `REJECTED`): the comment is fully present and coherent but is
+   a one-line joke about tabs versus spaces. Deciding reason: no gate
+   triggers and there is nothing to judge — hesitancy is not a review reason
+   → `REJECTED`.
+
+### Materiality boundary: MATERIAL vs NOT_MATERIAL
+
+Material relevance asks: stripped of its context, does this comment retain
+technical value worth indexing? Decide materiality before the primary class.
+
+- (a) Jokes that embed a real tool mention: `MATERIAL` if the joke still
+  communicates a usable fact about a named subject (e.g. a pun whose punchline
+  is that a specific library single-handedly fixed a specific failure mode).
+  `NOT_MATERIAL` if the tool name is ornamental — the joke would land equally
+  with any other name swapped in. The test: swap the name; if the retained
+  value collapses, it is material.
+- (b) First-hand war stories with no generalizable content: `NOT_MATERIAL`.
+  "We hit this at 3 a.m. and everything was on fire" retains an emotion, not
+  a fact. It becomes `MATERIAL` only if a cause, remedy, or tradeoff survives
+  extraction.
+- (c) News links with one-line commentary: `MATERIAL` only when the one line
+  adds a retained fact ("this is the first release with the new allocator").
+  A bare reaction ("huge if true", "about time") over a URL is
+  `NOT_MATERIAL`: the comment itself contributes nothing indexable beyond the
+  root story.
+- (d) Meta-commentary about HN itself: comment threads about HN culture,
+  voting, moderation, or the comment section are `NOT_MATERIAL` regardless of
+  wit, unless the comment is principally about a named technical subject that
+  happens to be HN-adjacent infrastructure.
+
+When genuinely torn, record `UNCERTAIN` with `AMBIGUOUS_CLASSIFICATION` — do
+not force a guess and do not use `UNCERTAIN` as a shortcut past the structural
+fields.
+
+### Fully worked end-to-end example
+
+Fabricated comment text (none of this is a corpus row):
+
+> "Been running the queueless scheduler from that tiny Nordic consultancy —
+> Skiplist, I think — for six months on our ingest cluster. One caveat: if
+> your consumers exceed the partition count the broker degrades to polling
+> instead of erroring, which looks like a slowdown, not a failure. Took us a
+> week to find."
+
+- `materialRelevance`: `MATERIAL` — a named subject plus a durable caveat
+  survive out of context.
+- Primary class: `EXPERT_NOTE`, note type `IMPLEMENTATION_CAVEAT`. Applying
+  the priority ordering: the subject name is hedged ("I think") and secondary;
+  the durable, hard-to-reconstruct content is the silent-degradation caveat,
+  which survives even if you already knew the name.
+- Subject (recorded separately): `Skiplist`, type `SERVICE` (remotely
+  operated scheduling capability), evidence origin `COMMENT` with span
+  "Skiplist" — hedged naming alone would not carry a Discovery, but the
+  subject reference is still recorded.
+- Evidence spans (UTF-16 offsets into `comment.plainText`): "Skiplist" for
+  the subject name; "if your consumers exceed the partition count the broker
+  degrades to polling instead of erroring" for the caveat; "six months on our
+  ingest cluster" for the first-hand grounding (`PRODUCT_EXPERIENCE`
+  secondary note).
+- No review reason triggered: no URL claims, no security/destructive advice,
+  no content-state problem.
+
 ## Evidence origins
 
 - `COMMENT`: every relevant claim and subject name is supported by validated spans in the selected comment.
@@ -95,3 +233,16 @@ their extraction fields. Record a stable adjudicator ID, use method
 `bounded-disagreement-review`, and write a source-bounded rationale of at least
 20 characters without raw URLs. If a packet contains no rows, the response is
 an empty file.
+
+## Endgame decision rule
+
+Pre-registered 2026-08-30, before any calibration corpus was labeled.
+
+If the second calibration batch (Plan 009, Step 3) still fails to reach
+κ ≥ 0.75 on either primary class or material relevance, the project adopts the
+assist-only endpoint: `CLASSIFIER_ENABLED` remains false for automatic
+decisions, all classification output is restricted to mandatory human review
+(the existing behavior of `decision-router.v1` + the unpromoted-provider review
+gate), Plan 003R is closed as satisfied-at-assist-level, and Plan 007
+production deployment proceeds with the review-only classifier. No further
+annotation cycles are opened.
