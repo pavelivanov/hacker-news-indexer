@@ -1,8 +1,11 @@
-import { readFile } from "node:fs/promises";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 
 import { describe, expect, it } from "vitest";
 
 import {
+  abandonEvaluationHoldoutClaim,
   assertEvaluationCycleArtifactsMatch,
   assertEvaluationDevelopmentMayRun,
   assertEvaluationHoldoutMayOpen,
@@ -13,7 +16,9 @@ import {
   recordEvaluationAnnotationFailure,
   recordEvaluationHoldoutResult,
   selectEvaluationCandidate,
+  serializeEvaluationCycleManifest,
   validateEvaluationCycleSet,
+  type EvaluationCycleManifest,
 } from "@hn-knowledge/application";
 
 const loadV1 = async () =>
@@ -22,6 +27,35 @@ const loadV1 = async () =>
   );
 
 const freshIds = Array.from({ length: 90 }, (_, index) => 50_000_000 + index);
+
+const annotatedV2 = (v1: EvaluationCycleManifest): EvaluationCycleManifest =>
+  parseEvaluationCycleManifest({
+    ...prepareEvaluationCycle({
+      cycleId: "v2",
+      source: {
+        path: "evaluation/source-v2.json",
+        sha256: "5".repeat(64),
+        commentIds: freshIds,
+      },
+      holdoutPath: "evaluation/holdout-v2.json",
+      priorManifests: [v1],
+    }).manifest,
+    status: "ANNOTATED",
+    annotations: {
+      annotatorA: {
+        path: "evaluation/annotations/annotator-a-v2.jsonl",
+        sha256: "a".repeat(64),
+      },
+      annotatorB: {
+        path: "evaluation/annotations/annotator-b-v2.jsonl",
+        sha256: "b".repeat(64),
+      },
+      gold: {
+        path: "evaluation/gold-v2.jsonl",
+        sha256: "c".repeat(64),
+      },
+    },
+  });
 
 describe("immutable evaluation cycles", () => {
   it("records the terminal failed state of the opened v1 holdout", async () => {
@@ -450,5 +484,171 @@ describe("immutable evaluation cycles", () => {
         report: input.developmentReport,
       }),
     ).toThrow(/reports must differ/u);
+  });
+
+  it("abandons a wedged holdout claim back to a re-claimable candidate", async () => {
+    const v1 = await loadV1();
+    const annotated = annotatedV2(v1);
+    const runtime = {
+      corpusSha256: "c".repeat(64),
+      sourceSha256: "5".repeat(64),
+      provider: "openai",
+      modelId: "gpt-5.6-sol",
+      modelConfigId: "openai:test",
+      promptVersion: "classification-prompt.v4",
+      promptHash: "d".repeat(64),
+    } as const;
+    const claimed = claimEvaluationHoldout(
+      selectEvaluationCandidate(annotated, {
+        ...runtime,
+        cycleId: "v2",
+        mode: "benchmark",
+        split: "development",
+        rows: 63,
+        terminalRuns: 63,
+        activatedDecisions: 0,
+        passed: true,
+        developmentReport: {
+          path: "evaluation/reports/benchmark-v2-openai-test-v4.json",
+          sha256: "e".repeat(64),
+        },
+      }),
+      runtime,
+    );
+    expect(claimed.status).toBe("HOLDOUT_CLAIMED");
+
+    const directory = await mkdtemp(path.join(tmpdir(), "hn-abandon-"));
+    const manifestPath = path.join(directory, "v2.json");
+    const markerPath = path.join(
+      directory,
+      "holdout-v2-openai-test-v5.json.attempt",
+    );
+    const manifestText = serializeEvaluationCycleManifest(claimed);
+    await writeFile(manifestPath, manifestText, "utf8");
+    await writeFile(markerPath, "stale attempt\n", "utf8");
+
+    const abandoned = await abandonEvaluationHoldoutClaim(claimed, {
+      manifestPath,
+      manifestText,
+      attemptMarkerPaths: [markerPath],
+      existingHoldoutReportPaths: [],
+      abandonedAt: "2026-08-30T00:00:00.000Z",
+      companionManifests: [v1],
+    });
+
+    expect(abandoned.manifest).toMatchObject({
+      cycleId: "v2",
+      status: "CANDIDATE_SELECTED",
+      claimAbandonedAt: "2026-08-30T00:00:00.000Z",
+      holdoutOpening: null,
+    });
+    expect(abandoned.removedAttemptMarkerPaths).toEqual([markerPath]);
+    await expect(readFile(markerPath, "utf8")).rejects.toThrow(/ENOENT/u);
+    expect(
+      parseEvaluationCycleManifest(
+        JSON.parse(await readFile(manifestPath, "utf8")) as unknown,
+      ),
+    ).toEqual(abandoned.manifest);
+    expect(() =>
+      validateEvaluationCycleSet([v1, abandoned.manifest]),
+    ).not.toThrow();
+
+    expect(() =>
+      assertEvaluationHoldoutMayOpen(abandoned.manifest, runtime),
+    ).not.toThrow();
+    const reclaimed = claimEvaluationHoldout(abandoned.manifest, runtime);
+    expect(reclaimed.status).toBe("HOLDOUT_CLAIMED");
+    expect(reclaimed.claimAbandonedAt).toBe("2026-08-30T00:00:00.000Z");
+    expect(() => validateEvaluationCycleSet([v1, reclaimed])).not.toThrow();
+  });
+
+  it("refuses to abandon a holdout claim unless every precondition holds", async () => {
+    const v1 = await loadV1();
+    const annotated = annotatedV2(v1);
+    const runtime = {
+      corpusSha256: "c".repeat(64),
+      sourceSha256: "5".repeat(64),
+      provider: "openai",
+      modelId: "gpt-5.6-sol",
+      modelConfigId: "openai:test",
+      promptVersion: "classification-prompt.v4",
+      promptHash: "d".repeat(64),
+    } as const;
+    const selected = selectEvaluationCandidate(annotated, {
+      ...runtime,
+      cycleId: "v2",
+      mode: "benchmark",
+      split: "development",
+      rows: 63,
+      terminalRuns: 63,
+      activatedDecisions: 0,
+      passed: true,
+      developmentReport: {
+        path: "evaluation/reports/benchmark-v2-openai-test-v4.json",
+        sha256: "e".repeat(64),
+      },
+    });
+    const claimed = claimEvaluationHoldout(selected, runtime);
+
+    const directory = await mkdtemp(path.join(tmpdir(), "hn-abandon-refuse-"));
+    const manifestPath = path.join(directory, "v2.json");
+    const markerPath = path.join(
+      directory,
+      "holdout-v2-openai-test-v5.json.attempt",
+    );
+    const manifestText = serializeEvaluationCycleManifest(claimed);
+    await writeFile(manifestPath, manifestText, "utf8");
+    await writeFile(markerPath, "stale attempt\n", "utf8");
+
+    const input = {
+      manifestPath,
+      manifestText,
+      attemptMarkerPaths: [markerPath],
+      abandonedAt: "2026-08-30T00:00:00.000Z",
+    } as const;
+
+    await expect(
+      abandonEvaluationHoldoutClaim(claimed, {
+        ...input,
+        existingHoldoutReportPaths: [
+          path.join(directory, "holdout-v2-openai-test-v5.json"),
+        ],
+      }),
+    ).rejects.toThrow(/holdout report already exists/u);
+    await expect(
+      abandonEvaluationHoldoutClaim(claimed, {
+        ...input,
+        attemptMarkerPaths: [
+          path.join(directory, "holdout-v2-missing-v5.json.attempt"),
+        ],
+        existingHoldoutReportPaths: [],
+      }),
+    ).rejects.toThrow(/attempt marker is missing/u);
+    await expect(
+      abandonEvaluationHoldoutClaim(claimed, {
+        ...input,
+        attemptMarkerPaths: [],
+        existingHoldoutReportPaths: [],
+      }),
+    ).rejects.toThrow(/attempt marker is missing/u);
+    await expect(
+      abandonEvaluationHoldoutClaim(claimed, {
+        ...input,
+        existingHoldoutReportPaths: [],
+        abandonedAt: "   ",
+      }),
+    ).rejects.toThrow(/claimAbandonedAt/u);
+
+    for (const refusal of [annotated, selected, v1]) {
+      await expect(
+        abandonEvaluationHoldoutClaim(refusal, {
+          ...input,
+          existingHoldoutReportPaths: [],
+        }),
+      ).rejects.toThrow(/requires HOLDOUT_CLAIMED/u);
+    }
+
+    expect(await readFile(manifestPath, "utf8")).toBe(manifestText);
+    expect(await readFile(markerPath, "utf8")).toBe("stale attempt\n");
   });
 });
