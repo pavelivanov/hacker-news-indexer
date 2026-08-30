@@ -117,6 +117,28 @@ technical value worth indexing? Decide materiality before the primary class.
   wit, unless the comment is principally about a named technical subject that
   happens to be HN-adjacent infrastructure.
 
+Calibration clarification (2026-08-31): a named technical subject does not
+make adjacent legal, political, moral, or consumer commentary material. After
+removing the surrounding advocacy or emotion, the selected comment must still
+add a concrete reusable technical element: a relationship, effect, constraint,
+observed outcome, operational consequence, or bounded remedy. Do not infer a
+technical consequence merely because one would make the comment useful.
+
+- A terse correction may be `MATERIAL` without explaining the full mechanism
+  when it states a specific, independently checkable technical relationship or
+  counterfact. Bare contradiction, ridicule, or unsupported evaluation is
+  `NOT_MATERIAL`.
+- An analogy inside advocacy is `MATERIAL` only when the comparison itself maps
+  technical processes, properties, constraints, or operational effects into a
+  checkable claim. Applying the same legal, political, or moral principle to
+  two technologies is insufficient.
+- A stated preference, conditional refusal, or hypothetical future reaction is
+  not `PRODUCT_EXPERIENCE` or an `IMPLEMENTATION_CAVEAT` without an observed
+  outcome or a concrete reusable design tradeoff.
+- Decide materiality before applying legal, medical, or security review gates.
+  A gate routes an otherwise material result to review; it does not upgrade
+  non-technical commentary into material content.
+
 When genuinely torn, record `UNCERTAIN` with `AMBIGUOUS_CLASSIFICATION` — do
 not force a guess and do not use `UNCERTAIN` as a shortcut past the structural
 fields.
@@ -180,6 +202,18 @@ Each subject mention, Discovery, and note records its own evidence origin. Evide
 - `OPERATIONS`: covers deployment, reliability, maintenance, or incident practice.
 - `COMPARISON`: contrasts technologies or approaches with reusable detail.
 - `GUIDE`: gives bounded procedural technical advice.
+
+`SECURITY` requires a concrete technical threat, vulnerability, control, risky
+behavior, or operational exposure. Sanctions, legal designation, political
+risk, or reputational risk to users or developers is not a security note
+without such a technical consequence.
+
+`CORRECTION` requires commenter-added counterevidence, a concrete counterfact,
+or a specific independently checkable technical relationship. A precise quoted
+premise followed only by an unsupported objection remains `GENERIC_OPINION`.
+
+`PRODUCT_EXPERIENCE` requires actual use plus a substantive observed outcome,
+constraint, or tradeoff; a preference or hypothetical response is not enough.
 
 ## Review reasons
 

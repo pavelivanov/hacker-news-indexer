@@ -18,8 +18,13 @@
   two-stage application router are implemented. Live evaluation is pinned to
   an annotated cycle and its frozen artifacts, and holdout opening has a
   durable claim/terminal lifecycle. V2 is terminal `ANNOTATION_FAILED` after
-  its independent passes missed both kappa gates. Separate calibration and a
-  fresh v3 cycle remain; no development evaluation was run.
+  its independent passes missed both kappa gates. Two excluded 31-row
+  calibration batches are complete; batch 2 passed with primary-class κ
+  `0.8896797153` and material-relevance κ `0.8697478992`, selecting the fresh
+  v3 path under the pre-registered rule. V3 cannot yet be captured: it must
+  start at Telegram message `33100` or later, and the channel had reached only
+  `33102` on 2026-08-31, short of the required 90-message window. No
+  development evaluation was run and classification remains disabled.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH
