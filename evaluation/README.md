@@ -2,7 +2,7 @@
 
 `gold-v1.jsonl` is the frozen, double-annotated evaluation set for the 98
 canonical selected comments in the Plan 002 seed corpus. Each non-empty line is
-one object matching `annotation-schema.json`.
+one object matching `evaluation/annotation-schema-v2.json`.
 
 The two annotation passes are independent and may not use the known aggregate
 totals to choose individual labels. The final row records both proposed primary
@@ -80,6 +80,8 @@ annotator identity and method, separate material-relevance and primary-class
 labels, exact source-reproducing evidence, grounded opaque URL candidate IDs,
 canonical review/rejection codes, and class/content consistency. Do not update
 the cycle manifest until both passes are complete and independently validated.
+Annotator pass files must be stored under `evaluation/annotations/<cycle>/`
+(or `failed/<cycle>/`), never at the repository root.
 
 Once both files validate, compare them and prepare the adjudicator's bounded
 input:
