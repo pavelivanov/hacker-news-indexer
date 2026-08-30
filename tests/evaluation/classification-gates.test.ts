@@ -39,6 +39,7 @@ interface EvaluationReport {
   readonly schemaValidRate: number;
   readonly applicationValidRate: number;
   readonly latencyMs: { readonly p95: number };
+  readonly latencySampleCount?: number;
   readonly usage: {
     readonly accountingVersion?: number;
     readonly runs?: number;
@@ -427,5 +428,63 @@ describe("classification evaluation gates", () => {
         readFile(`evaluation/reports/${name}`, "utf8"),
       ).rejects.toMatchObject({ code: "ENOENT" });
     }
+  });
+});
+
+describe("latency aggregation over successful runs", () => {
+  interface LatencyRunInput {
+    readonly latencyMs: number | null;
+  }
+
+  // Mirrors the aggregation in scripts/evaluate-classifier.mts: failed runs
+  // record latencyMs null and must not deflate the acceptance percentiles.
+  const aggregate = (runInputs: readonly LatencyRunInput[]) => {
+    const latencies = runInputs
+      .filter((run) => run.latencyMs !== null)
+      .map((run) => run.latencyMs as number)
+      .sort((left, right) => left - right);
+    const percentile = (fraction: number): number =>
+      latencies[
+        Math.min(latencies.length - 1, Math.floor(latencies.length * fraction))
+      ] ?? 0;
+    return { latencies, percentile };
+  };
+
+  it("counts only successful runs and computes percentiles from successes only", () => {
+    const successLatencies = [
+      1_000, 2_000, 3_000, 4_000, 5_000, 6_000, 7_000, 7_500,
+    ];
+    const runInputs: readonly LatencyRunInput[] = [
+      ...successLatencies.map((latencyMs) => ({ latencyMs })),
+      { latencyMs: null },
+      { latencyMs: null },
+    ];
+
+    const { latencies, percentile } = aggregate(runInputs);
+
+    expect(latencies).toEqual(successLatencies);
+    expect(latencies.length).toBe(8); // report.latencySampleCount
+    expect(percentile(0.5)).toBe(5_000);
+    expect(percentile(0.95)).toBe(7_500);
+  });
+
+  it("returns 0 percentiles when every run failed", () => {
+    const { latencies, percentile } = aggregate([
+      { latencyMs: null },
+      { latencyMs: null },
+    ]);
+
+    expect(latencies).toEqual([]);
+    expect(percentile(0.5)).toBe(0);
+    expect(percentile(0.95)).toBe(0);
+  });
+
+  it("records latencySampleCount equal to the terminal run count for the all-success fixture replay", async () => {
+    const benchmark = await load("benchmark-fixture-v5.json");
+    const shadow = await load("shadow-fixture-v5.json");
+
+    expect(benchmark.latencySampleCount).toBe(benchmark.terminalRuns);
+    expect(shadow.latencySampleCount).toBe(shadow.terminalRuns);
+    expect(benchmark.latencyMs.p95).toBeGreaterThan(0);
   });
 });

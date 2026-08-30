@@ -997,7 +997,8 @@ const stableGoldExtractionMetrics = calculateExtractionMetrics(
     .map((entry) => entry.extraction),
 );
 const latencies = repository.runInputs
-  .map((run) => run.latencyMs ?? 0)
+  .filter((run) => run.latencyMs !== null)
+  .map((run) => run.latencyMs as number)
   .sort((left, right) => left - right);
 const percentile = (fraction: number): number =>
   latencies[
@@ -1372,6 +1373,7 @@ const report = {
   reviewRate: 1 - automaticCoverage,
   reviewRouting,
   latencyMs: { p50: percentile(0.5), p95: latencyP95 },
+  latencySampleCount: latencies.length,
   usage: {
     accountingVersion: 2,
     ...totalUsage,
