@@ -57,11 +57,7 @@ const annotatorAText = `${commentIds
 const annotatorBText = `${commentIds
   .map((commentId, index) =>
     JSON.stringify(
-      passRow(
-        "B",
-        commentId,
-        index % 2 === 0 ? "NOT_MATERIAL" : "UNCERTAIN",
-      ),
+      passRow("B", commentId, index % 2 === 0 ? "NOT_MATERIAL" : "UNCERTAIN"),
     ),
   )
   .join("\n")}\n`;
@@ -107,14 +103,20 @@ const prepareRoot = async (): Promise<{
     manifestText,
     annotatorAPath,
     annotatorBPath,
-    reportPath: path.join(root, "evaluation/reports/annotation-comparison-v1.json"),
+    reportPath: path.join(
+      root,
+      "evaluation/reports/annotation-comparison-v1.json",
+    ),
   };
 };
 
-const runComparison = (root: string, fixtures: {
-  readonly annotatorAPath: string;
-  readonly annotatorBPath: string;
-}) =>
+const runComparison = (
+  root: string,
+  fixtures: {
+    readonly annotatorAPath: string;
+    readonly annotatorBPath: string;
+  },
+) =>
   spawnSync(
     process.execPath,
     [
@@ -137,61 +139,53 @@ const manifestStatus = async (manifestPath: string): Promise<string> =>
     .status;
 
 describe("compare-annotation-passes crash recovery", () => {
-  it(
-    "records the annotation failure again over a crashed run's matching artifacts",
-    async () => {
-      const fixtures = await prepareRoot();
-      const first = runComparison(fixtures.root, fixtures);
-      expect(first.status).toBe(1);
-      expect(await manifestStatus(fixtures.manifestPath)).toBe(
-        "ANNOTATION_FAILED",
-      );
+  it("records the annotation failure again over a crashed run's matching artifacts", async () => {
+    const fixtures = await prepareRoot();
+    const first = runComparison(fixtures.root, fixtures);
+    expect(first.status).toBe(1);
+    expect(await manifestStatus(fixtures.manifestPath)).toBe(
+      "ANNOTATION_FAILED",
+    );
 
-      // Simulate the crash: the artifacts survived but the manifest rename
-      // never happened, so a rerun meets EEXIST on every artifact.
-      await writeFile(fixtures.manifestPath, fixtures.manifestText, "utf8");
-      const rerun = runComparison(fixtures.root, fixtures);
-      expect(rerun.status).toBe(1);
-      expect(rerun.stderr).not.toMatch(/EEXIST/u);
-      expect(await manifestStatus(fixtures.manifestPath)).toBe(
-        "ANNOTATION_FAILED",
-      );
-      expect(await readFile(fixtures.reportPath, "utf8")).toContain(
-        '"status": "ANNOTATION_FAILED"',
-      );
-      expect(await readFile(fixtures.annotatorAPath, "utf8")).toBe(
-        annotatorAText,
-      );
-      expect(await readFile(fixtures.annotatorBPath, "utf8")).toBe(
-        annotatorBText,
-      );
-    },
-    60_000,
-  );
+    // Simulate the crash: the artifacts survived but the manifest rename
+    // never happened, so a rerun meets EEXIST on every artifact.
+    await writeFile(fixtures.manifestPath, fixtures.manifestText, "utf8");
+    const rerun = runComparison(fixtures.root, fixtures);
+    expect(rerun.status).toBe(1);
+    expect(rerun.stderr).not.toMatch(/EEXIST/u);
+    expect(await manifestStatus(fixtures.manifestPath)).toBe(
+      "ANNOTATION_FAILED",
+    );
+    expect(await readFile(fixtures.reportPath, "utf8")).toContain(
+      '"status": "ANNOTATION_FAILED"',
+    );
+    expect(await readFile(fixtures.annotatorAPath, "utf8")).toBe(
+      annotatorAText,
+    );
+    expect(await readFile(fixtures.annotatorBPath, "utf8")).toBe(
+      annotatorBText,
+    );
+  }, 60_000);
 
-  it(
-    "replaces mismatched artifacts left by a crashed run",
-    async () => {
-      const fixtures = await prepareRoot();
-      const leftoverDirectory = path.join(
-        fixtures.root,
-        "evaluation/annotations/failed/v1",
-      );
-      const leftoverPath = path.join(leftoverDirectory, "annotator-a.jsonl");
-      await mkdir(leftoverDirectory, { recursive: true });
-      await writeFile(leftoverPath, "corrupted leftover\n", "utf8");
+  it("replaces mismatched artifacts left by a crashed run", async () => {
+    const fixtures = await prepareRoot();
+    const leftoverDirectory = path.join(
+      fixtures.root,
+      "evaluation/annotations/failed/v1",
+    );
+    const leftoverPath = path.join(leftoverDirectory, "annotator-a.jsonl");
+    await mkdir(leftoverDirectory, { recursive: true });
+    await writeFile(leftoverPath, "corrupted leftover\n", "utf8");
 
-      const result = runComparison(fixtures.root, fixtures);
+    const result = runComparison(fixtures.root, fixtures);
 
-      expect(result.status).toBe(1);
-      expect(result.stderr).not.toMatch(/EEXIST/u);
-      expect(await manifestStatus(fixtures.manifestPath)).toBe(
-        "ANNOTATION_FAILED",
-      );
-      expect(await readFile(leftoverPath, "utf8")).toBe(annotatorAText);
-    },
-    60_000,
-  );
+    expect(result.status).toBe(1);
+    expect(result.stderr).not.toMatch(/EEXIST/u);
+    expect(await manifestStatus(fixtures.manifestPath)).toBe(
+      "ANNOTATION_FAILED",
+    );
+    expect(await readFile(leftoverPath, "utf8")).toBe(annotatorAText);
+  }, 60_000);
 });
 
 afterAll(() => {

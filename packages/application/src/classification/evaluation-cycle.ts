@@ -940,11 +940,9 @@ export const abandonEvaluationHoldoutClaim = async (
   );
   let renamed = false;
   try {
-    await writeFile(
-      temporaryPath,
-      serializeEvaluationCycleManifest(updated),
-      { flag: "wx" },
-    );
+    await writeFile(temporaryPath, serializeEvaluationCycleManifest(updated), {
+      flag: "wx",
+    });
     if ((await readFile(input.manifestPath, "utf8")) !== input.manifestText) {
       throw new Error(
         `${manifest.cycleId} manifest changed during holdout abandonment`,
