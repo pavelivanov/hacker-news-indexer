@@ -8,6 +8,10 @@ interface EvaluationReport {
   readonly modelId: string;
   readonly promptVersion: string;
   readonly decisionRouterVersion?: string;
+  readonly hypothesis?: null | {
+    readonly path: string;
+    readonly sha256: string;
+  };
   readonly mode: string;
   readonly split: string;
   readonly rows: number;
@@ -106,11 +110,11 @@ const expectAcceptanceGates = (report: EvaluationReport): void => {
 
 describe("classification evaluation gates", () => {
   it("benchmarks only the development split", async () => {
-    const report = await load("benchmark-fixture-v4.json");
+    const report = await load("benchmark-fixture-v5.json");
 
     expect(report).toMatchObject({
       mode: "benchmark",
-      reportVersion: 4,
+      reportVersion: 5,
       promptVersion: "classification-prompt.v4",
       split: "development",
       rows: 69,
@@ -120,17 +124,18 @@ describe("classification evaluation gates", () => {
       automaticCoverage: 53 / 69,
       automaticAccuracy: 1,
       decisionRouterVersion: "decision-router.v1",
+      hypothesis: null,
       stableGold: { rows: 65, macroF1: 1 },
     });
     expectAcceptanceGates(report);
   });
 
   it("passes the frozen 98-comment shadow replay without publication", async () => {
-    const report = await load("shadow-fixture-v4.json");
+    const report = await load("shadow-fixture-v5.json");
 
     expect(report).toMatchObject({
       mode: "shadow",
-      reportVersion: 4,
+      reportVersion: 5,
       promptVersion: "classification-prompt.v4",
       split: "all",
       rows: 98,
@@ -140,6 +145,7 @@ describe("classification evaluation gates", () => {
       automaticAccuracy: 1,
       automaticCoverage: 78 / 98,
       decisionRouterVersion: "decision-router.v1",
+      hypothesis: null,
       stableGold: { rows: 88, macroF1: 1 },
     });
     expectAcceptanceGates(report);
@@ -158,7 +164,7 @@ describe("classification evaluation gates", () => {
 
   it("keeps reports free of prompts, source documents, and provider output", async () => {
     const text = await readFile(
-      "evaluation/reports/shadow-fixture-v4.json",
+      "evaluation/reports/shadow-fixture-v5.json",
       "utf8",
     );
 
@@ -170,7 +176,7 @@ describe("classification evaluation gates", () => {
   });
 
   it("records non-sensitive per-case diagnostics for every development row", async () => {
-    const report = await load("benchmark-fixture-v4.json");
+    const report = await load("benchmark-fixture-v5.json");
 
     expect(report.cases).toHaveLength(69);
     expect(new Set(report.cases.map((entry) => entry.commentId)).size).toBe(69);

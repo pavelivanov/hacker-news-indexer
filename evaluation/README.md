@@ -129,10 +129,11 @@ conditions even when the model omits them. This set has no quality claim yet:
 do not make a paid development run or select a candidate until v2 reaches
 `ANNOTATED`, and never use the opened v1 holdout to tune it.
 
-Evaluation report v4 records `decisionRouterVersion` and uses new `*-v4.json`
-filenames so a prompt-v4 development run cannot overwrite any historical paid
-v3 report. The checked-in v4 fixture reports exercise routing and pipeline
-safety only; they are not model-quality evidence.
+Evaluation report v4 introduced `decisionRouterVersion` for prompt v4. Report
+v5 adds the hash-pinned development-hypothesis reference and uses new
+`*-v5.json` filenames so the strengthened workflow cannot overwrite historical
+reports. The checked-in v5 fixture reports exercise routing and pipeline safety
+only; they are not model-quality evidence.
 
 ## Starting a fresh evaluation cycle
 
@@ -183,19 +184,45 @@ selection.
 Live development evaluation is cycle-aware and is blocked until the selected
 cycle is `ANNOTATED`. The evaluator derives the source and gold paths from the
 manifest, verifies both frozen digests and the exact development partition,
-and refuses `--corpus` or `--source` overrides. Live report names include the
-cycle ID, and an exclusive `.attempt` marker is written before the first
-provider request, so neither a concurrent retry nor a later cycle can overwrite
-or duplicate the exact attempt. A successful report removes its marker; a
-failed/interrupted run deliberately leaves the marker for review rather than
-silently retrying paid calls:
+and refuses `--corpus` or `--source` overrides. Every paid development run also
+requires one reviewed JSON hypothesis under `evaluation/hypotheses/`, matching
+`evaluation/evaluation-hypothesis-schema-v1.json`. The hypothesis pins the
+cycle, provider/model configuration, reasoning effort, prompt hash, router,
+expected result, and pass/fail decision rule. For example, the first v2 Sol-low
+hypothesis uses the following configuration fields plus concrete `statement`
+and `decisionRule` strings of at least 40 characters:
+
+```json
+{
+  "schemaVersion": "evaluation-hypothesis.v1",
+  "cycleId": "v2",
+  "mode": "benchmark",
+  "provider": "openai",
+  "modelId": "gpt-5.6-sol",
+  "modelConfigId": "openai-responses:gpt-5.6-sol:reasoning-low:max-output-8192:strict-json-schema:store-false:v1",
+  "reasoningEffort": "low",
+  "promptVersion": "classification-prompt.v4",
+  "promptHash": "2c4504a14bc62e55e08dcb54bc754e2016867e9b5ed7f20b4d2f75937dcf6487",
+  "decisionRouterVersion": "decision-router.v1",
+  "statement": "State the single expected quality and cost outcome for this configuration.",
+  "decisionRule": "State what happens after a pass or failure, without authorizing a parameter sweep."
+}
+```
+
+The evaluator verifies and hash-pins that file before reserving the attempt.
+Live report names include the cycle ID, and an exclusive `.attempt` marker is
+written before the first provider request, so neither a concurrent retry nor a
+later cycle can overwrite or duplicate the exact attempt. A successful report
+removes its marker; a failed/interrupted run deliberately leaves the marker for
+review rather than silently retrying paid calls:
 
 ```bash
 npm run eval -- \
   --cycle v2 \
   --provider openai \
   --model gpt-5.6-sol \
-  --reasoning-effort low
+  --reasoning-effort low \
+  --hypothesis evaluation/hypotheses/v2-sol-low.json
 ```
 
 If the report passes, review its metrics, cost, configuration, cycle, and
@@ -204,14 +231,15 @@ artifact hashes before freezing it exactly once:
 ```bash
 npm run evaluation:select-candidate -- \
   --cycle v2 \
-  --report evaluation/reports/benchmark-v2-openai-gpt-5-6-sol-low-v4.json
+  --report evaluation/reports/benchmark-v2-openai-gpt-5-6-sol-low-v5.json
 ```
 
-Candidate selection requires the current prompt/schema/router compatibility
-set, a passing live development report with zero activated decisions, the
-exact source/gold digests and row count, and an `ANNOTATED` manifest. It
-atomically advances the cycle to `CANDIDATE_SELECTED`; fixture reports, failed
-reports, path overrides, and repeated selection are rejected.
+Candidate selection revalidates the hypothesis file and digest. It also
+requires the current prompt/schema/router compatibility set, a passing live
+development report with zero activated decisions, the exact source/gold
+digests and row count, and an `ANNOTATED` manifest. It atomically advances the
+cycle to `CANDIDATE_SELECTED`; fixture reports, failed reports, changed or
+mismatched hypotheses, path overrides, and repeated selection are rejected.
 
 Live holdout mode requires the matching cycle explicitly:
 
@@ -238,14 +266,16 @@ without provider calls:
 ```bash
 npm run evaluation:finalize-holdout -- \
   --cycle v2 \
-  --report evaluation/reports/holdout-v2-openai-<frozen-model>-<effort>-v4.json
+  --report evaluation/reports/holdout-v2-openai-<frozen-model>-<effort>-v5.json
 ```
 
-Recovery verifies the report and hash-pinned development compatibility set,
-candidate configuration, cycle artifacts, full holdout row/run counts, and
-zero activated decisions before recording the terminal result. A claimed cycle
-without a complete valid report remains claimed for owner review. The evaluator
-also refuses a cycle whose holdout was already opened, lacks a frozen passing
+Recovery verifies the report, the unchanged development hypothesis, the
+hash-pinned development compatibility set, candidate configuration, cycle
+artifacts, full holdout row/run counts, and zero activated decisions before
+recording the terminal result. Holdout mode never accepts a new hypothesis; it
+inherits the selected development hypothesis. A claimed cycle without a
+complete valid report remains claimed for owner review. The evaluator also
+refuses a cycle whose holdout was already opened, lacks a frozen passing
 candidate, or differs in corpus, provider, model configuration, prompt version,
 or prompt hash. Cycle v1 is terminal `OPENED_FAILED`, so it cannot be run again
 even if a matching development report is present.
@@ -257,10 +287,10 @@ npm run evaluation:build-source
 npm run evaluation:validate-corpus
 ```
 
-The checked-in `benchmark-fixture-v3.json` and `shadow-fixture-v3.json` reports
-are deterministic gold replays through the production validation path. They
-prove pipeline behavior, not model quality. Historical v1/v2 reports remain
-for audit. The historical v1 live reports use only its 69-row development
+The latest checked-in fixture reports are deterministic gold replays through
+the production validation path. They prove pipeline behavior, not model
+quality. Historical report versions remain for audit. The historical v1 live
+reports use only its 69-row development
 split. New live reports use only the chosen cycle's manifest-pinned development
 split until a configuration is selected. The selected Sol-low/prompt-v3
 configuration failed its single 29-row v1 holdout; that opened split is never
@@ -337,8 +367,10 @@ Classification can remain disabled while running development evaluation.
 npm run eval -- \
   --cycle v2 \
   --provider openai \
+  --model gpt-5.6-sol \
   --reasoning-effort low \
-  --concurrency 2
+  --concurrency 2 \
+  --hypothesis evaluation/hypotheses/v2-sol-low.json
 ```
 
 For v2, the command sends only the manifest-pinned 63-row development split,

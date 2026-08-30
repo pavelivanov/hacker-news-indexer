@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evaluation-hypothesis.v1",
+  "title": "Paid development evaluation hypothesis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "cycleId",
+    "mode",
+    "provider",
+    "modelId",
+    "modelConfigId",
+    "reasoningEffort",
+    "promptVersion",
+    "promptHash",
+    "decisionRouterVersion",
+    "statement",
+    "decisionRule"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "evaluation-hypothesis.v1" },
+    "cycleId": { "type": "string", "pattern": "^v[1-9][0-9]*$" },
+    "mode": { "const": "benchmark" },
+    "provider": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "modelId": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "modelConfigId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "reasoningEffort": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "promptVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "promptHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "decisionRouterVersion": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "statement": { "type": "string", "minLength": 40, "maxLength": 2000 },
+    "decisionRule": {
+      "type": "string",
+      "minLength": 40,
+      "maxLength": 2000
+    }
+  }
+}

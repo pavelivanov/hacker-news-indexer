@@ -8,7 +8,10 @@ import {
   CLASSIFICATION_PROMPT_VERSION,
   CLASSIFICATION_SYSTEM_PROMPT,
   assertEvaluationDevelopmentMayRun,
+  assertEvaluationHypothesisMatches,
   parseEvaluationCycleManifest,
+  parseEvaluationHypothesis,
+  parseEvaluationHypothesisReference,
   selectEvaluationCandidate,
   serializeEvaluationCycleManifest,
   validateEvaluationCycleSet,
@@ -94,6 +97,27 @@ const booleanField = (name: string): boolean => {
   }
   return value;
 };
+const objectField = (name: string): Record<string, unknown> => {
+  const value = report[name];
+  if (value === null || Array.isArray(value) || typeof value !== "object") {
+    throw new TypeError(`Candidate report ${name} is invalid`);
+  }
+  return value as Record<string, unknown>;
+};
+
+const reportCycleId = stringField("cycleId");
+const reportProvider = stringField("provider");
+const reportModelId = stringField("modelId");
+const reportModelConfigId = stringField("modelConfigId");
+const reportPromptVersion = stringField("promptVersion");
+const reportPromptHash = stringField("promptHash");
+const configuration = objectField("configuration");
+const reasoningEffort = configuration["reasoningEffort"];
+if (typeof reasoningEffort !== "string" || reasoningEffort.trim() === "") {
+  throw new TypeError(
+    "Candidate report configuration.reasoningEffort is invalid",
+  );
+}
 
 if (
   report["reportVersion"] !== CLASSIFICATION_EVALUATION_REPORT_VERSION ||
@@ -107,8 +131,33 @@ if (
   );
 }
 
+const hypothesisReference = parseEvaluationHypothesisReference(
+  report["hypothesis"],
+);
+const hypothesisText = await readFile(
+  path.resolve(root, hypothesisReference.path),
+  "utf8",
+);
+if (sha256(hypothesisText) !== hypothesisReference.sha256) {
+  throw new Error("Candidate evaluation hypothesis digest has changed");
+}
+const hypothesis = parseEvaluationHypothesis(
+  JSON.parse(hypothesisText) as unknown,
+);
+assertEvaluationHypothesisMatches(hypothesis, {
+  cycleId: reportCycleId,
+  mode: "benchmark",
+  provider: reportProvider,
+  modelId: reportModelId,
+  modelConfigId: reportModelConfigId,
+  reasoningEffort,
+  promptVersion: reportPromptVersion,
+  promptHash: reportPromptHash,
+  decisionRouterVersion: CLASSIFICATION_DECISION_ROUTER_VERSION,
+});
+
 const updatedManifest = selectEvaluationCandidate(manifest, {
-  cycleId: stringField("cycleId"),
+  cycleId: reportCycleId,
   mode: stringField("mode"),
   split: stringField("split"),
   rows: numberField("rows"),
@@ -117,11 +166,11 @@ const updatedManifest = selectEvaluationCandidate(manifest, {
   passed: booleanField("passed"),
   corpusSha256: stringField("corpusSha256"),
   sourceSha256: stringField("sourceSha256"),
-  provider: stringField("provider"),
-  modelId: stringField("modelId"),
-  modelConfigId: stringField("modelConfigId"),
-  promptVersion: stringField("promptVersion"),
-  promptHash: stringField("promptHash"),
+  provider: reportProvider,
+  modelId: reportModelId,
+  modelConfigId: reportModelConfigId,
+  promptVersion: reportPromptVersion,
+  promptHash: reportPromptHash,
   developmentReport: {
     path: reportRelativePath,
     sha256: sha256(reportText),

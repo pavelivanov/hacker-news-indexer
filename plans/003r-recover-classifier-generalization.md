@@ -177,6 +177,15 @@ current compatibility set with zero activated decisions and atomically freezes
 its hash and exact configuration. These controls make Step 4 ready to execute
 after annotation; no provider call has been made.
 
+Every paid development attempt additionally requires a strict, reviewed,
+repository-contained hypothesis file. It is bound to one cycle, provider/model
+configuration, reasoning effort, prompt hash, router, expected outcome, and
+pass/fail decision rule. The evaluator hash-pins it in both the attempt marker
+and report before the first request. Candidate selection revalidates the file;
+holdout execution and interrupted-run recovery require the same development
+hypothesis and reject a replacement. Report v5 records this reference. No
+provider call was made while implementing or verifying this guardrail.
+
 ### Step 5: Open the new holdout once
 
 Record the exact candidate and passing development report in the v2 cycle
