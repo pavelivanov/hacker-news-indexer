@@ -1,0 +1,47 @@
+{
+  "schemaVersion": "calibration-comparison.v1",
+  "batchId": "calibration-v2",
+  "annotationNamespace": "v9002",
+  "excludedFromNumberedCycles": true,
+  "threshold": 0.75,
+  "sourceSha256": "be5e49f85798acb38ff00ab954f2d4a86fe36dba1e12498d08a1dcb42677e4fe",
+  "annotatorPasses": {
+    "A": {
+      "rows": 31,
+      "sha256": "b2bdcda427ef707976e69c1e2b6e9096e45bbe481faa38d12aa90d8db88af7b5"
+    },
+    "B": {
+      "rows": 31,
+      "sha256": "4c670ba3eec24637be5099ceff11f34379b3a5932ff0fdbd287f6b0e72f0ee8d"
+    }
+  },
+  "rows": 31,
+  "exactDecisionAgreementRows": 29,
+  "primaryClassKappa": 0.889679715302491,
+  "materialRelevanceKappa": 0.8697478991596638,
+  "passed": true,
+  "disagreements": [
+    {
+      "commentId": 49491266,
+      "materialRelevance": {
+        "annotatorA": "NOT_MATERIAL",
+        "annotatorB": "MATERIAL"
+      },
+      "primaryClass": {
+        "annotatorA": "REJECTED",
+        "annotatorB": "DISCOVERY"
+      }
+    },
+    {
+      "commentId": 49498543,
+      "materialRelevance": {
+        "annotatorA": "MATERIAL",
+        "annotatorB": "NOT_MATERIAL"
+      },
+      "primaryClass": {
+        "annotatorA": "EXPERT_NOTE",
+        "annotatorB": "REJECTED"
+      }
+    }
+  ]
+}

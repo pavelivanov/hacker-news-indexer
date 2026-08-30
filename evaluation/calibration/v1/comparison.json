@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "calibration-comparison.v1",
+  "batchId": "calibration-v1",
+  "annotationNamespace": "v9001",
+  "excludedFromNumberedCycles": true,
+  "threshold": 0.75,
+  "sourceSha256": "b0fb347aa36c167d848a3282574b95d7c24e09674dc800056bc644725ee42b34",
+  "annotatorPasses": {
+    "A": {
+      "rows": 31,
+      "sha256": "d07b4c308f37ca6c96693321348ed478dea7a14fa0d5d1a5fdd123e9032207fc"
+    },
+    "B": {
+      "rows": 31,
+      "sha256": "b1a27a35105d5928595e24c50b341a74cc6162b51e92cd825f74e70b1132376c"
+    }
+  },
+  "rows": 31,
+  "exactDecisionAgreementRows": 27,
+  "primaryClassKappa": 0.7606177606177605,
+  "materialRelevanceKappa": 0.7529880478087649,
+  "passed": true,
+  "disagreements": [
+    {
+      "commentId": 49487533,
+      "materialRelevance": {
+        "annotatorA": "MATERIAL",
+        "annotatorB": "NOT_MATERIAL"
+      },
+      "primaryClass": {
+        "annotatorA": "EXPERT_NOTE",
+        "annotatorB": "REJECTED"
+      }
+    },
+    {
+      "commentId": 49478826,
+      "materialRelevance": {
+        "annotatorA": "UNCERTAIN",
+        "annotatorB": "NOT_MATERIAL"
+      },
+      "primaryClass": {
+        "annotatorA": "EXPERT_NOTE",
+        "annotatorB": "REJECTED"
+      }
+    },
+    {
+      "commentId": 49478894,
+      "materialRelevance": {
+        "annotatorA": "MATERIAL",
+        "annotatorB": "NOT_MATERIAL"
+      },
+      "primaryClass": {
+        "annotatorA": "EXPERT_NOTE",
+        "annotatorB": "REJECTED"
+      }
+    },
+    {
+      "commentId": 49478431,
+      "materialRelevance": {
+        "annotatorA": "MATERIAL",
+        "annotatorB": "NOT_MATERIAL"
+      },
+      "primaryClass": {
+        "annotatorA": "EXPERT_NOTE",
+        "annotatorB": "REJECTED"
+      }
+    }
+  ]
+}

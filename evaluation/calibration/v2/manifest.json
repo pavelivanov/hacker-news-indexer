@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "calibration-manifest.v1",
+  "batchId": "calibration-v2",
+  "annotationNamespace": "v9002",
+  "excludedFromNumberedCycles": true,
+  "mayNeverEnterEvaluationCycle": true,
+  "guide": {
+    "path": "docs/annotation-guide.md",
+    "sha256": "86f473506da2ab69a293590f725b80f053b73c47095365e9098ef9c692870e52"
+  },
+  "capture": {
+    "path": "evaluation/calibration/capture-33010-33099",
+    "transportMessageWindow": {
+      "minId": 33010,
+      "maxId": 33099
+    },
+    "selectedMessageWindow": {
+      "minId": 33069,
+      "maxId": 33099
+    },
+    "ignoredPrefixMessageWindow": {
+      "minId": 33010,
+      "maxId": 33037
+    }
+  },
+  "source": {
+    "path": "evaluation/calibration/v2/source.json",
+    "sha256": "be5e49f85798acb38ff00ab954f2d4a86fe36dba1e12498d08a1dcb42677e4fe",
+    "rows": 31,
+    "commentIds": [
+      49478976, 49480314, 49480843, 49480844, 49481495, 49481561, 49484021,
+      49486157, 49486515, 49486734, 49489147, 49490252, 49490290, 49490424,
+      49491170, 49491266, 49491920, 49492356, 49492669, 49492800, 49493784,
+      49494444, 49494491, 49494983, 49495123, 49496239, 49498447, 49498543,
+      49500040, 49500331, 49500466
+    ]
+  },
+  "packets": [
+    {
+      "annotatorId": "A",
+      "path": "packets/annotator-a.jsonl",
+      "rows": 31,
+      "sha256": "99c03c6e0ab68c176d45e2d74f207c47f16118037d2071567ad0b5e3fa00801b"
+    },
+    {
+      "annotatorId": "B",
+      "path": "packets/annotator-b.jsonl",
+      "rows": 31,
+      "sha256": "79133d12b68a52c672da2a30cb87b1358f0e282e83c02183c6835a9979b7aa0d"
+    }
+  ],
+  "includesHoldoutAssignment": false,
+  "includesModelPredictions": false
+}
