@@ -1,4 +1,6 @@
 import { createHash } from "node:crypto";
+import { readFile, rename, stat, unlink, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 import { MINIMUM_ANNOTATION_COHENS_KAPPA } from "./annotation-packet.js";
 
@@ -64,6 +66,7 @@ export interface EvaluationCycleManifest {
     readonly report: EvaluationFileDigest;
     readonly passed: boolean;
   };
+  readonly claimAbandonedAt?: string;
 }
 
 export interface EvaluationHoldoutFile {
@@ -153,6 +156,18 @@ const STATUSES = new Set<EvaluationCycleStatus>([
 const fail = (message: string): never => {
   throw new TypeError(message);
 };
+
+const MANIFEST_KEYS = [
+  "schemaVersion",
+  "cycleId",
+  "status",
+  "source",
+  "split",
+  "annotations",
+  "annotationFailure",
+  "candidate",
+  "holdoutOpening",
+] as const;
 
 const object = (value: unknown, location: string): Record<string, unknown> => {
   if (value === null || Array.isArray(value) || typeof value !== "object") {
@@ -297,6 +312,17 @@ const expectedHoldoutIds = (
     .sort((left, right) => left - right);
 
 const validateManifest = (manifest: EvaluationCycleManifest): void => {
+  if (
+    manifest.claimAbandonedAt !== undefined &&
+    manifest.status !== "CANDIDATE_SELECTED" &&
+    manifest.status !== "HOLDOUT_CLAIMED" &&
+    manifest.status !== "OPENED_FAILED" &&
+    manifest.status !== "OPENED_PASSED"
+  ) {
+    fail(
+      `${manifest.cycleId} claim abandonment requires a holdout-stage status`,
+    );
+  }
   const sourceIds = manifest.source.commentIds;
   if (sourceIds.length < MINIMUM_EVALUATION_CYCLE_ROWS) {
     fail(
@@ -854,25 +880,104 @@ export const recordEvaluationHoldoutResult = (
   return updated;
 };
 
+export interface AbandonEvaluationHoldoutClaimInput {
+  readonly manifestPath: string;
+  readonly manifestText: string;
+  readonly attemptMarkerPaths: readonly string[];
+  readonly existingHoldoutReportPaths: readonly string[];
+  readonly abandonedAt: string;
+  readonly companionManifests?: readonly EvaluationCycleManifest[];
+}
+
+export interface AbandonedEvaluationHoldoutClaim {
+  readonly manifest: EvaluationCycleManifest;
+  readonly removedAttemptMarkerPaths: readonly string[];
+}
+
+export const abandonEvaluationHoldoutClaim = async (
+  manifest: EvaluationCycleManifest,
+  input: AbandonEvaluationHoldoutClaimInput,
+): Promise<AbandonedEvaluationHoldoutClaim> => {
+  if (manifest.status !== "HOLDOUT_CLAIMED" || manifest.candidate === null) {
+    fail(`${manifest.cycleId} claim abandonment requires HOLDOUT_CLAIMED`);
+  }
+  if (input.existingHoldoutReportPaths.length > 0) {
+    fail(`${manifest.cycleId} holdout report already exists`);
+  }
+  if (input.attemptMarkerPaths.length === 0) {
+    fail(`${manifest.cycleId} stale holdout attempt marker is missing`);
+  }
+  const abandonedAt = nonEmptyString(
+    input.abandonedAt,
+    "claimAbandonedAt.abandonedAt",
+  );
+  const existingMarkers: string[] = [];
+  for (const markerPath of input.attemptMarkerPaths) {
+    try {
+      await stat(markerPath);
+    } catch {
+      fail(`${manifest.cycleId} stale holdout attempt marker is missing`);
+    }
+    existingMarkers.push(markerPath);
+  }
+  const updated: EvaluationCycleManifest = {
+    ...manifest,
+    status: "CANDIDATE_SELECTED",
+    claimAbandonedAt: abandonedAt,
+  };
+  validateManifest(updated);
+  if (input.companionManifests !== undefined) {
+    validateEvaluationCycleSet([...input.companionManifests, updated]);
+  }
+
+  const directory = path.dirname(input.manifestPath);
+  const temporaryPath = path.join(
+    directory,
+    `.${manifest.cycleId}.json.abandon-holdout-${process.pid}`,
+  );
+  let renamed = false;
+  try {
+    await writeFile(
+      temporaryPath,
+      serializeEvaluationCycleManifest(updated),
+      { flag: "wx" },
+    );
+    if ((await readFile(input.manifestPath, "utf8")) !== input.manifestText) {
+      throw new Error(
+        `${manifest.cycleId} manifest changed during holdout abandonment`,
+      );
+    }
+    await rename(temporaryPath, input.manifestPath);
+    renamed = true;
+  } finally {
+    if (!renamed) {
+      await unlink(temporaryPath).catch(() => undefined);
+    }
+  }
+  for (const markerPath of existingMarkers) {
+    await unlink(markerPath);
+  }
+  return {
+    manifest: updated,
+    removedAttemptMarkerPaths: existingMarkers,
+  };
+};
+
 export const parseEvaluationCycleManifest = (
   value: unknown,
 ): EvaluationCycleManifest => {
   const item = object(value, "manifest");
-  exactKeys(
-    item,
-    [
-      "schemaVersion",
-      "cycleId",
-      "status",
-      "source",
-      "split",
-      "annotations",
-      "annotationFailure",
-      "candidate",
-      "holdoutOpening",
-    ],
-    "manifest",
-  );
+  const manifestItem: Record<string, unknown> = { ...item };
+  const claimAbandonedAtValue = manifestItem["claimAbandonedAt"];
+  delete manifestItem["claimAbandonedAt"];
+  exactKeys(manifestItem, [...MANIFEST_KEYS], "manifest");
+  let claimAbandonedAt: string | undefined;
+  if (claimAbandonedAtValue !== undefined) {
+    claimAbandonedAt = nonEmptyString(
+      claimAbandonedAtValue,
+      "manifest.claimAbandonedAt",
+    );
+  }
   if (item["schemaVersion"] !== EVALUATION_CYCLE_SCHEMA_VERSION) {
     fail("manifest.schemaVersion is unsupported");
   }
@@ -1083,5 +1188,6 @@ export const parseEvaluationCycleManifest = (
     annotationFailure,
     candidate,
     holdoutOpening,
+    ...(claimAbandonedAt === undefined ? {} : { claimAbandonedAt }),
   };
 };
