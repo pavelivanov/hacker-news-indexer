@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "evaluation-hypothesis.v1",
+  "cycleId": "v3",
+  "mode": "benchmark",
+  "provider": "openai",
+  "modelId": "gpt-5.6-sol",
+  "modelConfigId": "openai-responses:gpt-5.6-sol:reasoning-low:max-output-8192:strict-json-schema:store-false:v1",
+  "reasoningEffort": "low",
+  "promptVersion": "classification-prompt.v4",
+  "promptHash": "2c4504a14bc62e55e08dcb54bc754e2016867e9b5ed7f20b4d2f75937dcf6487",
+  "decisionRouterVersion": "decision-router.v1",
+  "statement": "DRAFT — owner review required before first provider call. Expected: on the freshly annotated v3 development split, the two-stage compatibility set (classification-prompt.v4 + decision-router.v1) meets every fixed development gate — grounding, schema validity, application validity, URL grounding, evidence-origin consistency, and latency p95 under 60s over successful runs — at Sol-low cost roughly in line with the v1 development runs, with the rewritten annotation guide raising gold-label quality enough for stable-gold metrics to be meaningful.",
+  "decisionRule": "DRAFT — owner review required before first provider call. If this single development run passes every fixed gate, freeze it exactly once as the v3 candidate via evaluation:select-candidate and proceed to the one-time authorized holdout opening. If it fails any gate, record the failure, do not sweep models, reasoning efforts, prompts, or thresholds, and adopt the assist-only endpoint per the v3 pre-registration in docs/annotation-guide.md."
+}
