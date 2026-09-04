@@ -6,9 +6,9 @@ read-only planning, staging changes, and production changes.
 
 ## Current execution state
 
-As of 2026-08-28:
+As of 2026-08-31:
 
-- The unqualified `railway` command resolves to authenticated CLI `5.45.5`.
+- The unqualified `railway` command resolves to authenticated CLI `5.45.10`.
   This closes the earlier incomplete-asdf-installation blocker; continue to
   reconfirm the version and linked context before every remote mutation.
 - The checkout is linked to `staging` (environment ID suffix `62dc`) in
@@ -73,8 +73,16 @@ As of 2026-08-28:
   signals; it passed at 22:41 UTC with service utilization below 1% and volume
   utilization below 4%. Railway native monitors, notification routing, and
   live synthetic failures remain unconfigured and require fresh approval.
-- Plan 003R is still in progress. Live classifier promotion and production
-  promotion remain blocked even if the infrastructure is otherwise healthy.
+- Plan 003R is still in progress, but the v3 pre-registration permits Plan 007
+  to proceed independently with classification explicitly excluded from the
+  initial production release: `CLASSIFIER_ENABLED=false`, no provider
+  credentials, zero model activation, and mandatory human review for any later
+  classifier-assisted output. The paid v3 evaluation remains separately gated.
+- The current worktree passed `npm run release:verify` twice on 2026-08-31:
+  236 unit tests, 42 evaluation tests, 45 integration tests, all evaluation,
+  subject, feed, export, migration-replay, image-inspection, and API/worker/
+  scheduler container smokes passed on both runs. The release image digest was
+  identical across the two builds.
 
 Do not replace these statements with successful deployment evidence until the
 corresponding command and manual check have actually passed.
@@ -86,7 +94,7 @@ Fresh operator approval is required before each unchecked boundary:
 1. [x] Create the Railway project and staging environment.
 2. [x] Apply the reviewed IaC graph to staging.
 3. [x] Configure the staging API token and generate its single domain.
-4. [ ] Enable Telegram or another live external dependency in staging.
+4. [x] Enable Telegram or another live external dependency in staging.
 5. [x] Create a staging backup/schedule or disposable restore resource and run
        a recovery or rollback drill.
 6. [x] Roll back and roll forward the staging API, then restart the worker for
@@ -101,12 +109,12 @@ non-API service, or widens secret scope.
 
 ## Intended resource graph
 
-| Resource    | Public     | Start command                                                 | Pre-deploy                  | Persistent state                                                 |
-| ----------- | ---------- | ------------------------------------------------------------- | --------------------------- | ---------------------------------------------------------------- |
-| `postgres`  | No         | Railway managed                                               | None                        | Railway database volume/backups                                  |
-| `api`       | Post-apply | `node --enable-source-maps apps/api/dist/server.js`           | `npm run db:migrate:deploy` | None                                                             |
-| `worker`    | No         | `node --enable-source-maps apps/worker/dist/index.js`         | None                        | Sealed in-memory Telegram session; legacy volume pending removal |
-| `scheduler` | No         | `node --enable-source-maps apps/worker/dist/schedule-once.js` | None                        | None                                                             |
+| Resource    | Public     | Start command                                                 | Pre-deploy                  | Persistent state                                                                           |
+| ----------- | ---------- | ------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------ |
+| `postgres`  | No         | Railway managed                                               | None                        | Railway database volume/backups                                                            |
+| `api`       | Post-apply | `node --enable-source-maps apps/api/dist/server.js`           | `npm run db:migrate:deploy` | None                                                                                       |
+| `worker`    | No         | `node --enable-source-maps apps/worker/dist/index.js`         | None                        | Sealed in-memory Telegram session when enabled; staging-only legacy volume pending removal |
+| `scheduler` | No         | `node --enable-source-maps apps/worker/dist/schedule-once.js` | None                        | None                                                                                       |
 
 All three application services build the repository root Dockerfile with the
 full npm-workspace context. Keep one replica of each initially. Only `api` gets
@@ -220,8 +228,33 @@ duplicated environment selector.
 
 The current Railway IaC beta plans resources only against the linked
 environment. The environment must be created and linked separately, and the
-current CLI's missing evaluator context means environment-derived configuration
-must not be committed until the upstream behavior is fixed and re-verified.
+CLI context must be verified after upgrades before relying on
+environment-derived configuration.
+
+### Redacted production IaC plan summary
+
+Status: **REVIEWED LOCALLY — NOT APPLIED**
+
+- Plan time: 2026-08-31 with Railway CLI `5.45.10`.
+- Project: `hacker-news-indexer`; target: existing empty `production`
+  environment.
+- Diff: four additions (`postgres`, `api`, `worker`, and `scheduler`), zero
+  updates, and zero destroys. No database or volume deletion/replacement was
+  proposed.
+- The obsolete Telegram-session volume is conditional on `staging`; production
+  neither creates nor mounts it. A staging-targeted regression plan retained
+  the volume, proving `ctx.environment` is now populated.
+- API is the only service with `npm run db:migrate:deploy`; worker and scheduler
+  have no pre-deploy command. All roles remain at one replica.
+- Initial production integration posture is fail-closed: Telegram disabled,
+  classifier disabled with no provider credentials, automatic export disabled,
+  and no public domain or application token added by the base graph.
+- Railway showed no monthly cost estimate. Apply, token/domain creation,
+  production source/session use, and post-deploy ingestion remain separately
+  approval-gated.
+- The CLI was restored to the `staging` link after planning. The staging plan
+  was not applied because it would remove sealed variables maintained outside
+  IaC.
 
 Do not paste raw runner JSON, variable values, domains containing credentials,
 or complete project/service IDs into this repository.
@@ -346,11 +379,11 @@ Production remains blocked until all boxes are evidenced:
 - [x] Staging soak covered at least one scheduled reconciliation cycle.
 - [x] Bounded HN live contract passed without content/secret logs.
 - [x] Bounded Telegram staging check passed without content/secret logs.
-- [ ] Plan 003R promotion gates are green or classification remains explicitly out of scope.
+- [x] Plan 003R promotion gates are green or classification remains explicitly out of scope.
 - [x] Backup restore drill passed with recorded RPO/RTO.
 - [x] API rollback and worker-volume persistence drills passed.
 - [ ] Synthetic readiness, retryable-job, invalid-schema, and aged-review alerts fired.
-- [ ] No unresolved P1 review/export issue exists.
+- [x] No unresolved P1 review/export issue exists.
 - [ ] Operator approved cost, service graph, production source/session use, and production deployment.
 
 After production approval, deploy the reviewed commit, watch bounded status and

@@ -31,11 +31,13 @@ const baseEnvironment = {
   LOG_LEVEL: "info",
 };
 
-export default defineRailway(() => {
+export default defineRailway((ctx) => {
   const database = postgres("postgres");
   // Retained in staging until the serialized-session rollout is verified and
-  // its separate, destructive removal is approved. New runtimes do not use it.
-  const telegramSession = volume("telegram-session");
+  // its separate, destructive removal is approved. Production never creates
+  // or mounts this obsolete volume.
+  const telegramSession =
+    ctx.environment === "staging" ? volume("telegram-session") : null;
 
   const api = service("api", {
     source: source(),
@@ -73,9 +75,13 @@ export default defineRailway(() => {
       TELEGRAM_ENABLED: "false",
       CLASSIFIER_ENABLED: "false",
     },
-    volumeMounts: {
-      "/data/telegram": telegramSession,
-    },
+    ...(telegramSession === null
+      ? {}
+      : {
+          volumeMounts: {
+            "/data/telegram": telegramSession,
+          },
+        }),
   });
 
   const scheduler = fn("scheduler", {
@@ -94,6 +100,12 @@ export default defineRailway(() => {
 
   return project("hacker-news-indexer", {
     environments: ["staging", "production"],
-    resources: [database, telegramSession, api, worker, scheduler],
+    resources: [
+      database,
+      ...(telegramSession === null ? [] : [telegramSession]),
+      api,
+      worker,
+      scheduler,
+    ],
   });
 });

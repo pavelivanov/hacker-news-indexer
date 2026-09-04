@@ -101,6 +101,16 @@ and generate the single API Railway domain with `railway domain` after each
 approved environment apply until the documented context behavior is fixed and
 re-verified.
 
+**Follow-up (2026-08-31):** Railway CLI `5.45.10` now supplies
+`ctx.environment` correctly. A production plan using an environment-conditional
+legacy volume produced four creates (PostgreSQL, API, worker, scheduler), zero
+updates, and zero destroys; it did not create or mount the staging-only
+Telegram volume. Re-targeting the same file to staging retained that volume,
+confirming the context fix. The staging plan also exposed destructive drift for
+sealed variables managed outside IaC, so it was not applied. Continue to plan
+each environment separately and never apply a staging plan that removes those
+variables.
+
 **Verify**: `railway config plan` shows only the intended creates/updates, no deletion/replacement of an existing database/volume, one migration path, and correct start commands. Save a redacted plan summary in the deploy runbook.
 
 ### Step 3: Configure variables and secret boundaries
@@ -298,7 +308,9 @@ Before production apply/deploy, require:
 
 - release verification green;
 - staging soak covering at least one scheduled reconciliation cycle;
-- all research acceptance thresholds green;
+- all research acceptance thresholds green, or classification explicitly
+  excluded from the release with `CLASSIFIER_ENABLED=false` and no provider
+  credentials;
 - successful backup/restore and rollback drills;
 - no unresolved P1 review/export issue;
 - operator approval of cost/service graph and production source/session use.

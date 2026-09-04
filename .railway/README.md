@@ -41,6 +41,11 @@ railway config apply
 - Destructive changes in non-interactive or agent sessions require `railway config apply --confirm-destructive` after reviewing the plan.
 - Services already managed by `railway.json` must be migrated before `.railway/railway.ts` can manage them.
 - Keep one `.railway` file for the whole project. A named `export const partial` (or `PARTIAL` / `const Partial`) is a last resort for separate repos that cannot share that file. Do not add it unless omit=delete across repos is a blocker.
+- The legacy `telegram-session` volume is conditional on `staging`; production
+  must not create or mount it. Always plan both environments after changing
+  environment-conditional resources.
+- Staging has sealed variables managed outside IaC. A staging plan that deletes
+  those variables is destructive drift and must never be applied.
 - Use `replicas` for scaling; advanced placement can still specify region names.
 - Use `group("Name", [resources])` to keep large projects organized on the Railway canvas.
 - Secrets imported from Railway are rendered as `preserve()` so existing values are retained without writing secret values to source. Use `railway config pull --omit-preserved-variables` for a smaller import.
