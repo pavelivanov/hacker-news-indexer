@@ -11,7 +11,7 @@
 
 ## Status
 
-- **Execution status**: IN PROGRESS — cycle locking, v1 terminal hashes,
+- **Execution status**: DONE — ASSIST-ONLY. Cycle locking, v1 terminal hashes,
   no-rerun enforcement, model non-activation, authenticated manual decision
   review, the fresh immutable v2 split, blind annotation validation, the
   dual-kappa comparison gate, fail-closed gold finalization, and the inactive
@@ -24,10 +24,16 @@
   v3 path under the pre-registered rule. On 2026-09-04, the public channel
   reached message `33189`; the exact `33100..33189` window captured 90
   occurrences resolving to 90 unique canonical comments. V3 is now
-  `SPLIT_FROZEN` with 63 development and 27 sealed holdout rows, and two blind,
-  differently ordered annotation packet sets are prepared. Independent passes
-  are pending. No development evaluation was run and classification remains
-  disabled.
+  frozen with 63 development and 27 sealed holdout rows. Both blind,
+  differently ordered annotation passes validated with distinct hashes, but
+  primary-class kappa was `0.7326543603`, below the fixed `0.75` gate;
+  material-relevance kappa was `0.7578870139`. The owner comparison command
+  atomically terminalized v3 as `ANNOTATION_FAILED`, preserved both passes and
+  the body-free report, and wrote no adjudication packet or gold corpus. Under
+  the v3 pre-registration, 003R closes as satisfied at the assist-only level:
+  no v4, adjudication, paid development run, candidate selection, or holdout
+  opening is permitted. `CLASSIFIER_ENABLED` remains false for automatic
+  decisions and every later classifier-assisted output requires human review.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH

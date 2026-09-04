@@ -6,7 +6,7 @@ read-only planning, staging changes, and production changes.
 
 ## Current execution state
 
-As of 2026-08-31:
+As of 2026-09-04:
 
 - The unqualified `railway` command resolves to authenticated CLI `5.45.10`.
   This closes the earlier incomplete-asdf-installation blocker; continue to
@@ -73,11 +73,14 @@ As of 2026-08-31:
   signals; it passed at 22:41 UTC with service utilization below 1% and volume
   utilization below 4%. Railway native monitors, notification routing, and
   live synthetic failures remain unconfigured and require fresh approval.
-- Plan 003R is still in progress, but the v3 pre-registration permits Plan 007
-  to proceed independently with classification explicitly excluded from the
+- Plan 003R has closed at the pre-registered assist-only endpoint. Both v3
+  annotation passes validated, but primary-class kappa was `0.7326543603`,
+  below the fixed `0.75` gate; v3 is terminal `ANNOTATION_FAILED`. No
+  adjudication, gold corpus, provider call, candidate, or holdout opening was
+  produced. Plan 007 proceeds with classification explicitly excluded from the
   initial production release: `CLASSIFIER_ENABLED=false`, no provider
   credentials, zero model activation, and mandatory human review for any later
-  classifier-assisted output. The paid v3 evaluation remains separately gated.
+  classifier-assisted output.
 - The current worktree passed `npm run release:verify` twice on 2026-08-31:
   236 unit tests, 42 evaluation tests, 45 integration tests, all evaluation,
   subject, feed, export, migration-replay, image-inspection, and API/worker/

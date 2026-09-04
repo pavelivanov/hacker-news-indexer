@@ -292,8 +292,11 @@ deployments, low resource utilization, and zero alerts. The bounded official
 HN API contract also passed through the production adapter without emitting
 source content. Telegram serialized-session validation, sealed staging setup,
 bounded ingestion, and restart persistence passed at 11:26 UTC on 2026-08-28.
-The next external-dependency gate is Plan 003R classifier shadow validation;
-live classification remains disabled.
+Plan 003R closed at the pre-registered assist-only endpoint after v3 failed the
+primary-class annotation agreement gate. Production therefore proceeds only
+with `CLASSIFIER_ENABLED=false`, no provider credentials, zero automatic model
+activation, and mandatory human review for any later classifier-assisted
+output.
 
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does

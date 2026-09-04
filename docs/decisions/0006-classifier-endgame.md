@@ -1,6 +1,6 @@
 # ADR 0006: Classifier endgame
 
-- Status: Fresh v3 split frozen; independent annotation pending
+- Status: Assist-only endpoint adopted after v3 annotation failure
 - Date: 2026-09-04
 
 ## Context
@@ -36,30 +36,41 @@ batch-2 passes.
 
 The source manifests, distinct pass hashes, body-free comparisons, and batch-1
 discussion memos are under `evaluation/calibration/`. The production annotation
-parser validated both passes before each comparison. Numbered-cycle validation
-continues to report only v1 `OPENED_FAILED` and v2 `ANNOTATION_FAILED`.
+parser validated both passes before each comparison.
+
+The fresh v3 cycle then used the non-overlapping Telegram window
+`33100..33189`, resolving 90 occurrences to 90 unique canonical comments and
+freezing a 63-row development / 27-row sealed-holdout split before annotation.
+Both blind pass files validated across all 90 rows and had distinct hashes.
+Their body-free comparison recorded 76 exact-decision agreement rows,
+primary-class kappa `0.7326543603`, and material-relevance kappa
+`0.7578870139`, against the unchanged `0.75` requirement. The primary-class
+gate failed, so the owner script sealed v3 as `ANNOTATION_FAILED`, preserved
+the pass files and comparison report, and wrote no adjudication packet or gold
+corpus. No provider call occurred and the holdout remained sealed.
 
 ## Decision
 
-Both batch-2 κ values exceed the pre-registered `0.75` threshold. Proceed with
-a fresh v3 cycle exactly as documented in `evaluation/README.md`; do not adopt
-the assist-only endpoint at this decision point. `CLASSIFIER_ENABLED` remains
-false, every model-derived decision remains inactive and mandatory-review, and
-no production quality claim exists until v3 reaches a terminal holdout result.
+Both batch-2 κ values exceeded the pre-registered `0.75` threshold, so the
+project proceeded with one fresh v3 cycle exactly as documented in
+`evaluation/README.md`.
 
 V3 uses the later non-overlapping Telegram window `33100..33189`. When message
 `33189` became public on 2026-09-04, the capture resolved 90 occurrences to 90
 unique canonical HN comments. The immutable split was frozen before annotation
-with 63 development and 27 sealed holdout rows. Cycle validation reports v1
-`OPENED_FAILED`, v2 `ANNOTATION_FAILED`, and v3 `SPLIT_FROZEN`; blind packet
-sets contain no holdout assignment or model predictions.
+with 63 development and 27 sealed holdout rows. Its independent annotation
+comparison then failed the primary-class gate at `0.7326543603`. This is the
+v3 decision point pre-registered in `docs/annotation-guide.md`: adopt the
+assist-only endpoint, open no v4, and make no paid v3 development or holdout
+call. `CLASSIFIER_ENABLED` remains false for automatic decisions, all
+classifier output is restricted to mandatory human review, and no production
+quality claim is made.
 
 ## Consequences
 
-Plan 003R and Plan 009 remain in progress at independent annotation. The next
-permitted action is two blind annotation passes using the rewritten guide;
-weakening the agreement gate, reusing calibration rows, or switching to the
-assist-only endpoint before the pre-registered v3 decision point would violate
-the rule. Plan 007 may continue only under the existing inactive,
-mandatory-human-review classifier posture until v3 decides the terminal
-provider outcome.
+Plans 003R and 009 are complete at the assist-only endpoint. Row-level v3
+disagreements must not be reconciled or used for further rubric, prompt, or
+model work, and no further annotation cycle may be opened. Plan 007 may
+continue independently with classification excluded from automatic decisions:
+`CLASSIFIER_ENABLED=false`, no provider credentials, zero model activation,
+and mandatory human review for any later classifier-assisted output.
