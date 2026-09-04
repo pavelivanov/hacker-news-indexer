@@ -21,10 +21,13 @@
   its independent passes missed both kappa gates. Two excluded 31-row
   calibration batches are complete; batch 2 passed with primary-class κ
   `0.8896797153` and material-relevance κ `0.8697478992`, selecting the fresh
-  v3 path under the pre-registered rule. V3 cannot yet be captured: it must
-  start at Telegram message `33100` or later, and the channel had reached only
-  `33102` on 2026-08-31, short of the required 90-message window. No
-  development evaluation was run and classification remains disabled.
+  v3 path under the pre-registered rule. On 2026-09-04, the public channel
+  reached message `33189`; the exact `33100..33189` window captured 90
+  occurrences resolving to 90 unique canonical comments. V3 is now
+  `SPLIT_FROZEN` with 63 development and 27 sealed holdout rows, and two blind,
+  differently ordered annotation packet sets are prepared. Independent passes
+  are pending. No development evaluation was run and classification remains
+  disabled.
 - **Priority**: P1
 - **Effort**: M
 - **Risk**: HIGH

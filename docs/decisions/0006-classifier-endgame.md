@@ -1,7 +1,7 @@
 # ADR 0006: Classifier endgame
 
-- Status: Fresh v3 path selected; terminal provider outcome pending source availability
-- Date: 2026-08-31
+- Status: Fresh v3 split frozen; independent annotation pending
+- Date: 2026-09-04
 
 ## Context
 
@@ -47,19 +47,19 @@ the assist-only endpoint at this decision point. `CLASSIFIER_ENABLED` remains
 false, every model-derived decision remains inactive and mandatory-review, and
 no production quality claim exists until v3 reaches a terminal holdout result.
 
-V3 must use a later non-overlapping Telegram window beginning at message
-`33100` or later. At the 2026-08-31 readiness check the public channel had
-reached only `33102`, so the required 90-message window did not yet exist. No
-cycle was opened because source freshness and minimum size could not be
-demonstrated. Execution resumes when a bounded window through at least message
-`33189` is publicly available.
+V3 uses the later non-overlapping Telegram window `33100..33189`. When message
+`33189` became public on 2026-09-04, the capture resolved 90 occurrences to 90
+unique canonical HN comments. The immutable split was frozen before annotation
+with 63 development and 27 sealed holdout rows. Cycle validation reports v1
+`OPENED_FAILED`, v2 `ANNOTATION_FAILED`, and v3 `SPLIT_FROZEN`; blind packet
+sets contain no holdout assignment or model predictions.
 
 ## Consequences
 
-Plan 003R and Plan 009 remain in progress at the fresh-source STOP condition.
-The next permitted action is the v3 capture; weakening the size/freshness gate,
-reusing calibration rows, opening an incomplete cycle, or switching to the
-assist-only endpoint despite the passing result would violate the
-pre-registered rule. Plan 007 may continue only under the existing inactive,
+Plan 003R and Plan 009 remain in progress at independent annotation. The next
+permitted action is two blind annotation passes using the rewritten guide;
+weakening the agreement gate, reusing calibration rows, or switching to the
+assist-only endpoint before the pre-registered v3 decision point would violate
+the rule. Plan 007 may continue only under the existing inactive,
 mandatory-human-review classifier posture until v3 decides the terminal
 provider outcome.

@@ -36,13 +36,13 @@ Generated on 2026-08-24 from `docs/telegram-hn-technical-knowledge-project-resea
 | 001 | Establish the project foundation and decision record | P1 | L | — | DONE |
 | 002 | Implement deterministic selection ingestion and HN resolution | P1 | L | 001 | DONE |
 | 003 | Implement grounded classification and the evaluation harness | P1 | L | 002 | BLOCKED (Sol prompt-v3 failed the single sealed holdout) |
-| 003R | Recover classifier generalization on a fresh evaluation cycle | P1 | M | 003 implementation | IN PROGRESS (calibration passed both κ gates; v3 awaits a 90-message public window starting at 33100+) |
+| 003R | Recover classifier generalization on a fresh evaluation cycle | P1 | M | 003 implementation | IN PROGRESS (v3 split frozen: 63 development/27 holdout; independent annotations pending) |
 | 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 implementation | DONE |
 | 005 | Implement the private knowledge-feed APIs and reconciliation | P1 | L | 004 | DONE |
 | 006 | Implement the FindThatProject export outbox | P2 | M | 004 | DONE |
-| 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | IN PROGRESS (Telegram staging passed; classifier shadow, live alerts, and production pending) |
+| 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | IN PROGRESS (release reverified; production four-create/no-destroy plan clean; live alerts and apply approval pending) |
 | 008 | Add the optional Vite/React reader and review UI | P3 | L | 005 | TODO |
-| 009 | Resolve the classifier endgame via rubric calibration with a pre-registered assist-only fallback | P1 | M | none | IN PROGRESS (Steps 1–3 complete; batch-2 κ passed; v3 blocked until the public channel provides 90 messages after calibration) |
+| 009 | Resolve the classifier endgame via rubric calibration with a pre-registered assist-only fallback | P1 | M | none | IN PROGRESS (Step 4: v3 split frozen; independent annotations pending) |
 | 010 | Fix four correctness defects in the classification core | P1 | M | none | DONE (branch advisor/010-correctness-core, reviewed) |
 | 011 | Make evaluation crash states recoverable | P2 | M | none (before first live holdout; see 009 Step 4) | DONE (branch advisor/011-crash-recovery, reviewed) |
 | 012 | Hygiene batch: dead fixtures, doc drift, root strays, @types/node, AGENTS.md | P2 | S | none | DONE (branch advisor/012-hygiene, reviewed) |

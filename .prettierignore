@@ -8,3 +8,10 @@ package-lock.json
 plans/
 docs/telegram-hn-technical-knowledge-project-research-plan.md
 .idea/
+evaluation/annotations/
+evaluation/captures/
+evaluation/cycles/
+evaluation/reports/
+evaluation/gold-v*.jsonl
+evaluation/holdout-v*.json
+evaluation/source-v*.json
