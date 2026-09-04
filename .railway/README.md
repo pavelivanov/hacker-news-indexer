@@ -44,8 +44,19 @@ railway config apply
 - The legacy `telegram-session` volume is conditional on `staging`; production
   must not create or mount it. Always plan both environments after changing
   environment-conditional resources.
+- Railway service names are project-global. Keep the established staging names
+  (`postgres`, `api`, `worker`, `scheduler`) and the production-specific names
+  (`postgres-production`, `api-production`, `worker-production`,
+  `scheduler-production`) distinct.
 - Staging has sealed variables managed outside IaC. A staging plan that deletes
   those variables is destructive drift and must never be applied.
+- `APP_API_TOKEN` is declared with `preserve()` so IaC never reads, creates, or
+  deletes its out-of-band value. Do not remove that marker while either
+  environment has an API token.
+- Railway CLI `5.49.1` may continue to preview the API/worker restart policy as
+  unset after applying it. Verify the latest deployment manifests show
+  `ON_FAILURE` with 10 retries; do not repeat applies solely to clear that
+  preview-normalization drift.
 - Use `replicas` for scaling; advanced placement can still specify region names.
 - Use `group("Name", [resources])` to keep large projects organized on the Railway canvas.
 - Secrets imported from Railway are rendered as `preserve()` so existing values are retained without writing secret values to source. Use `railway config pull --omit-preserved-variables` for a smaller import.

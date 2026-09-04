@@ -40,7 +40,7 @@ Generated on 2026-08-24 from `docs/telegram-hn-technical-knowledge-project-resea
 | 004 | Implement subjects, discoveries, notes, and human review | P1 | L | 003 implementation | DONE |
 | 005 | Implement the private knowledge-feed APIs and reconciliation | P1 | L | 004 | DONE |
 | 006 | Implement the FindThatProject export outbox | P2 | M | 004 | DONE |
-| 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | IN PROGRESS (review-only classifier fixed; production four-create/no-destroy plan clean; live alerts and apply approval pending) |
+| 007 | Harden and deploy the API, worker, and PostgreSQL on Railway | P1 | L | 005, 006 | IN PROGRESS (production base graph healthy and fail-closed smoke passed; token seal, live alerts, and bounded ingestion pending) |
 | 008 | Add the optional Vite/React reader and review UI | P3 | L | 005 | TODO |
 | 009 | Resolve the classifier endgame via rubric calibration with a pre-registered assist-only fallback | P1 | M | none | DONE (v3 annotation gate selected the pre-registered assist-only endpoint) |
 | 010 | Fix four correctness defects in the classification core | P1 | M | none | DONE (branch advisor/010-correctness-core, reviewed) |

@@ -111,6 +111,18 @@ sealed variables managed outside IaC, so it was not applied. Continue to plan
 each environment separately and never apply a staging plan that removes those
 variables.
 
+**Production follow-up (2026-09-04):** Railway CLI `5.49.1` rejected the first
+production change set before mutation because service names are project-global
+and the original names already belonged to staging. The environment remained
+empty. After explicit operator approval, IaC retained the staging names and
+used `postgres-production`, `api-production`, `worker-production`, and
+`scheduler-production` in production. The revised plan contained four creates,
+zero changes, and zero destroys and applied without diagnostics. A subsequent
+`preserve()` marker protects the out-of-band API token from future IaC deletion.
+The API and worker deployment manifests have the intended `ON_FAILURE` policy
+with 10 retries, although the IaC preview continues to normalize those two
+fields to unset; do not repeat applies for that preview-only drift.
+
 **Verify**: `railway config plan` shows only the intended creates/updates, no deletion/replacement of an existing database/volume, one migration path, and correct start commands. Save a redacted plan summary in the deploy runbook.
 
 ### Step 3: Configure variables and secret boundaries
@@ -321,6 +333,20 @@ Before production apply/deploy, require:
 Deploy with a release summary, watch bounded logs/status, run authenticated smoke tests, ingest a small bounded range, and verify metrics. Initial export remains manual and zero-false-positive gated.
 
 **Verify**: production API/worker/scheduler/PostgreSQL healthy, migrations applied once, bounded ingestion completes, no secret/log leaks, and release checklist is signed/dated in the deploy runbook.
+
+**Production base rollout (2026-09-04):** The four production services reached
+`SUCCESS`; PostgreSQL has one ready private volume, API/worker each have one
+running replica, and the cron scheduler is configured for `17 3 * * *`. The
+first API pre-deploy applied all nine migrations and the token-triggered
+redeploy found no pending migrations. One Railway API domain on port `8080`
+passed health, readiness, fail-closed unauthenticated metrics/API, and
+authenticated metrics-safety checks. Worker, scheduler, and PostgreSQL remain
+private. `TELEGRAM_ENABLED=false` and `CLASSIFIER_ENABLED=false`; no Telegram,
+classifier-provider, or export credential exists in production. Live
+ingestion/export and synthetic alerts were not run, as authorized. The API
+token is scoped correctly but still requires sealing in the Railway UI because
+the authenticated CLI/API and available browser session provide no seal
+mutation.
 
 ## Test plan
 

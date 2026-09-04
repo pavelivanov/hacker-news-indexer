@@ -3,6 +3,7 @@ import {
   fn,
   github,
   postgres,
+  preserve,
   project,
   service,
   volume,
@@ -32,14 +33,21 @@ const baseEnvironment = {
 };
 
 export default defineRailway((ctx) => {
-  const database = postgres("postgres");
+  // Railway service names are project-global even though each environment has
+  // isolated instances. Keep the established staging names while giving the
+  // separately managed production graph unique service identities.
+  const production = ctx.environment === "production";
+  const resourceName = (name: string) =>
+    production ? `${name}-production` : name;
+
+  const database = postgres(resourceName("postgres"));
   // Retained in staging until the serialized-session rollout is verified and
   // its separate, destructive removal is approved. Production never creates
   // or mounts this obsolete volume.
   const telegramSession =
     ctx.environment === "staging" ? volume("telegram-session") : null;
 
-  const api = service("api", {
+  const api = service(resourceName("api"), {
     source: source(),
     build,
     start: "node --enable-source-maps apps/api/dist/server.js",
@@ -55,11 +63,12 @@ export default defineRailway((ctx) => {
     env: {
       ...baseEnvironment,
       DATABASE_URL: database.env.DATABASE_URL,
+      APP_API_TOKEN: preserve(),
       APP_REVIEW_ACTOR_ID: "owner",
     },
   });
 
-  const worker = service("worker", {
+  const worker = service(resourceName("worker"), {
     source: source(),
     build,
     start: "node --enable-source-maps apps/worker/dist/index.js",
@@ -84,7 +93,7 @@ export default defineRailway((ctx) => {
         }),
   });
 
-  const scheduler = fn("scheduler", {
+  const scheduler = fn(resourceName("scheduler"), {
     source: source(),
     build,
     start: "node --enable-source-maps apps/worker/dist/schedule-once.js",
