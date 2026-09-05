@@ -60,6 +60,7 @@ const environmentSchema = z
     RAILWAY_REPLICA_ID: optionalString,
     RAILWAY_REPLICA_REGION: optionalString,
     RAILWAY_GIT_COMMIT_SHA: optionalString,
+    HOST: z.enum(["127.0.0.1", "0.0.0.0", "::1"]).default("0.0.0.0"),
     PORT: integer(3000, 1, 65_535),
     DATABASE_URL: z.preprocess(
       emptyToUndefined,

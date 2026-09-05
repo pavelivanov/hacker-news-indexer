@@ -15,3 +15,4 @@ evaluation/reports/
 evaluation/gold-v*.jsonl
 evaluation/holdout-v*.json
 evaluation/source-v*.json
+output/playwright/

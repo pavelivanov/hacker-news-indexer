@@ -24,6 +24,7 @@ export const REVIEW_REASON_CODES = [
   "LOW_CONFIDENCE",
   "AMBIGUOUS_CLASSIFICATION",
   "UNPROMOTED_MODEL_DECISION",
+  "MANUAL_DECISION_REVIEW",
 ] as const;
 
 export type ReviewReasonCode = (typeof REVIEW_REASON_CODES)[number];
@@ -143,6 +144,7 @@ const SCORES: Readonly<Record<ReviewReasonCode, number>> = {
   LOW_CONFIDENCE: 35,
   AMBIGUOUS_CLASSIFICATION: 30,
   UNPROMOTED_MODEL_DECISION: 25,
+  MANUAL_DECISION_REVIEW: 25,
 };
 
 const priorityFor = (score: number): ReviewPriority => {

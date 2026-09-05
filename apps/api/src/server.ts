@@ -8,7 +8,7 @@ const config = getConfig();
 const logger = createLogger(config, { component: "server", role: "api" });
 const server = serve({
   fetch: app.fetch,
-  hostname: "0.0.0.0",
+  hostname: config.HOST,
   port: config.PORT,
 });
 
@@ -16,7 +16,7 @@ logger.info(
   {
     config: redactConfig(config),
     event: "api_started",
-    host: "0.0.0.0",
+    host: config.HOST,
     port: config.PORT,
   },
   "API started",

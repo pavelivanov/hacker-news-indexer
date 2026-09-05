@@ -84,6 +84,7 @@ const compareRecords = (
 
 export const createKnowledgeReaderRepository = (
   client: PrismaClient,
+  normalizeRootBody: (html: string, documentId: string) => string,
 ): KnowledgeReaderRepository => ({
   async listPublishedContent(filter) {
     const limit = positiveLimit(filter.limit);
@@ -217,7 +218,21 @@ export const createKnowledgeReaderRepository = (
         select: { hnItemId: true, occurrenceId: true },
       }),
     ]);
-    const roots = new Map(rootItems.map((item) => [item.id, item] as const));
+    const roots = new Map(
+      rootItems.map(
+        (item) =>
+          [
+            item.id,
+            {
+              ...item,
+              evidenceText: normalizeRootBody(
+                item.textHtml ?? "",
+                `hn:item:${item.id}`,
+              ),
+            },
+          ] as const,
+      ),
+    );
     const occurrences = new Map<bigint, string[]>();
     for (const reference of references) {
       const values = occurrences.get(reference.hnItemId) ?? [];
@@ -265,7 +280,7 @@ export const createKnowledgeReaderRepository = (
             commentText: selectedComment.canonicalText,
             rootId: hnItemId(Number(selectedComment.rootId)),
             rootTitle: root.title ?? "",
-            rootText: root.textPlain ?? "",
+            rootText: root.evidenceText,
           }),
         )
         .filter((value): value is ReaderEvidenceRecord => value !== null);
@@ -331,7 +346,7 @@ export const createKnowledgeReaderRepository = (
             commentText: selected.canonicalText,
             rootId: hnItemId(Number(selected.rootId)),
             rootTitle: root.title ?? "",
-            rootText: root.textPlain ?? "",
+            rootText: root.evidenceText,
           }),
         )
         .filter((value): value is ReaderEvidenceRecord => value !== null);

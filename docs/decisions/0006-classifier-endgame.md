@@ -3,6 +3,12 @@
 - Status: Assist-only endpoint adopted after v3 annotation failure
 - Date: 2026-09-04
 
+On 2026-09-05 the owner superseded the mandatory-review restriction for private
+browsing with [ADR 0007](0007-classifier-results-feedback.md): classifier results
+may be viewed immediately and corrected optionally during use. The evaluation
+history and approved-reader/export rules below remain unchanged. This document
+records the earlier endgame decision and its evidence.
+
 ## Context
 
 Evaluation cycle v1 is terminal `OPENED_FAILED`, and v2 is terminal

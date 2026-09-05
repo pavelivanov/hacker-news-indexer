@@ -11,6 +11,7 @@ WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
 COPY apps/api/package.json apps/api/package.json
 COPY apps/worker/package.json apps/worker/package.json
+COPY apps/web/package.json apps/web/package.json
 COPY packages/config/package.json packages/config/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 COPY packages/domain/package.json packages/domain/package.json
@@ -25,6 +26,7 @@ COPY tsconfig.json tsconfig.base.json ./
 COPY apps apps
 COPY packages packages
 COPY tests/tsconfig.json tests/tsconfig.json
+COPY tests/fixtures/manual-review tests/fixtures/manual-review
 RUN npm run build
 
 FROM base AS runtime-dependencies
@@ -34,6 +36,7 @@ ENV NODE_ENV=production
 COPY package.json package-lock.json .npmrc ./
 COPY apps/api/package.json apps/api/package.json
 COPY apps/worker/package.json apps/worker/package.json
+COPY apps/web/package.json apps/web/package.json
 COPY packages/config/package.json packages/config/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 COPY packages/domain/package.json packages/domain/package.json

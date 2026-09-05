@@ -15,18 +15,18 @@ jobs:
       postgres:
         image: postgres:17-bookworm
         env:
-          POSTGRES_DB: hn_knowledge
+          POSTGRES_DB: hn_manual_review_test
           POSTGRES_USER: hn_knowledge
           POSTGRES_PASSWORD: hn_knowledge
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U hn_knowledge -d hn_knowledge"
+          --health-cmd "pg_isready -U hn_knowledge -d hn_manual_review_test"
           --health-interval 2s
           --health-timeout 2s
           --health-retries 20
     env:
-      DATABASE_URL: postgresql://hn_knowledge:hn_knowledge@127.0.0.1:5432/hn_knowledge
+      DATABASE_URL: postgresql://hn_knowledge:hn_knowledge@127.0.0.1:5432/hn_manual_review_test
       NODE_ENV: test
 
     steps:
@@ -60,9 +60,20 @@ jobs:
 
       - name: Verify PostgreSQL integration
         run: |
+          npm run manual-review:check-test-target
           npm run db:test:wait
           npm run db:migrate:deploy
           npm run test:integration
+
+      - name: Verify local contracts
+        run: npm run test:contract -- --dry-run
+
+      - name: Verify browser components and real review workflow
+        run: |
+          npm run test:web
+          npx playwright install --with-deps chromium
+          npm run test:e2e:web
+          npm run test:a11y:web
 
       - name: Build container
         run: docker build -t hn-knowledge:verify .

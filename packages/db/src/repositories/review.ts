@@ -1,3 +1,8 @@
+import {
+  withTransaction,
+  isTransactionClient,
+  type RepositoryClient,
+} from "../transaction-context.js";
 import { createHash } from "node:crypto";
 
 import {
@@ -188,7 +193,7 @@ const sameReasons = (
   left.every((value, index) => value === right[index]);
 
 const findOpenResult = async (
-  client: PrismaClient,
+  client: RepositoryClient,
   input: OpenReviewTaskInput,
 ): Promise<OpenReviewTaskResult | null> => {
   const task = await client.reviewTask.findUnique({
@@ -257,7 +262,7 @@ const replayResolution = async (
 };
 
 const resolutionAfterSerializationConflict = async (
-  client: PrismaClient,
+  client: RepositoryClient,
   input: ResolveReviewTaskInput,
 ): Promise<ResolveReviewTaskResult> => {
   const replay = await replayResolution(client, input);
@@ -341,7 +346,7 @@ const replayEntityMutation = async (
 };
 
 const taskMutationState = async (
-  client: PrismaClient,
+  client: RepositoryClient,
   taskId: string,
 ): Promise<EntityReviewMutationResult> => {
   const task = await client.reviewTask.findUnique({
@@ -358,7 +363,7 @@ const taskMutationState = async (
 };
 
 const reopenState = async (
-  client: PrismaClient,
+  client: RepositoryClient,
   taskId: string,
 ): Promise<ReopenReviewTaskResult> => {
   const task = await client.reviewTask.findUnique({
@@ -441,7 +446,8 @@ const completeEntityReview = async (
 };
 
 export const createReviewRepository = (
-  client: PrismaClient,
+  client: RepositoryClient,
+  manualDraftId: string | null = null,
 ): ReviewRepository => ({
   async openTask(input) {
     assertOpenInput(input);
@@ -450,7 +456,8 @@ export const createReviewRepository = (
       return existing;
     }
     try {
-      return await client.$transaction(
+      return await withTransaction(
+        client,
         async (transaction) => {
           const decision = await transaction.contentDecision.findFirst({
             where: {
@@ -499,6 +506,7 @@ export const createReviewRepository = (
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );
     } catch (error) {
+      if (isTransactionClient(client)) throw error;
       if (hasPrismaErrorCode(error, "P2002")) {
         const raced = await findOpenResult(client, input);
         if (raced !== null) {
@@ -543,7 +551,8 @@ export const createReviewRepository = (
       return replay;
     }
     try {
-      return await client.$transaction(
+      return await withTransaction(
+        client,
         async (transaction): Promise<ResolveReviewTaskResult> => {
           const repeated = await replayResolution(transaction, input);
           if (repeated !== null) {
@@ -555,6 +564,17 @@ export const createReviewRepository = (
           if (task === null) {
             return { kind: "NOT_FOUND" };
           }
+          const owned = await transaction.contentDecision.findUnique({
+            where: { id: task.contentDecisionId },
+            select: { manualDraftId: true },
+          });
+          if (
+            task.kind === "CONTENT_DECISION" &&
+            owned?.manualDraftId != null &&
+            (owned.manualDraftId !== manualDraftId ||
+              !isTransactionClient(client))
+          )
+            return { kind: "POLICY_INVALID" };
           if (task.state !== "OPEN") {
             return { kind: "INVALID_STATE", state: task.state };
           }
@@ -681,6 +701,7 @@ export const createReviewRepository = (
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );
     } catch (error) {
+      if (isTransactionClient(client)) throw error;
       if (hasPrismaErrorCode(error, "P2002")) {
         return (
           (await replayResolution(client, input)) ?? {
@@ -702,7 +723,8 @@ export const createReviewRepository = (
       return replay;
     }
     try {
-      return await client.$transaction(
+      return await withTransaction(
+        client,
         async (transaction): Promise<ReopenReviewTaskResult> => {
           const repeated = await replayReopen(transaction, input);
           if (repeated !== null) {
@@ -714,6 +736,15 @@ export const createReviewRepository = (
           if (previous === null) {
             return { kind: "NOT_FOUND" };
           }
+          const owned = await transaction.contentDecision.findUnique({
+            where: { id: previous.contentDecisionId },
+            select: { manualDraftId: true },
+          });
+          if (
+            previous.kind === "CONTENT_DECISION" &&
+            owned?.manualDraftId != null
+          )
+            return { kind: "POLICY_INVALID" };
           if (previous.state === "OPEN") {
             return { kind: "INVALID_STATE", state: previous.state };
           }
@@ -777,6 +808,7 @@ export const createReviewRepository = (
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );
     } catch (error) {
+      if (isTransactionClient(client)) throw error;
       if (hasPrismaErrorCode(error, "P2002")) {
         return (
           (await replayReopen(client, input)) ?? {
@@ -802,7 +834,8 @@ export const createReviewRepository = (
       return replay;
     }
     try {
-      return await client.$transaction(
+      return await withTransaction(
+        client,
         async (transaction): Promise<EntityReviewMutationResult> => {
           const repeated = await replayEntityMutation(transaction, input);
           if (repeated !== null) {
@@ -926,6 +959,7 @@ export const createReviewRepository = (
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );
     } catch (error) {
+      if (isTransactionClient(client)) throw error;
       if (hasPrismaErrorCode(error, "P2002")) {
         return (
           (await replayEntityMutation(client, input)) ?? {
@@ -950,7 +984,8 @@ export const createReviewRepository = (
       return replay;
     }
     try {
-      return await client.$transaction(
+      return await withTransaction(
+        client,
         async (transaction): Promise<EntityReviewMutationResult> => {
           const repeated = await replayEntityMutation(transaction, input);
           if (repeated !== null) {
@@ -1101,6 +1136,7 @@ export const createReviewRepository = (
         { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
       );
     } catch (error) {
+      if (isTransactionClient(client)) throw error;
       if (hasPrismaErrorCode(error, "P2002")) {
         return (
           (await replayEntityMutation(client, input)) ?? {

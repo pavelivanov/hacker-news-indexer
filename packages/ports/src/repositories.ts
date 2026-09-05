@@ -43,6 +43,7 @@ import type {
 import type { StoredClassifierSource } from "./classifier.js";
 
 export interface RecordClassificationRunInput {
+  readonly attempt?: number;
   readonly commentId: HnItemId;
   readonly inputHash: string;
   readonly promptVersion: string;

@@ -44,3 +44,7 @@ export * from "./subjects/materialize-classification.js";
 export * from "./reader/knowledge-reader.js";
 export * from "./reader/safe-html.js";
 export * from "./reconcile/reconcile-hn-item.js";
+
+export * from "./manual-review/service.js";
+export * from "./classifier-results/service.js";
+export * from "./classifier-results/processing.js";

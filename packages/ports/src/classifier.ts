@@ -73,6 +73,7 @@ export interface StoredClassifierSource {
 }
 
 export interface ClassifierRequest {
+  readonly signal?: AbortSignal;
   readonly input: BoundedClassifierInput;
   readonly prompt: string;
   readonly promptVersion: string;

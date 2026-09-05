@@ -7,3 +7,7 @@ export * from "./jobs.js";
 export * from "./multipart.js";
 export * from "./review.js";
 export * from "./subjects.js";
+
+export * from "./manual-review.js";
+export * from "./classifier-feedback.js";
+export * from "./feed-processing.js";

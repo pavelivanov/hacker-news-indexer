@@ -232,9 +232,9 @@ export class OpenAiClassifier implements ClassifierPort {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), request.timeoutMs);
     timeout.unref();
-    let response: Response;
+    let payload: unknown;
     try {
-      response = await this.fetcher(OPENAI_RESPONSES_URL, {
+      const response = await this.fetcher(OPENAI_RESPONSES_URL, {
         method: "POST",
         headers: {
           authorization: `Bearer ${this.apiToken}`,
@@ -259,33 +259,33 @@ export class OpenAiClassifier implements ClassifierPort {
           max_output_tokens: this.maxOutputTokens,
           store: false,
         }),
-        signal: controller.signal,
+        signal: request.signal
+          ? AbortSignal.any([controller.signal, request.signal])
+          : controller.signal,
       });
+      if (!response.ok) throw httpError(response);
+      try {
+        payload = await response.json();
+      } catch (error) {
+        throw new ClassifierProviderError(
+          "CLASSIFIER_INVALID_RESPONSE",
+          false,
+          null,
+          { cause: error },
+        );
+      }
     } catch (error) {
       if (controller.signal.aborted) {
         throw new ClassifierProviderError("CLASSIFIER_TIMEOUT", true, null, {
           cause: error,
         });
       }
+      if (error instanceof ClassifierProviderError) throw error;
       throw new ClassifierProviderError("CLASSIFIER_PROVIDER_5XX", true, null, {
         cause: error,
       });
     } finally {
       clearTimeout(timeout);
-    }
-    if (!response.ok) {
-      throw httpError(response);
-    }
-    let payload: unknown;
-    try {
-      payload = await response.json();
-    } catch (error) {
-      throw new ClassifierProviderError(
-        "CLASSIFIER_INVALID_RESPONSE",
-        false,
-        null,
-        { cause: error },
-      );
     }
     if (!isRecord(payload) || payload["status"] !== "completed") {
       throw new ClassifierProviderError("CLASSIFIER_INVALID_RESPONSE", false);

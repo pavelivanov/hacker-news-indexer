@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   buildClassifierInput,
+  restoreClassifierInputOrder,
   COMMENT_INPUT_LIMIT_BYTES,
   ROOT_TEXT_LIMIT_BYTES,
   ROOT_TITLE_LIMIT_CHARACTERS,
@@ -26,6 +27,24 @@ const source = () => ({
 });
 
 describe("bounded classifier input", () => {
+  it("restores exact input bytes after object key order changes in storage", () => {
+    const input = buildClassifierInput(source());
+    const reverseKeys = (value: unknown): unknown => {
+      if (Array.isArray(value)) return value.map(reverseKeys);
+      if (value && typeof value === "object")
+        return Object.fromEntries(
+          Object.entries(value)
+            .reverse()
+            .map(([key, child]) => [key, reverseKeys(child)]),
+        );
+      return value;
+    };
+    const stored = reverseKeys(input) as typeof input;
+    expect(JSON.stringify(stored)).not.toBe(JSON.stringify(input));
+    expect(JSON.stringify(restoreClassifierInputOrder(stored))).toBe(
+      JSON.stringify(input),
+    );
+  });
   it("is byte-for-byte deterministic and respects every cap", () => {
     const first = buildClassifierInput(source());
     const second = buildClassifierInput(source());
