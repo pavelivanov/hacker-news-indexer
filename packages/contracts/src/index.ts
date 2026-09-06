@@ -14,3 +14,4 @@ export * from "./reader-v1.js";
 export * from "./manual-review-v1.js";
 export * from "./classifier-feedback-v1.js";
 export * from "./feed-processing-v1.js";
+export * from "./result-bookmark-v1.js";

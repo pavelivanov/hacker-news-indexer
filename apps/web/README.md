@@ -24,6 +24,12 @@ optimistic version conflicts and exact retry of uncertain saves. Corrections
 preserve original output and append feedback; they never create approval events.
 The manual workspace remains accessible through navigation or `?view=inbox`.
 
+Results support literal, case-insensitive title/summary search and persistent
+bookmarks. Search and the Saved results filter remain in result URLs. Pagination
+responses from an earlier search are ignored. List/detail saved state reconciles
+by bookmark version; bookmark writes and retries preserve correction text and
+never append feedback or approval events.
+
 The processing strip polls status every five seconds while the page is visible.
 New arrivals offer a refresh button instead of replacing the open result or
 unsaved correction. Sync, pause/resume, daily usage, and failed-job retries live

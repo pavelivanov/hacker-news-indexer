@@ -93,6 +93,222 @@ test.beforeEach(async ({ context }) => {
 });
 test.afterAll(async () => database.close());
 
+test("search and bookmarks persist across list, detail, saved view, and reload", async ({
+  page,
+}) => {
+  const fixture = await seedClassifierResult(client);
+  await seedClassifierResult(client, 900002, "REJECTED");
+  await unlock(page, "/?view=results");
+  await page.getByLabel("Search titles and summaries").fill("BATCHING");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await expect(page.locator(".classifier-result-list li")).toHaveCount(1);
+  await page
+    .getByRole("button", {
+      name: "Save result: Batching storage writes",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByRole("button", {
+      name: "Remove bookmark: Batching storage writes",
+    }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByLabel("Show results").selectOption("saved");
+  await page.getByRole("link", { name: /Batching storage writes/ }).click();
+  await expect(
+    page
+      .getByRole("region", { name: "Result details", exact: true })
+      .getByRole("button", { name: /Remove bookmark:/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  const resultUrl = new URL(page.url());
+  expect(resultUrl.searchParams.get("q")).toBe("BATCHING");
+  expect(resultUrl.searchParams.get("filter")).toBe("saved");
+  await page.reload();
+  await page.getByLabel("Local API token").fill(browserToken);
+  await page.getByRole("button", { name: "Unlock workspace" }).click();
+  const detail = page.getByRole("region", {
+    name: "Result details",
+    exact: true,
+  });
+  await detail.getByRole("button", { name: /Remove bookmark:/ }).click();
+  await expect(
+    page.getByText("No matching results", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    detail.getByRole("button", { name: /Save result:/ }),
+  ).toHaveAttribute("aria-pressed", "false");
+  await page.getByRole("button", { name: "Clear search" }).click();
+  await expect(
+    page.getByText("No saved results yet", { exact: true }),
+  ).toBeVisible();
+  expect(await client.classifierFeedback.count()).toBe(0);
+  expect(await client.manualOverrideEvent.count()).toBe(0);
+  expect(
+    (
+      await client.classifierResultSnapshot.findUniqueOrThrow({
+        where: { runId: fixture.id },
+      })
+    ).originalOutput,
+  ).toEqual(fixture.output);
+});
+
+test("a lost bookmark response retries the identical command exactly once", async ({
+  page,
+}) => {
+  await seedClassifierResult(client);
+  await unlock(page, "/?view=results");
+  const commands: (string | null)[] = [];
+  await page.route("**/v1/classifier-results/*/bookmark", async (route) => {
+    commands.push(route.request().postData());
+    if (commands.length === 1) {
+      expect((await route.fetch()).status()).toBe(200);
+      await route.abort();
+    } else await route.continue();
+  });
+  await page.getByRole("button", { name: /Save result:/ }).click();
+  await page.getByRole("button", { name: /Retry bookmark:/ }).click();
+  await expect(
+    page.getByRole("button", { name: /Remove bookmark:/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  expect(commands).toHaveLength(2);
+  expect(commands[1]).toBe(commands[0]);
+  expect(await client.resultBookmarkReceipt.count()).toBe(1);
+  expect(
+    (await client.classifierResultSnapshot.findFirstOrThrow()).bookmarkVersion,
+  ).toBe(1);
+});
+
+test("bookmark conflicts and search navigation preserve unsaved correction text", async ({
+  page,
+  context,
+}) => {
+  const fixture = await seedClassifierResult(client);
+  const route = `/?view=results&result=${fixture.id}`;
+  const second = await context.newPage();
+  await unlock(page, route);
+  await unlock(second, route);
+  const details = second.getByRole("region", {
+    name: "Result details",
+    exact: true,
+  });
+  await second
+    .getByRole("button", { name: "Correct result", exact: true })
+    .click();
+  await second.getByLabel(/^Title/).fill("Keep my unfinished correction");
+  await second.keyboard.press("Escape");
+  await page
+    .getByRole("region", { name: "Result details", exact: true })
+    .getByRole("button", { name: /Save result:/ })
+    .click();
+  await expect(
+    page.getByRole("button", { name: /Remove bookmark:/ }),
+  ).toHaveCount(2);
+  await details.getByRole("button", { name: /Save result:/ }).click();
+  await expect(
+    details.getByText(/This bookmark changed in another tab/),
+  ).toBeVisible();
+  await second.getByLabel("Search titles and summaries").fill("another phrase");
+  await second.getByRole("button", { name: "Search", exact: true }).click();
+  await expect(second.getByRole("alertdialog")).toBeVisible();
+  await second.getByRole("button", { name: "Keep editing" }).click();
+  await second
+    .getByRole("button", { name: "Continue correction", exact: true })
+    .click();
+  await expect(second.getByLabel(/^Title/)).toHaveValue(
+    "Keep my unfinished correction",
+  );
+  expect(await client.classifierFeedback.count()).toBe(0);
+  expect(await client.resultBookmarkReceipt.count()).toBe(1);
+  await second.close();
+});
+
+test("late pagination cannot append results from the previous search", async ({
+  page,
+}) => {
+  for (let n = 0; n < 22; n += 1)
+    await seedClassifierResult(client, 900001 + n);
+  await unlock(page, "/?view=results");
+  let release!: () => void;
+  let arrived!: () => void;
+  const held = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const requested = new Promise<void>((resolve) => {
+    arrived = resolve;
+  });
+  await page.route("**/v1/classifier-results?**", async (route) => {
+    if (new URL(route.request().url()).searchParams.has("cursor")) {
+      const response = await route.fetch();
+      arrived();
+      await held;
+      await route.fulfill({ response });
+    } else await route.continue();
+  });
+  await page.getByRole("button", { name: "Load more results" }).click();
+  await requested;
+  await page
+    .getByLabel("Search titles and summaries")
+    .fill("nothing matches this");
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await expect(
+    page.getByText("No matching results", { exact: true }),
+  ).toBeVisible();
+  const response = page.waitForResponse((item) =>
+    new URL(item.url()).searchParams.has("cursor"),
+  );
+  release();
+  await response;
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
+  await expect(
+    page.getByText("No matching results", { exact: true }),
+  ).toBeVisible();
+  await expect(page.locator(".classifier-result-list li")).toHaveCount(0);
+});
+
+test("@a11y search and saved controls work with keyboard on desktop and mobile", async ({
+  page,
+}) => {
+  await seedClassifierResult(client);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await unlock(page, "/?view=results");
+  await page.getByLabel("Search titles and summaries").focus();
+  await page.keyboard.type("batching");
+  await page.keyboard.press("Enter");
+  const save = page.getByRole("button", { name: /Save result:/ });
+  await save.focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("button", { name: /Remove bookmark:/ }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await page.getByLabel("Show results").selectOption("saved");
+  for (const viewport of [
+    { width: 1440, height: 1000 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    const report = await new AxeBuilder({ page }).analyze();
+    expect(
+      report.violations.filter(
+        (item) => item.impact === "serious" || item.impact === "critical",
+      ),
+    ).toEqual([]);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await screenshot(
+      page,
+      viewport.width === 390 ? "search-saved-mobile" : "search-saved-desktop",
+    );
+  }
+});
+
 async function unlock(page: Page, route = `/?view=inbox&comment=${id}`) {
   await page.goto(route);
   await page.getByLabel("Local API token").fill(browserToken);
@@ -466,9 +682,7 @@ test("classifier results need no approval and corrections survive reload", async
   await page
     .getByRole("button", { name: "Correct result", exact: true })
     .click();
-  await page
-    .getByLabel("Title", { exact: false })
-    .fill("A corrected storage lesson");
+  await page.getByLabel(/^Title/).fill("A corrected storage lesson");
   await page
     .getByLabel("Anything else?")
     .fill("The distinction matters in practice.");
@@ -518,10 +732,8 @@ test("classifier correction conflicts preserve text and reconcile explicitly", a
     await tab
       .getByRole("button", { name: "Correct result", exact: true })
       .click();
-  await page.getByLabel("Title", { exact: false }).fill("First correction");
-  await second
-    .getByLabel("Title", { exact: false })
-    .fill("My later correction");
+  await page.getByLabel(/^Title/).fill("First correction");
+  await second.getByLabel(/^Title/).fill("My later correction");
   await page
     .getByRole("button", { name: "Save correction", exact: true })
     .click();
@@ -530,9 +742,7 @@ test("classifier correction conflicts preserve text and reconcile explicitly", a
     .getByRole("button", { name: "Save correction", exact: true })
     .click();
   await expect(second.getByText("A newer correction exists")).toBeVisible();
-  await expect(second.getByLabel("Title", { exact: false })).toHaveValue(
-    "My later correction",
-  );
+  await expect(second.getByLabel(/^Title/)).toHaveValue("My later correction");
   await second
     .getByRole("button", { name: "Use latest version, keep my text" })
     .click();

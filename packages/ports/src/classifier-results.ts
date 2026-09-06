@@ -2,7 +2,13 @@ import type { ResultCategory, ResultCorrection } from "@hn-knowledge/domain";
 import type { BoundedClassifierInput } from "./classifier.js";
 
 export type ResultsFilter =
-  "all" | "discovery" | "expert_note" | "skipped" | "uncertain" | "corrected";
+  | "all"
+  | "discovery"
+  | "expert_note"
+  | "skipped"
+  | "uncertain"
+  | "corrected"
+  | "saved";
 export interface ResultFeedbackRecord {
   readonly id: string;
   readonly version: number;
@@ -18,6 +24,8 @@ export interface ClassifierResultRecord {
   readonly title: string;
   readonly summary: string;
   readonly feedbackVersion: number;
+  readonly bookmarked: boolean;
+  readonly bookmarkVersion: number;
   readonly input: BoundedClassifierInput;
   readonly output: unknown;
   readonly errorCode: string | null;
@@ -34,8 +42,16 @@ export interface ClassifierResultsRepository {
   list(
     filter: ResultsFilter,
     after: { createdAt: Date; id: string } | null,
+    query: string,
   ): Promise<readonly ClassifierResultRecord[]>;
   get(id: string): Promise<ClassifierResultRecord | null>;
+  bookmark(input: {
+    id: string;
+    expectedVersion: number;
+    commandKey: string;
+    requestHash: string;
+    bookmarked: boolean;
+  }): Promise<{ bookmarked: boolean; version: number; replayed: boolean }>;
   capture(input: {
     runId: string;
     source: BoundedClassifierInput;

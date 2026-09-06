@@ -37,6 +37,8 @@ const record = (row: Row): ClassifierResultRecord => ({
   title: row.title,
   summary: row.summary,
   feedbackVersion: row.feedbackVersion,
+  bookmarked: row.bookmarked,
+  bookmarkVersion: row.bookmarkVersion,
   input: row.sourceInput as unknown as BoundedClassifierInput,
   output: row.originalOutput,
   errorCode: row.errorCode,
@@ -54,7 +56,7 @@ const record = (row: Row): ClassifierResultRecord => ({
 export const createClassifierResultsRepository = (
   client: PrismaClient,
 ): ClassifierResultsRepository => ({
-  async list(filter, after) {
+  async list(filter, after, query) {
     const categories =
       filter === "discovery"
         ? ["DISCOVERY"]
@@ -69,6 +71,29 @@ export const createClassifierResultsRepository = (
       where: {
         ...(categories ? { category: { in: categories } } : {}),
         ...(filter === "corrected" ? { feedbackVersion: { gt: 0 } } : {}),
+        ...(filter === "saved" ? { bookmarked: true } : {}),
+        ...(query
+          ? {
+              AND: [
+                {
+                  OR: [
+                    {
+                      title: {
+                        contains: query.replace(/[\\%_]/g, "\\$&"),
+                        mode: "insensitive",
+                      },
+                    },
+                    {
+                      summary: {
+                        contains: query.replace(/[\\%_]/g, "\\$&"),
+                        mode: "insensitive",
+                      },
+                    },
+                  ],
+                },
+              ],
+            }
+          : {}),
         ...(after
           ? {
               OR: [
@@ -90,6 +115,75 @@ export const createClassifierResultsRepository = (
       include,
     });
     return row ? record(row) : null;
+  },
+  async bookmark(input) {
+    const replay = (receipt: {
+      resultId: string;
+      requestHash: string;
+      bookmarked: boolean;
+      version: number;
+    }) => {
+      if (
+        receipt.resultId !== input.id ||
+        receipt.requestHash !== input.requestHash
+      )
+        throw new ClassifierResultsError("IDEMPOTENCY_CONFLICT");
+      return {
+        bookmarked: receipt.bookmarked,
+        version: receipt.version,
+        replayed: true,
+      };
+    };
+    try {
+      return await client.$transaction(async (tx) => {
+        const existing = await tx.resultBookmarkReceipt.findUnique({
+          where: { commandKey: input.commandKey },
+        });
+        if (existing) return replay(existing);
+        const updated = await tx.classifierResultSnapshot.updateMany({
+          where: { runId: input.id, bookmarkVersion: input.expectedVersion },
+          data: {
+            bookmarked: input.bookmarked,
+            bookmarkVersion: { increment: 1 },
+          },
+        });
+        if (!updated.count) {
+          const exists = await tx.classifierResultSnapshot.findUnique({
+            where: { runId: input.id },
+            select: { runId: true },
+          });
+          throw new ClassifierResultsError(
+            exists ? "VERSION_CONFLICT" : "NOT_FOUND",
+          );
+        }
+        const receipt = await tx.resultBookmarkReceipt.create({
+          data: {
+            commandKey: input.commandKey,
+            resultId: input.id,
+            requestHash: input.requestHash,
+            bookmarked: input.bookmarked,
+            version: input.expectedVersion + 1,
+          },
+        });
+        return {
+          bookmarked: receipt.bookmarked,
+          version: receipt.version,
+          replayed: false,
+        };
+      });
+    } catch (error) {
+      if (
+        error instanceof ClassifierResultsError ||
+        (error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002")
+      ) {
+        const receipt = await client.resultBookmarkReceipt.findUnique({
+          where: { commandKey: input.commandKey },
+        });
+        if (receipt) return replay(receipt);
+      }
+      throw error;
+    }
   },
   async capture(input) {
     const run = await client.classificationRun.findUniqueOrThrow({

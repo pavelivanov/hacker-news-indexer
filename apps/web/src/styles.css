@@ -1090,3 +1090,28 @@ details > summary {
     font-size: 28px;
   }
 }
+.results-search {
+  margin-bottom: 1rem;
+}
+.results-search-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+.results-search-controls input {
+  flex: 1 1 12rem;
+  min-width: 0;
+}
+.bookmark-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.classifier-result-list > li > .bookmark-control {
+  padding: 0 1rem 1rem;
+}
+.classifier-detail > .bookmark-control {
+  margin-bottom: 0.75rem;
+}

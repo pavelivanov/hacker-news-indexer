@@ -9,6 +9,7 @@ import {
   errorMessage,
   type Api,
   type ResultDetail,
+  type ResultBookmarkState,
 } from "../lib/api";
 import { label } from "../lib/draft";
 import { Button } from "./ui/button";
@@ -17,6 +18,7 @@ import { FieldGroup } from "./ui/field";
 import { Alert, AlertTitle, AlertDescription } from "./ui/alert";
 import { Skeleton } from "./ui/skeleton";
 import { RetryResult } from "./retry-result";
+import { BookmarkResult } from "./bookmark-result";
 import { Choice, TextField } from "./form-fields";
 import {
   Dialog,
@@ -49,11 +51,15 @@ export function ClassifierResultDetail({
   api,
   onState,
   onSaved,
+  bookmark,
+  onBookmark,
 }: {
   id: string;
   api: Api;
   onState: (dirty: boolean, busy: boolean) => void;
   onSaved: () => void;
+  bookmark?: ResultBookmarkState;
+  onBookmark: (state: ResultBookmarkState) => void;
 }) {
   const [data, setData] = useState<ResultDetail | null>(null);
   const [values, setValues] = useState<Values | null>(null);
@@ -77,6 +83,7 @@ export function ClassifierResultDetail({
         if (controller.signal.aborted) return;
         const form = valuesFor(next);
         setData(next);
+        onBookmark(next);
         setValues(form);
         setBaseline(JSON.stringify(form));
       })
@@ -84,7 +91,7 @@ export function ClassifierResultDetail({
         if (!controller.signal.aborted) setError(errorMessage(failure));
       });
     return () => controller.abort();
-  }, [id, api]);
+  }, [id, api, onBookmark]);
   const submit = async () => {
     if (!data || !values || flight.current) return;
     let command: ClassifierFeedbackV1;
@@ -182,6 +189,13 @@ export function ClassifierResultDetail({
       </div>
       <h1>{data.title}</h1>
       <p className="result-full-summary">{data.summary}</p>
+      <BookmarkResult
+        api={api}
+        id={id}
+        title={data.title}
+        state={bookmark ?? data}
+        onChange={onBookmark}
+      />
       <Button variant="outline" onClick={() => setOpen(true)}>
         <PencilLine data-icon="inline-start" aria-hidden="true" />
         {dirty ? "Continue correction" : "Correct result"}

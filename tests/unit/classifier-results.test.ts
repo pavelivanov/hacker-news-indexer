@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import { createApp } from "@hn-knowledge/api";
-import { parseClassifierFeedbackV1 } from "@hn-knowledge/contracts";
+import {
+  parseClassifierFeedbackV1,
+  parseResultBookmarkV1,
+} from "@hn-knowledge/contracts";
 import { createClassifierResultsService } from "@hn-knowledge/application";
 import { ClassifierResultsError } from "@hn-knowledge/domain";
 
@@ -20,6 +23,7 @@ const service = createClassifierResultsService(
     get: vi.fn().mockResolvedValue(null),
     capture: vi.fn(),
     correct: vi.fn(),
+    bookmark: vi.fn(),
   },
   { sha256: (value) => value },
   { actorId: "owner", cursorSecret: "test-only" },
@@ -61,6 +65,7 @@ describe("classifier feedback contracts and routes", () => {
     ["GET", "/v1/classifier-results"],
     ["GET", `/v1/classifier-results/${id}`],
     ["POST", `/v1/classifier-results/${id}/corrections`],
+    ["PUT", `/v1/classifier-results/${id}/bookmark`],
   ])("authenticates %s %s", async (method, path) => {
     expect((await app.request(path, { method })).status).toBe(401);
   });
@@ -69,6 +74,8 @@ describe("classifier feedback contracts and routes", () => {
       "/v1/classifier-results?filter=invalid",
       "/v1/classifier-results?actor=spoof",
       "/v1/classifier-results/no-id",
+      "/v1/classifier-results?q=first&q=second",
+      `/v1/classifier-results?q=${"x".repeat(201)}`,
     ])
       expect((await app.request(path, { headers })).status).toBe(400);
     expect(
@@ -77,6 +84,44 @@ describe("classifier feedback contracts and routes", () => {
           method: "POST",
           headers,
           body: JSON.stringify({ ...request, explanation: "x".repeat(140000) }),
+        })
+      ).status,
+    ).toBe(400);
+  });
+  it("validates desired bookmark state and bounds optimistic versions", async () => {
+    const bookmark = {
+      bookmarked: true,
+      expected_version: 0,
+      command_key: "save:1",
+    };
+    expect(parseResultBookmarkV1(bookmark)).toEqual(bookmark);
+    for (const invalid of [
+      { bookmarked: "true" },
+      { expected_version: -1 },
+      { expected_version: 2147483647 },
+      { expected_version: 0.5 },
+      { command_key: "" },
+      { actor: "someone-else" },
+    ]) {
+      expect(() =>
+        parseResultBookmarkV1({ ...bookmark, ...invalid }),
+      ).toThrow();
+      expect(
+        (
+          await app.request(`/v1/classifier-results/${id}/bookmark`, {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({ ...bookmark, ...invalid }),
+          })
+        ).status,
+      ).toBe(400);
+    }
+    expect(
+      (
+        await app.request("/v1/classifier-results/no-id/bookmark", {
+          method: "PUT",
+          headers,
+          body: JSON.stringify(bookmark),
         })
       ).status,
     ).toBe(400);

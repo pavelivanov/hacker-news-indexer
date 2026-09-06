@@ -71,6 +71,26 @@ your text: choose **Use latest version, keep my text**, then save. If a response
 is lost, **Retry same correction** safely recovers the same save without adding
 duplicate feedback. Unsaved text is not persisted across a page reload.
 
+## Find and save useful results
+
+Enter a phrase in **Search titles and summaries** and press Enter or **Search**.
+Search matches a literal substring, ignoring letter case, in the displayed title
+or summary—including your latest correction. It accepts up to 200 characters;
+it does not search the full source text. **Clear search** restores the current
+view without the phrase. Search combines with **Show results**, and both choices
+remain in the URL when you open a result or reload.
+
+Choose **Save** beside a result or in its detail view, then select **Saved results**
+to return to it later. Choose **Saved** to remove the bookmark. Bookmarks survive
+reload and locking the workspace. Each belongs to that specific prediction;
+retrying classification creates a separate result and does not move the bookmark.
+Saving an item is a reading preference and does not submit feedback or approval.
+
+If a response is interrupted, **Retry bookmark** recovers the same request.
+A conflict with another tab reloads the current saved state and lets you try
+again. Neither case discards an unfinished correction. Bookmark state and
+correction history use independent versions.
+
 ## What feedback does
 
 Each result has an immutable source/output snapshot in
@@ -97,8 +117,11 @@ are unchanged; this interface makes no new classifier quality claim.
 ## API and checks
 
 - `GET /v1/classifier-results`: 20 results per page. Optional `filter` is `all`,
-  `discovery`, `expert_note`, `skipped`, `uncertain`, or `corrected`. Follow
-  `next_cursor` with the same filter. Filtering uses the latest correction.
+  `saved`, `discovery`, `expert_note`, `skipped`, `uncertain`, or `corrected`.
+  Optional `q` is a search phrase of at most 200 characters. Follow `next_cursor`
+  with the same filter and normalized query. Search and filtering happen before
+  pagination and use the latest correction. List and detail include `bookmarked`
+  and `bookmark_version`.
 - `GET /v1/classifier-results/:id`: display values, original prediction, bounded
   source, model metadata, and correction history. The ID is a classifier run UUID.
 - `POST /v1/classifier-results/:id/corrections`: shared
@@ -106,6 +129,13 @@ are unchanged; this interface makes no new classifier quality claim.
   `expected_version`, `command_key`, `category`, `title`, `summary`, `issue`, and
   `explanation`. The server supplies the actor. Exact retries return the original
   version; stale versions and conflicting command reuse return HTTP 409.
+- `PUT /v1/classifier-results/:id/bookmark`: shared
+  [bookmark contract](../packages/contracts/src/result-bookmark-v1.ts) with
+  `bookmarked` (desired boolean state), `expected_version`, and `command_key`.
+  Returns `bookmarked`, `version`, and `replayed`. Retry an uncertain request
+  unchanged; old receipts do not undo newer changes. Re-fetch the result after
+  a retry to display its current state. Stale versions or changed command reuse
+  return HTTP 409.
 
 All endpoints require the local bearer token. While the local servers are
 running, `npm run classifier-results:smoke` reads the feed and opens result,

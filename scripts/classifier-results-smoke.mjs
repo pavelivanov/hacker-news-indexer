@@ -56,6 +56,40 @@ try {
     path: "output/playwright/local-classifier-results.png",
     fullPage: true,
   });
+  const phrase = items[0].title.slice(0, 200);
+  await page.getByLabel("Search titles and summaries").fill(phrase);
+  await page.getByRole("button", { name: "Search", exact: true }).click();
+  await page.locator(".classifier-result-list a").first().waitFor();
+  assert.equal(new URL(page.url()).searchParams.get("q"), phrase.trim());
+  await page.screenshot({
+    path: "output/playwright/local-results-search-desktop.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(
+    await page.evaluate(
+      () =>
+        globalThis.document.documentElement.scrollWidth <=
+        globalThis.innerWidth,
+    ),
+    true,
+  );
+  await page.screenshot({
+    path: "output/playwright/local-results-search-mobile.png",
+    fullPage: true,
+  });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.getByRole("button", { name: "Clear search" }).click();
+  await page.getByLabel("Show results").selectOption("saved");
+  if (items.some((item) => item.bookmarked))
+    await page.locator(".classifier-result-list a").first().waitFor();
+  else await page.getByText("No saved results yet", { exact: true }).waitFor();
+  await page.screenshot({
+    path: "output/playwright/local-results-saved-desktop.png",
+    fullPage: true,
+  });
+  await page.getByLabel("Show results").selectOption("all");
+  await page.locator(".classifier-result-list a").first().waitFor();
   const processing = page.getByRole("region", { name: "Feed processing" });
   await processing.locator("summary").click();
   await page.screenshot({
@@ -157,6 +191,8 @@ try {
       categories: counts,
       correctedResults: items.filter((item) => item.feedback_version > 0)
         .length,
+      savedResults: items.filter((item) => item.bookmarked).length,
+      searchAndSavedViews: true,
       resultScreensOpened: opened,
       mutations: 0,
       persistentBrowserEntries: 0,
