@@ -1,9 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
 import { createApp } from "@hn-knowledge/api";
 import { createFeedProcessingService } from "@hn-knowledge/application";
-import { parseFeedControlV1, parseFeedRetryV1 } from "@hn-knowledge/contracts";
+import {
+  parseFeedControlV1,
+  parseFeedRetryV1,
+  parseFeedSettingsV1,
+} from "@hn-knowledge/contracts";
 import { FeedProcessingError } from "@hn-knowledge/domain";
-const repository = { status: vi.fn(), control: vi.fn(), retry: vi.fn() };
+const repository = {
+  status: vi.fn(),
+  control: vi.fn(),
+  retry: vi.fn(),
+  saveSettings: vi.fn(),
+};
 const service = createFeedProcessingService(repository);
 const app = createApp({
   apiToken: "fixture",
@@ -19,6 +28,7 @@ describe("feed processing boundary", () => {
   it.each([
     ["GET", "/v1/processing"],
     ["POST", "/v1/processing/control"],
+    ["PUT", "/v1/processing/settings"],
     ["POST", `/v1/processing/jobs/${id}/retry`],
     ["POST", `/v1/processing/results/${id}/retry`],
   ])("authenticates %s %s", async (method, path) => {
@@ -80,5 +90,74 @@ describe("feed processing boundary", () => {
       id,
       "fixture-retry",
     );
+  });
+  it("accepts bounded settings and rejects invalid or unrecognized fields", async () => {
+    const settings = {
+      interval_minutes: 30,
+      daily_request_limit: 100,
+      expected_version: 0,
+      command_key: "settings:1",
+    };
+    expect(parseFeedSettingsV1(settings)).toEqual(settings);
+    for (const invalid of [
+      { interval_minutes: 0 },
+      { interval_minutes: 1441 },
+      { interval_minutes: 1.5 },
+      { daily_request_limit: 0 },
+      { daily_request_limit: 1001 },
+      { daily_request_limit: "100" },
+      { expected_version: -1 },
+      { expected_version: 2147483647 },
+      { command_key: "" },
+      { enabled: true },
+      { source: "other" },
+      { model: "other" },
+    ]) {
+      expect(() => parseFeedSettingsV1({ ...settings, ...invalid })).toThrow();
+      expect(
+        (
+          await app.request("/v1/processing/settings", {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({ ...settings, ...invalid }),
+          })
+        ).status,
+      ).toBe(400);
+    }
+    for (const body of [{}, { ...settings, interval_minutes: undefined }])
+      expect(
+        (
+          await app.request("/v1/processing/settings", {
+            method: "PUT",
+            headers,
+            body: JSON.stringify(body),
+          })
+        ).status,
+      ).toBe(400);
+    expect(
+      (
+        await app.request("/v1/processing/settings?approved=true", {
+          method: "PUT",
+          headers,
+          body: JSON.stringify(settings),
+        })
+      ).status,
+    ).toBe(400);
+    repository.saveSettings.mockResolvedValueOnce({
+      settings_version: 1,
+      replayed: false,
+    });
+    const response = await app.request("/v1/processing/settings", {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(settings),
+    });
+    expect(response.status).toBe(200);
+    expect(repository.saveSettings).toHaveBeenLastCalledWith({
+      intervalSeconds: 1800,
+      dailyRequestLimit: 100,
+      expectedVersion: 0,
+      commandKey: "settings:1",
+    });
   });
 });

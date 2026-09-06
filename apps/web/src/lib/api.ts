@@ -12,6 +12,7 @@ import type {
   ReaderCommentV1,
   ClassifierFeedbackV1,
   ResultBookmarkV1,
+  FeedSettingsV1,
 } from "@hn-knowledge/contracts";
 
 export type CommentDetail = Awaited<
@@ -116,6 +117,14 @@ export const createApi = (token: string, onUnauthorized: () => void) => {
   return {
     processing: (signal?: AbortSignal) =>
       request<ProcessingStatus>("/v1/processing", { signal }),
+    saveProcessingSettings: (body: FeedSettingsV1) =>
+      request<{ settings_version: number; replayed: boolean }>(
+        "/v1/processing/settings",
+        {
+          method: "PUT",
+          body: JSON.stringify(body),
+        },
+      ),
     controlProcessing: (action: "sync" | "pause" | "resume") =>
       request<{ accepted: boolean }>("/v1/processing/control", {
         method: "POST",

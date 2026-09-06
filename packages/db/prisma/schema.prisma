@@ -412,6 +412,7 @@ model FeedProcessingState {
   intervalSeconds   Int @default(1800) @map("interval_seconds")
   batchSize         Int @default(20) @map("batch_size")
   dailyRequestLimit Int @default(100) @map("daily_request_limit")
+  settingsVersion   Int @default(0) @map("settings_version")
   updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   @@map("feed_processing_state")

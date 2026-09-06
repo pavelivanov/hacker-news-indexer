@@ -42,9 +42,25 @@ captured-comment generator from running concurrently.
 
 ## Bounds and provenance
 
-Defaults are stored in `feed_processing_state`: checks every 1,800 seconds,
-20 selection IDs per batch, and 100 classifier requests per UTC day. There is no
-browser settings editor for these limits in this milestone.
+Defaults are checks every 30 minutes, 20 selection IDs per batch, and 100
+classifier requests per UTC day. In **Processing details → Feed settings**, edit
+**Check every (minutes)** (1–1,440, whole minutes) or **Daily request limit**
+(1–1,000). **Save settings** persists both values; **Cancel** makes no changes.
+The selection batch size stays fixed in this interface.
+
+Changes take effect without restarting the worker. A changed interval schedules
+the next automatic check from the save time; an already-requested sync can still
+run sooner. Changing only the request limit keeps the existing schedule. Saving
+does not resume paused updates, reset today's usage, or change the source/model.
+Requests already reserved may finish. Lowering the limit below current usage
+blocks further requests until the next UTC day or a limit increase. Raising it
+releases work waiting only on that allowance.
+
+The dialog preserves edits while status refreshes. If another tab saved first,
+**Reload current settings** explicitly replaces your draft with the latest values.
+An interrupted save offers **Retry same settings**, which repeats the exact
+command without applying an older change again. Reloading the whole page clears
+unsaved inputs and shows persisted values after unlocking.
 
 The first sync starts at the newest 20 Telegram message IDs, rather than loading
 the entire channel history. Subsequent batches continue after the saved cursor,
@@ -95,6 +111,13 @@ All endpoints require the existing local bearer token:
 
 - `GET /v1/processing`: bounded status and the ten most recent failed jobs.
 - `POST /v1/processing/control`: `{ "action": "sync" | "pause" | "resume" }`.
+- `PUT /v1/processing/settings`: `{ "interval_minutes": 30,
+"daily_request_limit": 100, "expected_version": 0, "command_key": "unique-key" }`.
+  Read `settings_version` from `GET /v1/processing` for `expected_version`.
+  Strict validation rejects unknown fields. Saves return `settings_version` and
+  `replayed`; stale edits/changed command reuse return 409. After a save/replay,
+  re-fetch status for the current configuration. Settings revisions are separate
+  from worker heartbeats and content feedback.
 - `POST /v1/processing/jobs/:id/retry` and
   `POST /v1/processing/results/:id/retry`: `{ "command_key": "unique-key" }`.
   Exact retries recover the original receipt; conflicting reuse returns 409.
@@ -107,6 +130,8 @@ against the running local workspace for a read-only browser check. Screenshots
 are written to ignored `output/playwright/`.
 `npm run feed:status` reads local database status and aggregate counts without
 requiring the browser server, changing data, or exposing credentials.
+`npm run feed:status -- --snapshot` records settings, counts, and the original
+snapshot fingerprint without requiring migration 0012, for upgrade comparisons.
 
 This milestone does not change prompts, promote the classifier, retrain from
 feedback, modify evaluation evidence, export results, or deploy hosted services.

@@ -11,6 +11,7 @@ export interface FeedProcessingStatus {
   interval_seconds: number;
   batch_size: number;
   daily_request_limit: number;
+  settings_version: number;
   requests_today: number;
   budget_resets_at: string;
   pending: number;
@@ -27,6 +28,12 @@ export interface FeedProcessingStatus {
 export interface FeedProcessingRepository {
   status(): Promise<FeedProcessingStatus>;
   control(action: "sync" | "pause" | "resume"): Promise<void>;
+  saveSettings(input: {
+    intervalSeconds: number;
+    dailyRequestLimit: number;
+    expectedVersion: number;
+    commandKey: string;
+  }): Promise<{ settings_version: number; replayed: boolean }>;
   retry(
     kind: "job" | "result",
     id: string,

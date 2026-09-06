@@ -15,6 +15,12 @@ if (
   throw new Error("Invalid local configuration");
 const origin = "http://127.0.0.1:5173";
 const headers = { Authorization: `Bearer ${env.APP_API_TOKEN}` };
+const statusResponse = await fetch(`${origin}/v1/processing`, {
+  headers,
+  signal: globalThis.AbortSignal.timeout(10000),
+});
+assert.equal(statusResponse.status, 200);
+const processingStatus = await statusResponse.json();
 const items = [];
 let cursor = null;
 do {
@@ -92,6 +98,37 @@ try {
   await page.locator(".classifier-result-list a").first().waitFor();
   const processing = page.getByRole("region", { name: "Feed processing" });
   await processing.locator("summary").click();
+  await page
+    .getByRole("button", { name: "Feed settings", exact: true })
+    .click();
+  await page.getByRole("dialog", { name: "Feed settings" }).waitFor();
+  assert.equal(
+    Number(await page.getByLabel("Check every (minutes)").inputValue()),
+    processingStatus.interval_seconds / 60,
+  );
+  assert.equal(
+    Number(await page.getByLabel("Daily request limit").inputValue()),
+    processingStatus.daily_request_limit,
+  );
+  for (const viewport of [
+    { width: 1440, height: 1000 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    assert.equal(
+      await page.evaluate(
+        () =>
+          globalThis.document.documentElement.scrollWidth <=
+          globalThis.innerWidth,
+      ),
+      true,
+    );
+    await page.screenshot({
+      path: `output/playwright/local-feed-settings-${viewport.width === 390 ? "mobile" : "desktop"}.png`,
+    });
+  }
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.screenshot({
     path: "output/playwright/local-processing-desktop.png",
     fullPage: true,
@@ -193,6 +230,12 @@ try {
         .length,
       savedResults: items.filter((item) => item.bookmarked).length,
       searchAndSavedViews: true,
+      settings: {
+        interval_seconds: processingStatus.interval_seconds,
+        daily_request_limit: processingStatus.daily_request_limit,
+        enabled: processingStatus.enabled,
+        settings_version: processingStatus.settings_version ?? 0,
+      },
       resultScreensOpened: opened,
       mutations: 0,
       persistentBrowserEntries: 0,

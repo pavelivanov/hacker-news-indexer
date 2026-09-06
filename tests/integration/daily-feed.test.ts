@@ -127,8 +127,13 @@ describe("automatic private feed", () => {
     expect(fixture.state.calls).toBe(2);
   });
   it("reserves a hard daily request cap atomically and defers work at the limit", async () => {
+    await processing.initialize("fixture-channel");
+    await client.feedProcessingState.update({
+      where: { id: "local" },
+      data: { dailyRequestLimit: 5 },
+    });
     const reserved = await Promise.all(
-      Array.from({ length: 20 }, () => processing.reserveRequest(5)),
+      Array.from({ length: 20 }, () => processing.reserveRequest()),
     );
     expect(reserved.filter(Boolean)).toHaveLength(5);
     await client.feedRequestUsage.deleteMany();

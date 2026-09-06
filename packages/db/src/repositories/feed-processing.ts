@@ -1,7 +1,11 @@
 import { createHash } from "node:crypto";
-import { FeedProcessingError } from "@hn-knowledge/domain";
-import type { FeedProcessingStatus } from "@hn-knowledge/ports";
+import { FeedProcessingError, type PipelineJobId } from "@hn-knowledge/domain";
+import type {
+  FeedProcessingRepository,
+  FeedProcessingStatus,
+} from "@hn-knowledge/ports";
 import { Prisma, type PrismaClient } from "../generated/prisma/client.js";
+import { JobLeaseError } from "../job-queue.js";
 
 const hash = (value: string) =>
   createHash("sha256").update(value).digest("hex");
@@ -84,6 +88,7 @@ export const createFeedProcessingRepository = (client: PrismaClient) => ({
       interval_seconds: state?.intervalSeconds ?? 1800,
       batch_size: state?.batchSize ?? 20,
       daily_request_limit: state?.dailyRequestLimit ?? 100,
+      settings_version: state?.settingsVersion ?? 0,
       requests_today: usage?.requests ?? 0,
       budget_resets_at: new Date(
         midnight().getTime() + 86_400_000,
@@ -117,16 +122,141 @@ export const createFeedProcessingRepository = (client: PrismaClient) => ({
     });
     if (!result.count) throw new FeedProcessingError("NOT_FOUND");
   },
-  async reserveRequest(limit: number): Promise<boolean> {
-    if (!Number.isSafeInteger(limit) || limit < 1 || limit > 1000)
-      throw new TypeError("Invalid request limit");
-    const rows = await client.$queryRaw<Array<{ requests: number }>>(Prisma.sql`
-      INSERT INTO feed_request_usage(day,requests)
-      VALUES ((CURRENT_TIMESTAMP AT TIME ZONE 'UTC')::date, 1)
-      ON CONFLICT(day) DO UPDATE SET requests = feed_request_usage.requests + 1
-      WHERE feed_request_usage.requests < ${limit} RETURNING requests
-    `);
-    return rows.length === 1;
+  async saveSettings(
+    input: Parameters<FeedProcessingRepository["saveSettings"]>[0],
+  ) {
+    const requestHash = hash(
+      JSON.stringify([
+        "feed-settings-v1",
+        input.intervalSeconds,
+        input.dailyRequestLimit,
+        input.expectedVersion,
+      ]),
+    );
+    const replay = (receipt: {
+      requestHash: string;
+      result: Prisma.JsonValue;
+    }) => {
+      if (receipt.requestHash !== requestHash)
+        throw new FeedProcessingError("IDEMPOTENCY_CONFLICT");
+      const version = object(receipt.result)["settings_version"];
+      if (typeof version !== "number")
+        throw new Error("Invalid settings receipt");
+      return { settings_version: version, replayed: true };
+    };
+    try {
+      return await client.$transaction(async (tx) => {
+        // Saves, reservations, and budget deferrals use this lock in the same order.
+        await tx.$queryRaw`SELECT id FROM feed_processing_state WHERE id = 'local' FOR UPDATE`;
+        const receipt = await tx.feedCommandReceipt.findUnique({
+          where: { commandKey: input.commandKey },
+        });
+        if (receipt) return replay(receipt);
+        const state = await tx.feedProcessingState.findUnique({
+          where: { id: "local" },
+        });
+        if (!state) throw new FeedProcessingError("NOT_FOUND");
+        if (state.settingsVersion !== input.expectedVersion)
+          throw new FeedProcessingError("STATE_CONFLICT");
+        const now = new Date();
+        const updated = await tx.feedProcessingState.update({
+          where: { id: "local" },
+          data: {
+            intervalSeconds: input.intervalSeconds,
+            dailyRequestLimit: input.dailyRequestLimit,
+            settingsVersion: { increment: 1 },
+            ...(state.intervalSeconds !== input.intervalSeconds
+              ? {
+                  nextSyncAt: new Date(
+                    now.getTime() + input.intervalSeconds * 1000,
+                  ),
+                }
+              : {}),
+          },
+        });
+        const usage = await tx.feedRequestUsage.findUnique({
+          where: { day: midnight() },
+        });
+        if ((usage?.requests ?? 0) < input.dailyRequestLimit)
+          await tx.pipelineJob.updateMany({
+            where: {
+              lane: "feed",
+              type: "CLASSIFY_COMMENT",
+              state: "RETRYABLE",
+              lastErrorCode: "DAILY_REQUEST_LIMIT",
+              availableAt: { gt: now },
+            },
+            data: { availableAt: now },
+          });
+        const result = { settings_version: updated.settingsVersion };
+        await tx.feedCommandReceipt.create({
+          data: { commandKey: input.commandKey, requestHash, result },
+        });
+        return { ...result, replayed: false };
+      });
+    } catch (error) {
+      if (
+        error instanceof FeedProcessingError ||
+        (error instanceof Prisma.PrismaClientKnownRequestError &&
+          error.code === "P2002")
+      ) {
+        const receipt = await client.feedCommandReceipt.findUnique({
+          where: { commandKey: input.commandKey },
+        });
+        if (receipt) return replay(receipt);
+      }
+      throw error;
+    }
+  },
+  async reserveRequest(): Promise<boolean> {
+    return client.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM feed_processing_state WHERE id = 'local' FOR UPDATE`;
+      const state = await tx.feedProcessingState.findUnique({
+        where: { id: "local" },
+      });
+      if (!state) return false;
+      const rows = await tx.$queryRaw<Array<{ requests: number }>>(Prisma.sql`
+        INSERT INTO feed_request_usage(day,requests) VALUES (${midnight()}::date, 1)
+        ON CONFLICT(day) DO UPDATE SET requests = feed_request_usage.requests + 1
+        WHERE feed_request_usage.requests < ${state.dailyRequestLimit} RETURNING requests
+      `);
+      return rows.length === 1;
+    });
+  },
+  async deferForBudget(id: PipelineJobId, owner: string): Promise<void> {
+    await client.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT id FROM feed_processing_state WHERE id = 'local' FOR UPDATE`;
+      const state = await tx.feedProcessingState.findUniqueOrThrow({
+        where: { id: "local" },
+      });
+      const day = midnight();
+      const usage = await tx.feedRequestUsage.findUnique({ where: { day } });
+      const now = new Date();
+      const availableAt =
+        (usage?.requests ?? 0) < state.dailyRequestLimit
+          ? now
+          : new Date(day.getTime() + 86_400_000);
+      const updated = await tx.pipelineJob.updateMany({
+        where: {
+          id,
+          lane: "feed",
+          type: "CLASSIFY_COMMENT",
+          state: "LEASED",
+          leaseOwner: owner,
+          leaseExpiresAt: { gt: now },
+          attempts: { gt: 0 },
+        },
+        data: {
+          state: "RETRYABLE",
+          availableAt,
+          attempts: { decrement: 1 },
+          lastErrorCode: "DAILY_REQUEST_LIMIT",
+          leaseOwner: null,
+          leaseExpiresAt: null,
+        },
+      });
+      if (updated.count !== 1) throw new JobLeaseError(id);
+    });
   },
   async advanceCursor() {
     const completed = await client.ingestionRun.aggregate({

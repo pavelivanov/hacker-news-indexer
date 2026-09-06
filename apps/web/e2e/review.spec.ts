@@ -93,6 +93,198 @@ test.beforeEach(async ({ context }) => {
 });
 test.afterAll(async () => database.close());
 
+async function settings(page: Page) {
+  await page.getByText("Processing details", { exact: true }).click();
+  await page
+    .getByRole("button", { name: "Feed settings", exact: true })
+    .click();
+  await expect(
+    page.getByRole("dialog", { name: "Feed settings" }),
+  ).toBeVisible();
+}
+
+test("browser settings persist across polling and reload without changing pause state or corrections", async ({
+  page,
+}) => {
+  await dailyFeedFixture(database);
+  await client.feedProcessingState.update({
+    where: { id: "local" },
+    data: { enabled: false },
+  });
+  await unlock(page, "/?view=results");
+  await settings(page);
+  await page.getByLabel("Check every (minutes)").fill("45");
+  await page.getByLabel("Daily request limit").fill("75");
+  // Wait for the next real status poll while the form contains unfinished edits.
+  await page.waitForResponse(
+    (response) => new URL(response.url()).pathname === "/v1/processing",
+  );
+  await expect(page.getByLabel("Check every (minutes)")).toHaveValue("45");
+  await expect(page.getByLabel("Daily request limit")).toHaveValue("75");
+  await page
+    .getByRole("button", { name: "Save settings", exact: true })
+    .click();
+  await expect(page.getByText(/Settings saved\./)).toBeVisible();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
+  await page.reload();
+  await page.getByLabel("Local API token").fill(browserToken);
+  await page.getByRole("button", { name: "Unlock workspace" }).click();
+  await settings(page);
+  await expect(page.getByLabel("Check every (minutes)")).toHaveValue("45");
+  await expect(page.getByLabel("Daily request limit")).toHaveValue("75");
+  expect(
+    await client.feedProcessingState.findUnique({ where: { id: "local" } }),
+  ).toMatchObject({
+    enabled: false,
+    intervalSeconds: 2700,
+    dailyRequestLimit: 75,
+    settingsVersion: 1,
+  });
+  expect(await client.classifierFeedback.count()).toBe(0);
+  expect(await client.manualOverrideEvent.count()).toBe(0);
+});
+
+test("settings validate ranges and Cancel discards changes without saving", async ({
+  page,
+}) => {
+  await dailyFeedFixture(database);
+  await unlock(page, "/?view=results");
+  await settings(page);
+  await page.getByLabel("Check every (minutes)").fill("0");
+  await page.getByLabel("Daily request limit").fill("1001");
+  await page
+    .getByRole("button", { name: "Save settings", exact: true })
+    .click();
+  await expect(page.getByLabel("Check every (minutes)")).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+  await expect(page.getByLabel("Daily request limit")).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+  expect(await client.feedCommandReceipt.count()).toBe(0);
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Feed settings", exact: true })
+    .click();
+  await expect(page.getByLabel("Check every (minutes)")).toHaveValue("30");
+  await expect(page.getByLabel("Daily request limit")).toHaveValue("100");
+});
+
+test("an interrupted settings save retries the same command without a second revision", async ({
+  page,
+}) => {
+  await dailyFeedFixture(database);
+  await unlock(page, "/?view=results");
+  await settings(page);
+  const commands: (string | null)[] = [];
+  await page.route("**/v1/processing/settings", async (route) => {
+    commands.push(route.request().postData());
+    if (commands.length === 1) {
+      expect((await route.fetch()).status()).toBe(200);
+      await route.abort();
+    } else await route.continue();
+  });
+  await page.getByLabel("Check every (minutes)").fill("60");
+  await page
+    .getByRole("button", { name: "Save settings", exact: true })
+    .click();
+  await expect(page.getByLabel("Check every (minutes)")).toBeDisabled();
+  await page.getByRole("button", { name: "Retry same settings" }).click();
+  await expect(page.getByText(/Settings saved\./)).toBeVisible();
+  expect(commands).toHaveLength(2);
+  expect(commands[1]).toBe(commands[0]);
+  expect(await client.feedCommandReceipt.count()).toBe(1);
+  expect(
+    (
+      await client.feedProcessingState.findUniqueOrThrow({
+        where: { id: "local" },
+      })
+    ).settingsVersion,
+  ).toBe(1);
+});
+
+test("settings conflicts preserve the unfinished values until explicitly reloaded", async ({
+  page,
+  context,
+}) => {
+  await dailyFeedFixture(database);
+  const second = await context.newPage();
+  await unlock(page, "/?view=results");
+  await unlock(second, "/?view=results");
+  await settings(page);
+  await settings(second);
+  await page.getByLabel("Check every (minutes)").fill("45");
+  await second.getByLabel("Check every (minutes)").fill("60");
+  await page
+    .getByRole("button", { name: "Save settings", exact: true })
+    .click();
+  await expect(page.getByText(/Settings saved\./)).toBeVisible();
+  await second
+    .getByRole("button", { name: "Save settings", exact: true })
+    .click();
+  await expect(
+    second.getByText(/Settings changed in another tab/),
+  ).toBeVisible();
+  await expect(second.getByLabel("Check every (minutes)")).toHaveValue("60");
+  await second.getByRole("button", { name: "Reload current settings" }).click();
+  await expect(second.getByLabel("Check every (minutes)")).toHaveValue("45");
+  expect(await client.feedCommandReceipt.count()).toBe(1);
+  await second.close();
+});
+
+test("@a11y feed settings and validation fit desktop and mobile with keyboard controls", async ({
+  page,
+}) => {
+  await dailyFeedFixture(database);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await unlock(page, "/?view=results");
+  await settings(page);
+  await expect(page.getByLabel("Check every (minutes)")).toBeFocused();
+  for (const viewport of [
+    { width: 1440, height: 1000 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    const audit = await new AxeBuilder({ page }).analyze();
+    expect(
+      audit.violations.filter(
+        (item) => item.impact === "serious" || item.impact === "critical",
+      ),
+    ).toEqual([]);
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+    await screenshot(
+      page,
+      viewport.width === 390 ? "settings-mobile" : "settings-desktop",
+    );
+  }
+  await page.getByLabel("Daily request limit").fill("0");
+  await page
+    .getByRole("button", { name: "Save settings", exact: true })
+    .focus();
+  await page.keyboard.press("Enter");
+  await expect(page.getByLabel("Daily request limit")).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
+  const audit = await new AxeBuilder({ page }).analyze();
+  expect(
+    audit.violations.filter(
+      (item) => item.impact === "serious" || item.impact === "critical",
+    ),
+  ).toEqual([]);
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Feed settings", exact: true }),
+  ).toBeFocused();
+});
+
 test("search and bookmarks persist across list, detail, saved view, and reload", async ({
   page,
 }) => {
