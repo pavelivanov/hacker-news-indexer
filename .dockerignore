@@ -13,3 +13,4 @@ coverage
 *.session
 *.session-journal
 plans
+output

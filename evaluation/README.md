@@ -49,6 +49,13 @@ for model selection. The exact pass digests and body-free comparison are pinned
 in the cycle manifest. The next recovery attempt is v3 after calibration on a
 separate, excluded corpus.
 
+Cycle v3 was captured and frozen on 2026-09-04 from the exact later Telegram
+window `33100..33189`. Its 90 occurrences resolve to 90 unique canonical HN
+comments with zero overlap with earlier cycles. The immutable split contains 63
+development rows and 27 sealed holdout rows; `evaluation/cycles/v3.json` is in
+`SPLIT_FROZEN` state pending two independent annotation passes with the
+rewritten guide.
+
 Prepare two blind, differently ordered packet sets outside the repository. The
 command verifies the frozen source digest, refuses an existing output
 directory, emits 15-row chunks by default, and prints only body-free metadata:

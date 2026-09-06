@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   evaluateReviewPolicy,
+  reviewPolicyFromReasons,
   REVIEW_REASON_CODES,
   UNPROMOTED_MODEL_REVIEW_DECISION,
   type ReviewPolicyInput,
@@ -115,9 +116,21 @@ describe("mandatory review policy", () => {
   });
 
   it("covers every stable reason code", () => {
-    expect(new Set(cases.map(({ reason }) => reason))).toEqual(
-      new Set(REVIEW_REASON_CODES),
-    );
+    const manualDraftPolicy = reviewPolicyFromReasons([
+      "MANUAL_DECISION_REVIEW",
+    ]);
+    expect(manualDraftPolicy).toEqual({
+      required: true,
+      reasons: ["MANUAL_DECISION_REVIEW"],
+      priority: "LOW",
+      priorityScore: 25,
+    });
+    expect(
+      new Set([
+        ...cases.map(({ reason }) => reason),
+        ...manualDraftPolicy.reasons,
+      ]),
+    ).toEqual(new Set(REVIEW_REASON_CODES));
   });
 
   it("orders combined reasons deterministically by priority", () => {

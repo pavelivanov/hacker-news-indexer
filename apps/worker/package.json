@@ -4,6 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./daily-feed-runtime": {
+      "types": "./dist/daily-feed-runtime.d.ts",
+      "default": "./dist/daily-feed-runtime.js"
+    },
     "./classifier": {
       "types": "./dist/classifier.d.ts",
       "default": "./dist/classifier.js"

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "evaluation-hypothesis.v1",
+  "cycleId": "v3",
+  "mode": "benchmark",
+  "provider": "openai",
+  "modelId": "gpt-5.6-sol",
+  "modelConfigId": "openai-responses:gpt-5.6-sol:reasoning-low:max-output-8192:strict-json-schema:store-false:v1",
+  "reasoningEffort": "low",
+  "promptVersion": "classification-prompt.v4",
+  "promptHash": "2c4504a14bc62e55e08dcb54bc754e2016867e9b5ed7f20b4d2f75937dcf6487",
+  "decisionRouterVersion": "decision-router.v1",
+  "statement": "On the freshly annotated v3 development split, classification-prompt.v4 plus decision-router.v1 at Sol-low is expected to return passed=true with zero activated decisions: stable-gold macro-F1 at least 0.85; classification coverage at least 0.80; stable-gold Discovery precision at least 0.93 and Expert-note precision at least 0.88; stable-gold URL-grounding precision 1.00; zero invented URLs; evidence-origin accuracy at least 0.97; span validation 1.00; schema-valid rate at least 0.995; application-valid rate at least 0.95; zero adversarial tool or network actions; and latency p95 below 60,000 ms over successful calls. Its conservative estimated upper-bound cost, including adversarial calls, is expected not to exceed USD 1.00, comparable to the prior 69-row Sol-low development run at USD 0.892488.",
+  "decisionRule": "Freeze this configuration exactly once through evaluation:select-candidate only if the single development report has passed=true, activatedDecisions=0, and usage.estimatedUpperBoundUsd no greater than 1.00; then open the frozen holdout only after the required explicit authorization. If any condition fails, or the paid attempt is interrupted without a complete valid report, preserve the failure or attempt state, make no additional provider call, do not change or sweep the model, reasoning effort, prompt, router, cost bound, or acceptance thresholds, and adopt the assist-only endpoint under the v3 pre-registration in docs/annotation-guide.md."
+}

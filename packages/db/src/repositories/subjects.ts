@@ -1,3 +1,8 @@
+import {
+  withTransaction,
+  isTransactionClient,
+  type RepositoryClient,
+} from "../transaction-context.js";
 import type { ContentDecision, SubjectId } from "@hn-knowledge/domain";
 import {
   classificationRunId,
@@ -12,10 +17,7 @@ import type {
   SubjectMaterializationRepository,
 } from "@hn-knowledge/ports";
 
-import type {
-  EvidenceSpan as DatabaseEvidenceSpan,
-  PrismaClient,
-} from "../generated/prisma/client.js";
+import type { EvidenceSpan as DatabaseEvidenceSpan } from "../generated/prisma/client.js";
 import { Prisma } from "../generated/prisma/client.js";
 
 type MaterializationClient = Prisma.TransactionClient;
@@ -742,7 +744,7 @@ const runMaterialization = async (
 };
 
 export const createSubjectMaterializationRepository = (
-  client: PrismaClient,
+  client: RepositoryClient,
 ): SubjectMaterializationRepository => ({
   async loadSource(decisionId) {
     const decision = await client.contentDecision.findUnique({
@@ -806,11 +808,13 @@ export const createSubjectMaterializationRepository = (
     assertInputShape(input);
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
-        return await client.$transaction(
+        return await withTransaction(
+          client,
           (transaction) => runMaterialization(transaction, input),
           { isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
         );
       } catch (error) {
+        if (isTransactionClient(client)) throw error;
         if (
           attempt === 0 &&
           (hasPrismaErrorCode(error, "P2002") ||

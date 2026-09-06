@@ -10,6 +10,7 @@ const state = vi.hoisted(() => ({
   rejectImport: false,
   rejectStringImport: false,
   storageKinds: [] as string[],
+  historyCalls: [] as unknown[],
 }));
 
 vi.mock("@mtcute/node", () => ({
@@ -37,6 +38,10 @@ vi.mock("@mtcute/node", () => ({
     getMessages(): Promise<readonly []> {
       return Promise.resolve([]);
     }
+    getHistory(sourceKey: string, options: unknown) {
+      state.historyCalls.push([sourceKey, options]);
+      return Promise.resolve([{ id: 42 }]);
+    }
 
     destroy(): Promise<void> {
       state.destroyed += 1;
@@ -60,6 +65,7 @@ describe("mtcute serialized sessions", () => {
     state.rejectImport = false;
     state.rejectStringImport = false;
     state.storageKinds.length = 0;
+    state.historyCalls.length = 0;
   });
 
   it("imports and verifies a serialized session in memory", async () => {
@@ -74,6 +80,8 @@ describe("mtcute serialized sessions", () => {
     expect(state.getMeCalls).toBe(1);
     expect(state.storageKinds).toEqual(["MemoryStorage"]);
     expect(telegram.sessionFormat).toBe("mtcute");
+    expect(await telegram.latestId("fixture-channel")).toBe(42);
+    expect(state.historyCalls).toEqual([["fixture-channel", { limit: 1 }]]);
 
     await telegram.close();
     expect(state.destroyed).toBe(1);

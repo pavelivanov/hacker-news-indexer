@@ -1,3 +1,8 @@
+import {
+  withTransaction,
+  isTransactionClient,
+  type RepositoryClient,
+} from "../transaction-context.js";
 import type {
   ClassificationRun,
   ClassificationRunId,
@@ -18,7 +23,6 @@ import type {
 import type {
   ClassificationRun as DatabaseClassificationRun,
   EvidenceSpan as DatabaseEvidenceSpan,
-  PrismaClient,
 } from "../generated/prisma/client.js";
 import { Prisma } from "../generated/prisma/client.js";
 
@@ -136,17 +140,18 @@ const validateRunShape = (input: RecordClassificationRunInput): void => {
 };
 
 const findIdempotentRun = (
-  client: PrismaClient,
+  client: RepositoryClient,
   input: RecordClassificationRunInput,
 ): Promise<DatabaseClassificationRun | null> =>
   client.classificationRun.findUnique({
     where: {
-      commentId_inputHash_promptVersion_schemaVersion_modelConfigId: {
+      runIdentity: {
         commentId: BigInt(input.commentId),
         inputHash: input.inputHash,
         promptVersion: input.promptVersion,
         schemaVersion: input.schemaVersion,
         modelConfigId: input.modelConfigId,
+        attempt: input.attempt ?? 1,
       },
     },
   });
@@ -186,7 +191,8 @@ const validateEvidence = (input: SaveContentDecisionInput): void => {
 };
 
 export const createClassificationRepository = (
-  client: PrismaClient,
+  client: RepositoryClient,
+  manualDraftId: string | null = null,
 ): ClassificationRepository => ({
   async loadSource(commentId) {
     const selected = await client.selectedComment.findUnique({
@@ -230,7 +236,10 @@ export const createClassificationRepository = (
 
   async recordRun(input) {
     validateRunShape(input);
+    if (!Number.isSafeInteger(input.attempt ?? 1) || (input.attempt ?? 1) < 1)
+      throw new TypeError("Invalid classifier attempt");
     const data = {
+      attempt: input.attempt ?? 1,
       commentId: BigInt(input.commentId),
       inputHash: requiredText(input.inputHash, "inputHash"),
       promptVersion: requiredText(input.promptVersion, "promptVersion"),
@@ -292,7 +301,7 @@ export const createClassificationRepository = (
     confidence(input.decisionConfidence);
     validateEvidence(input);
     const storedOutput = jsonValue(input.validatedOutput, "validatedOutput");
-    return client.$transaction(async (transaction) => {
+    return withTransaction(client, async (transaction) => {
       if (input.source === "MODEL") {
         if (
           input.classificationRunId === null ||
@@ -324,18 +333,37 @@ export const createClassificationRepository = (
       } else {
         if (
           input.classificationRunId !== null ||
-          input.manualOverrideOfId === null
+          (input.manualOverrideOfId === null && manualDraftId === null)
         ) {
           throw new TypeError(
             "A manual decision requires an overridden decision and no run",
           );
         }
-        const overridden = await transaction.contentDecision.findFirst({
-          where: {
-            id: input.manualOverrideOfId,
-            commentId: BigInt(input.commentId),
-          },
-        });
+        if (manualDraftId !== null) {
+          const draft = await transaction.manualReviewDraft.findFirst({
+            where: {
+              id: manualDraftId,
+              commentId: BigInt(input.commentId),
+              state: "DRAFT",
+              baseActiveDecisionId: input.manualOverrideOfId,
+            },
+          });
+          if (
+            draft === null ||
+            !input.reviewRequired ||
+            !isTransactionClient(client)
+          )
+            throw new TypeError("Invalid manual draft decision");
+        }
+        const overridden =
+          input.manualOverrideOfId === null
+            ? true
+            : await transaction.contentDecision.findFirst({
+                where: {
+                  id: input.manualOverrideOfId,
+                  commentId: BigInt(input.commentId),
+                },
+              });
         if (overridden === null) {
           throw new TypeError(
             "Manual override target does not belong to comment",
@@ -354,6 +382,7 @@ export const createClassificationRepository = (
           reviewRequired: input.reviewRequired,
           validatedOutput: storedOutput,
           manualOverrideOfId: input.manualOverrideOfId,
+          manualDraftId: input.source === "MANUAL" ? manualDraftId : null,
           evidenceSpans: {
             create: input.evidenceSpans.map((span) => ({
               spanId: span.spanId,

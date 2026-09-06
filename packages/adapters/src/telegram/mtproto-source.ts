@@ -69,6 +69,7 @@ export interface MtcuteTelegramSourceOptions extends TelegramMtprotoSourceOption
 
 export interface MtcuteTelegramSource {
   readonly source: SelectionSource;
+  latestId(sourceKey: string): Promise<number | null>;
   readonly sessionFormat: TelegramSessionFormat;
   close(): Promise<void>;
 }
@@ -540,7 +541,10 @@ export const createMtcuteTelegramSource = async (
     }
 
     try {
-      await client.getMe();
+      await withTimeout(
+        client.getMe(),
+        options.requestTimeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS,
+      );
     } catch (error: unknown) {
       try {
         await client.destroy();
@@ -556,6 +560,13 @@ export const createMtcuteTelegramSource = async (
         options,
       ),
       sessionFormat: candidate.format,
+      async latestId(sourceKey) {
+        const messages = await withTimeout(
+          client.getHistory(sourceKey, { limit: 1 }),
+          options.requestTimeoutMs ?? DEFAULT_REQUEST_TIMEOUT_MS,
+        );
+        return messages[0]?.id ?? null;
+      },
       async close(): Promise<void> {
         await client.destroy();
       },

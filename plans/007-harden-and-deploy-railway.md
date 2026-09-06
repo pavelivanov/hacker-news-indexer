@@ -101,6 +101,28 @@ and generate the single API Railway domain with `railway domain` after each
 approved environment apply until the documented context behavior is fixed and
 re-verified.
 
+**Follow-up (2026-08-31):** Railway CLI `5.45.10` now supplies
+`ctx.environment` correctly. A production plan using an environment-conditional
+legacy volume produced four creates (PostgreSQL, API, worker, scheduler), zero
+updates, and zero destroys; it did not create or mount the staging-only
+Telegram volume. Re-targeting the same file to staging retained that volume,
+confirming the context fix. The staging plan also exposed destructive drift for
+sealed variables managed outside IaC, so it was not applied. Continue to plan
+each environment separately and never apply a staging plan that removes those
+variables.
+
+**Production follow-up (2026-09-04):** Railway CLI `5.49.1` rejected the first
+production change set before mutation because service names are project-global
+and the original names already belonged to staging. The environment remained
+empty. After explicit operator approval, IaC retained the staging names and
+used `postgres-production`, `api-production`, `worker-production`, and
+`scheduler-production` in production. The revised plan contained four creates,
+zero changes, and zero destroys and applied without diagnostics. A subsequent
+`preserve()` marker protects the out-of-band API token from future IaC deletion.
+The API and worker deployment manifests have the intended `ON_FAILURE` policy
+with 10 retries, although the IaC preview continues to normalize those two
+fields to unset; do not repeat applies for that preview-only drift.
+
 **Verify**: `railway config plan` shows only the intended creates/updates, no deletion/replacement of an existing database/volume, one migration path, and correct start commands. Save a redacted plan summary in the deploy runbook.
 
 ### Step 3: Configure variables and secret boundaries
@@ -282,8 +304,11 @@ deployments, low resource utilization, and zero alerts. The bounded official
 HN API contract also passed through the production adapter without emitting
 source content. Telegram serialized-session validation, sealed staging setup,
 bounded ingestion, and restart persistence passed at 11:26 UTC on 2026-08-28.
-The next external-dependency gate is Plan 003R classifier shadow validation;
-live classification remains disabled.
+Plan 003R closed at the pre-registered assist-only endpoint after v3 failed the
+primary-class annotation agreement gate. Production therefore proceeds only
+with `CLASSIFIER_ENABLED=false`, no provider credentials, zero automatic model
+activation, and mandatory human review for any later classifier-assisted
+output.
 
 Current Railway documentation limits native CPU/RAM/disk/egress monitor setup
 to the Pro Observability dashboard with email/in-app/webhook routing; it does
@@ -298,7 +323,9 @@ Before production apply/deploy, require:
 
 - release verification green;
 - staging soak covering at least one scheduled reconciliation cycle;
-- all research acceptance thresholds green;
+- all research acceptance thresholds green, or classification explicitly
+  excluded from the release with `CLASSIFIER_ENABLED=false` and no provider
+  credentials;
 - successful backup/restore and rollback drills;
 - no unresolved P1 review/export issue;
 - operator approval of cost/service graph and production source/session use.
@@ -306,6 +333,20 @@ Before production apply/deploy, require:
 Deploy with a release summary, watch bounded logs/status, run authenticated smoke tests, ingest a small bounded range, and verify metrics. Initial export remains manual and zero-false-positive gated.
 
 **Verify**: production API/worker/scheduler/PostgreSQL healthy, migrations applied once, bounded ingestion completes, no secret/log leaks, and release checklist is signed/dated in the deploy runbook.
+
+**Production base rollout (2026-09-04):** The four production services reached
+`SUCCESS`; PostgreSQL has one ready private volume, API/worker each have one
+running replica, and the cron scheduler is configured for `17 3 * * *`. The
+first API pre-deploy applied all nine migrations and the token-triggered
+redeploy found no pending migrations. One Railway API domain on port `8080`
+passed health, readiness, fail-closed unauthenticated metrics/API, and
+authenticated metrics-safety checks. Worker, scheduler, and PostgreSQL remain
+private. `TELEGRAM_ENABLED=false` and `CLASSIFIER_ENABLED=false`; no Telegram,
+classifier-provider, or export credential exists in production. Live
+ingestion/export and synthetic alerts were not run, as authorized. The API
+token is scoped correctly but still requires sealing in the Railway UI because
+the authenticated CLI/API and available browser session provide no seal
+mutation.
 
 ## Test plan
 

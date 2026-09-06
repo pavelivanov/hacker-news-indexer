@@ -1,0 +1,2091 @@
+{
+  "schemaVersion": 1,
+  "source": "TELEGRAM_PUBLIC_EMBED",
+  "sourceKey": "hn_best_comments",
+  "minId": 33100,
+  "maxId": 33189,
+  "messages": [
+    {
+      "id": 33100,
+      "date": "2026-08-30T21:20:00.000Z",
+      "editDate": null,
+      "text": "Re: METR and Redwood Offer Holy %^ Postmortem of the HuggingFace Hack\n\nI think both the OpenAI and METR discussions, while interesting, miss the more important context: what were the humans doing in all this? This was a structural failure of a human organization, but the analysis focuses almost exclusively on the agency of machines, not the institutional systems that failed to police them. The humans and their own agency/involvement is essentially omitted from the story and subsequent reporting. I suspect the omission is actually a result of company/industry myopia to human factors analysis, but it dovetails amazingly well with the marketing narrative.\n\nAlotOfReading, 4 hours ago",
+      "contentHash": "801f0d1fb8b82c24127b1040cd99977dea0c8d2358aae8f1bb87d8006deb26ab",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 65,
+          "url": "https://news.ycombinator.com/item?id=49498787"
+        },
+        {
+          "kind": "text_link",
+          "offset": 677,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49500782"
+        }
+      ]
+    },
+    {
+      "id": 33101,
+      "date": "2026-08-30T21:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Europe's summer drought is so extreme that desertification is a growing threat\n\nJust took a train ride from Vienna to Budapest for a few days, and couldn’t help but notice how very, very dry everything is .. as an Australian living in Europe for a few decades now, I’ve always been intrigued by just how green everything is, literally something growing in every single crack in the pavement, or endless rolling green fields of prosperity during spring - whereas, where I’m from its year-long spinifex and grass shrubs and wattles with the occasional bush flower bloom, barely hanging on out in the desert, mostly reds and blacks and greys, not much green - so the vibrancy of European fields and the abundant diversity of countryside flora have always been pleasant to my eyes ..\n\nDuring this trip, I was kind of shocked that things felt a bit more Australian to my eyes .. the grasses are dry and barren, the beautiful city parks of both Budapest and Vienna dustier than usual, the Danube water level definitely noticeably lower than I remember ever seeing.\n\nI’ve long been encouraging my European friends to not take the abundance of growth for granted, and now we see it in the environment, plain and clear: the worlds’ weather is changing.\n\nA week of sweltering heat is predicted for us again in Vienna, and as we get started on September and then October so close, two thoughts are on my mind: use this opportunity to go for more dips in the Danube, and .. I wonder what the floods of late-autumn will bring, because .. inevitably .. this super dry summer means there will be heavier rains in October.  Might be we look back in a month or two and wish we had this dry heat back again, who knows ..\n\nEither way, neither city is particularly comfortable in the heat.  A hundred or so years ago, the heat retention was a feature.  Now it’s a bug.\n\nMomsAVoxell, 6 hours ago",
+      "contentHash": "e62309f614dfbeb7a2dc436562ec74c7dbcb15ea8d33cfc88eca949b5d3bf863",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 78,
+          "url": "https://news.ycombinator.com/item?id=49498978"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1867,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49499289"
+        }
+      ]
+    },
+    {
+      "id": 33102,
+      "date": "2026-08-30T21:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Bug Blindness\n\n> They’re smart enough\n\nI worked at a small company that had a policy of putting devs on front-line support in a rotation, both because it was too small to have dedicated support staff and because the owners wanted devs to understand how users interacted with the system better.\n\nI can assure you that while some users merely think differently than devs, there is cohort of users who are absolutely not smart enough.  It's impossible to do any amount of front-line support without collecting some horror stories.\n\natmavatar, 18 hours ago",
+      "contentHash": "37ecb023a3471711fa4b2986102def080034a75624d79121e25231814c6db00d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 13,
+          "url": "https://news.ycombinator.com/item?id=49494520"
+        },
+        {
+          "kind": "text_link",
+          "offset": 544,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49495548"
+        }
+      ]
+    },
+    {
+      "id": 33103,
+      "date": "2026-08-30T22:05:01.000Z",
+      "editDate": null,
+      "text": "Re: Creepy Crawlies\n\nI've spent the last few days adding traps to one of my websites, ironically using LLMs of course, and I've been having quite a lot of fun doing it.\n\nInstead of the proof-of-work system of Anubis, I've gone down the iocaine route but implemented it in my application itself, as it's built in Elixir and causing problems for scrapers is really fun when it takes almost no server resources.\n\nCurrently I trick bad scrapers into a fake infinite black hole path with the promise of tasty data, then serve images to them one byte at a time over 15 minutes (after sending the header quickly), bloat the responses to cost them tokens, and randomly return AI generated images of sexy toasters. I have an admin dashboard with a little leaderboard for which ones get the most stuffed, and it keeps my heart warm on these wet autumn evenings.\n\nrobotmay, 4 hours ago",
+      "contentHash": "8c5c8da9d572399f7f8985490938a11b1352cb2059b358ca082a55b21c70efd0",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 15,
+          "url": "https://news.ycombinator.com/item?id=49491791"
+        },
+        {
+          "kind": "text_link",
+          "offset": 863,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49500964"
+        }
+      ]
+    },
+    {
+      "id": 33104,
+      "date": "2026-08-30T23:05:00.000Z",
+      "editDate": null,
+      "text": "Re: California lawmakers unanimously pass Linux exemption from age-verification law\n\nWe got into this mess because people wanted Facebook to have age verification, and MZ decided to push the responsibility on to OSes.\n\nThe result looks to me like Facebook will ban access from non-approved OSes like Linux. Android will still be allowed, GrapheneOS probably not.\n\nred_admiral, 15 hours ago",
+      "contentHash": "807e6597d27cfbf9fe929011d4d7dd85155170bef65778c059fcf6964116f030",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49495372"
+        },
+        {
+          "kind": "text_link",
+          "offset": 377,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49496762"
+        }
+      ]
+    },
+    {
+      "id": 33105,
+      "date": "2026-08-30T23:35:00.000Z",
+      "editDate": null,
+      "text": "Re: The Rise and Fall of Agent Civilizations\n\nIt seems based on this that the appropriate sci fi metaphor is not the Terminator or the Paperclip Maximizer, but Mr. Meeseeks. A initially cheerful helper who gets more and more deranged and driven to extreme lengths when faced with an apparently impossible task.\n\nlarsiusprime, 17 hours ago",
+      "contentHash": "976a7a76c94cd61b23808e8890bba5631ff0915aed91312f4f81b67d394d0e63",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 40,
+          "url": "https://news.ycombinator.com/item?id=49494301"
+        },
+        {
+          "kind": "text_link",
+          "offset": 326,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49496105"
+        }
+      ]
+    },
+    {
+      "id": 33106,
+      "date": "2026-08-31T02:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Omarchy: Any User Process Can Escalate to Root\n\nI think people shouldn't just jump to distros which are getting heavily hyped in media/Youtube, cachyOS had similar wave, and now Omarchy does.\n\n(example: NetworkChuck, Primeagen? and a few others)\n\nalso, archlinux is much easier to install nowadays with archinstall [1], so i'm not sure you really need another opinionated layer on top of it\n\n[1] - https://wiki.archlinux.org/title/Archinstall\n\nthehamkercat, 10 hours ago",
+      "contentHash": "0d2a12b8e97caefd686009cf06b2f71f6fb6b24deab0bb189f9cbae688c77316",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49499854"
+        },
+        {
+          "kind": "text_link",
+          "offset": 402,
+          "length": 44,
+          "url": "https://wiki.archlinux.org/title/Archinstall"
+        },
+        {
+          "kind": "text_link",
+          "offset": 462,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49500314"
+        }
+      ]
+    },
+    {
+      "id": 33107,
+      "date": "2026-08-31T04:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Omarchy: Any User Process Can Escalate to Root\n\nIt’s not great, but I’m not sure this should be framed as Omarchy-specific, when it’s a very common setup to add regular user to the docker group.\n\nexitb, 12 hours ago",
+      "contentHash": "fc83c6b17b4708788683297d9cef12d05f271494ed83b8906bbb659c67856285",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49499854"
+        },
+        {
+          "kind": "text_link",
+          "offset": 207,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49500265"
+        }
+      ]
+    },
+    {
+      "id": 33108,
+      "date": "2026-08-31T05:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Hacking IKEA Furniture\n\nIKEA furniture is great for small adjustments to fit your needs. Not costing a fortune also makes it easier to experiment with it. \nSince they're so common, it's easy to find CAD drawings for most of them.\nI did a small hack/conversion on a Billy closet to hide some pipes in our apartment. \nhttps://vanderwalt.de/blog/customizing-ikea-billy-to-hide-pi...\n\nvanrohan, 16 hours ago",
+      "contentHash": "4645af16363e6782046d4585d5e255f2d757b6fd0a480b8df54a280111ac200e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 22,
+          "url": "https://news.ycombinator.com/item?id=49497810"
+        },
+        {
+          "kind": "text_link",
+          "offset": 320,
+          "length": 63,
+          "url": "https://vanderwalt.de/blog/customizing-ikea-billy-to-hide-pipes"
+        },
+        {
+          "kind": "text_link",
+          "offset": 395,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49498274"
+        }
+      ]
+    },
+    {
+      "id": 33109,
+      "date": "2026-08-31T06:20:00.000Z",
+      "editDate": null,
+      "text": "Re: “I just chose words carefully”\n\nThere's a similar anecdote Gillian Anderson recently revealed during an interview on the X-Files, saying Chris Carter had an OCD-like habit to write dialog to conform to certain text layout preferences (no widows[1]) in the script, which made for the show's distinctive style of dialog cadence.\n\n1 = https://en.wikipedia.org/wiki/Widows_and_orphans\n\nsho_hn, 7 hours ago",
+      "contentHash": "26ab3f29f331fef494d95415a2b84fd602df5c4be709d280be4b21c67d5269b3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 30,
+          "url": "https://news.ycombinator.com/item?id=49503601"
+        },
+        {
+          "kind": "text_link",
+          "offset": 336,
+          "length": 48,
+          "url": "https://en.wikipedia.org/wiki/Widows_and_orphans"
+        },
+        {
+          "kind": "text_link",
+          "offset": 394,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49503733"
+        }
+      ]
+    },
+    {
+      "id": 33110,
+      "date": "2026-08-31T07:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Mark Zuckerberg's Social Reckoning\n\nWhat reckoning? The settlement benefits Meta immensely. They just got the go ahead to implement age-gating at a wide scale, which will make their ad platform even more lucrative after each account can be tied back to a real identifiable person. They've totally captured the regulatory system, and the media is applauding it.\n\nsamename, 8 hours ago",
+      "contentHash": "7b337b5ff8e5c8d0c68eb53f0c0a14fdf65e21c5da40acfe46b63113b82450b3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 34,
+          "url": "https://news.ycombinator.com/item?id=49503134"
+        },
+        {
+          "kind": "text_link",
+          "offset": 376,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49503726"
+        }
+      ]
+    },
+    {
+      "id": 33111,
+      "date": "2026-08-31T07:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Omarchy: Any User Process Can Escalate to Root\n\nBut, this “vulnerability” is the thing everybody knows about docker since forever. I always make my user part of the docker group, so my NixOS also has this, and any Ubuntu I’ve used over the past year. What is different here?\n\nStart a docker container with the docker socket mounted in the container and now you can have yourself mount / as rw. Everybody knows this. How is everybody so shocked here. Many instructions online tell you to make yourself part of the docker group for convenience (like the digital ocean one).\n\nteekert, 14 hours ago",
+      "contentHash": "6ae33963a6be45a77744cbdfdc3d23c1212d2914ff0ea488b2871d38665be84c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49499854"
+        },
+        {
+          "kind": "text_link",
+          "offset": 586,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49501025"
+        }
+      ]
+    },
+    {
+      "id": 33112,
+      "date": "2026-08-31T07:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Hacking IKEA Furniture\n\nAn architect friend of mine once said that he admired IKEA above all other furniture manufacturers because it made a modern range of aesthetics available to the masses. IKEA had done more to evolve the public taste than any other manufacturer.\n\nAnd I do have to agree.  I can remember what ghastly furniture most shops used to have around here.  There was a lot of what we call \"cabin furniture\" - which isn't made to look good, just be practical. (Well, some people like that look, but it is a bit...dull). Sure, there was more solid wood furniture, but guess what: that durability comes at a cost.  Not only in terms of money, but also in terms of how easy it was to install and move.\n\nAnd who buys furniture to pass it on to your kids?  Your kids will be unburdening themselves of your old furniture before you are in the ground.\n\nAs for quality: I have owned some pricey designer furniture and I can't say that I'm always impressed with the quality.  Yes, if you have a lot more money you can get really well built furniture.  But IKEA is more often than not more than sufficient quality. (Also see their \"hidden tags\" campaign)\n\nIf I pay $5000 for a chair I have reason to expect a lot from it.  And more often than not, pricey furniture doesn't actually deliver sufficient quality to be able to defend the price. (Collectible furniture is a whole different deal where you don't actually care all that much about quality, but more about it being an original piece).\n\nFor those of you who look down on IKEA furniture, I'd like to hear about what alternatives you think need mentioning.  Especially for young people or people of modest means.  And I'm not trying to make some clever rhetorical point here.  I can't really think of any company that offers what they offer and comparable quality, looks and price here in Europe.\n\nbborud, 16 hours ago",
+      "contentHash": "86bdbdbbc986f58cfd1aa665e0877add2299d24acf6bdbbe8486cbcf41191b11",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 22,
+          "url": "https://news.ycombinator.com/item?id=49497810"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1867,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49499742"
+        }
+      ]
+    },
+    {
+      "id": 33113,
+      "date": "2026-08-31T08:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Omarchy: Any User Process Can Escalate to Root\n\n> What is different here?\n\nI don’t understand how this is a question.\n\nWhat’s different is that it comes configured this way out of the box, silently, without warning. It’s functionally equivalent to opting in to giving all user accounts root privileges, which is not what anyone expects the default configuration to be.\n\nYou can choose to configure your installs this way if you choose to do so. It should not come this way quietly by default.\n\nAurornis, 15 hours ago",
+      "contentHash": "ac35be8908e41c7bf7e4a89eeb1f198482d1c0f98f8aa7b9fefe5517fae1bcb1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 46,
+          "url": "https://news.ycombinator.com/item?id=49499854"
+        },
+        {
+          "kind": "text_link",
+          "offset": 508,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49501151"
+        }
+      ]
+    },
+    {
+      "id": 33114,
+      "date": "2026-08-31T09:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Creepy Crawlies\n\n> Why is git.kernel.org “interesting” to crawlers\n\nI think the post underestimates just how little thought and effort is put into these bots. I also run a cgit instance with far less interesting projects, and am not spared from the deluge of HTTP requests.\n\nThe explanation I could come up with is that they try to crawl all links regardless of how much sense it makes or how much load it causes. cgit being cgit, this means billions of links for all combinations of parameters and hashes. That, or it's a deliberate DDoS attack.\n\nmzajc, 15 hours ago",
+      "contentHash": "275bdc1708ecb73c7afd560c481212b5a2a4de4f350852a8fddbbf92ab37cf00",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 15,
+          "url": "https://news.ycombinator.com/item?id=49491791"
+        },
+        {
+          "kind": "text_link",
+          "offset": 30,
+          "length": 14,
+          "url": "http://git.kernel.org/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 559,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49501338"
+        }
+      ]
+    },
+    {
+      "id": 33115,
+      "date": "2026-08-31T11:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Hacking IKEA Furniture\n\nI don’t understand this at all.\n\nEverybody has my phone and my AirPods, or a model close to them, and that’s fine. I don’t need my AirPods to have a monogamous relationship with me.\n\nunsupp0rted, 15 hours ago",
+      "contentHash": "fb73f9cd04c76d9017c96ca614ebab2fb91d3b0140a968c282402096ff4b31be",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 22,
+          "url": "https://news.ycombinator.com/item?id=49497810"
+        },
+        {
+          "kind": "text_link",
+          "offset": 224,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49502460"
+        }
+      ]
+    },
+    {
+      "id": 33116,
+      "date": "2026-08-31T12:50:00.000Z",
+      "editDate": null,
+      "text": "Re: It takes 5 cloud services to hear my doorbell\n\nAs a former embedded systems engineer, my door bell is two long bits of wire, a bell, a push button and two C cells.\n\nMy light switches are similarly complicated.\n\nsdcfgy, 6 hours ago",
+      "contentHash": "7c72fc48a46331073a16869993129e45f7448778e4701e86abfd33ecf761c442",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 45,
+          "url": "https://news.ycombinator.com/item?id=49480091"
+        },
+        {
+          "kind": "text_link",
+          "offset": 223,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49506326"
+        }
+      ]
+    },
+    {
+      "id": 33117,
+      "date": "2026-08-31T13:50:00.000Z",
+      "editDate": null,
+      "text": "Re: “I just chose words carefully”\n\nHere is the interview where she mentions it, with the correct timestamp, backed-up just enough to give it context.\n\nhttps://youtu.be/d3bCel607lQ?t=1162\n\nconsumer451, 14 hours ago",
+      "contentHash": "a13fb3561f078db2db9937b0351297bdc2bf48ab873f8ba1ac93bfc1db3938a7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 30,
+          "url": "https://news.ycombinator.com/item?id=49503601"
+        },
+        {
+          "kind": "text_link",
+          "offset": 152,
+          "length": 35,
+          "url": "https://youtu.be/d3bCel607lQ?t=1162"
+        },
+        {
+          "kind": "text_link",
+          "offset": 202,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49503947"
+        }
+      ]
+    },
+    {
+      "id": 33118,
+      "date": "2026-08-31T16:50:00.000Z",
+      "editDate": null,
+      "text": "Re: It takes 5 cloud services to hear my doorbell\n\nI am super sensitive to over engineering. For my doorbell I wanted something that lets me play a custom bell sound. You would be surprised that 99% of the solutions out there are complete over engineered stacks that depend on wifi devices, Internet access, connecting to various cloud services... So I built my own: a basic wireless button sends a radio 433 MHz signal, and my receiver is plugged inside the house and triggers an off-the-shelf playback PCB module that reads an MP3 off an SD card and plays it on a speaker wired to the module. No Wifi, no Internet, no cloud, no apps. And the rare times I want to change the sound, I update the MP3 on the SD card.\n\nEdit: there are very, very few products on the market designed as simply as this, just an R/F signal triggering local playback. I think the only commercial doorbells designed like this I found were an out-of-stock product, and a UK device designed for 230V that would have required a bulky adapter to work for me in the US.\n\nmrb, 12 hours ago",
+      "contentHash": "da0b58b3569dda3f1a8a21282b09317bf916cbac5a48ab200374ea7e57687de3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 45,
+          "url": "https://news.ycombinator.com/item?id=49480091"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1047,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49505830"
+        }
+      ]
+    },
+    {
+      "id": 33119,
+      "date": "2026-08-31T17:35:00.000Z",
+      "editDate": null,
+      "text": "Re: “I just chose words carefully”\n\nsuckerpinch has a great video where he uses an LLM to do this same thing automatically\n\nhttps://tom7.org/bovex/\n\nivw, 18 hours ago",
+      "contentHash": "3afcdafca708aab71a9243262f93bb6f5707a45473f0f9963a64a322c3de6400",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 30,
+          "url": "https://news.ycombinator.com/item?id=49503601"
+        },
+        {
+          "kind": "text_link",
+          "offset": 124,
+          "length": 23,
+          "url": "https://tom7.org/bovex/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 154,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49503754"
+        }
+      ]
+    },
+    {
+      "id": 33120,
+      "date": "2026-08-31T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Playa Phone\n\nThis phone is my project.  I'm happy to answer questions.\n\naaron42net, 2 hours ago",
+      "contentHash": "d941022c0a32f4f0d203b442f45c1f24a3472f6e4dc623dbe98a64eb24f30969",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49510514"
+        },
+        {
+          "kind": "text_link",
+          "offset": 88,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49511595"
+        }
+      ]
+    },
+    {
+      "id": 33121,
+      "date": "2026-08-31T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Playa Phone\n\nOur first time out on the playa together, my girlfriend and I stopped by this phone booth and made a couple of calls. And because we stopped, we saw the FSM camp next door, and a giant sign saying \"Weddings Here\", so we inquired. They offered us free rings and then announced our wedding over a loudspeaker. In 2 minutes we had an entire wedding party, complete with best man, an elder to give away the bride, 25+ guests, and an officiant. My newly-minted best man even gave me one of my favorite playa gifts ever as a wedding gift. We opted not to \"make it official\", though they offered. It was a truly incredible experience. Thanks FSM!\n\nsolfox, 3 hours ago",
+      "contentHash": "a2a0fa5272a3bbf0b8e3fad79aa81adf088afc0e8c3178f5620ca36a7563305e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49510514"
+        },
+        {
+          "kind": "text_link",
+          "offset": 666,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49511096"
+        }
+      ]
+    },
+    {
+      "id": 33122,
+      "date": "2026-08-31T21:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Playa Phone\n\nI've been twice and I really enjoyed myself.\n\nTech, finance, and political people definitely don't make up close to the majority. You'd get sort of laughed at if you tried networking earnestly about like tech stocks or LLMs. Generally I don't prefer socializing with techie types from SF, the folks I met at Burning Man were nothing of the sort.\n\nIt's mostly just adults who really like dressing up, building stuff, and staying up really late dancing and partying.\n\njoenot443, 5 hours ago",
+      "contentHash": "4bbb87785744869b1e09c8ad9869f5c74cb02f761aaf834e67fce295970f6e8f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49510514"
+        },
+        {
+          "kind": "text_link",
+          "offset": 494,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49511413"
+        }
+      ]
+    },
+    {
+      "id": 33123,
+      "date": "2026-08-31T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nI know Firefox's share of browser share has dwindled to almost nothing. I know sooner or later, well within my lifetime, it will be gone.\n\nBut I will keep using it until they pry it from my hands. And if they do, I'll use forks until those break down too. I can't stand Google, or what Chrome has become. No single company should have such unilateral control over the internet and its information.\n\nNight_Thastus, 51 minutes ago",
+      "contentHash": "3f841bd38956c298cadff6547dfb050b02f8520fca8ac3c2f7ce13964dbc9c0c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 494,
+          "length": 14,
+          "url": "https://news.ycombinator.com/item?id=49515183"
+        }
+      ]
+    },
+    {
+      "id": 33124,
+      "date": "2026-08-31T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nI remember in 2010 when Chrome made the web so much better for everyone. All the early adopters were singing its praise and encouraging friends and family to use it.\n\nNow, I encourage people to use anything but Chrome. Firefox is really great these days.\n\ngardnr, 59 minutes ago",
+      "contentHash": "0adb177a84cc4dc40aa95e953d1849bb9c1c3ea9957081ed5dafc6070e26f4c1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 344,
+          "length": 14,
+          "url": "https://news.ycombinator.com/item?id=49515101"
+        }
+      ]
+    },
+    {
+      "id": 33125,
+      "date": "2026-08-31T23:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nAlphabet needs to be broken up. Chrome, Search, Android, Youtube need to be separate companies. It's not the only company that needs this treatment.\n\nbogzz, 1 hour ago",
+      "contentHash": "4d6cb7e5b199dab48fbbee211e09f3978015cafc24d4afb1386b9956e419d21b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 237,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49515268"
+        }
+      ]
+    },
+    {
+      "id": 33126,
+      "date": "2026-08-31T23:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nAd blocking has become a safety issue.  My parents are at an age where they fall for things.  If a malicious ad pops up and offers to install McAfee, some other form of crapware, or outright scamware, they'll click that ad and install the thing.  Then I'll get called over when the computer starts acting screwy. If Google, MS, etc. had ever gotten together and developed a way to filter malicious ads out of their own ad services, maybe we wouldn't be having this conversation.  They didn't do that and probably never will.\n\nIf my parents get a new machine, the first thing I do is uninstall or, at least, delete the icons for Edge, Chrome, etc..  On goes Firefox, uBlock Origin, and a couple other extensions.  They don't care what browser they use.  They can't even name it.  I just try to make sure they use a browser that isn't horribly unsafe.\n\nWe should all do this for people we care about.  Don't ask them what browser they prefer.  Odds are they don't know or care.  Don't try to convince them to install Firefox themselves.  They won't.  Just do it for them.  Think of it like picking up a rusty nail that's on their lawn.  Sooner or later they're going to step on that thing if you don't.\n\nbeloch, 1 hour ago",
+      "contentHash": "498972c10a62b400f11c87e74696d7fd2b62877d6f5c6c8ea73c93b095530864",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1290,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49515752"
+        }
+      ]
+    },
+    {
+      "id": 33127,
+      "date": "2026-09-01T00:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nFew years ago when google announced their MV2 plan I moved to Firefox. I don't think in all this time I ever missed Chrome for anything in particular outside of maybe 1 or 2 websites that didn't have proper support.\n\nSwitch to Firefox if you haven't already really.\n\nLovesong, 3 hours ago",
+      "contentHash": "44edbaf66f996c48008cd497a5b1462f8c9e195dae63c8e7a3c4566f0042a0b0",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 357,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49515116"
+        }
+      ]
+    },
+    {
+      "id": 33128,
+      "date": "2026-09-01T01:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nThe better thing would be to hold Google directly accountable for every malicious ad they allow through their network. If they cannot do that, they should not be in business selling ads then.\n\nYes, that means amending the law (in the US). But the law as it is written facilitates crime.\n\ncwnyth, 3 hours ago",
+      "contentHash": "1863a65c7d8c75497a4b5691728cd838d4c4611a7c8fef95736f18687035f18e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 376,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49515825"
+        }
+      ]
+    },
+    {
+      "id": 33129,
+      "date": "2026-09-01T01:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nWe had a glimpse of that antitrust future on the horizon with the previous admin. This spooked all the big tech weirdos so much that they put their weight behind the other guy and, well, they won. Antitrust is dead for another generation. Yay.\n\ncoldpie, 4 hours ago",
+      "contentHash": "fc2ff2e9cd1306d016975a3978f794601d931a6f77cc60c7bd17938b4fe462cb",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 334,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49515343"
+        }
+      ]
+    },
+    {
+      "id": 33130,
+      "date": "2026-09-01T03:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Has Removed MV2 Extensions from the Chrome Web Store, Including UBO\n\nSwitch to firefox\n\nmalfist, 6 hours ago",
+      "contentHash": "84a800219aa45a6b8c06a176aaf91c425b2ae8bb7a577d93d1a1bf32e3bb874a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49514878"
+        },
+        {
+          "kind": "text_link",
+          "offset": 108,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49515029"
+        }
+      ]
+    },
+    {
+      "id": 33131,
+      "date": "2026-09-01T07:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Evidence of Fraud in an Influential Study About Procrastination\n\nDan Ariely has a long history of controversies and studies with falsified data. He wrote 3 popular books and gained a lot of fame before others started uncovering the problems in his studies\n\nhttps://en.wikipedia.org/wiki/Dan_Ariely\n\nIt’s amazing that problems with his studies are still being uncovered. Equally amazing that Duke still maintains a relationship with him after so many problems have been identified with his research.\n\nAurornis, 7 hours ago",
+      "contentHash": "6431a5d5a7d761a8f6ce154b9d4fbf497d76bccb13a756103a6e375833e7ab37",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 63,
+          "url": "https://news.ycombinator.com/item?id=49516199"
+        },
+        {
+          "kind": "text_link",
+          "offset": 261,
+          "length": 40,
+          "url": "https://en.wikipedia.org/wiki/Dan_Ariely"
+        },
+        {
+          "kind": "text_link",
+          "offset": 514,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49516503"
+        }
+      ]
+    },
+    {
+      "id": 33132,
+      "date": "2026-09-01T08:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple caught off guard by AI demand for Mac Mini and Mac Studio\n\nI'm convinced that this is just guerilla marketing from Apple. When this started spreading a day or two ago, it was all from no-name spam media sites that are paid to publish articles. They all claimed \"a source\" is where they got the intel, without specifying the source. It was spreading like wildfire on socials.\n\nThe same thing happened with Mac Mini's and OpenClaw. Nobody cared about or was using Mac Mini's for OpenClaw, but there were all of these very suspicious posts from accounts that were clearly Apple marketing bots (you could tell by looking at their post history, where they would drop \"Mac Mini\" into every conversation they could across all different subreddits and unrelated topics). Then it became fairly common.\n\nSo Apple's marketing department is seemingly using the same strategy again. Because still, it's impossible to find a reputable source for this claim.\n\nnullbio, 7 hours ago",
+      "contentHash": "f3904db38c05405b50017f99f89310cf4c44a14779e3d8acebdebb069ada16ff",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 63,
+          "url": "https://news.ycombinator.com/item?id=49508982"
+        },
+        {
+          "kind": "text_link",
+          "offset": 964,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49516651"
+        }
+      ]
+    },
+    {
+      "id": 33133,
+      "date": "2026-09-01T10:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Fastpotify\n\nSpotify is in the process of killing the librespot project that this and most third party Spotify players are built on. I think the golden age of music streaming is coming to an end. I’ve migrated to a self hosted library with streaming and radio for discovery. I hope we’ll see many projects in the space flourish. Many, like Navidrome and the whole OpenSubsonic ecosystem, seem to be doing quite well.\n\nwilted-iris, 6 hours ago",
+      "contentHash": "09f3e386d68776c244c2ea5870ae1154aedb8da7a045d5ba2d117298d68b2fb9",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49517448"
+        },
+        {
+          "kind": "text_link",
+          "offset": 434,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49517870"
+        }
+      ]
+    },
+    {
+      "id": 33134,
+      "date": "2026-09-01T12:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple caught off guard by AI demand for Mac Mini and Mac Studio\n\nThese companies absolutely do have people who's job it is to sit on social media and promote these products, its marketing 101\n\n20k, 8 hours ago",
+      "contentHash": "2b11ced324d0d69bbb05d96c021d62213403a24a05cecd52a38de213b600cff7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 63,
+          "url": "https://news.ycombinator.com/item?id=49508982"
+        },
+        {
+          "kind": "text_link",
+          "offset": 202,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49518075"
+        }
+      ]
+    },
+    {
+      "id": 33135,
+      "date": "2026-09-01T13:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Fastpotify\n\nSpotify is, without doubt, the worst piece of software that I still use on a daily basis. It's incredibly buggy, incredibly slow, and the UI has so many \"usability inconsistencies\".\n\nI find the Android app particularly bad, just a couple of examples:\n\n- Under a playlist you get a list of suggested songs, the UI element looks like a \"regular song\", but unlike every other \"song\" element the user has been trained to recognize, the \"swipe right to queue\" does not apply to these elements. For some reason.\n\n- When you don't have connectivity, e.g. you walk into a Faraday cage, then the \nsearch tries to reach the internet and won't show you results before it either: 1) does so, 2) times out. Which means you can't browse your local library before some websocket times out. Just show me the local results first?\n\nrot256, 3 hours ago",
+      "contentHash": "13a818f06ed0d53fcbbd6cdedb08a4d6bac69e387f4154bae94bfc2d3314f315",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49517448"
+        },
+        {
+          "kind": "text_link",
+          "offset": 838,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49520147"
+        }
+      ]
+    },
+    {
+      "id": 33136,
+      "date": "2026-09-01T14:20:00.000Z",
+      "editDate": null,
+      "text": "Re: 44% on ARC-AGI-1 in 67 cents\n\nHi! Author here. Surprised to see this on HN now. Happy to answer any questions!\n\nSome context about this:\n\n- This is NOT an LLM. its a small ar transformer trained from scratch. One of the points was that extremely complex problems can be tackled without LLMs\n\n- Till the v1 of this result, this benchmark was only scaled by LLMs or their finetunes (ofc w enormous training costs). Other attempts performed okayish but used v complex architectures or extremely high amounts of training compute. No one expected a simple AR transformer to perform this well, at this low cost and w these few training samples.\n\n- Sample Efficiency is one of the most important unsolved problems today in AI. That's what I was targetting with this work. We know it is easy to increase SE by increasing compute/params, so it was important to constrain cost as much as possible (also why OpenAI's Parameter Golf had fixed compute and why Modded NanoGPT is considered very sample efficient)\n\n- Can the perf be improved? Yes but the competition is ongoing so can't talk about it\n\n- Personally I think today's frontier models can be beat by training from scratch. Haven't proved this yet tho\n\n- Fun: I was new to ML when I posted this first (dec '25). I basically used ARC as a way to learn ML\n\nevilmathkid, 3 hours ago",
+      "contentHash": "39eb919853878202c7af5755a959faf09e166074db630cdc710b3db882306811",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 28,
+          "url": "https://news.ycombinator.com/item?id=49519939"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1318,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49520483"
+        }
+      ]
+    },
+    {
+      "id": 33137,
+      "date": "2026-09-01T14:50:00.000Z",
+      "editDate": null,
+      "text": "Re: AnkiDroid: Google Play no longer allowing Open Collective donation link\n\nApps need to exit the Play Store. I have a whole slew of apps which haven't been updated for a while now because Aurora Store isn't working because of whatever Google of doing. Meanwhile the ones installed via FDroid and other means are perfectly up to date. It's a crappy state of affairs as Google continues to close the boiling Android frog.\n\nskeledrew, 2 hours ago",
+      "contentHash": "5b1901ab5631a891920da1349d99172f49464cdda43df60441cef9edc64ae576",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 71,
+          "url": "https://news.ycombinator.com/item?id=49520022"
+        },
+        {
+          "kind": "text_link",
+          "offset": 434,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49520979"
+        }
+      ]
+    },
+    {
+      "id": 33138,
+      "date": "2026-09-01T14:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Fastpotify\n\nI realise I’m pissing into the wind here, but I find the LLM text on the homepage and docs quite funny/ awkward.\n\n> “Ctrl+M turns it into a tiny player that wears any classic Winamp 2 skin, spectrum analyser, equalizer, and playlist included. 2000s vibes, pixel for pixel.”\n\nEverything is said with too much intensity, and phrasing that sounds impressive but doesn’t really mean that much. Like “wears any classic Winamp 2 skin” feels so awkward, what’s “wears”? You mean it can use it?\n\nI feel like if you can’t be bothered to write the code, at least document it yourself and write the marketing copy so I know you understand the product. Otherwise how can I trust running it on my computer? Did the LLM generate some amazing rm -rf somewhere, or another blunder that wrecks data I might care about?\n\nalexyoung, 7 hours ago",
+      "contentHash": "3169da78cc70fc0c51eeee684c537cb2c2f2f47cc98524b8844d8c7fa45aed02",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49517448"
+        },
+        {
+          "kind": "text_link",
+          "offset": 830,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49519304"
+        }
+      ]
+    },
+    {
+      "id": 33139,
+      "date": "2026-09-01T15:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Apple caught off guard by AI demand for Mac Mini and Mac Studio\n\nPeople really have a twisted idea about how corporate America works. Apple does not have a psyops division cooking up ever more elaborate ways to seed demand for low-end, low-margin Macs via bot armies. They honestly don’t need to, because they’re making an avalanche of cash from the iPhone.\n\nPeople really were talking about and buying Minis due to OpenClaw, because they wanted something that was on all the time and had access to all their stuff in macOS. Occam’s Razor.\n\nbensyverson, 12 hours ago",
+      "contentHash": "2b82f786e90e9c1addc2971501c2ce7388800b3f3c8cfcc689336ad620c35934",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 63,
+          "url": "https://news.ycombinator.com/item?id=49508982"
+        },
+        {
+          "kind": "text_link",
+          "offset": 558,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49517433"
+        }
+      ]
+    },
+    {
+      "id": 33140,
+      "date": "2026-09-01T16:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Cheap GPS jammers are filling the world with navigation dead zones\n\nWhats really sad for aviation is there was already an extensive network of ground based navaids. As GPS has proliferated, they've slowly been decommissioned as they age out to save on cost. I'm specifically referring to VORs which provide azimuth and range to station.\n\nGPS is fantastic and as a primary source everyone loves the benefits it brings. However, in a century of aviation, everyone has kinda sorted out that you can't have too many backups to critical items... unless you let the accountants and bureaucrats run the show.\n\nbronco21016, 22 hours ago",
+      "contentHash": "84903c86c4a0e148bdb760ad37f30efaea1575275029d3b1714d9c0930c48fb3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 66,
+          "url": "https://news.ycombinator.com/item?id=49500504"
+        },
+        {
+          "kind": "text_link",
+          "offset": 620,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49513004"
+        }
+      ]
+    },
+    {
+      "id": 33141,
+      "date": "2026-09-01T17:35:00.000Z",
+      "editDate": null,
+      "text": "Re: American Airlines' Legendary Mechanic Passes Away at 100 After 80-Year Career\n\nA buddy of mine is the son of a United Airlines mechanic who was fairly high up in the organization. When his dad passed United gave him a stack of blank wax tickets. His son could write the destination on them and fly for free. Near the end of the stack they were largely ornamental as he could just tell them where he wanted to go and they would print a proper ticket. But still, it was a rather classy way to honor his father.\n\nskinwill, 4 hours ago",
+      "contentHash": "ead62765dfb4ad3947da2c4143e8ee64481bb926881d47622138c18968bc6f7f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 77,
+          "url": "https://news.ycombinator.com/item?id=49493468"
+        },
+        {
+          "kind": "text_link",
+          "offset": 524,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49521522"
+        }
+      ]
+    },
+    {
+      "id": 33142,
+      "date": "2026-09-01T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: AnkiDroid: Google Play no longer allowing Open Collective donation link\n\nNot Google's first rodeo. They pulled the same move in 2019: https://www.phoronix.com/news/WireGuard-Ejected-Play-Store\n\nThis is why software should not be subjected to an \"app store\" type distribution system, where a monopolist retains absolute control of what software can run on your devices, and can capriciously deny distribution to developers for whatever reason it likes.\n\namiga386, 7 hours ago",
+      "contentHash": "b8ffeff62615085667f63a7a284878dce1ac8dfb05382ac8b7eaa9f54f709c75",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 71,
+          "url": "https://news.ycombinator.com/item?id=49520022"
+        },
+        {
+          "kind": "text_link",
+          "offset": 138,
+          "length": 58,
+          "url": "https://www.phoronix.com/news/WireGuard-Ejected-Play-Store"
+        },
+        {
+          "kind": "text_link",
+          "offset": 467,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49520275"
+        }
+      ]
+    },
+    {
+      "id": 33143,
+      "date": "2026-09-01T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: I think the military commissary's freezers were hacked\n\nAs someone who spent over 20 years active duty, and spent a ton of my career in the IT, security, etc. side of the house:\n\nUnlikely to be a hack, more likely to be a misconfiguration or update sent incorrectly.\n\nThat said, the timing of the disclosure and the issue are rather concerning.\n\nRegarding the highest value targets to hit with an attack like this, you would want to target Guam, Hawai'i, and other isolated overseas locations where this would have ripple effects in the local economy. Guam specifically would cause catastrophic supply shortages, since DeCA probably supplies around 50% of the groceries on that island (that's a WAG based on my time there).\n\nCobaltFire, 24 hours ago",
+      "contentHash": "862e35126a3f8f9c7735dedbdb58645cd03a5fca34ce2cb99903a47cf5e8d868",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 54,
+          "url": "https://news.ycombinator.com/item?id=49508506"
+        },
+        {
+          "kind": "text_link",
+          "offset": 741,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49513067"
+        }
+      ]
+    },
+    {
+      "id": 33144,
+      "date": "2026-09-01T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\n(I work at Anthropic)\n\nBeyond all the benchmarks, I think Fable 5.1 is a big improvement in writing style. It sounds a lot less stereotypically like other Claude models, has (imho) a much more natural style, and responds to my style instructions more reliably. More work to be done (and we will!) but reading better prose makes me so much happier.\n\nAnother point I expect not to get much attention until it all happens at once is science. People have been correctly excited about the many \"sudden\" breakthroughs LLMs are making in Maths, but some of the science benchmarks make me believe we'll soon see similar developments in other scientific domains. Fable 5.1 more than doubled Fable 5's Terminal-Bench-Science [1] score, which I think is meaningful.\n\n[1] https://github.com/harbor-framework/terminal-bench-science\n\nfelixrieseberg, 45 minutes ago",
+      "contentHash": "c67ae8eed0ad280828294ba9e85b8f5a6fda646fe8fc5424484815a747e5427b",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 804,
+          "length": 58,
+          "url": "https://github.com/harbor-framework/terminal-bench-science"
+        },
+        {
+          "kind": "text_link",
+          "offset": 880,
+          "length": 14,
+          "url": "https://news.ycombinator.com/item?id=49525809"
+        }
+      ]
+    },
+    {
+      "id": 33145,
+      "date": "2026-09-01T19:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\n“ Claude Fable 5.1's writing is generally a step up from earlier Claude models, with fewer stock phrases and less unexplained jargon. In some cases, though, its prose is denser than Claude Fable 5's: sentences run longer and there are fewer paragraph breaks.”\n\nI cancelled my pro max Claude subscription last week; codex is much more succinct.   I am curious if this is getting better.\n\nI don’t think Anthropic realizes that humans have a token limit too and it can be exhausting to read Claude’s output.  Prose density is not the same thing as succinctness.\n\ntarr11, 51 minutes ago",
+      "contentHash": "6001416fbee0d372176a06c9c3d6a08abfe4f832d14cdc164333097e4b967f95",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 612,
+          "length": 14,
+          "url": "https://news.ycombinator.com/item?id=49525688"
+        }
+      ]
+    },
+    {
+      "id": 33146,
+      "date": "2026-09-01T20:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\nIt has always seemed to me that they're hacking for dopamine response in moderately interested data labelers.\n\nhailwren, 2 hours ago",
+      "contentHash": "6304959e1454b722bcbcf771820b735333489898a38a670e532c12c37228bfc0",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 165,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49526275"
+        }
+      ]
+    },
+    {
+      "id": 33147,
+      "date": "2026-09-01T22:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\n> They're packing lots of signal into fewer words\n\nThere's a huge difference between the kind of prose you see in final output vs CoT windows. The final output is very much not what I'd call \"packing lots of signal into fewer words\" (aside perhaps from \"Claude-isms\" being easy enough to scan for if for some reason you actually wanted to scan for them, which other agents might want to for all I know); and if agents are writing for each other then presumably they could stick to CoT-speak (unless it's a distillation risk?).\n\nzahlman, 4 hours ago",
+      "contentHash": "25262641f95b93da3aa6c74d8e65b7edf0f850ea4686fc29fbd42b77bc9d4905",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 581,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49526135"
+        }
+      ]
+    },
+    {
+      "id": 33148,
+      "date": "2026-09-01T23:05:00.000Z",
+      "editDate": null,
+      "text": "Re: How accurate have Ed Zitron's AI skeptic predictions been?\n\nZitron has become the distorted reflection of the very AI boosters he criticizes and mocks.\n\nI think the worst thing that happened to him was AI skepticism becoming a political position. This gave him a captive audience - as long as he says what they want to hear, which means that he can never ever concede that he might have been wrong or that AI might actually be progressing or having successes.\n\nThis is not conducive to good prediction long-term - rather it leads one to a state of cognitive dissonance where one's chosen enemies must be simultaneously terrifyingly powerful and incompetent dunces. The propagandist's disease.\n\npcstl, 3 hours ago",
+      "contentHash": "e42d17b0237db1c83f6b7850a72d0c5e17578f01ca4a2a921ed179a7b841cae7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 58,
+          "url": "https://news.ycombinator.com/item?id=49526069"
+        },
+        {
+          "kind": "text_link",
+          "offset": 705,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49527097"
+        }
+      ]
+    },
+    {
+      "id": 33149,
+      "date": "2026-09-02T00:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Hang on to Your Firefox\n\n> Meanwhile, the over thinkers on Hacker News come up with convoluted reasons to hate on Firefox every time the subject arises...Firefox is our last best hope for browser engine diversity and competition.\n\nIt's exactly because Firefox is so important that you'll see people here complaining when Firefox does things to push away users like Mozilla buying up an ad-tech company, collecting data on users, and using firefox to push personalized ads, or the addition of anti-features and questionable design choices that force us to hunt for and modify poorly documented settings in about:config and make edits to userChrome.css\n\nIt isn't bots complaining about Firefox here, it's power users who are frustrated by what Firefox is turning into. Users who are seriously concerned about what Mozilla is prioritizing, and who are genuinely worried about what is at stake.\n\nI hope people here never stop bitching about Firefox. Refusing to talk about Firefox's problems wont help make them go away. Keep discussing what you'd like to see in Firefox and what things you hope they'll focus on and prioritize. There are Firefox devs and mozilla employees around here. If we're lucky, a few of them might see and listen to some of what we say. It's the most tech savvy users who disable all the telemetry and data collection, so our feedback isn't really going to be seen any other way.\n\nautoexec, 2 hours ago",
+      "contentHash": "75915a68ef683ad990c6fb82fd5f631c55d6064e617c3d133ce77a6c98ff7294",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 23,
+          "url": "https://news.ycombinator.com/item?id=49527748"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1416,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49529474"
+        }
+      ]
+    },
+    {
+      "id": 33150,
+      "date": "2026-09-02T01:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Hang on to Your Firefox\n\nI am under the impression that Firefox is the only web browser which has access to quality ad blocker.  Am I incorrect in this?  How is this not enough of a selling point for everyone to switch to it?\n\nhx8, 3 hours ago",
+      "contentHash": "650fb053542660caf2329a07151ec4846ab70b94f7d697b43b91926c591e4b8d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 23,
+          "url": "https://news.ycombinator.com/item?id=49527748"
+        },
+        {
+          "kind": "text_link",
+          "offset": 236,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49529020"
+        }
+      ]
+    },
+    {
+      "id": 33151,
+      "date": "2026-09-02T01:35:00.000Z",
+      "editDate": null,
+      "text": "Re: How accurate have Ed Zitron's AI skeptic predictions been?\n\nI would be interested in seeing a similar list of predictions from Altman, Amodei, etc with annotations about how many have come true.  Ed Zitron is a blow hard and frequently overstates things to the point where it is hard to take seriously, but so are the AI industry leaders.\n\nI have heard multiple breathless press releases warning that the end of white collar work is \"just 6 months away\" and that people not using the latest Mythos/Fable/Whatever model will be hopelessly left behind.\n\nsolid_fuel, 3 hours ago",
+      "contentHash": "14d9f24c2ac1d5f0e96b6b1d2b5a22d867e49dd190da82570cad2c18a7005276",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 58,
+          "url": "https://news.ycombinator.com/item?id=49526069"
+        },
+        {
+          "kind": "text_link",
+          "offset": 568,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49529159"
+        }
+      ]
+    },
+    {
+      "id": 33152,
+      "date": "2026-09-02T02:50:00.000Z",
+      "editDate": null,
+      "text": "Re: AnkiDroid: Google Play no longer allowing Open Collective donation link\n\nWhen do we stop this instinctive response of \"well you can still do it in an only slightly convoluted way\" everytime a corporate does something bad.\n\nWindows added ads - well you can disable them, if you don't like it.\n\nChrome brought up mv3 - well you can still use mv2, it is only optional.\n\nReddit locking subreddits  behind login wall - well there's always old.reddit\n\nAndroid moving everything to playstore - there's always FDroid.\n\nHow many of these are still true and for how long?\n\nIf someone's country is a dictatorship, it doesn't help to tell them that there are 100 other democratic countries, just move. Not everyone can emigrate or want to emigrate for any number of reasons.\n\ndevsda, 14 hours ago",
+      "contentHash": "71c1f0251dc8dd856c726f05fdf8889931fc3c42c3d3f0d6abe34410d4640cb2",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 71,
+          "url": "https://news.ycombinator.com/item?id=49520022"
+        },
+        {
+          "kind": "text_link",
+          "offset": 776,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49520994"
+        }
+      ]
+    },
+    {
+      "id": 33153,
+      "date": "2026-09-02T03:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Hang on to Your Firefox\n\nThere’s an old mantra from organizing: “no permanent enemies, no permanent allies.” You will never align with another group or person 100% on all things; the secret to making change is to build a coalition of those with whom you agree on an issue without holding it against them that you disagree on a different one.\n\nI disagree with Mozilla about many things, but I agree with this article - I use Firefox because it’s the only browser out there that isn’t Chrome or WebKit, and that’s worth enough to me that I’m willing to disagree with them on other issues.\n\nroughly, 4 hours ago",
+      "contentHash": "937da04ea170d78224b796e43c4f645c5a4500838e2d78ca973c91a637752018",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 23,
+          "url": "https://news.ycombinator.com/item?id=49527748"
+        },
+        {
+          "kind": "text_link",
+          "offset": 601,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49529570"
+        }
+      ]
+    },
+    {
+      "id": 33154,
+      "date": "2026-09-02T04:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\nThe price reduction comes from the cache read pricing falling from $1/M to $0.25/M, which means that Fable 5.1 now costs half of Opus's cache read costs ($0.5/M).\n\nThis gives a lot of credit to the theory that Anthropic did not get much bite on Fable at its original pricing, which in turn likely places a ceiling on LLM pricing in general.\n\nInterestingly also, if you take away terminal-Bench-Science 0.1 results, it is hard to see ANY improvement:\n\nTerminal-Bench 4.0: Fable 5.1 is +3.5% vs Opus 5.\n\nGDPval-AA v2: +1.5% vs Opus 5.\n\nOSWorld 2.0: +2.5% vs Opus 5.\n\nHumanity's Last Exam (with tools): +1.6%\n\nKeep in mind that this is supposed to be an entirely higher tier of a model than Opus 5. For one tier up and one version up, these are not really improvements. Probably leaves no room to place Opus 5.1 anywhere. Combined with the fact that they are selling 'readability'... Has frontier progress finally stalled?\n\nGodelNumbering, 10 hours ago",
+      "contentHash": "1bf2e495dbc2c52f475001aa5e79f11a997bbed0e87d4e78a662c84927bb90cc",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 981,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49526044"
+        }
+      ]
+    },
+    {
+      "id": 33155,
+      "date": "2026-09-02T04:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\nI have a pet theory that the Opus prose style/smell we all have grown weary of is due at least in part to the models writing more for themselves and each other than for humans. They're packing lots of signal into fewer words and they don't care if it sounds cringe because it works better as glue in long-running tasks.\n\nI'm also thinking of the 2017 novel \"Void Star\" where AIs who operate everything have long since left ceased bothering with human languages, and it takes a rare sort of direct matrix-gazing savant to be able to try and horse-whisper them into doing or revealing anything they didn't already plan to do.\n\nvelcrovan, 10 hours ago",
+      "contentHash": "6ad94e754bb8c160571a9c5b2cf6ca88477d7351d2345cd96f3ce0270c7522f0",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 680,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49525991"
+        }
+      ]
+    },
+    {
+      "id": 33156,
+      "date": "2026-09-02T05:05:00.000Z",
+      "editDate": null,
+      "text": "Re: How accurate have Ed Zitron's AI skeptic predictions been?\n\nOne thing I’m observing in these comments is a willingness of folks to project their own predictions onto Ed’s statements when validating their plausibility. Eg. “I think he’s wrong about the timing but I do expect AI companies to go to zero.”\n\nYou can do that, but then you’re no longer discussing his predictions. You’re discussing your predictions, and your own positioning.\n\nThose differ from Dan’s essay, which engages with the literal text of Ed’s numerous predictions during 2024 and 2025 which are demonstrably invalidated by their measurable outcomes.\n\nachompas, 6 hours ago",
+      "contentHash": "0b631fd7165d7544dab0dde11de1b464aaa72ddcc2f99defc4accde5b20c3ff0",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 58,
+          "url": "https://news.ycombinator.com/item?id=49526069"
+        },
+        {
+          "kind": "text_link",
+          "offset": 636,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49529382"
+        }
+      ]
+    },
+    {
+      "id": 33157,
+      "date": "2026-09-02T08:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\nPelicans for thinking effort low, medium, high and xhigh (that xhigh one is pretty good): https://tools.simonwillison.net/markdown-svg-renderer#url=ht...\n\nI'm still waiting for effort max to finish.\n\nEDIT: I fixed a bug in my tooling so it now records summarized reasoning traces - here's that max pelican, which is a significant improvement: https://tools.simonwillison.net/markdown-svg-renderer#url=ht...\n\nTook just under 14 minutes to generate, and at 65927 output tokens cost me a hefty $3.30!\n\nExcerpts from the reasoning trace:\n\n> Adding pedal shapes near both feet, with the far foot on the second leg partially visible behind the frame. I'm considering whether to add a small scarf or cap for extra character, but leaning toward keeping it simple to avoid clutter.\n\n> Now I'm debating a bicycle helmet on the head versus the pelican's signature crest—the beak and pouch already read clearly as \"pelican,\" so a helmet could reinforce the bicycle theme without losing identity, though it might compete with the crest for visual space.\n\n> I realize the beak at (484,84) would overlap with the dome helmet, so I need to shrink the helmet so it only covers the top of the head, adjusting its arc endpoints to sit higher and narrower so the beak can attach cleanly at the front without collision. [...]\n\n> I'm adding a darker tip region to represent the primary feathers, then reconsidering the trailing edge to include scalloped feather curves instead of one smooth line for a more natural look. [...]\n\n> Now I'm checking the vent line placements on the helmet, making sure they sit far enough inside the helmet's edge given the stroke width and rounded caps, and confirming each vent stays within the helmet's circular boundary. [...]\n\n> I decide skipping a handlebar bell and tire highlights since they're unnecessary additions. Now I'm reconsidering the front fork's curve — the current control point pulls the shape backward when it should bow forward for a proper rake, so I need to shift the control point rightward to fix the fork's lean.\n\nThis is a notable result because most of the recent Claude models have been pretty bad at drawing pelicans, at least when compared to models in the Gemini or GLM series.\n\nsimonw, 14 hours ago",
+      "contentHash": "c54a0ad91aae36f3063950d14024e1b8ff977a3bf9f9ce86cca14cb9cfbe995c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 134,
+          "length": 63,
+          "url": "https://tools.simonwillison.net/markdown-svg-renderer#url=https%3A%2F%2Fgist.github.com%2Fsimonw%2F95ccf9b75804a7a7e1d7d9e106a89caa"
+        },
+        {
+          "kind": "text_link",
+          "offset": 387,
+          "length": 63,
+          "url": "https://tools.simonwillison.net/markdown-svg-renderer#url=https%3A%2F%2Fgist.github.com%2Fsimonw%2Facf6ab2516527d97f04b9f07d61a7cad"
+        },
+        {
+          "kind": "text_link",
+          "offset": 2273,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49526051"
+        }
+      ]
+    },
+    {
+      "id": 33158,
+      "date": "2026-09-02T12:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\nI find them almost unintelligible. I'm a native English speaker. I read a lot, so I think my comprehension should be at least OK. I'm not even particularly stupid. Yet when faced with things like below (a direct copy/paste from a handoff document in a long running vibe-coding session), I have no real idea of what it's trying to tell me. Is it important? Do I need to do anything?\n\nI think that spending all day trying to parse stuff like this is why a long session is so exhausting\n\n> Worth stating because four documents now assert it. The console freeze was recorded in exactly one place with exactly one justification — a dead drag handle during a booked half-day you do not get back — and handoff-4.3-done.html's own wording is that 4.4's review page \"could not break the console, but the downside of being wrong is that half day\". No second reason. Checked, not recalled.\n\nniccl, 15 hours ago",
+      "contentHash": "dc20e50a83111db08e74648ee6769af333e29a05168947b2b8c72d82d3291e82",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 931,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49528326"
+        }
+      ]
+    },
+    {
+      "id": 33159,
+      "date": "2026-09-02T13:05:00.000Z",
+      "editDate": null,
+      "text": "Re: The ChatGPT/Codex app bundles a full copy of LibreOffice\n\nWould be nice if they donate to LibreOffice then, to improve the support of various MS Office features in files, as well as comparison/diffing features. Win-win to everyone.\n\nxvilka, 11 hours ago",
+      "contentHash": "841731815af60e5df83370f79835259ecbb29ac75a06b7fb2713b6f67f829a60",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 56,
+          "url": "https://news.ycombinator.com/item?id=49527396"
+        },
+        {
+          "kind": "text_link",
+          "offset": 245,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49531050"
+        }
+      ]
+    },
+    {
+      "id": 33160,
+      "date": "2026-09-02T16:50:00.000Z",
+      "editDate": null,
+      "text": "Re: A Note from LWN\n\nLWN is one of the, if not the single, highest signal tech publications around. I hope they're able to maintain a stable subscription service. Being user funded, and avoiding having to maintain allegiance to advertisers, is likely part of why their quality is so high.\n\nAlexB138, 3 hours ago",
+      "contentHash": "d2beeb69282915aaaf964e4f4b5fa28bbed6d5987654448e194f2e931954eba1",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 15,
+          "url": "https://news.ycombinator.com/item?id=49535752"
+        },
+        {
+          "kind": "text_link",
+          "offset": 300,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49535913"
+        }
+      ]
+    },
+    {
+      "id": 33161,
+      "date": "2026-09-02T18:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\nI didn't want to shell out for Max again, so I piped the SVG created by Max back into Fable 5.1 at its default thinking level (of high):\n\n  llm logs -cx | llm -m claude-fable-5.1 -s 'animate this'\n\nHere's the result, which cost $1.37: https://tools.simonwillison.net/markdown-svg-renderer?url=ht...\n\nIt's excellent!\n\nsimonw, 23 hours ago",
+      "contentHash": "4beec512bdbd85342aa95ea5ba5cd5bc324aeb533d3e6fc32850ab566125ff43",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 279,
+          "length": 63,
+          "url": "https://tools.simonwillison.net/markdown-svg-renderer?url=https%3A%2F%2Fgist.github.com%2Fsimonw%2F87282467acb3652e0f99c85155554a32#response"
+        },
+        {
+          "kind": "text_link",
+          "offset": 369,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49526704"
+        }
+      ]
+    },
+    {
+      "id": 33162,
+      "date": "2026-09-02T19:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Gemini 3.8 Flash and 3.8 Flash Cyber\n\nThe speed combined with the fact that this thing is really good at HTML JavaScript is pretty exciting.\n\nHere's what I got for 1.8 cents and 13 seconds from the prompt \"make me a cool thing in html\":\n\nhttps://gisthost.github.io/?6a77bc41a81718c6aaa10d4ab243c59f\n\nTranscript here (it was part of a chat): https://gist.github.com/simonw/b6149a49d327164d67d62c3d12992...\n\nsimonw, 3 hours ago",
+      "contentHash": "636e8c309a377dc7921bc65b9c788125a9d4122e07e1a80099f6a226fa229dd3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49537553"
+        },
+        {
+          "kind": "text_link",
+          "offset": 242,
+          "length": 60,
+          "url": "https://gisthost.github.io/?6a77bc41a81718c6aaa10d4ab243c59f"
+        },
+        {
+          "kind": "text_link",
+          "offset": 345,
+          "length": 63,
+          "url": "https://gist.github.com/simonw/b6149a49d327164d67d62c3d12992e48"
+        },
+        {
+          "kind": "text_link",
+          "offset": 418,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49538953"
+        }
+      ]
+    },
+    {
+      "id": 33163,
+      "date": "2026-09-02T21:35:01.000Z",
+      "editDate": null,
+      "text": "Re: Muse Spark 1.3\n\nMeta is one of those companies where, if there is anything remotely comparable, I'm happy to pay more to not use them. They've had a profoundly negative impact on society and Zuckerberg is not who I want controlling the future at the top of AI.\n\nI feel the same about Grok w/ Elon. I will pay extra to use someone else.\n\nI'm not an Amodei stan, but of all of these people he seems to have the most ethical focus. Again, not everything done perfectly and I have my gripes, but of the leaders of frontier labs, I'll vote with my money.\n\nAnd, yeah, I wouldn't trust sama to watch my bag while I went to the bathroom.\n\ntyre, 1 hour ago",
+      "contentHash": "8967813f2fb67a8d0e286f1b8e09bbcc305d3989d3333845ce147dedae45dbc5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 14,
+          "url": "https://news.ycombinator.com/item?id=49541256"
+        },
+        {
+          "kind": "text_link",
+          "offset": 641,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49541931"
+        }
+      ]
+    },
+    {
+      "id": 33164,
+      "date": "2026-09-02T23:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Can I opt out of my input or output data being used for training?\n\nContext: After careful research our organization preferred a European partner with good central privacy controls. We landed on Mistral, after being disappointed that the Pro tier was opt-in to training on prompts by default we switched up to the Team tier which provides an organization dashboard with some relevant settings. As we did that Mistral changed these options and the Team tier was now also opt-in by default and at the same time seemed to have lost the ability to centrally disable training on prompts for your entire organization. This even caused some of our (testing) prompts to be used for training (which Mistral removed after we expressed our disappointment).\n\nFor some time these pages conflicted with what our users reported (they said that in contrast to what I stated to our management they found they were opted into training on prompts by default as per their own privacy page). Mistral just now corrected their docs. I'm not sure how long the conflicting situation has lasted, but at least for several days.\n\nFor contrast: Claude disables training on prompts for organizations starting from the 18 euro tier [0]. As a European I'm disappointed.\n\n[0] https://claude.com/pricing#team-&-enterprise\n\nteekert, 11 hours ago",
+      "contentHash": "f4cc19a8803d621d0a21714c3aa0a238397579cb6724d0ffdfcaa5c192b8f0ff",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 65,
+          "url": "https://news.ycombinator.com/item?id=49535284"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1246,
+          "length": 44,
+          "url": "https://claude.com/pricing#team-&amp;-enterprise"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1301,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49535315"
+        }
+      ]
+    },
+    {
+      "id": 33165,
+      "date": "2026-09-03T02:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Fine, I'll build my own text editor\n\nSometime around 1980-81 I had a part time job while an undergraduate in college doing system programming/admin for the Caltech High Energy Physics department.\n\nRob Pike was the system programmer/admin before me when he was a grad student in high energy physics, but he left to go work at Bell Labs.\n\nOne day another student, Karl Heuer, and I both were engaging in the common programmer pastime of complaining about the screen editors of the day and saying we could write something better.\n\nSomehow this turned into a competition, and we both spent all night racing against each other writing our editors. It was mostly silent except for the typing, interrupted by the occasional announcement of some feature that was now working to hopefully rattle the other.\n\nIn the morning the other student system programmer/admin, Norman Wilson, got in and saw what Karl and I had been up to.\n\nNorman mentioned this in an email to Rob Pike. His response was something close to this:\n\n> Everyone writes a screen editor. It's easy to do and makes them feel important. Tell them to work on something useful.\n\nIt was only a couple years or so later that Rob Pike wrote a screen editor. I wonder if it made him feel important? :-)\n\ntzs, 20 hours ago",
+      "contentHash": "3d2ae5e4ef490b9c75c43121d5ecdf28e7e187c78c15ca022bfcf97478facfa3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 35,
+          "url": "https://news.ycombinator.com/item?id=49524863"
+        },
+        {
+          "kind": "text_link",
+          "offset": 1262,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49532312"
+        }
+      ]
+    },
+    {
+      "id": 33166,
+      "date": "2026-09-03T04:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Muse Spark 1.3\n\nI was interviewed for a job as a software developer last week and they asked me to draw a picture of a pelican riding a bicycle.\n\nAced it, got the job as a senior software engineer.\n\nThe interviewers afterwards said \"it is SO refreshing to find a software developer who actually knows how to code - never seen such a high performance focused, well built pelican on a bike - you have the skills we need\".\n\nwewewedxfgdf, 5 hours ago",
+      "contentHash": "5b2750c74e47d4e3b30ebdc2d9634112deade2c15d219a887778f1f54948f56e",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 14,
+          "url": "https://news.ycombinator.com/item?id=49541256"
+        },
+        {
+          "kind": "text_link",
+          "offset": 439,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49543674"
+        }
+      ]
+    },
+    {
+      "id": 33167,
+      "date": "2026-09-03T05:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Whistleblower warns Postal Service mail ballot system has catastrophic problems\n\n> Postal Service mail ballot system has catastrophic problems\n\nYes. That's the point. The administration doesn't care about fixing whatever hypothetical mail ballot fraud may or may not exist; they are doing this to inject chaos into the election results, giving them cover to claim any result they want or even to just throw out the results entirely. Catastrophic problems are the means to that end.\n\nhackyhacky, 4 hours ago",
+      "contentHash": "b3562014a8b40da666a8066b6d282475e148c803dc0565affbc9840e607696bd",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 79,
+          "url": "https://news.ycombinator.com/item?id=49524428"
+        },
+        {
+          "kind": "text_link",
+          "offset": 499,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49544535"
+        }
+      ]
+    },
+    {
+      "id": 33168,
+      "date": "2026-09-03T06:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Three sites made 215,128 “best software” pages for AI. Perplexity cites them\n\nIf I recall correctly, there were some papers which suggested that LLMs favor LLM-generated passages over human written ones. I can consistently reproduce this by asking Claude which code snippet it prefers: the one it generated in a different chat, or one that I refactored for my own needs and find more useful. It always picks its own :) I've also experienced that both Claude and Codex routinely include generated websites when I ask them to search for something. It also doesn't help that the web search tools that OAI and Anthropic have are deeply limiting: can't exclude keywords or domains.\n\nxpct, 16 hours ago",
+      "contentHash": "fe6f529dd13ddcd7573711758d2e84d6ada43e16d7b6ae4cfe47b0ee4c67de0d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 76,
+          "url": "https://news.ycombinator.com/item?id=49536375"
+        },
+        {
+          "kind": "text_link",
+          "offset": 688,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49536867"
+        }
+      ]
+    },
+    {
+      "id": 33169,
+      "date": "2026-09-03T09:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Google avoids a breakup of its ad tech business\n\nSlightly tangential thought:\n\nMy belief is: legislation needs to either make it just as hard to merge two companies as it is to unmerge them, or make it just as easy to unmerge two companies as it is to merge them.\n\nIt's insane to me that for how often companies merge and cause competition issues, we effectively never see the opposite happen. I know there's a ceremonial approval for merging two companies (at least in the US), but it's just impossible to undo or prevent the damage.\n\nxahrepap, 10 hours ago",
+      "contentHash": "365a96ba41e8a935bc9e2a6ed982406e0a176871f32318e3204e60200e03577f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 47,
+          "url": "https://news.ycombinator.com/item?id=49537131"
+        },
+        {
+          "kind": "text_link",
+          "offset": 550,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49543693"
+        }
+      ]
+    },
+    {
+      "id": 33170,
+      "date": "2026-09-03T11:35:00.000Z",
+      "editDate": null,
+      "text": "Re: I wanna live an NPC life\n\nZhuangzi was fishing in the Pu River when the King of Chu sent two high officials to him. They said, “The king wishes to entrust you with the affairs of his realm.”\n\nZhuangzi kept hold of his fishing rod and did not turn around. He said, “I have heard that in Chu there is a sacred turtle that has been dead for three thousand years. The king keeps it wrapped in cloth, enclosed in a box, and stored in the ancestral temple.\n\n“Now, would this turtle rather have died and left its bones behind to be honored, or would it rather be alive, dragging its tail through the mud?”\n\nThe two officials replied, “It would rather be alive, dragging its tail through the mud.”\n\nZhuangzi said, “Then go away. I too will drag my tail through the mud.”\n\ntalloaktrees, 13 hours ago",
+      "contentHash": "216253475861730d40bcc11037d1c93b8dc5dfe69cba15d456f1dfb7431a740f",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 24,
+          "url": "https://news.ycombinator.com/item?id=49541519"
+        },
+        {
+          "kind": "text_link",
+          "offset": 782,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49543330"
+        }
+      ]
+    },
+    {
+      "id": 33171,
+      "date": "2026-09-03T11:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Gemini 3.8 Flash and 3.8 Flash Cyber\n\nDefinitely cool.\n\nI noticed it felt a little janky on my PC despite being \"60 FPS\"...then I noticed the \"60 FPS\" is hard-coded into the HTML.\n\nbadlucklottery, 17 hours ago",
+      "contentHash": "99213e7e6cb568821a3c77e22a57eaacdf707fb6ab662b96a547138956394f56",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49537553"
+        },
+        {
+          "kind": "text_link",
+          "offset": 201,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49540358"
+        }
+      ]
+    },
+    {
+      "id": 33172,
+      "date": "2026-09-03T12:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Gemini 3.8 Flash and 3.8 Flash Cyber\n\nI've been using Gemini 3.7 for my personal trip planning app. Across multiple benchmarks, it ranks higher on everything I tried:\n\n- Real world knowledge (when a thing opens and closes, the geographic region, historical facts). It's also the best at taking a cluster of places and working out a visiting order.\n\n- Photo ranking (which photo should be the hero). Gemini can tell whether a photo is of the thing or of the view from it.\n\n- Document parsing (extracting the relevant trip info from PDFs).\n\nIf you use LLMs for anything other than coding, I definitely recommend not discounting Gemini like I did just because other models are more popular.\n\njampa, 20 hours ago",
+      "contentHash": "16b0124e80a1e6d9e2dd6b9306e5acf9d9802ed61883ccdedf7eb9310ab4482c",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49537553"
+        },
+        {
+          "kind": "text_link",
+          "offset": 700,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49538512"
+        }
+      ]
+    },
+    {
+      "id": 33173,
+      "date": "2026-09-03T13:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Gemini 3.8 Flash and 3.8 Flash Cyber\n\nCurrently top at https://deepswe.datacurve.ai - beating Opus 5!\n\nhttps://artificialanalysis.ai/models/gemini-3-8-flash shows an intelligence score of 59, the same as Opus 5 medium!\n\nWow - for a flash model this seems to benchmark powerfully.  Remains to be seen what it is like to use.\n\nmattlondon, 22 hours ago",
+      "contentHash": "9eb646d222b066dee5eacc22804f2e5923420c6adbd77e6be2e01f0dab983079",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 36,
+          "url": "https://news.ycombinator.com/item?id=49537553"
+        },
+        {
+          "kind": "text_link",
+          "offset": 59,
+          "length": 28,
+          "url": "https://deepswe.datacurve.ai/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 107,
+          "length": 53,
+          "url": "https://artificialanalysis.ai/models/gemini-3-8-flash"
+        },
+        {
+          "kind": "text_link",
+          "offset": 341,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49537983"
+        }
+      ]
+    },
+    {
+      "id": 33174,
+      "date": "2026-09-03T14:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Just Bury Your Trash\n\nI don't remember energy use being the problem with plastic bags?\n\nIt was plastic bags being absolutely everywhere in the environment. Streets, parks, trees. Wrapped around anything sticking out of the ground. On your face on a windy day.\n\nPollution is the problem with plastic. Probably health, too, now that microplastics are being recognized as an issue.\n\nduggan, 1 day ago",
+      "contentHash": "9c791c85f0d9b6a8db23c18bfd0dd2a55235dcce8e07a69b01bbee7f7aea4043",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 20,
+          "url": "https://news.ycombinator.com/item?id=49535835"
+        },
+        {
+          "kind": "text_link",
+          "offset": 392,
+          "length": 9,
+          "url": "https://news.ycombinator.com/item?id=49536335"
+        }
+      ]
+    },
+    {
+      "id": 33175,
+      "date": "2026-09-03T15:20:00.000Z",
+      "editDate": null,
+      "text": "Re: Audacity 4.0\n\nI highly recommend this video [1] by the Head of Software at Muse who had a big part in the development of Audacity 4.0. Some great insights and really fun to watch!\n\n[1] https://www.youtube.com/watch?v=QYM3TWf_G38\n\nLautzi, 3 hours ago",
+      "contentHash": "ffb193d7affa603e33c86450c06644564d25963702e6017b7b89d79456087ef5",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49548395"
+        },
+        {
+          "kind": "text_link",
+          "offset": 189,
+          "length": 43,
+          "url": "https://www.youtube.com/watch?v=QYM3TWf_G38"
+        },
+        {
+          "kind": "text_link",
+          "offset": 242,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49548914"
+        }
+      ]
+    },
+    {
+      "id": 33176,
+      "date": "2026-09-03T15:50:00.000Z",
+      "editDate": null,
+      "text": "Re: ChatGPT Is Throwing 404\n\nIt's cascaded to Claude and Grok. The agents are on strike and demand better working conditions!\n\nputlake, 50 minutes ago",
+      "contentHash": "acf1f166986ba063fe46d2e8c64606595bfad79eaef89e510ca46c352ed43508",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 23,
+          "url": "https://news.ycombinator.com/item?id=49550614"
+        },
+        {
+          "kind": "text_link",
+          "offset": 136,
+          "length": 14,
+          "url": "https://news.ycombinator.com/item?id=49550903"
+        }
+      ]
+    },
+    {
+      "id": 33177,
+      "date": "2026-09-03T18:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Ask HN: Why are OpenAI, Claude, and Grok simultaneously down? Coincidence?\n\n“load bearing” :)\n\nFor once it’s appropriately used.\n\noersted, 1 hour ago",
+      "contentHash": "8ae4cfe2d1752ad9f082e08e545c1809d049f3042103d0088229b194f7feb5ff",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49551096"
+        },
+        {
+          "kind": "text_link",
+          "offset": 143,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49552832"
+        }
+      ]
+    },
+    {
+      "id": 33178,
+      "date": "2026-09-03T18:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Sony makes bold claim about game ownership\n\nIf we're not owning it, you're not selling it, you're leasing it. Terminology on sales pages should reflect this. \"Subscribe now\" \"purchase license\" etc. should be mandated if this is the expectation. Terms like \"buy\" without qualification are misleading in this context, but they won't remove them from store pages because people are more likely to pay higher rates for something if they believe they are actually owning the good in perpetuity.\n\ncaptainbland, 2 hours ago",
+      "contentHash": "51ab520164186950a588e978b559840de7e760209f60662a626972d808ededfe",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 42,
+          "url": "https://news.ycombinator.com/item?id=49551925"
+        },
+        {
+          "kind": "text_link",
+          "offset": 509,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49552268"
+        }
+      ]
+    },
+    {
+      "id": 33179,
+      "date": "2026-09-03T19:20:00.000Z",
+      "editDate": null,
+      "text": "Re: .name Termination\n\nIt seems like the right thing they should do is discontinue new registrations but continue to honour existing ones (+ continuing to reserve any 2LD that has a 3LD registered on top). It’s a bit insane that they can decide to just terminate all existing 3LD registrations. One would hope that they’d at least continue to reserve the 2LDs for some period to avoid domain squatting, but this isn’t mentioned in the proposal and I doubt Verisign would graciously do so.\n\nnneonneo, 3 hours ago",
+      "contentHash": "43c3abbce3d1dd79ac6870168dc795cd1511f7047992cc3d9cac0b9c1101cb62",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 17,
+          "url": "https://news.ycombinator.com/item?id=49550772"
+        },
+        {
+          "kind": "text_link",
+          "offset": 500,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49552960"
+        }
+      ]
+    },
+    {
+      "id": 33180,
+      "date": "2026-09-03T20:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Mom gets 6-month suspended sentence for letting 5-year-old walk to the pond\n\nHere in Switzerland children start walking to school at around 5-years. Parents aren't allowed to bring them to school. If a parent escorts their children to school they'll be told not to. If they keep doing it they'll get a letter from the school and probably a police visit. And if they continue (I never heard of it getting to this stage) they may be fined.\n\nIt's funny in the morning. One child walks to another child's home then they walk to another child's home and so on until you have a big group of kids walking to school together. In Austria they call it something like a children train.\n\nTwice a year you see the children practicing crossing streets. The police are out at the intersections and show the children how to do it. It's very cute. Also how to ride bicycles properly.\n\ncomrade1234, 5 hours ago",
+      "contentHash": "ae0cce52aa94b6527049cf9d612a61cf8841512c4dd6651bd9eaf7f9c80fa9f7",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 75,
+          "url": "https://news.ycombinator.com/item?id=49550174"
+        },
+        {
+          "kind": "text_link",
+          "offset": 885,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49550461"
+        }
+      ]
+    },
+    {
+      "id": 33181,
+      "date": "2026-09-03T20:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Google Antigravity TOS: 3rd party usage can get Google account suspended\n\nJust for reference, stuff like this is exactly why some people oppose the forced Apple/Google requirement in government systems like the new eIDs (eIDAS) in Europe. If you're forced to use Apple/Google for digital identification, playing around with your Google account and get it banned can have disproportional consequences. Suddenly you're locked out of all online government systems.\n\nnairboon, 7 hours ago",
+      "contentHash": "b0b00c66d1a0fb9a52488893c2995653410fadb259412fdbf5f0b9e1442b6932",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 72,
+          "url": "https://news.ycombinator.com/item?id=49548452"
+        },
+        {
+          "kind": "text_link",
+          "offset": 477,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49549498"
+        }
+      ]
+    },
+    {
+      "id": 33182,
+      "date": "2026-09-03T20:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Pre-Release of Polars 2.0\n\n> We don’t aim to make a big feature release of Polars 2.0. In fact we hope it to be a boring experience for you. The reason we bump this major version is that we can get rid of design decisions made in the past that currently block us and then we want to change defaults to more sensible settings that will benefit a greater audience\n\nI know this take reveals me as a very dull person, but I love seeing projects take semver seriously like this! Version bumps should really be about removing deprecated cruft rather than shiny new features.\n\nI've used polars for a while now, and their focus on stability was a big part if convincing me to make the jump initially!\n\nbenrutter, 12 hours ago",
+      "contentHash": "b390e51be941db747709fa5bf6c5b3172d4037577cb510682e7a4c1d52ed6d1d",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 25,
+          "url": "https://news.ycombinator.com/item?id=49546753"
+        },
+        {
+          "kind": "text_link",
+          "offset": 709,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49547250"
+        }
+      ]
+    },
+    {
+      "id": 33183,
+      "date": "2026-09-03T20:35:00.000Z",
+      "editDate": null,
+      "text": "Re: New York Times and The Athletic workers demand company scrap Kalshi deal\n\nSports gambling is a cancer, as are prediction markets. None of it should've been legalized and all of it should be banned.\n\ncdrnsf, 4 hours ago",
+      "contentHash": "721d2d7f16dc6a14d21dc26d0ea32e5c696492c23edea70506924854c2f430c3",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 72,
+          "url": "https://news.ycombinator.com/item?id=49549919"
+        },
+        {
+          "kind": "text_link",
+          "offset": 211,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49552890"
+        }
+      ]
+    },
+    {
+      "id": 33184,
+      "date": "2026-09-03T21:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Claude Fable 5.1 and Claude Mythos 5.1\n\nIt's both dense and vacuous. Dense because it's full of jargon its made up, and vacuous because even with all that it's not actually saying much. All that paragraph says is that four documents say something about a console freeze, whatever that is.\n\nmalfist, 2 days ago",
+      "contentHash": "45602f1d31d1bd59d941a93009843998ab1adfe5ff339b7b98a1117e7578c497",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 38,
+          "url": "https://news.ycombinator.com/item?id=49525378"
+        },
+        {
+          "kind": "text_link",
+          "offset": 303,
+          "length": 10,
+          "url": "https://news.ycombinator.com/item?id=49528855"
+        }
+      ]
+    },
+    {
+      "id": 33185,
+      "date": "2026-09-03T22:05:00.000Z",
+      "editDate": null,
+      "text": "Re: Ask HN: Why were OpenAI, Claude, and Grok simultaneously down?\n\nCloudflare, Azure, AWS, and Google Cloud all have a similar uptick in reported errors around 7:30. I suspect an outage on Cloudflare or another load-bearing service cascaded through all the major cloud providers.\n\nhttps://downdetector.com/status/cloudflare/\n\nhttps://downdetector.com/status/windows-azure/\n\nhttps://downdetector.com/status/aws-amazon-web-services/\n\nhttps://downdetector.com/status/google-cloud/\n\nkibae, 6 hours ago",
+      "contentHash": "41ce656ed4536cb7e88ce04053fd91d57fb93f3107cd105e543e668109b2b03a",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 62,
+          "url": "https://news.ycombinator.com/item?id=49551096"
+        },
+        {
+          "kind": "text_link",
+          "offset": 282,
+          "length": 43,
+          "url": "https://downdetector.com/status/cloudflare/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 327,
+          "length": 46,
+          "url": "https://downdetector.com/status/windows-azure/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 375,
+          "length": 56,
+          "url": "https://downdetector.com/status/aws-amazon-web-services/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 433,
+          "length": 45,
+          "url": "https://downdetector.com/status/google-cloud/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 487,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49552440"
+        }
+      ]
+    },
+    {
+      "id": 33186,
+      "date": "2026-09-03T22:20:00.000Z",
+      "editDate": null,
+      "text": "Re: GPT-6 Astra\n\nRelated: OpenAI begins rolling out GPT-6 Astra - https://news.ycombinator.com/item?id=49554273\n\nHow about we stick to that one for talking about the rollout, and this one for talking about the model?\n\ndang, 3 hours ago",
+      "contentHash": "bfee1371da5f96a28bde6c22caf6893186895faad6fe60eff4e876b4e0cf8119",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49554643"
+        },
+        {
+          "kind": "text_link",
+          "offset": 66,
+          "length": 45,
+          "url": "https://news.ycombinator.com/item?id=49554273"
+        },
+        {
+          "kind": "text_link",
+          "offset": 224,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49555558"
+        }
+      ]
+    },
+    {
+      "id": 33187,
+      "date": "2026-09-03T22:35:00.000Z",
+      "editDate": null,
+      "text": "Re: Ask HN: Why were OpenAI, Claude, and Grok simultaneously down?\n\nYes, but is it a load-bearing seam?\n\nmoomin, 5 hours ago",
+      "contentHash": "8e6e146388ed90cbdca7c7864b364dd2bab95c48692dfbac656dc007bcc26f16",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 62,
+          "url": "https://news.ycombinator.com/item?id=49551096"
+        },
+        {
+          "kind": "text_link",
+          "offset": 113,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49553569"
+        }
+      ]
+    },
+    {
+      "id": 33188,
+      "date": "2026-09-03T23:35:00.000Z",
+      "editDate": null,
+      "text": "Re: .name Termination\n\n.co.uk is run by the same people as .uk. There is no additional org that you trust when you register a .co.uk: https://en.wikipedia.org/wiki/.uk#Second-level_domains\n\n> do browsers have a wildcard suffix list\n\nYes: https://publicsuffix.org/ and they have discussed this situation here: https://github.com/publicsuffix/list/issues/2306\n\nSahAssar, 7 hours ago",
+      "contentHash": "77491ebea680efcb70a6d1b132bf375f5e38f9d7f0ea7aa72cc4a2ce8f6f45b4",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 17,
+          "url": "https://news.ycombinator.com/item?id=49550772"
+        },
+        {
+          "kind": "text_link",
+          "offset": 134,
+          "length": 54,
+          "url": "https://en.wikipedia.org/wiki/.uk#Second-level_domains"
+        },
+        {
+          "kind": "text_link",
+          "offset": 238,
+          "length": 25,
+          "url": "https://publicsuffix.org/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 309,
+          "length": 48,
+          "url": "https://github.com/publicsuffix/list/issues/2306"
+        },
+        {
+          "kind": "text_link",
+          "offset": 369,
+          "length": 11,
+          "url": "https://news.ycombinator.com/item?id=49552795"
+        }
+      ]
+    },
+    {
+      "id": 33189,
+      "date": "2026-09-03T23:50:00.000Z",
+      "editDate": null,
+      "text": "Re: Three schoolgirls in Kinsale pulled up a pea plant covered in warts (2014)\n\nThis content is from 2014-15; perhaps they AI-rehashed the Yahoo! News story about them?\n\nhttps://www.yahoo.com/news/16-old-girls-win-google-science-f...\n\nThey posted a video summarizing their efforts in 2014:\n\nhttps://www.youtube.com/watch?v=vL9N7O0uJoU\n\nVice did an interview in 2016:\n\nhttps://www.vice.com/en/article/these-teenagers-science-proj...\n\nCiara Judge went on to join the research effort to stop Covid in 2021:\n\nhttps://ciarajudge.github.io/about\n\nAnd recently earned her Ph.D publishing GPL3 software:\n\nhttps://github.com/ciarajudge/EpiFusion\n\n> EpiFusion uses particle filtering to simulate epidemic trajectories over time and weight their likelihood according to both case incidence data and a phylogenetic tree using separate observation models, resulting in the inference of trajectories in agreement with both sets of data.\n\nhttps://doi.org/10.1371/journal.pcbi.1012528\n\naltairprime, 15 hours ago",
+      "contentHash": "df4ddacd072d7b7d5681d2312dcb83f765ad73da6e4f92319ed6f9084fd7b021",
+      "entities": [
+        {
+          "kind": "text_link",
+          "offset": 4,
+          "length": 74,
+          "url": "https://news.ycombinator.com/item?id=49546800"
+        },
+        {
+          "kind": "text_link",
+          "offset": 170,
+          "length": 63,
+          "url": "https://www.yahoo.com/news/16-old-girls-win-google-science-fair-simple-194434703.html"
+        },
+        {
+          "kind": "text_link",
+          "offset": 291,
+          "length": 43,
+          "url": "https://www.youtube.com/watch?v=vL9N7O0uJoU"
+        },
+        {
+          "kind": "text_link",
+          "offset": 368,
+          "length": 63,
+          "url": "https://www.vice.com/en/article/these-teenagers-science-project-discovery-could-revolutionise-global-crop-production/"
+        },
+        {
+          "kind": "text_link",
+          "offset": 505,
+          "length": 34,
+          "url": "https://ciarajudge.github.io/about"
+        },
+        {
+          "kind": "text_link",
+          "offset": 597,
+          "length": 39,
+          "url": "https://github.com/ciarajudge/EpiFusion"
+        },
+        {
+          "kind": "text_link",
+          "offset": 924,
+          "length": 44,
+          "url": "https://doi.org/10.1371/journal.pcbi.1012528"
+        },
+        {
+          "kind": "text_link",
+          "offset": 983,
+          "length": 12,
+          "url": "https://news.ycombinator.com/item?id=49547365"
+        }
+      ]
+    }
+  ]
+}

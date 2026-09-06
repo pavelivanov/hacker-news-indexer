@@ -226,6 +226,7 @@ model IngestionRun {
   updatedAt      DateTime                 @updatedAt @map("updated_at") @db.Timestamptz(3)
   occurrences    IngestionRunOccurrence[]
   jobs           PipelineJob[]
+  feedBatch      FeedSyncBatch?
 
   @@index([status, createdAt])
   @@map("ingestion_runs")
@@ -297,6 +298,7 @@ model PipelineJob {
   type           PipelineJobType
   payload        Json
   idempotencyKey String           @unique @map("idempotency_key")
+  lane           String           @default("legacy")
   state          PipelineJobState @default(AVAILABLE)
   attempts       Int              @default(0)
   availableAt    DateTime         @default(now()) @map("available_at") @db.Timestamptz(6)
@@ -309,6 +311,7 @@ model PipelineJob {
 
   @@index([state, availableAt, createdAt])
   @@index([leaseExpiresAt])
+  @@index([lane, state, availableAt])
   @@map("pipeline_jobs")
 }
 
@@ -359,6 +362,7 @@ model SelectedComment {
   revisions            SelectedCommentRevision[]
   resolutionRevisions  ResolutionPathRevision[]
   reconciliationEvents HnReconciliationEvent[]
+  manualReviewDraft    ManualReviewDraft?
 
   @@index([rootId])
   @@map("selected_comments")
@@ -372,6 +376,7 @@ model ClassificationRun {
   promptHash            String                  @map("prompt_hash")
   schemaVersion         String                  @map("schema_version")
   modelConfigId         String                  @map("model_config_id")
+  attempt               Int                     @default(1)
   provider              String
   modelId               String                  @map("model_id")
   outputHash            String?                 @map("output_hash")
@@ -386,11 +391,83 @@ model ClassificationRun {
   createdAt             DateTime                @default(now()) @map("created_at") @db.Timestamptz(3)
   comment               SelectedComment         @relation(fields: [commentId], references: [id], onDelete: Restrict)
   contentDecision       ContentDecision?
+  resultSnapshot        ClassifierResultSnapshot?
 
-  @@unique([commentId, inputHash, promptVersion, schemaVersion, modelConfigId])
+  @@unique([commentId, inputHash, promptVersion, schemaVersion, modelConfigId, attempt], name: "runIdentity", map: "classification_runs_identity_attempt_key")
   @@index([commentId, createdAt])
   @@index([status, createdAt])
   @@map("classification_runs")
+}
+
+model FeedProcessingState {
+  id                String @id @default("local")
+  sourceKey         String @map("source_key")
+  enabled           Boolean @default(true)
+  cursor            BigInt?
+  syncRequested     Boolean @default(true) @map("sync_requested")
+  nextSyncAt        DateTime @default(now()) @map("next_sync_at") @db.Timestamptz(3)
+  lastCheckedAt     DateTime? @map("last_checked_at") @db.Timestamptz(3)
+  heartbeatAt       DateTime? @map("heartbeat_at") @db.Timestamptz(3)
+  errorCode         String? @map("error_code")
+  intervalSeconds   Int @default(1800) @map("interval_seconds")
+  batchSize         Int @default(20) @map("batch_size")
+  dailyRequestLimit Int @default(100) @map("daily_request_limit")
+  updatedAt         DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@map("feed_processing_state")
+}
+
+model FeedSyncBatch {
+  runId     String @id @map("run_id") @db.Uuid
+  run       IngestionRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  @@map("feed_sync_batches")
+}
+
+model FeedRequestUsage {
+  day      DateTime @id @db.Date
+  requests Int @default(0)
+  @@map("feed_request_usage")
+}
+
+model FeedCommandReceipt {
+  commandKey String @id @map("command_key")
+  requestHash String @map("request_hash")
+  result Json
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  @@map("feed_command_receipts")
+}
+
+model ClassifierResultSnapshot {
+  runId           String @id @map("run_id") @db.Uuid
+  sourceInput     Json @map("source_input")
+  originalOutput  Json? @map("original_output")
+  errorCode       String? @map("error_code")
+  category        String
+  title           String
+  summary         String
+  feedbackVersion Int @default(0) @map("feedback_version")
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  run             ClassificationRun @relation(fields: [runId], references: [id], onDelete: Restrict)
+  feedback        ClassifierFeedback[]
+
+  @@index([category, createdAt, runId])
+  @@map("classifier_result_snapshots")
+}
+
+model ClassifierFeedback {
+  id          String @id @default(uuid()) @db.Uuid
+  resultId    String @map("result_id") @db.Uuid
+  version     Int
+  commandKey  String @unique @map("command_key")
+  requestHash String @map("request_hash")
+  values      Json
+  actorId     String @map("actor_id")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  result      ClassifierResultSnapshot @relation(fields: [resultId], references: [runId], onDelete: Restrict)
+
+  @@unique([resultId, version])
+  @@map("classifier_feedback")
 }
 
 model ContentDecision {
@@ -403,6 +480,8 @@ model ContentDecision {
   materiallyTechnical  Boolean               @map("materially_technical")
   reviewRequired       Boolean               @map("review_required")
   validatedOutput      Json                  @map("validated_output")
+  manualDraftId        String?               @unique @map("manual_draft_id") @db.Uuid
+  manualDraft          ManualReviewDraft?    @relation(fields: [manualDraftId], references: [id], onDelete: Restrict)
   manualOverrideOfId   String?               @map("manual_override_of_id") @db.Uuid
   createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(3)
   comment              SelectedComment       @relation("CommentDecisions", fields: [commentId], references: [id], onDelete: Restrict)
@@ -878,4 +957,30 @@ model HnReconciliationEvent {
   @@index([selectedCommentId, createdAt])
   @@index([outcome, createdAt])
   @@map("hn_reconciliation_events")
+}
+
+model ManualReviewDraft {
+  id                   String   @id @default(uuid()) @db.Uuid
+  commentId            BigInt   @unique @map("comment_id")
+  payload              Json
+  version              Int      @default(1)
+  sourceHash           String   @map("source_hash") @db.VarChar(64)
+  baseActiveDecisionId  String?  @map("base_active_decision_id") @db.Uuid
+  state                String   @default("DRAFT") @db.VarChar(16)
+  actorId              String   @map("actor_id") @db.VarChar(128)
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  comment              SelectedComment @relation(fields: [commentId], references: [id], onDelete: Restrict)
+  decision             ContentDecision?
+  receipt              ManualReviewReceipt?
+  @@map("manual_review_drafts")
+}
+
+model ManualReviewReceipt {
+  commandKey  String @id @map("command_key") @db.VarChar(160)
+  draftId     String @unique @map("draft_id") @db.Uuid
+  requestHash String @map("request_hash") @db.VarChar(64)
+  result      Json
+  draft       ManualReviewDraft @relation(fields: [draftId], references: [id], onDelete: Restrict)
+  @@map("manual_review_receipts")
 }

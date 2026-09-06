@@ -14,7 +14,7 @@
     "deepmerge-ts": "8.0.2"
   },
   "scripts": {
-    "build": "npm run db:generate && tsc -b --force --pretty false",
+    "build": "npm run db:generate && tsc -b --force --pretty false && npm run typecheck -w @hn-knowledge/web && npm run build:web",
     "clean": "tsc -b --clean",
     "contracts:generate-schema": "tsx scripts/generate-classification-schema.mts",
     "dev:api": "npm run dev -w @hn-knowledge/api",
@@ -25,8 +25,9 @@
     "telegram:session:check": "node --env-file-if-exists=.env --enable-source-maps apps/worker/dist/telegram-session.js",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
+    "prelint": "npm run typecheck",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "npm run db:generate && tsc -b --pretty false",
+    "typecheck": "npm run db:generate && tsc -b --pretty false && npm run typecheck -w @hn-knowledge/web",
     "test": "vitest run --config vitest.config.ts",
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:contract": "node scripts/run-contract-tests.mjs",
@@ -66,7 +67,25 @@
     "container:smoke": "bash scripts/container-smoke.sh",
     "staging:smoke": "node --env-file-if-exists=.env scripts/staging-smoke.mjs",
     "observability:check": "node --env-file-if-exists=.env --import tsx scripts/observability-check.mts",
-    "release:verify": "bash scripts/release-verify.sh"
+    "release:verify": "bash scripts/release-verify.sh",
+    "manual-review:prepare-local": "node scripts/manual-review/prepare.mjs local",
+    "manual-review:prepare-test": "node scripts/manual-review/prepare.mjs test",
+    "manual-review:check-test-target": "node scripts/manual-review/target.mjs",
+    "manual-review:test": "node scripts/manual-review/run.mjs test",
+    "dev:manual-review:api": "node scripts/manual-review/run.mjs local dev:api",
+    "manual-review:smoke": "node scripts/manual-review/smoke.mjs",
+    "manual-review:browser-smoke": "node scripts/manual-review/browser-smoke.mjs",
+    "dev:web": "npm run dev -w @hn-knowledge/web",
+    "build:web": "npm run build -w @hn-knowledge/web",
+    "test:web": "npm run test -w @hn-knowledge/web",
+    "test:e2e:web": "node scripts/manual-review/browser-test.mjs e2e",
+    "test:a11y:web": "node scripts/manual-review/browser-test.mjs a11y",
+    "dev:manual-review": "node scripts/manual-review/dev.mjs local",
+    "dev:manual-review:test": "node scripts/manual-review/dev.mjs test",
+    "classifier-results:generate": "node scripts/classifier-results-generate.mjs",
+    "classifier-results:smoke": "node scripts/classifier-results-smoke.mjs",
+    "feed:worker": "node scripts/manual-review/feed-worker.mjs",
+    "feed:status": "node scripts/manual-review/feed-status.mjs"
   },
   "dependencies": {
     "prisma": "7.9.1"

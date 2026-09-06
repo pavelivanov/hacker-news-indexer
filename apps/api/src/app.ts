@@ -3,6 +3,13 @@ import { createHash, randomUUID } from "node:crypto";
 import {
   createFindThatProjectExportService,
   createReviewService,
+  createManualReviewService,
+  createClassifierResultsService,
+  createFeedProcessingService,
+  type FeedProcessingService,
+  type ClassifierResultsService,
+  normalizeHnCommentHtml,
+  type ManualReviewService,
   createKnowledgeReader,
   type KnowledgeReader,
   type FindThatProjectExportService,
@@ -21,6 +28,9 @@ import {
   createIngestionRunRepository,
   createFindThatProjectExportRepository,
   createReviewRepository,
+  createManualReviewUnitOfWork,
+  createClassifierResultsRepository,
+  createFeedProcessingRepository,
   createKnowledgeReaderRepository,
   getDatabase,
 } from "@hn-knowledge/db";
@@ -40,6 +50,10 @@ import {
   registerFindThatProjectReviewRoutes,
 } from "./routes/findthatproject-export.js";
 
+import { registerManualReviewRoutes } from "./routes/manual-review.js";
+import { registerClassifierResultsRoutes } from "./routes/classifier-results.js";
+import { registerFeedProcessingRoutes } from "./routes/feed-processing.js";
+
 const SAFE_REQUEST_ID = /^[A-Za-z0-9._-]{1,128}$/u;
 
 export interface SafeLogger {
@@ -56,6 +70,9 @@ export interface AppOptions {
   readonly maxIngestionRange?: number;
   readonly startIngestion?: StartIngestion;
   readonly reviewService?: ReviewService;
+  readonly manualReviewService?: ManualReviewService;
+  readonly classifierResultsService?: ClassifierResultsService;
+  readonly feedProcessingService?: FeedProcessingService;
   readonly reviewActorId?: string;
   readonly knowledgeReader?: KnowledgeReader;
   readonly findThatProjectExportService?: FindThatProjectExportService;
@@ -87,7 +104,13 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
   const knowledgeReader =
     options.knowledgeReader ??
     createKnowledgeReader(
-      createKnowledgeReaderRepository(getDatabase().client),
+      createKnowledgeReaderRepository(
+        getDatabase().client,
+        (html, id) =>
+          normalizeHnCommentHtml(html, id, {
+            sha256: (value) => createHash("sha256").update(value).digest("hex"),
+          }).canonicalText,
+      ),
       {
         cursorSecret: apiToken ?? "reader-cursor-disabled",
       },
@@ -146,6 +169,13 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
     metrics,
   });
   app.use("/v1/*", createBearerAuth(apiToken));
+  registerFeedProcessingRoutes(
+    app,
+    options.feedProcessingService ??
+      createFeedProcessingService(
+        createFeedProcessingRepository(getDatabase().client),
+      ),
+  );
   registerIngestionRoutes(app, {
     maxRange: options.maxIngestionRange ?? config.INGESTION_MAX_RANGE,
     startIngestion,
@@ -154,7 +184,31 @@ export const createApp = (options: AppOptions = {}): Hono<HealthBindings> => {
     service: reviewService,
     actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
   });
+  registerManualReviewRoutes(
+    app,
+    options.manualReviewService ??
+      createManualReviewService(
+        createManualReviewUnitOfWork(getDatabase().client),
+        { sha256: (value) => createHash("sha256").update(value).digest("hex") },
+        {
+          actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
+          cursorSecret: apiToken ?? "manual-review-disabled",
+        },
+      ),
+  );
   registerReaderRoutes(app, { reader: knowledgeReader, metrics });
+  registerClassifierResultsRoutes(
+    app,
+    options.classifierResultsService ??
+      createClassifierResultsService(
+        createClassifierResultsRepository(getDatabase().client),
+        { sha256: (value) => createHash("sha256").update(value).digest("hex") },
+        {
+          actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,
+          cursorSecret: apiToken ?? "classifier-results-disabled",
+        },
+      ),
+  );
   registerFindThatProjectReviewRoutes(app, {
     service: findThatProjectExportService,
     actorId: options.reviewActorId ?? config.APP_REVIEW_ACTOR_ID,

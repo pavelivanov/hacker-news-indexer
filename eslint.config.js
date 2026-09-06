@@ -9,12 +9,13 @@ export default tseslint.config(
       "coverage/**",
       "node_modules/**",
       "packages/db/src/generated/**",
+      "output/playwright/**",
     ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {
-    files: ["**/*.ts", "**/*.mts"],
+    files: ["**/*.ts", "**/*.mts", "**/*.tsx"],
     languageOptions: {
       parserOptions: {
         projectService: {
@@ -32,7 +33,7 @@ export default tseslint.config(
       "@typescript-eslint/no-confusing-void-expression": "off",
       "@typescript-eslint/no-misused-promises": [
         "error",
-        { checksVoidReturn: { arguments: false } },
+        { checksVoidReturn: { arguments: false, attributes: false } },
       ],
       "@typescript-eslint/restrict-template-expressions": [
         "error",
@@ -41,7 +42,12 @@ export default tseslint.config(
     },
   },
   {
-    files: ["tests/**/*.ts"],
+    files: [
+      "tests/**/*.ts",
+      "apps/web/src/**/*.test.ts",
+      "apps/web/src/**/*.test.tsx",
+      "apps/web/e2e/**/*.ts",
+    ],
     rules: {
       "@typescript-eslint/no-base-to-string": "off",
       "@typescript-eslint/no-unused-vars": [

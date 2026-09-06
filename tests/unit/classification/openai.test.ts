@@ -54,6 +54,29 @@ const completedResponse = (rawOutput: string): Response =>
   );
 
 describe("OpenAI classifier adapter", () => {
+  it("keeps the deadline active while reading a stalled response body", async () => {
+    const classifier = new OpenAiClassifier({
+      apiToken: "test-only",
+      modelId: "synthetic",
+      fetch: async (_url, init) =>
+        new Response(
+          new ReadableStream({
+            start(controller) {
+              init?.signal?.addEventListener(
+                "abort",
+                () => controller.error(new Error("aborted")),
+                { once: true },
+              );
+            },
+          }),
+          { headers: { "content-type": "application/json" } },
+        ),
+    });
+    await expect(classifier.classify(request(10))).rejects.toMatchObject({
+      code: "CLASSIFIER_TIMEOUT",
+      retryable: true,
+    });
+  });
   it("uses the Responses API with strict schema output and no capabilities", async () => {
     const rawOutput = '{"schema_version":"classification.v1"}';
     const fetcher = vi.fn<OpenAiFetch>(async () =>
@@ -188,6 +211,33 @@ describe("OpenAI classifier adapter", () => {
       code: "CLASSIFIER_TIMEOUT",
       retryable: true,
     });
+  });
+
+  it("propagates worker cancellation into the provider request", async () => {
+    const controller = new AbortController();
+    let aborted = false;
+    const classifier = new OpenAiClassifier({
+      apiToken: "test-token",
+      modelId: "fixture",
+      fetch: async (_input, init) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener(
+            "abort",
+            () => {
+              aborted = true;
+              reject(new Error("cancelled"));
+            },
+            { once: true },
+          );
+        }),
+    });
+    const pending = classifier.classify({
+      ...request(),
+      signal: controller.signal,
+    });
+    controller.abort();
+    await expect(pending).rejects.toThrow();
+    expect(aborted).toBe(true);
   });
 
   it("does not mutate the application-owned schema during adaptation", () => {

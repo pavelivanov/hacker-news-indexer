@@ -1,7 +1,13 @@
 # ADR 0006: Classifier endgame
 
-- Status: Fresh v3 path selected; terminal provider outcome pending source availability
-- Date: 2026-08-31
+- Status: Assist-only endpoint adopted after v3 annotation failure
+- Date: 2026-09-04
+
+On 2026-09-05 the owner superseded the mandatory-review restriction for private
+browsing with [ADR 0007](0007-classifier-results-feedback.md): classifier results
+may be viewed immediately and corrected optionally during use. The evaluation
+history and approved-reader/export rules below remain unchanged. This document
+records the earlier endgame decision and its evidence.
 
 ## Context
 
@@ -36,30 +42,41 @@ batch-2 passes.
 
 The source manifests, distinct pass hashes, body-free comparisons, and batch-1
 discussion memos are under `evaluation/calibration/`. The production annotation
-parser validated both passes before each comparison. Numbered-cycle validation
-continues to report only v1 `OPENED_FAILED` and v2 `ANNOTATION_FAILED`.
+parser validated both passes before each comparison.
+
+The fresh v3 cycle then used the non-overlapping Telegram window
+`33100..33189`, resolving 90 occurrences to 90 unique canonical comments and
+freezing a 63-row development / 27-row sealed-holdout split before annotation.
+Both blind pass files validated across all 90 rows and had distinct hashes.
+Their body-free comparison recorded 76 exact-decision agreement rows,
+primary-class kappa `0.7326543603`, and material-relevance kappa
+`0.7578870139`, against the unchanged `0.75` requirement. The primary-class
+gate failed, so the owner script sealed v3 as `ANNOTATION_FAILED`, preserved
+the pass files and comparison report, and wrote no adjudication packet or gold
+corpus. No provider call occurred and the holdout remained sealed.
 
 ## Decision
 
-Both batch-2 κ values exceed the pre-registered `0.75` threshold. Proceed with
-a fresh v3 cycle exactly as documented in `evaluation/README.md`; do not adopt
-the assist-only endpoint at this decision point. `CLASSIFIER_ENABLED` remains
-false, every model-derived decision remains inactive and mandatory-review, and
-no production quality claim exists until v3 reaches a terminal holdout result.
+Both batch-2 κ values exceeded the pre-registered `0.75` threshold, so the
+project proceeded with one fresh v3 cycle exactly as documented in
+`evaluation/README.md`.
 
-V3 must use a later non-overlapping Telegram window beginning at message
-`33100` or later. At the 2026-08-31 readiness check the public channel had
-reached only `33102`, so the required 90-message window did not yet exist. No
-cycle was opened because source freshness and minimum size could not be
-demonstrated. Execution resumes when a bounded window through at least message
-`33189` is publicly available.
+V3 uses the later non-overlapping Telegram window `33100..33189`. When message
+`33189` became public on 2026-09-04, the capture resolved 90 occurrences to 90
+unique canonical HN comments. The immutable split was frozen before annotation
+with 63 development and 27 sealed holdout rows. Its independent annotation
+comparison then failed the primary-class gate at `0.7326543603`. This is the
+v3 decision point pre-registered in `docs/annotation-guide.md`: adopt the
+assist-only endpoint, open no v4, and make no paid v3 development or holdout
+call. `CLASSIFIER_ENABLED` remains false for automatic decisions, all
+classifier output is restricted to mandatory human review, and no production
+quality claim is made.
 
 ## Consequences
 
-Plan 003R and Plan 009 remain in progress at the fresh-source STOP condition.
-The next permitted action is the v3 capture; weakening the size/freshness gate,
-reusing calibration rows, opening an incomplete cycle, or switching to the
-assist-only endpoint despite the passing result would violate the
-pre-registered rule. Plan 007 may continue only under the existing inactive,
-mandatory-human-review classifier posture until v3 decides the terminal
-provider outcome.
+Plans 003R and 009 are complete at the assist-only endpoint. Row-level v3
+disagreements must not be reconciled or used for further rubric, prompt, or
+model work, and no further annotation cycle may be opened. Plan 007 may
+continue independently with classification excluded from automatic decisions:
+`CLASSIFIER_ENABLED=false`, no provider credentials, zero model activation,
+and mandatory human review for any later classifier-assisted output.

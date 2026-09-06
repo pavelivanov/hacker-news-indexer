@@ -46,6 +46,8 @@ export class ClassificationExecutionError extends Error {
 }
 
 export interface ClassifyCommentInput {
+  readonly attempt?: number;
+  readonly signal?: AbortSignal;
   readonly commentId: HnItemId;
   readonly boundedInput: BoundedClassifierInput;
   readonly persistRetryableFailure?: boolean;
@@ -141,15 +143,24 @@ export const createClassifyComment =
         Record<string, unknown>
       >,
       timeoutMs: CLASSIFIER_REQUEST_TIMEOUT_MS,
+      ...(input.signal ? { signal: input.signal } : {}),
     } as const;
     const responses: ClassifierResponse[] = [];
     let invalidCode: ClassifierOutputValidationErrorCode | null = null;
 
     for (let attempt = 0; attempt < 2; attempt += 1) {
+      input.signal?.throwIfAborted();
       let response: ClassifierResponse;
       try {
         response = await classifier.classify(request);
       } catch (error) {
+        if (input.signal?.aborted)
+          throw new ClassificationExecutionError(
+            "CLASSIFIER_CANCELLED",
+            true,
+            null,
+            { cause: error },
+          );
         const providerError =
           error instanceof ClassifierProviderError
             ? error
@@ -164,6 +175,7 @@ export const createClassifyComment =
           input.persistRetryableFailure === true
         ) {
           await repository.recordRun({
+            attempt: input.attempt ?? 1,
             commentId: input.commentId,
             inputHash,
             promptVersion: CLASSIFICATION_PROMPT_VERSION,
@@ -203,6 +215,7 @@ export const createClassifyComment =
           continue;
         }
         const recorded = await repository.recordRun({
+          attempt: input.attempt ?? 1,
           commentId: input.commentId,
           inputHash,
           promptVersion: CLASSIFICATION_PROMPT_VERSION,
@@ -234,12 +247,12 @@ export const createClassifyComment =
       const providerOutput = validated.output;
       const route = routeClassificationDecision(providerOutput);
       const output = route.output;
-      const routedEvidenceSpanIds = new Set(route.evidenceSpanIds);
       const reviewPolicy = reviewPolicyFromReasons([
         ...UNPROMOTED_MODEL_REVIEW_DECISION.reasons,
         ...output.review.reasons.map(outputReviewReason),
       ]);
       const recorded = await repository.recordRun({
+        attempt: input.attempt ?? 1,
         commentId: input.commentId,
         inputHash,
         promptVersion: CLASSIFICATION_PROMPT_VERSION,
@@ -261,17 +274,39 @@ export const createClassifyComment =
         status: reviewPolicy.required ? "REVIEW" : "SUCCEEDED",
         errorCode: null,
       });
+      // A concurrent/replayed call must derive its decision from the run that
+      // actually won persistence, never from the losing provider response.
+      const persisted = recorded.created
+        ? validated
+        : validateClassifierOutput(
+            JSON.stringify(recorded.run.providerOutput),
+            input.boundedInput,
+            hasher,
+          );
+      if (recorded.run.errorCode !== null || !persisted.ok)
+        throw new ClassificationExecutionError(
+          "CLASSIFIER_RUN_CONFLICT",
+          false,
+        );
+      const persistedRoute = routeClassificationDecision(persisted.output);
+      const persistedOutput = persistedRoute.output;
+      const routedEvidenceSpanIds = new Set(persistedRoute.evidenceSpanIds);
+      const persistedPolicy = reviewPolicyFromReasons([
+        ...UNPROMOTED_MODEL_REVIEW_DECISION.reasons,
+        ...persistedOutput.review.reasons.map(outputReviewReason),
+      ]);
       const decision = await repository.saveDecision({
         commentId: input.commentId,
         classificationRunId: recorded.run.id,
         source: "MODEL",
-        primaryDecision: output.primary_decision,
-        decisionConfidence: output.decision_confidence,
-        materiallyTechnical: output.comment_relevance.is_materially_technical,
-        reviewRequired: reviewPolicy.required,
-        validatedOutput: output,
+        primaryDecision: persistedOutput.primary_decision,
+        decisionConfidence: persistedOutput.decision_confidence,
+        materiallyTechnical:
+          persistedOutput.comment_relevance.is_materially_technical,
+        reviewRequired: persistedPolicy.required,
+        validatedOutput: persistedOutput,
         manualOverrideOfId: null,
-        evidenceSpans: validated.evidenceSpans
+        evidenceSpans: persisted.evidenceSpans
           .filter((span) => routedEvidenceSpanIds.has(span.id))
           .map((span) => ({
             spanId: span.id,
@@ -286,10 +321,15 @@ export const createClassifyComment =
         await reviewQueue.openPolicyReview({
           commentId: input.commentId,
           contentDecisionId: decision.id,
-          policy: reviewPolicy,
+          policy: persistedPolicy,
         });
       }
-      return { kind: "DECISION", run: recorded.run, decision, output };
+      return {
+        kind: "DECISION",
+        run: recorded.run,
+        decision,
+        output: persistedOutput,
+      };
     }
 
     throw new ClassificationExecutionError(

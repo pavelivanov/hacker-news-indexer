@@ -237,6 +237,24 @@ may discuss only those calibration rows. Revise this guide only from that
 separate exercise, require agreement on a second excluded calibration batch,
 then label a later fresh cycle independently from scratch.
 
+## V3 cycle pre-registration
+
+Pre-registered 2026-08-31, after the passing calibration recorded in
+`docs/decisions/0006-classifier-endgame.md` and before any v3 row was
+labeled.
+
+If the fresh v3 cycle fails either annotation kappa gate (primary class or
+material relevance below 0.75), the project adopts the assist-only endpoint
+defined in the endgame decision rule above: the cycle is sealed terminal
+`ANNOTATION_FAILED`, no calibration retry or v4 cycle is opened,
+`CLASSIFIER_ENABLED` remains false, all classification output stays in
+mandatory human review, and Plan 007 production proceeds review-only. The
+same rule applies if the v3 development evaluation produces no passing
+candidate under a pre-registered hypothesis, or if the one-time holdout
+fails: in every case the project terminates at the assist-only endpoint
+rather than opening another cycle. The v3 capture window starts at message
+33100 or later and must not overlap any calibration or earlier cycle row.
+
 Each annotator receives only their own shuffled packet directory, this guide,
 and `evaluation/annotation-pass-schema-v2.json`. They must not receive the
 other pass, model predictions, historical class totals or examples, the cycle

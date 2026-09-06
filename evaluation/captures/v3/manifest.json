@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "approvalStatus": "PENDING_OWNER_APPROVAL",
+  "telegramSha256": "c4bc193e8a26eb378a30280bd0a5f713916a1f456fc7836d53824efc55f5a1f8",
+  "hnSha256": "abf68e9cf397262f914fc507b7152ec7b81c78e192a3280a9923bfa31e527862",
+  "multipartSelectedIds": [],
+  "counts": {
+    "telegramOccurrences": 90,
+    "uniqueSelectedComments": 90,
+    "currentRoots": 46,
+    "displayedStoryReferences": 46,
+    "displayedRootMismatches": 0,
+    "multipartGroups": 0,
+    "multipartParts": 0,
+    "uniqueHnItems": 145,
+    "siblingRequests": 0
+  }
+}

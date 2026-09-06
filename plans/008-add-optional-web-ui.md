@@ -1,5 +1,13 @@
 # Plan 008: Add the optional Vite/React reader and review UI
 
+> **Scope update, 2026-09-04:** The owner selected
+> [Plan 013](013-local-manual-review-mvp.md) as the next milestone. It delivers
+> the local browser inbox, draft/approval path, and basic Discovery/Expert-note
+> feeds. Plan 013 completed on 2026-09-05; reuse its workspace. Before executing this older
+> plan, reconcile its steps/commands against 013's result; do not recreate the
+> app or duplicate its review workflow. Broader subject/story/merge views and
+> any separately authorized hosting remain deferred here. Plan 008 stays TODO.
+
 > **Executor instructions**: This is optional and not on the backend v1 critical path. Complete Plan 005 first so API contracts are stable. Use current frontend, shadcn/ui, and React performance guidance at execution time.
 >
 > **Drift check (run first)**: verify Plan 005 is `DONE`; regenerate/read current API contracts and confirm there is still no `apps/web` implementation. Stop if auth or response contracts changed materially.

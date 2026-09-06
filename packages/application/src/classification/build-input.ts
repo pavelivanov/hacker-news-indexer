@@ -318,3 +318,44 @@ export const buildClassifierInput = (
 
   return input;
 };
+
+/** Restore the input builder's field order after JSONB storage. Hashes remain
+ * compatible with the original byte serialization and sealed evaluation data. */
+export const restoreClassifierInputOrder = (
+  input: BoundedClassifierInput,
+): BoundedClassifierInput => ({
+  schemaVersion: input.schemaVersion,
+  selectedCommentId: input.selectedCommentId,
+  rootId: input.rootId,
+  documents: input.documents.map((document) => ({
+    id: document.id,
+    origin: document.origin,
+    spans: document.spans.map((span) => ({
+      id: span.id,
+      documentId: span.documentId,
+      origin: span.origin,
+      kind: span.kind,
+      sourceStart: span.sourceStart,
+      sourceEnd: span.sourceEnd,
+      text: span.text,
+    })),
+  })),
+  urlCandidates: input.urlCandidates.map((candidate) => ({
+    id: candidate.id,
+    url: candidate.url,
+    sourceDocument: candidate.sourceDocument,
+    originField: candidate.originField,
+  })),
+  truncation: input.truncation.map((entry) => ({
+    documentId: entry.documentId,
+    originalLength: entry.originalLength,
+    includedRanges: entry.includedRanges.map((range) => ({
+      sourceStart: range.sourceStart,
+      sourceEnd: range.sourceEnd,
+    })),
+    omittedRanges: entry.omittedRanges.map((range) => ({
+      sourceStart: range.sourceStart,
+      sourceEnd: range.sourceEnd,
+    })),
+  })),
+});

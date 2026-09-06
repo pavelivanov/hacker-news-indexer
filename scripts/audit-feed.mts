@@ -1,4 +1,8 @@
-import { createKnowledgeReader } from "@hn-knowledge/application";
+import { createHash } from "node:crypto";
+import {
+  createKnowledgeReader,
+  normalizeHnCommentHtml,
+} from "@hn-knowledge/application";
 import { getConfig } from "@hn-knowledge/config";
 import {
   createDatabase,
@@ -19,7 +23,13 @@ if (!/^[A-Za-z0-9._-]{1,128}$/u.test(corpus)) {
 const database = createDatabase({ connectionString: getConfig().DATABASE_URL });
 try {
   const reader = createKnowledgeReader(
-    createKnowledgeReaderRepository(database.client),
+    createKnowledgeReaderRepository(
+      database.client,
+      (html, id) =>
+        normalizeHnCommentHtml(html, id, {
+          sha256: (value) => createHash("sha256").update(value).digest("hex"),
+        }).canonicalText,
+    ),
     { cursorSecret: getConfig().APP_API_TOKEN ?? "feed-audit-only" },
   );
   const primary: FeedItemV1[] = [];

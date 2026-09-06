@@ -18,6 +18,7 @@ const MAX_LEASE_DURATION_MS = 24 * 60 * 60 * 1_000;
 export type EnqueueJobInput = EnqueuePipelineJobInput;
 
 export interface ClaimJobOptions {
+  readonly lane?: "legacy" | "feed";
   readonly leaseOwner: string;
   readonly leaseDurationMs: number;
   readonly ingestionRunId?: IngestionRunId;
@@ -151,6 +152,7 @@ export const createJobQueue = (client: PrismaClient): JobQueue => ({
     const runId = input.ingestionRunId ?? null;
     const jobs = await client.$queryRaw<DatabasePipelineJob[]>(Prisma.sql`
       INSERT INTO pipeline_jobs (
+        lane,
         ingestion_run_id,
         type,
         payload,
@@ -159,6 +161,7 @@ export const createJobQueue = (client: PrismaClient): JobQueue => ({
         updated_at
       )
       VALUES (
+        ${input.lane ?? "legacy"},
         ${runId}::uuid,
         ${input.type}::"PipelineJobType",
         ${payload}::jsonb,
@@ -200,7 +203,8 @@ export const createJobQueue = (client: PrismaClient): JobQueue => ({
       WITH candidate AS (
         SELECT queued.id
         FROM pipeline_jobs AS queued
-        WHERE (${runId}::uuid IS NULL OR queued.ingestion_run_id = ${runId}::uuid)
+        WHERE queued.lane = ${options.lane ?? "legacy"}
+          AND (${runId}::uuid IS NULL OR queued.ingestion_run_id = ${runId}::uuid)
           AND (
             (
               queued.state IN ('AVAILABLE', 'RETRYABLE')
@@ -218,6 +222,7 @@ export const createJobQueue = (client: PrismaClient): JobQueue => ({
               WHERE prerequisite.ingestion_run_id = queued.ingestion_run_id
                 AND prerequisite.type = 'INGEST_SELECTION_RANGE'
                 AND prerequisite.state <> 'COMPLETED'
+                AND (queued.lane <> 'feed' OR prerequisite.state <> 'TERMINAL')
             )
           )
           AND (
@@ -228,6 +233,7 @@ export const createJobQueue = (client: PrismaClient): JobQueue => ({
               WHERE prerequisite.ingestion_run_id = queued.ingestion_run_id
                 AND prerequisite.type = 'RESOLVE_HN_COMMENT'
                 AND prerequisite.state <> 'COMPLETED'
+                AND (queued.lane <> 'feed' OR prerequisite.state <> 'TERMINAL')
             )
           )
         ORDER BY queued.available_at ASC, queued.created_at ASC, queued.id ASC

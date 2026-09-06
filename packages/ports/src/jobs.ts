@@ -5,6 +5,7 @@ import type {
 } from "@hn-knowledge/domain";
 
 export interface EnqueuePipelineJobInput {
+  readonly lane?: "legacy" | "feed";
   readonly type: PipelineJobType;
   readonly payload: Readonly<Record<string, unknown>>;
   readonly idempotencyKey: string;

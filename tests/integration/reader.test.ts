@@ -4,6 +4,7 @@ import { afterAll, afterEach, beforeEach, describe, expect, it } from "vitest";
 
 import {
   createKnowledgeReader,
+  normalizeHnCommentHtml,
   createReviewService,
   KnowledgeReaderError,
 } from "@hn-knowledge/application";
@@ -344,7 +345,13 @@ describe("knowledge reader repository", () => {
   it("excludes inactive decisions, then returns strict approved read models", async () => {
     const seeded = await seedPublishedContent();
     const reader = createKnowledgeReader(
-      createKnowledgeReaderRepository(database.client),
+      createKnowledgeReaderRepository(
+        database.client,
+        (html, id) =>
+          normalizeHnCommentHtml(html, id, {
+            sha256: (value) => createHash("sha256").update(value).digest("hex"),
+          }).canonicalText,
+      ),
       {
         cursorSecret: "reader-integration-secret",
         now: () => new Date("2099-01-01T00:00:00.000Z"),
@@ -428,7 +435,13 @@ describe("knowledge reader repository", () => {
       },
     });
     const reader = createKnowledgeReader(
-      createKnowledgeReaderRepository(database.client),
+      createKnowledgeReaderRepository(
+        database.client,
+        (html, id) =>
+          normalizeHnCommentHtml(html, id, {
+            sha256: (value) => createHash("sha256").update(value).digest("hex"),
+          }).canonicalText,
+      ),
       { cursorSecret: "reader-integration-secret" },
     );
 
