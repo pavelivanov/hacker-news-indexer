@@ -1,4 +1,5 @@
 import { FixtureHnItems, TelegramMtprotoSource } from "@hn-knowledge/adapters";
+import { setTimeout as delay } from "node:timers/promises";
 import { createDailyFeedRuntime } from "@hn-knowledge/worker/daily-feed-runtime";
 import {
   createFeedProcessingRepository,
@@ -27,6 +28,7 @@ export const dailyFeedFixture = async (database: Database) => {
     providerFails: false,
     calls: 0,
     latestCalls: 0,
+    onLatest: null as (() => Promise<void>) | null,
     ranges: [] as Array<[number, number]>,
   };
   const messages = new TelegramMtprotoSource(
@@ -102,6 +104,7 @@ export const dailyFeedFixture = async (database: Database) => {
       source,
       latestId: async () => {
         state.latestCalls += 1;
+        await state.onLatest?.();
         return state.latest;
       },
     }),
@@ -125,8 +128,16 @@ export const dailyFeedFixture = async (database: Database) => {
     }),
   });
   const drain = async () => {
-    for (let i = 0; i < 30; i += 1)
-      if ((await runtime.tick()) === "idle") return;
+    // Like the real polling worker, allow newly timestamped jobs to become ready.
+    // A single idle tick is not proof that the immediate queue has settled.
+    let idleTicks = 0;
+    for (let i = 0; i < 40; i += 1) {
+      if ((await runtime.tick()) === "idle") {
+        idleTicks += 1;
+        if (idleTicks === 3) return;
+        await delay(10);
+      } else idleTicks = 0;
+    }
     throw new Error("Fixture did not drain within its bound");
   };
   return { state, classifier, runtime, drain };

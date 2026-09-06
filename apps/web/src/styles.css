@@ -1115,3 +1115,10 @@ details > summary {
 .classifier-detail > .bookmark-control {
   margin-bottom: 0.75rem;
 }
+.processing-settings-dialog {
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+}
+.processing-settings-footer {
+  margin-top: 1.5rem;
+}

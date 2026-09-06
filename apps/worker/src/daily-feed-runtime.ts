@@ -81,7 +81,6 @@ export const createDailyFeedRuntime = (options: DailyFeedOptions) => {
   );
   const processClassification = async (
     job: PipelineJob,
-    limit: number,
     signal: AbortSignal,
   ) => {
     const selectedCommentId = job.payload["selectedCommentId"];
@@ -175,7 +174,7 @@ export const createDailyFeedRuntime = (options: DailyFeedOptions) => {
       modelConfigId: options.classifier.modelConfigId,
       async classify(request) {
         signal.throwIfAborted();
-        if (!(await processing.reserveRequest(limit))) {
+        if (!(await processing.reserveRequest())) {
           budgetAbort.abort();
           requestSignal.throwIfAborted();
         }
@@ -251,8 +250,9 @@ export const createDailyFeedRuntime = (options: DailyFeedOptions) => {
             await source.latestId(state.sourceKey),
           );
         } catch {
-          await client.feedProcessingState.update({
-            where: { id: "local" },
+          // A completed source check must not overwrite settings saved while it ran.
+          await client.feedProcessingState.updateMany({
+            where: { id: "local", settingsVersion: state.settingsVersion },
             data: {
               errorCode: "SOURCE_CONNECTION_FAILED",
               syncRequested: false,
@@ -292,17 +292,7 @@ export const createDailyFeedRuntime = (options: DailyFeedOptions) => {
         await renewal;
       };
       const deferForBudget = async () => {
-        const status = await processing.status();
-        await queue.retry(
-          job.id,
-          options.owner,
-          "DAILY_REQUEST_LIMIT",
-          new Date(status.budget_resets_at),
-        );
-        await client.pipelineJob.update({
-          where: { id: job.id },
-          data: { attempts: { decrement: 1 } },
-        });
+        await processing.deferForBudget(job.id, options.owner);
       };
       try {
         if (job.attempts > MAX_ATTEMPTS)
@@ -311,13 +301,13 @@ export const createDailyFeedRuntime = (options: DailyFeedOptions) => {
         else if (job.type === "RESOLVE_HN_COMMENT") await resolve(job);
         else if (job.type === "CLASSIFY_COMMENT") {
           const status = await processing.status();
-          if (status.requests_today >= state.dailyRequestLimit) {
+          if (status.requests_today >= status.daily_request_limit) {
             await stopRenewal();
             signal.throwIfAborted();
             await deferForBudget();
             return "processed";
           }
-          await processClassification(job, state.dailyRequestLimit, signal);
+          await processClassification(job, signal);
         } else throw new WorkerJobError("UNSUPPORTED_FEED_JOB", false);
         await stopRenewal();
         signal.throwIfAborted();

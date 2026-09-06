@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { RefreshCw } from "lucide-react";
 import { ApiError, type Api, type ProcessingStatus } from "../lib/api";
 import { Button } from "./ui/button";
+import { ProcessingSettings } from "./processing-settings";
 
 export const processingError = (code: string | null) => {
   if (code === "CLASSIFIER_AUTH")
@@ -46,7 +47,17 @@ export function ProcessingStatusPanel({
       )
         onNewResults();
       newest.current = next.last_result_at;
-      setStatus(next);
+      setStatus((previous) =>
+        previous && previous.settings_version > next.settings_version
+          ? {
+              ...next,
+              interval_seconds: previous.interval_seconds,
+              daily_request_limit: previous.daily_request_limit,
+              settings_version: previous.settings_version,
+              next_sync_at: previous.next_sync_at,
+            }
+          : next,
+      );
     },
     [onNewResults],
   );
@@ -210,6 +221,12 @@ export function ProcessingStatusPanel({
           >
             {status.enabled ? "Pause updates" : "Resume updates"}
           </Button>
+          <ProcessingSettings
+            api={api}
+            status={status}
+            disabled={busy}
+            onSaved={accept}
+          />
           {status.failures.length ? (
             <ul className="processing-failures">
               {status.failures.map((item) => (

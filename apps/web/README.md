@@ -37,6 +37,12 @@ in this strip. Failed predictions also have a retry action in their detail view.
 Retries preserve the original prediction and correction history. See the
 [feed runbook](../../docs/daily-feed-local.md).
 
+Processing details also includes Feed settings for the check interval and daily
+request cap. Settings persist independently of worker heartbeats and content
+feedback. The dialog preserves edits during polling and handles stale revisions
+and lost save responses. The worker reads the current cap for each reservation;
+changing it never resets the day's usage or resumes paused updates.
+
 The form uses the shared draft/output contracts, and final validation remains
 on the server. Application-service imports in the web API client are type-only.
 

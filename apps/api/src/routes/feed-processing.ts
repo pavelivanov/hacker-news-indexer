@@ -30,6 +30,11 @@ export const registerFeedProcessingRoutes = (
   app.get("/v1/processing", (context) =>
     execute(context, () => service.status()),
   );
+  app.put("/v1/processing/settings", (context) =>
+    execute(context, async () =>
+      service.saveSettings(await readBoundedJsonBody(context)),
+    ),
+  );
   app.post("/v1/processing/control", (context) =>
     execute(context, async () =>
       service.control(await readBoundedJsonBody(context)),
