@@ -25,6 +25,7 @@
     "telegram:session:check": "node --env-file-if-exists=.env --enable-source-maps apps/worker/dist/telegram-session.js",
     "format": "prettier --write . --ignore-unknown",
     "format:check": "prettier --check . --ignore-unknown",
+    "prelint": "npm run typecheck",
     "lint": "eslint . --max-warnings 0",
     "typecheck": "npm run db:generate && tsc -b --pretty false && npm run typecheck -w @hn-knowledge/web",
     "test": "vitest run --config vitest.config.ts",

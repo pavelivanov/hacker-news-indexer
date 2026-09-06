@@ -161,7 +161,19 @@ Processing details. Global legacy-worker lifecycle repairs are not claimed here.
 
 Search, bookmarks, feedback export, feedback-driven classifier improvements,
 and hosted access remain later work. Browser verification covers Chromium.
-Changes remain local and uncommitted; hosted CI has not run on this branch.
+The implementation was subsequently committed and pushed as `d6332af`.
+
+## Clean-checkout verification follow-up
+
+The first hosted CI run stopped at typed linting with 808 unresolved-type errors.
+An isolated checkout of `d6332af` reproduced the exact count: browser imports
+resolve shared-package declarations from `dist`, which did not yet exist. The
+local verification had reused previously built declarations.
+
+The root `prelint` lifecycle now runs the existing typecheck command to generate
+and check shared workspace outputs before ESLint. This preserves all strict lint
+rules and also fixes standalone `npm run lint` on fresh checkouts. In the isolated
+checkout, linting, formatting, build, and all 294 unit tests passed after the fix.
 
 The [feed runbook](../../docs/daily-feed-local.md) covers startup, limits,
 credentials, controls, failure recovery, API contracts, and test isolation.

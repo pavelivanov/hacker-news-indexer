@@ -8,6 +8,8 @@ repository root.
 - `npm run dev:manual-review` starts API, Vite, and the local feed worker together.
   The servers bind to loopback; test mode never starts the external-call worker.
 - `npm run build:web` builds static assets; root build also checks browser types.
+- `npm run lint` first prepares and checks shared workspace types, then runs
+  typed ESLint. It works on a fresh checkout without an earlier build.
 - `npm run test:web` runs discovered React component tests under jsdom.
 - `npm run test:e2e:web` exercises real API/PostgreSQL review journeys.
 - `npm run test:a11y:web` checks keyboard operation and desktop/mobile accessibility.
