@@ -447,12 +447,28 @@ model ClassifierResultSnapshot {
   title           String
   summary         String
   feedbackVersion Int @default(0) @map("feedback_version")
+  bookmarked      Boolean @default(false)
+  bookmarkVersion Int @default(0) @map("bookmark_version")
   createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   run             ClassificationRun @relation(fields: [runId], references: [id], onDelete: Restrict)
   feedback        ClassifierFeedback[]
+  bookmarkReceipts ResultBookmarkReceipt[]
 
   @@index([category, createdAt, runId])
+  @@index([bookmarked, createdAt, runId])
   @@map("classifier_result_snapshots")
+}
+
+model ResultBookmarkReceipt {
+  commandKey String @id @map("command_key") @db.VarChar(160)
+  resultId String @map("result_id") @db.Uuid
+  requestHash String @map("request_hash") @db.VarChar(64)
+  bookmarked Boolean
+  version Int
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  result ClassifierResultSnapshot @relation(fields: [resultId], references: [runId], onDelete: Restrict)
+
+  @@map("result_bookmark_receipts")
 }
 
 model ClassifierFeedback {

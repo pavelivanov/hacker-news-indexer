@@ -50,8 +50,9 @@ export const registerClassifierResultsRoutes = (
             ClassifierResultsService["list"]
           >[0],
           context.req.query("cursor") ?? null,
+          context.req.query("q") ?? "",
         ),
-      ["filter", "cursor"],
+      ["filter", "cursor", "q"],
     ),
   );
   app.get("/v1/classifier-results/:id", (context) =>
@@ -60,6 +61,11 @@ export const registerClassifierResultsRoutes = (
   app.post("/v1/classifier-results/:id/corrections", (context) =>
     execute(context, async () =>
       service.correct(id(context), await readBoundedJsonBody(context)),
+    ),
+  );
+  app.put("/v1/classifier-results/:id/bookmark", (context) =>
+    execute(context, async () =>
+      service.bookmark(id(context), await readBoundedJsonBody(context)),
     ),
   );
 };

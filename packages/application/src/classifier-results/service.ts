@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import {
   parseClassifierFeedbackV1,
+  parseResultBookmarkV1,
   validateClassificationV1,
 } from "@hn-knowledge/contracts";
 import { ClassifierResultsError } from "@hn-knowledge/domain";
@@ -75,6 +76,8 @@ const summary = (row: ClassifierResultRecord) => ({
   title: row.title,
   summary: row.summary,
   feedback_version: row.feedbackVersion,
+  bookmarked: row.bookmarked,
+  bookmark_version: row.bookmarkVersion,
   available: row.available,
   model: row.modelId,
   prompt_version: row.promptVersion,
@@ -95,14 +98,22 @@ export const createClassifierResultsService = (
     "skipped",
     "uncertain",
     "corrected",
+    "saved",
   ];
   return {
-    async list(filter: ResultsFilter = "all", cursor: string | null = null) {
+    async list(
+      filter: ResultsFilter = "all",
+      cursor: string | null = null,
+      search = "",
+    ) {
       if (!filters.includes(filter))
         throw new TypeError("Invalid result filter");
+      if (typeof search !== "string" || search.length > 200)
+        throw new TypeError("Invalid result search");
+      const query = search.trim().toLowerCase();
       let after: { createdAt: Date; id: string } | null = null;
       if (cursor) {
-        if (cursor.length > 1000) throw new TypeError("Invalid cursor");
+        if (cursor.length > 2000) throw new TypeError("Invalid cursor");
         const [body, signature, extra] = cursor.split(".");
         if (
           !body ||
@@ -117,6 +128,7 @@ export const createClassifierResultsService = (
         ) as Record<string, unknown>;
         if (
           value["filter"] !== filter ||
+          (value["query"] ?? "") !== query ||
           typeof value["date"] !== "string" ||
           typeof value["id"] !== "string" ||
           !/^[a-f0-9-]{36}$/i.test(value["id"])
@@ -127,7 +139,7 @@ export const createClassifierResultsService = (
           throw new TypeError("Invalid cursor");
         after = { createdAt, id: value["id"] };
       }
-      const rows = await repository.list(filter, after);
+      const rows = await repository.list(filter, after, query);
       const page = rows.slice(0, 20);
       const last = page.at(-1);
       const next =
@@ -135,6 +147,7 @@ export const createClassifierResultsService = (
           ? Buffer.from(
               JSON.stringify({
                 filter,
+                query,
                 date: last.createdAt.toISOString(),
                 id: last.id,
               }),
@@ -193,6 +206,23 @@ export const createClassifierResultsService = (
         ),
       });
       return { version: result.feedback.version, replayed: result.replayed };
+    },
+    async bookmark(id: string, body: unknown) {
+      const request = parseResultBookmarkV1(body);
+      return repository.bookmark({
+        id,
+        bookmarked: request.bookmarked,
+        expectedVersion: request.expected_version,
+        commandKey: request.command_key,
+        requestHash: hasher.sha256(
+          JSON.stringify({
+            id,
+            bookmarked: request.bookmarked,
+            version: request.expected_version,
+            actor: options.actorId,
+          }),
+        ),
+      });
     },
   };
 };

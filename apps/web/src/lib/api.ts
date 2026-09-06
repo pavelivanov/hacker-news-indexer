@@ -11,6 +11,7 @@ import type {
   ManualSaveV1,
   ReaderCommentV1,
   ClassifierFeedbackV1,
+  ResultBookmarkV1,
 } from "@hn-knowledge/contracts";
 
 export type CommentDetail = Awaited<
@@ -25,6 +26,10 @@ export type ProcessingStatus = Awaited<
   ReturnType<FeedProcessingService["status"]>
 >;
 export type ResultDetail = Awaited<ReturnType<ClassifierResultsService["get"]>>;
+export type ResultBookmarkState = Pick<
+  ResultDetail,
+  "bookmarked" | "bookmark_version"
+>;
 export type ResultsFilter = NonNullable<
   Parameters<ClassifierResultsService["list"]>[0]
 >;
@@ -125,13 +130,19 @@ export const createApi = (token: string, onUnauthorized: () => void) => {
       filter: ResultsFilter,
       cursor: string | null = null,
       signal?: AbortSignal,
+      query = "",
     ) =>
       request<ResultsPage>(
-        `/v1/classifier-results?filter=${filter}${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`,
+        `/v1/classifier-results?filter=${filter}&q=${encodeURIComponent(query)}${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`,
         { signal },
       ),
     result: (id: string, signal?: AbortSignal) =>
       request<ResultDetail>(`/v1/classifier-results/${id}`, { signal }),
+    bookmarkResult: (id: string, body: ResultBookmarkV1) =>
+      request<{ bookmarked: boolean; version: number; replayed: boolean }>(
+        `/v1/classifier-results/${id}/bookmark`,
+        { method: "PUT", body: JSON.stringify(body) },
+      ),
     correctResult: (id: string, body: ClassifierFeedbackV1) =>
       request<{ version: number; replayed: boolean }>(
         `/v1/classifier-results/${id}/corrections`,
